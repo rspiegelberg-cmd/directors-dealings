@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-sha" content="local">
+<title>FORT - Forterra plc</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+<style>
+  html, body { background:#f8fafc; color:#0f172a; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .pulse-highlight { animation: pulseBg 2s ease-out 1; }
+  @keyframes pulseBg {
+    0%   { background-color: #fef3c7; }
+    100% { background-color: transparent; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+<header class="border-b border-slate-200 bg-white px-6 h-12 flex items-center justify-between">
+<h1 class="text-sm font-semibold text-slate-900 tracking-tight">FORT - Forterra plc</h1>
+<nav class="flex items-center"><button id="refreshBtn" type="button" class="text-xs px-2.5 py-1 rounded border border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5" title="Run the full refresh pipeline (scrape -> parse -> backfill -> eval -> rebuild). Slow (~15+ min) and uses LLM credits."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span id="refreshBtnLabel">Refresh</span></button><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Today</a> <a href="../performance.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Performance</a></nav>
+</header>
+<main class="max-w-7xl mx-auto">
+<header class="border-b border-slate-200 bg-white px-6 py-4"><div class="flex items-center justify-between mb-1"><div class="flex items-center"><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 mr-4">&larr; Dashboard</a><h1 class="text-lg font-semibold text-slate-900 tabular-nums">FORT</h1><span class="text-sm text-slate-600 ml-2">Forterra plc</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Unknown sector</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Main</span></div></div><div class="flex items-center justify-between"><div class="text-sm tabular-nums">Latest close: 1.49p <span class="text-rose-600 ml-2">&#9660; -1.45%</span></div><div class="text-[10px] text-slate-400">Last refresh: 2026-05-15T07:38:59Z</div></div></header><section class="m-6 bg-white border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-center mb-3"><h2 class="text-xs uppercase tracking-wide text-slate-500">Price (trailing window)</h2></div><div class="relative h-72"><canvas id="priceChart"></canvas></div><div class="relative h-16 mt-1"><canvas id="volumeChart"></canvas></div><script>window.__priceData = {"dates":["2025-04-15","2025-04-16","2025-04-17","2025-04-22","2025-04-23","2025-04-24","2025-04-25","2025-04-28","2025-04-29","2025-04-30","2025-05-01","2025-05-02","2025-05-06","2025-05-07","2025-05-08","2025-05-09","2025-05-12","2025-05-13","2025-05-14","2025-05-15","2025-05-16","2025-05-19","2025-05-20","2025-05-21","2025-05-22","2025-05-23","2025-05-27","2025-05-28","2025-05-29","2025-05-30","2025-06-02","2025-06-03","2025-06-04","2025-06-05","2025-06-06","2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-07","2025-07-08","2025-07-09","2025-07-10","2025-07-11","2025-07-14","2025-07-15","2025-07-16","2025-07-17","2025-07-18","2025-07-21","2025-07-22","2025-07-23","2025-07-24","2025-07-25","2025-07-28","2025-07-29","2025-07-30","2025-07-31","2025-08-01","2025-08-04","2025-08-05","2025-08-06","2025-08-07","2025-08-08","2025-08-11","2025-08-12","2025-08-13","2025-08-14","2025-08-15","2025-08-18","2025-08-19","2025-08-20","2025-08-21","2025-08-22","2025-08-26","2025-08-27","2025-08-28","2025-08-29","2025-09-01","2025-09-02","2025-09-03","2025-09-04","2025-09-05","2025-09-08","2025-09-09","2025-09-10","2025-09-11","2025-09-12","2025-09-15","2025-09-16","2025-09-17","2025-09-18","2025-09-19","2025-09-22","2025-09-23","2025-09-24","2025-09-25","2025-09-26","2025-09-29","2025-09-30","2025-10-01","2025-10-02","2025-10-03","2025-10-06","2025-10-07","2025-10-08","2025-10-09","2025-10-10","2025-10-13","2025-10-14","2025-10-15","2025-10-16","2025-10-17","2025-10-20","2025-10-21","2025-10-22","2025-10-23","2025-10-24","2025-10-27","2025-10-28","2025-10-29","2025-10-30","2025-10-31","2025-11-03","2025-11-04","2025-11-05","2025-11-06","2025-11-07","2025-11-10","2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-17","2025-11-18","2025-11-19","2025-11-20","2025-11-21","2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-22","2025-12-23","2025-12-24","2025-12-29","2025-12-30","2025-12-31","2026-01-02","2026-01-05","2026-01-06","2026-01-07","2026-01-08","2026-01-09","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-19","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13"],"closes":[1.749648895263672,1.7716445922851562,1.749648895263672,1.7616465759277344,1.7776434326171875,1.7836421203613282,1.819635009765625,1.8276335144042968,1.8316325378417968,1.8636260986328126,1.8736241149902344,1.877623291015625,1.9196148681640626,1.8956198120117187,1.9256137084960938,1.9036181640625,1.921614532470703,1.9236141967773437,1.8816226196289063,1.8756239318847656,1.8896209716796875,1.8896209716796875,1.921614532470703,1.8996189880371093,1.8856217956542969,1.893620147705078,1.8996189880371093,1.9796028137207031,1.95960693359375,1.975603790283203,1.9856016540527344,1.9676052856445312,1.9416105651855469,1.9416105651855469,1.9396109008789062,1.9616064453125,2.014595947265625,1.9676052856445312,1.9538066101074218,1.9378082275390625,1.9358085632324218,1.9198100280761718,1.9058114624023437,1.8798139953613282,1.8598159790039062,1.8518167114257813,1.927809295654297,1.9458074951171875,1.961805877685547,1.9818038940429688,1.9698051452636718,1.9838037109375,1.9298091125488281,1.927809295654297,1.9178102111816406,1.9118107604980468,1.9838037109375,1.9998020935058594,1.9838037109375,1.9718048095703125,1.9698051452636718,1.961805877685547,1.9258094787597657,1.9558065795898438,1.9858035278320312,1.9918028259277343,1.9198100280761718,1.89981201171875,1.8958125305175781,1.8618157958984376,1.8378181457519531,2.039798126220703,2.019800109863281,2.014800567626953,1.9758045959472657,1.9898031616210938,1.9718048095703125,1.9538066101074218,1.9858035278320312,1.9878033447265624,1.9658055114746094,1.9678053283691406,1.961805877685547,1.94980712890625,1.9178102111816406,1.903811492919922,1.927809295654297,1.9378082275390625,1.915810546875,1.9558065795898438,1.9378082275390625,1.9438075256347656,1.9358085632324218,1.9138105773925782,1.89981201171875,1.863815460205078,1.8618157958984376,1.8758145141601563,1.8818138122558594,1.9118107604980468,1.927809295654297,1.9058114624023437,1.915810546875,1.9178102111816406,1.9198100280761718,1.921809844970703,1.9198100280761718,1.9480000305175782,1.8660000610351561,1.8560000610351564,1.88,1.8780000305175781,1.8260000610351563,1.8360000610351563,1.8560000610351564,1.8719999694824219,1.8560000610351564,1.8419999694824218,1.8619999694824219,1.8580000305175781,1.8060000610351563,1.818000030517578,1.84,1.7160000610351562,1.7560000610351563,1.8039999389648438,1.768000030517578,1.73,1.7,1.67,1.7,1.798000030517578,1.8360000610351563,1.8539999389648438,1.828000030517578,1.8219999694824218,1.8260000610351563,1.8260000610351563,1.82,1.8339999389648438,1.82,1.8260000610351563,1.8,1.78,1.8119999694824218,1.848000030517578,1.8360000610351563,1.8439999389648438,1.7860000610351563,1.758000030517578,1.73,1.73,1.7460000610351563,1.73,1.7560000610351563,1.8439999389648438,1.838000030517578,1.8639999389648438,1.8539999389648438,1.8239999389648438,1.808000030517578,1.82,1.8160000610351563,1.8219999694824218,1.7739999389648438,1.79,1.7719999694824218,1.7960000610351563,1.788000030517578,1.788000030517578,1.7760000610351563,1.8060000610351563,1.8360000610351563,1.818000030517578,1.818000030517578,1.8339999389648438,1.8339999389648438,1.86,1.8580000305175781,1.8539999389648438,1.8519999694824218,1.88,1.8460000610351563,1.8660000610351561,1.84,1.8439999389648438,1.81,1.768000030517578,1.77,1.83,1.7839999389648438,1.741999969482422,1.7080000305175782,1.7180000305175782,1.7639999389648438,1.778000030517578,1.79,1.7860000610351563,1.798000030517578,1.7860000610351563,1.77,1.8219999694824218,1.8160000610351563,1.85,1.8019999694824218,1.8160000610351563,1.8460000610351563,1.8519999694824218,1.8960000610351562,1.901999969482422,1.9439999389648437,1.9480000305175782,1.9439999389648437,1.95,1.92,1.9380000305175782,1.9160000610351562,1.8780000305175781,1.8660000610351561,1.911999969482422,1.9,1.8439999389648438,1.7739999389648438,1.77,1.7280000305175782,1.6839999389648437,1.6319999694824219,1.6460000610351562,1.64,1.6380000305175781,1.5939999389648438,1.63,1.63,1.6360000610351562,1.6,1.6,1.5960000610351563,1.5960000610351563,1.5960000610351563,1.6,1.558000030517578,1.558000030517578,1.548000030517578,1.6139999389648438,1.5860000610351563,1.55,1.6280000305175781,1.6339999389648439,1.6560000610351562,1.6280000305175781,1.66,1.65,1.6439999389648436,1.6980000305175782,1.6219999694824219,1.64,1.6219999694824219,1.5860000610351563,1.5919999694824218,1.588000030517578,1.5760000610351563,1.57,1.5719999694824218,1.57,1.5539999389648438,1.5960000610351563,1.5839999389648438,1.56,1.5460000610351563,1.5139999389648438,1.491999969482422],"volumes":[302238,163487,115186,203618,220706,152621,222845,174976,250481,205227,72087,148922,284114,208405,131913,281095,128786,199246,824608,2160035,128581,89921,5771750,592436,144296,933641,1797671,7231641,767087,690146,414583,304196,369500,525619,313067,295628,548826,944338,558401,372154,263278,553829,399029,234044,722649,385058,1738112,306953,326803,589056,562908,602707,325671,297875,393412,302690,617282,1556431,604867,215508,459900,428029,440204,977633,194619,536683,298790,376102,583068,959261,235839,4489593,1746098,695060,338509,248619,345891,826763,2250708,206411,400709,194185,233197,381764,203925,202701,210207,500644,450852,396545,473799,584001,1204625,496552,309775,333405,289230,295729,1624063,216994,737850,369674,211581,111655,777161,174836,687175,552809,866971,466134,578020,345106,229062,133361,294974,401902,471660,689522,208349,1363773,617476,671805,215766,2909436,920213,597906,869468,184812,663762,1702497,1341288,809188,673468,1449131,407018,128203,580261,364421,1102979,242030,668165,293024,350432,1418687,1348102,1040014,375142,446194,506435,654885,226300,166080,570578,687934,955853,998987,356004,391418,209861,438058,175916,152564,209625,207727,318844,266867,123733,120396,168653,317696,617947,373640,191268,397813,175490,980545,23640,156594,112070,98210,278328,247507,1120792,198617,588567,900754,1228742,405607,567413,762661,439518,248564,282723,584239,818195,1041914,349086,694782,200700,395169,324589,514346,256003,620782,609706,393424,152065,246730,888204,314779,559253,261588,188408,168207,104278,127650,169459,298355,769025,253041,179129,344259,366315,135711,226824,241571,327406,386259,525017,522793,1295334,969216,642031,417359,1009147,881347,1206002,643817,883328,1868030,466213,601361,800507,649721,391739,1111390,1185267,359345,373908,252635,275281,491750,210058,287261,347726,438549,1066549,283052,1562487,1331992,341170,273552,522305,408075,1209783,861324,2237618,250446,1762827,662963,858828],"markers":[{"date":"2025-10-23","type":"BUY","color":"#3C3489","director":"Nigel Lingwood","role":"Chair","shares":50000,"price":1.798,"value":89900.0,"signals":["f1","t2"],"fingerprint":"e868726228af59d2"}]};</script></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Transactions</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Date</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-left">Role</th><th class="px-3 py-2 text-left">Type</th><th class="px-3 py-2 text-right">Shares</th><th class="px-3 py-2 text-right">Price (p)</th><th class="px-3 py-2 text-right">Value (&pound;)</th><th class="px-3 py-2 text-left">Signals</th><th class="px-3 py-2 text-center">Source</th></tr></thead><tbody><tr id="txn-e868726228af59d2" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">23 Oct 2025</td><td class="px-3 py-2 text-slate-700">Nigel Lingwood</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-violet-100 text-violet-700">Chair</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">50,000</td><td class="px-3 py-2 text-right tabular-nums">1.80</td><td class="px-3 py-2 text-right tabular-nums">&pound;89,900</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T2 - Other exec buy (Chair, Group, Director) &gt;= GBP25k. Mid-conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-500 text-white">T2</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/forterra--fort/director-pdmr-shareholding/9190390" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/forterra--fort/director-pdmr-shareholding/9190390">&#8599;</a></td></tr></tbody></table></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Signal-firing history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No signals have fired for this ticker.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Cluster history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No clusters detected for this ticker.</div></section><footer class="px-6 py-4 text-[10px] text-slate-400 border-t border-slate-200"><p>Generated by build_dashboard.py 2026-05-15T07:38:59Z.</p><p>Data: Investegate RNS feed &middot; Yahoo Finance &middot; FTSE All-Share benchmark.</p><p class="mt-2">Historic insider-trading outcomes are not predictive. Net-of-cost CAR assumes 50bps round-trip + 0.5% UK stamp on non-AIM buys.</p></footer>
+<script>
+(function(){
+  const d = window.__priceData || {};
+  const dates = d.dates || [];
+  if (!dates.length) return;
+  const closes = d.closes || [];
+  const volumes = d.volumes || [];
+  const markers = d.markers || [];
+
+  // Build close-by-date map for marker yValue.
+  const closeMap = {};
+  dates.forEach(function(dt, i){ closeMap[dt] = closes[i]; });
+
+  // Use scatter overlay for markers via second dataset on the same chart.
+  const markerDatasets = {};
+  markers.forEach(function(m){
+    const key = m.type + '_' + m.color;
+    if (!markerDatasets[key]){
+      markerDatasets[key] = {
+        label: m.type,
+        type: 'scatter',
+        data: [],
+        backgroundColor: m.color,
+        borderColor: '#ffffff',
+        borderWidth: 1.5,
+        pointStyle: m.type === 'SELL' ? 'triangle' : 'triangle',
+        pointRotation: m.type === 'SELL' ? 180 : 0,
+        radius: 6,
+        showLine: false,
+        order: 0,
+        _markers: []
+      };
+    }
+    markerDatasets[key].data.push({ x: m.date, y: closeMap[m.date] });
+    markerDatasets[key]._markers.push(m);
+  });
+
+  const pCtx = document.getElementById('priceChart');
+  if (!pCtx) return;
+  const ds = [{
+    label: 'Close',
+    type: 'line',
+    data: dates.map(function(dt, i){ return { x: dt, y: closes[i] }; }),
+    borderColor: '#475569', borderWidth: 1.5, pointRadius: 0, tension: 0, order: 1
+  }].concat(Object.keys(markerDatasets).map(function(k){ return markerDatasets[k]; }));
+
+  window.__priceChart = new Chart(pCtx, {
+    type: 'line',
+    data: { datasets: ds },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      parsing: false,
+      scales: {
+        x: { type: 'category', labels: dates, ticks: { maxRotation: 0, font: { size: 10 } } },
+        y: { ticks: { font: { size: 10 } } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx){
+              if (ctx.dataset.type !== 'scatter') return ctx.dataset.label + ': ' + ctx.parsed.y;
+              const idx = ctx.dataIndex;
+              const m = ctx.dataset._markers[idx] || {};
+              return [
+                m.director + ' (' + m.role + ')',
+                m.type + ' ' + m.shares + ' sh @ ' + m.price.toFixed(2) + 'p',
+                'GBP ' + (m.value||0).toLocaleString(),
+                'Signals: ' + (m.signals || []).join(', ')
+              ];
+            }
+          }
+        }
+      },
+      onClick: function(evt, els){
+        if (!els.length) return;
+        const el = els[0];
+        const dsx = el.datasetIndex;
+        const dataset = ds[dsx];
+        if (dataset.type !== 'scatter') return;
+        const m = dataset._markers[el.index];
+        if (!m || !m.fingerprint) return;
+        const row = document.getElementById('txn-' + m.fingerprint);
+        if (row){
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          row.classList.add('pulse-highlight');
+          setTimeout(function(){ row.classList.remove('pulse-highlight'); }, 2000);
+        }
+      }
+    }
+  });
+
+  const vCtx = document.getElementById('volumeChart');
+  if (vCtx) {
+    window.__volChart = new Chart(vCtx, {
+      type: 'bar',
+      data: { labels: dates, datasets: [{ data: volumes, backgroundColor: '#cbd5e1' }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        }
+      }
+    });
+  }
+})();
+</script>
+
+</main>
+<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-05-15 07:38 UTC &middot; build local</footer>
+
+<script>
+(function(){
+  const $ = function(id){ return document.getElementById(id); };
+  let pollTimer = null;
+  let lastStatus = 'idle';
+
+  function setBtn(label, disabled){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    const lab = $('refreshBtnLabel');
+    if (lab) lab.textContent = label;
+    btn.disabled = !!disabled;
+    btn.classList.toggle('opacity-60', !!disabled);
+    btn.classList.toggle('cursor-not-allowed', !!disabled);
+  }
+  function showToast(msg, ok){
+    const t = document.createElement('div');
+    t.className = (ok ? 'bg-emerald-600' : 'bg-rose-600')
+      + ' fixed bottom-4 right-4 text-white text-xs px-4 py-2 rounded shadow-lg z-50';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, ok ? 4000 : 8000);
+  }
+  function startPolling(){
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(pollStatus, 5000);
+    pollStatus();
+  }
+  function stopPolling(){
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+  function pollStatus(){
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        lastStatus = s.status || 'idle';
+        if (lastStatus === 'running'){
+          const step = s.step_label || s.step || 'Working...';
+          setBtn('Refreshing - ' + step, true);
+        } else if (lastStatus === 'done'){
+          stopPolling();
+          showToast('Refresh complete. Reloading...', true);
+          setTimeout(function(){ window.location.reload(); }, 800);
+        } else if (lastStatus === 'error'){
+          stopPolling();
+          setBtn('Refresh', false);
+          showToast('Refresh failed: ' + (s.error || 'unknown'), false);
+        } else {
+          setBtn('Refresh', false);
+        }
+      }).catch(function(){ /* swallow */ });
+  }
+  function closeModal(){
+    const m = $('refreshModal');
+    if (m) m.remove();
+  }
+  function openConfirmModal(){
+    const modal = document.createElement('div');
+    modal.id = 'refreshModal';
+    modal.className = 'fixed inset-0 bg-slate-900/40 flex items-center '
+      + 'justify-center z-50';
+    modal.innerHTML =
+      '<div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">'
+      + '<h3 class="text-sm font-semibold text-slate-900 mb-2">'
+      + 'Run full refresh pipeline?</h3>'
+      + '<p class="text-xs text-slate-700 mb-3 leading-relaxed">'
+      + 'This will run the 6-step pipeline end-to-end:</p>'
+      + '<ol class="text-xs text-slate-700 mb-4 list-decimal pl-5 space-y-1">'
+      + '<li>Scrape Investegate RNS (last 60 days)</li>'
+      + '<li>Backfill share prices (Yahoo)</li>'
+      + '<li>Update sector benchmarks</li>'
+      + '<li>Recompute signal firings</li>'
+      + '<li>Rebuild signals/dealings JSON</li>'
+      + '<li>Regenerate dashboard HTML</li>'
+      + '</ol>'
+      + '<div class="bg-amber-50 border border-amber-200 rounded p-3 mb-4">'
+      + '<p class="text-[11px] text-amber-800 font-medium mb-1">'
+      + 'Heads up</p>'
+      + '<p class="text-[11px] text-amber-700 leading-relaxed">'
+      + 'Takes ~15-30 min. The scrape step uses Anthropic LLM credits '
+      + '(budget cap ~$50/run, set in run_scrape.py). Yahoo Finance may '
+      + 'rate-limit if run too often.</p>'
+      + '</div>'
+      + '<label class="flex items-center gap-2 text-xs text-slate-700 mb-4">'
+      + '<input id="refreshNoLlm" type="checkbox" class="rounded">'
+      + 'Skip LLM fallback (regex-only parsing)'
+      + '</label>'
+      + '<div class="flex justify-end gap-2">'
+      + '<button id="refreshCancel" class="px-3 py-1.5 text-xs border '
+      + 'border-slate-300 rounded text-slate-600 hover:bg-slate-50">'
+      + 'Cancel</button>'
+      + '<button id="refreshConfirm" class="px-3 py-1.5 text-xs '
+      + 'bg-indigo-600 text-white rounded hover:bg-indigo-700">'
+      + 'Run pipeline</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+    $('refreshCancel').onclick = closeModal;
+    $('refreshConfirm').onclick = function(){
+      const noLlm = $('refreshNoLlm').checked;
+      closeModal();
+      setBtn('Starting...', true);
+      fetch('/api/refresh-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scrape_days: 60, no_llm: noLlm })
+      }).then(function(resp){
+        if (resp.status === 409){
+          showToast('A refresh is already running.', false);
+        } else if (!resp.ok){
+          throw new Error('HTTP ' + resp.status);
+        } else {
+          showToast('Refresh started.', true);
+        }
+        startPolling();
+      }).catch(function(err){
+        setBtn('Refresh', false);
+        var hint = err.message;
+        if (/failed to fetch/i.test(hint)){
+          hint = 'server unreachable. Run `python server.py` and visit '
+            + 'http://localhost:5000 in your browser.';
+        }
+        showToast('Could not start refresh: ' + hint, false);
+      });
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    // If the page was opened via file://, no Flask server is reachable.
+    // Disable the button and tell the user how to fix it -- silent
+    // "Failed to fetch" errors are the #1 confusion point.
+    if (window.location.protocol === 'file:'){
+      setBtn('Refresh (start server)', true);
+      btn.title = 'This page was opened from disk (file://). Run '
+        + '`python server.py` and visit http://localhost:5000 to enable '
+        + 'the Refresh button.';
+      btn.addEventListener('click', function(){
+        showToast('Open http://localhost:5000 (run python server.py first) '
+          + 'to use Refresh.', false);
+      });
+      return;
+    }
+    btn.addEventListener('click', openConfirmModal);
+    // On load, check status -- if running, attach to existing pipeline.
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        if (s.status === 'running'){
+          setBtn('Refreshing - ' + (s.step_label || 'Working...'), true);
+          startPolling();
+        }
+      }).catch(function(err){
+        // Server unreachable on a non-file:// page -- the server died
+        // or is on a different host. Tell the user something useful.
+        setBtn('Refresh (server down)', true);
+        btn.title = 'Could not reach /api/refresh-status. Is the Flask '
+          + 'server still running? Try restarting `python server.py`.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

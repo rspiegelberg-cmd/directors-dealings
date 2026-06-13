@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-sha" content="local">
+<title>AUSC - ABRDN UK SMALLER COMPANIES GROWTH TRUST PLC</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+<style>
+  html, body { background:#f8fafc; color:#0f172a; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .pulse-highlight { animation: pulseBg 2s ease-out 1; }
+  @keyframes pulseBg {
+    0%   { background-color: #fef3c7; }
+    100% { background-color: transparent; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+<header class="border-b border-slate-200 bg-white px-6 h-12 flex items-center justify-between">
+<h1 class="text-sm font-semibold text-slate-900 tracking-tight">AUSC - ABRDN UK SMALLER COMPANIES GROWTH TRUST PLC</h1>
+<nav class="flex items-center"><button id="refreshBtn" type="button" class="text-xs px-2.5 py-1 rounded border border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5" title="Run the full refresh pipeline (scrape -> parse -> backfill -> eval -> rebuild). Slow (~15+ min) and uses LLM credits."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span id="refreshBtnLabel">Refresh</span></button><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Today</a> <a href="../performance.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Performance</a></nav>
+</header>
+<main class="max-w-7xl mx-auto">
+<header class="border-b border-slate-200 bg-white px-6 py-4"><div class="flex items-center justify-between mb-1"><div class="flex items-center"><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 mr-4">&larr; Dashboard</a><h1 class="text-lg font-semibold text-slate-900 tabular-nums">AUSC</h1><span class="text-sm text-slate-600 ml-2">ABRDN UK SMALLER COMPANIES GROWTH TRUST PLC</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Unknown sector</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Main</span></div></div><div class="flex items-center justify-between"><div class="text-sm tabular-nums">Latest close: 4.90p <span class="text-rose-600 ml-2">&#9660; -1.29%</span></div><div class="text-[10px] text-slate-400">Last refresh: 2026-05-15T13:21:15Z</div></div></header><section class="m-6 bg-white border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-center mb-3"><h2 class="text-xs uppercase tracking-wide text-slate-500">Price (trailing window)</h2></div><div class="relative h-72"><canvas id="priceChart"></canvas></div><div class="relative h-16 mt-1"><canvas id="volumeChart"></canvas></div><script>window.__priceData = {"dates":["2025-04-15","2025-04-16","2025-04-17","2025-04-22","2025-04-23","2025-04-24","2025-04-25","2025-04-28","2025-04-29","2025-04-30","2025-05-01","2025-05-02","2025-05-06","2025-05-07","2025-05-08","2025-05-09","2025-05-12","2025-05-13","2025-05-14","2025-05-15","2025-05-16","2025-05-19","2025-05-20","2025-05-21","2025-05-22","2025-05-23","2025-05-27","2025-05-28","2025-05-29","2025-05-30","2025-06-02","2025-06-03","2025-06-04","2025-06-05","2025-06-06","2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-07","2025-07-08","2025-07-09","2025-07-10","2025-07-11","2025-07-14","2025-07-15","2025-07-16","2025-07-17","2025-07-18","2025-07-21","2025-07-22","2025-07-23","2025-07-24","2025-07-25","2025-07-28","2025-07-29","2025-07-30","2025-07-31","2025-08-01","2025-08-04","2025-08-05","2025-08-06","2025-08-07","2025-08-08","2025-08-11","2025-08-12","2025-08-13","2025-08-14","2025-08-15","2025-08-18","2025-08-19","2025-08-20","2025-08-21","2025-08-22","2025-08-26","2025-08-27","2025-08-28","2025-08-29","2025-09-01","2025-09-02","2025-09-03","2025-09-04","2025-09-05","2025-09-08","2025-09-09","2025-09-10","2025-09-11","2025-09-12","2025-09-15","2025-09-16","2025-09-17","2025-09-18","2025-09-19","2025-09-22","2025-09-23","2025-09-24","2025-09-25","2025-09-26","2025-09-29","2025-09-30","2025-10-01","2025-10-02","2025-10-03","2025-10-06","2025-10-07","2025-10-08","2025-10-09","2025-10-10","2025-10-13","2025-10-14","2025-10-15","2025-10-16","2025-10-17","2025-10-20","2025-10-21","2025-10-22","2025-10-23","2025-10-24","2025-10-27","2025-10-28","2025-10-29","2025-10-30","2025-10-31","2025-11-03","2025-11-04","2025-11-05","2025-11-06","2025-11-07","2025-11-10","2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-17","2025-11-18","2025-11-19","2025-11-20","2025-11-21","2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-22","2025-12-23","2025-12-24","2025-12-29","2025-12-30","2025-12-31","2026-01-02","2026-01-05","2026-01-06","2026-01-07","2026-01-08","2026-01-09","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-19","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15"],"closes":[4.568749694824219,4.618736267089844,4.608738708496094,4.563751220703125,4.64872802734375,4.6787197875976565,4.688717041015625,4.738703308105468,4.768695068359375,4.7936880493164065,4.848673400878906,4.963641662597656,4.988634948730469,4.998632202148437,5.048618469238281,5.078610229492187,5.098604736328125,5.098604736328125,5.108601989746094,5.088607482910156,5.118599243164063,5.12859619140625,5.208574829101562,5.188579711914063,5.13859375,5.108601989746094,5.158588256835937,5.148590698242187,5.12859619140625,5.158588256835937,5.148590698242187,5.148590698242187,5.158588256835937,5.168585205078125,5.168585205078125,5.198577880859375,5.198577880859375,5.198577880859375,5.178582763671875,5.13859375,5.158588256835937,5.148590698242187,5.158588256835937,5.12859619140625,5.13859375,5.13859375,5.178582763671875,5.158588256835937,5.218572387695312,5.2985498046875,5.288552856445312,5.23856689453125,5.198577880859375,5.23856689453125,5.2285693359375,5.218572387695312,5.278555908203125,5.258561401367188,5.30854736328125,5.278555908203125,5.278555908203125,5.278555908203125,5.258561401367188,5.258561401367188,5.278555908203125,5.278555908203125,5.248563842773438,5.268558349609375,5.278555908203125,5.2985498046875,5.268558349609375,5.2285693359375,5.2285693359375,5.258561401367188,5.218572387695312,5.208574829101562,5.248563842773438,5.2285693359375,5.248563842773438,5.248563842773438,5.248563842773438,5.218572387695312,5.23856689453125,5.208574829101562,5.218572387695312,5.208574829101562,5.2285693359375,5.198577880859375,5.218572387695312,5.2985498046875,5.248563842773438,5.23856689453125,5.218572387695312,5.198577880859375,5.208574829101562,5.108601989746094,5.088607482910156,5.118599243164063,5.13859375,5.158588256835937,5.148590698242187,5.13859375,5.12859619140625,5.178582763671875,5.13859375,5.118599243164063,5.158588256835937,5.168585205078125,5.098604736328125,5.118599243164063,5.13859375,5.118599243164063,5.068612976074219,5.088607482910156,5.108601989746094,5.148590698242187,5.158588256835937,5.198577880859375,5.248563842773438,5.208574829101562,5.198577880859375,5.218572387695312,5.198577880859375,5.148590698242187,5.168585205078125,5.168585205078125,5.168585205078125,5.148590698242187,5.078610229492187,5.108601989746094,5.118599243164063,5.198577880859375,5.258561401367188,5.268558349609375,5.288552856445312,5.288552856445312,5.268558349609375,5.159518432617188,5.139520263671875,5.14951904296875,5.079525756835937,5.09952392578125,5.039529418945312,4.9695361328125,4.984534606933594,5.0195315551757815,5.029530639648438,5.0195315551757815,4.949537963867187,4.924540405273437,4.854546813964844,4.869545288085938,4.874544982910156,4.859546508789062,4.899542541503906,4.9695361328125,5.009532470703125,5.049528503417969,5.109523010253906,5.09952392578125,5.039529418945312,5.039529418945312,5.029530639648438,5.029530639648438,4.989534301757812,4.989534301757812,4.989534301757812,4.974535522460937,4.989534301757812,4.9995333862304685,5.0195315551757815,5.039529418945312,5.0195315551757815,5.029530639648438,5.0195315551757815,5.009532470703125,4.9995333862304685,5.029530639648438,5.049528503417969,5.039529418945312,5.0195315551757815,5.029530639648438,5.079525756835937,5.089524841308593,5.129520874023438,5.14951904296875,5.169517211914062,5.14951904296875,5.129520874023438,5.209513549804687,5.22951171875,5.1795166015625,5.129520874023438,5.169517211914062,5.249509887695313,5.239511108398437,5.219512939453125,5.219512939453125,5.189515380859375,5.159518432617188,5.169517211914062,5.209513549804687,5.169517211914062,5.199514770507813,5.109523010253906,5.129520874023438,5.169517211914062,5.159518432617188,5.14951904296875,5.139520263671875,5.1795166015625,5.159518432617188,5.189515380859375,5.189515380859375,5.1795166015625,5.219512939453125,5.209513549804687,5.189515380859375,5.189515380859375,5.219512939453125,5.239511108398437,5.129520874023438,4.9695361328125,5.009532470703125,4.99453369140625,5.009532470703125,4.884544067382812,4.939538879394531,4.939538879394531,4.894543151855469,4.819550170898437,4.794552307128907,4.83954833984375,4.819550170898437,4.675,4.615,4.58,4.58,4.63,4.64,4.54,4.51,4.585,4.685,4.69,4.675,4.9,4.89,4.925,4.915,5.01,5.02,5.04,5.1,5.06,5.08,5.07,5.02,4.995,4.96,4.935,4.89,4.915,4.93,4.91,4.99,4.99,5.0,5.02,4.91,4.925,4.96,4.89625],"volumes":[497040,264321,162289,32888,204223,126305,46058,312058,74642,379660,128668,222829,205458,160058,408072,146326,155354,85670,205272,138464,64736,205998,293249,76690,67693,117884,386366,239913,36600,90448,324464,142350,200737,174959,215672,100114,211933,232666,132625,194129,323455,110685,159562,291639,584005,260152,268416,91744,507495,280263,111180,31059,274413,81541,30393,138629,253511,223080,186995,232140,221619,544013,210340,193346,412503,153036,177911,115670,263772,190884,295248,227638,301088,940823,225148,337196,258658,266612,342552,288733,237769,257177,288492,162769,311610,277726,203422,89435,277032,254619,145813,286456,174482,85201,419422,214522,60202,192118,238626,126661,91793,1077783,63771,193850,175637,354157,176469,137739,207634,156331,137336,263316,166262,334994,165353,231474,249306,158716,236402,166868,194255,154541,237250,200122,148474,254683,144592,214912,287051,261535,289349,323244,347015,291868,271229,274352,245693,262921,252498,293942,361567,300983,276310,318959,417994,388161,371342,256190,177611,275975,231386,396572,493492,443673,368871,375440,442174,210073,186333,249058,595095,240632,447625,488916,311689,517657,370678,398190,254559,377326,311674,174222,53494,104052,90404,89785,20679,233283,256456,142788,205425,130884,352341,337022,308915,396990,186799,334563,210886,275813,342067,354785,228348,171922,290031,344606,229784,367437,265959,309279,368597,302204,323807,213197,396264,111048,230929,339133,346483,340196,305042,118199,47138,120158,73646,207004,453090,279906,283921,84927,104836,54426,90174,575226,405035,324494,282200,210434,259815,166679,266736,130566,56791,95655,167820,180997,132881,409442,209244,170274,288725,140572,68005,75149,71129,177274,56721,51602,178533,53993,70350,179585,113568,132449,139509,102336,72594,111368,140313,70752,135453,206149,49454,89423,112378,51505,554488,105398,241236,124931,248762,53035,17480],"markers":[{"date":"2026-05-14","type":"BUY","mtype":"ned_buy","color":"#4ade80","director":"ALEXA HENDERSON","role":"NON-EXECUTIVE DIRECTOR","shares":5543,"price":5.1314,"value":28443.35,"signals":["f1","t3"],"fingerprint":"15fa59448dbd866e"}]};</script></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Transactions</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Date</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-left">Role</th><th class="px-3 py-2 text-left">Type</th><th class="px-3 py-2 text-right">Shares</th><th class="px-3 py-2 text-right">Price (p)</th><th class="px-3 py-2 text-right">Value (&pound;)</th><th class="px-3 py-2 text-left">Signals</th><th class="px-3 py-2 text-center">Source</th></tr></thead><tbody><tr id="txn-15fa59448dbd866e" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">14 May 2026</td><td class="px-3 py-2 text-slate-700">ALEXA HENDERSON</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">NON-EXECUTIVE DIRECTOR</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">5,543</td><td class="px-3 py-2 text-right tabular-nums">5.13</td><td class="px-3 py-2 text-right tabular-nums">&pound;28,443</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T3 - NED (non-executive director) buy &gt;= GBP10k. Lower conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500 text-white">T3</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/abrdn-uk-smaller-companies-growth-trust--ausc/director-pdmr-shareholding/8895439" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/abrdn-uk-smaller-companies-growth-trust--ausc/director-pdmr-shareholding/8895439">&#8599;</a></td></tr></tbody></table></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Signal-firing history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No signals have fired for this ticker.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Cluster history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No clusters detected for this ticker.</div></section><footer class="px-6 py-4 text-[10px] text-slate-400 border-t border-slate-200"><p>Generated by build_dashboard.py 2026-05-15T13:21:15Z.</p><p>Data: Investegate RNS feed &middot; Yahoo Finance &middot; FTSE All-Share benchmark.</p><p class="mt-2">Historic insider-trading outcomes are not predictive. Net-of-cost CAR assumes 50bps round-trip + 0.5% UK stamp on non-AIM buys.</p></footer>
+<script>
+(function(){
+  const d = window.__priceData || {};
+  const dates = d.dates || [];
+  if (!dates.length) return;
+  const closes = d.closes || [];
+  const volumes = d.volumes || [];
+  const markers = d.markers || [];
+
+  // Build close-by-date map for marker yValue.
+  const closeMap = {};
+  dates.forEach(function(dt, i){ closeMap[dt] = closes[i]; });
+
+  // U4 vivid marker palette — keyed by mtype.
+  // exec_buy/ned_buy: triangle-up, white halo.
+  // sell: triangle-down, white halo.
+  // grant: square (rect), white halo.
+  // cluster: circle ring, violet stroke, no fill, drawn BEHIND transactions.
+  var MSTYLE = {
+    exec_buy: { label:'Exec Buy',   bg:'#16a34a',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:7,  ord:1 },
+    ned_buy:  { label:'NED Buy',    bg:'#4ade80',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:6,  ord:1 },
+    sell:     { label:'Sell',       bg:'#dc2626',        bc:'#ffffff', bw:3,   ps:'triangle', rot:180, r:7,  ord:1 },
+    grant:    { label:'Grant/SIP',  bg:'#d97706',        bc:'#ffffff', bw:2.5, ps:'rect',     rot:0,   r:5,  ord:1 },
+    cluster:  { label:'S1 Cluster', bg:'rgba(0,0,0,0)',  bc:'#7c3aed', bw:2.5, ps:'circle',   rot:0,   r:11, ord:2 }
+  };
+
+  // Group markers by mtype.
+  var markerDatasets = {};
+  markers.forEach(function(m){
+    var mtype = m.mtype || 'exec_buy';
+    if (!markerDatasets[mtype]){
+      var st = MSTYLE[mtype] || MSTYLE.exec_buy;
+      markerDatasets[mtype] = {
+        label: st.label,
+        type: 'scatter',
+        data: [],
+        backgroundColor: st.bg,
+        borderColor: st.bc,
+        borderWidth: st.bw,
+        pointStyle: st.ps,
+        rotation: st.rot,
+        pointRotation: st.rot,
+        radius: st.r,
+        hoverRadius: st.r + 2,
+        showLine: false,
+        order: st.ord,
+        _markers: []
+      };
+    }
+    var y = closeMap[m.date];
+    markerDatasets[mtype].data.push({ x: m.date, y: y });
+    markerDatasets[mtype]._markers.push(m);
+  });
+
+  const pCtx = document.getElementById('priceChart');
+  if (!pCtx) return;
+
+  // Price line first (order:0), then transaction markers (order:1),
+  // then cluster rings on top (order:2 — drawn last so ring encircles marker).
+  var markerList = Object.keys(markerDatasets)
+    .sort(function(a,b){ return (markerDatasets[a].order||1)-(markerDatasets[b].order||1); })
+    .map(function(k){ return markerDatasets[k]; });
+
+  const ds = [{
+    label: 'Close',
+    type: 'line',
+    data: dates.map(function(dt, i){ return { x: dt, y: closes[i] }; }),
+    borderColor: '#475569', borderWidth: 1.5, pointRadius: 0, tension: 0, order: 0
+  }].concat(markerList);
+
+  window.__priceChart = new Chart(pCtx, {
+    type: 'line',
+    data: { datasets: ds },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      parsing: false,
+      scales: {
+        x: { type: 'category', labels: dates, ticks: { maxRotation: 0, font: { size: 10 } } },
+        y: { ticks: { font: { size: 10 } } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx){
+              if (ctx.dataset.type !== 'scatter') return ctx.dataset.label + ': ' + ctx.parsed.y;
+              var idx = ctx.dataIndex;
+              var m = ctx.dataset._markers[idx] || {};
+              if (m.mtype === 'cluster'){
+                return ['S1 Cluster signal fired', 'Date: ' + m.date];
+              }
+              var lines = [];
+              if (m.director) lines.push(m.director + (m.role ? ' (' + m.role + ')' : ''));
+              lines.push(m.type + (m.shares ? ' ' + m.shares + ' sh @ ' + (m.price||0).toFixed(2) + 'p' : ''));
+              if (m.value) lines.push('£' + (m.value||0).toLocaleString());
+              if (m.signals && m.signals.length) lines.push('Signal: ' + m.signals.join(', '));
+              return lines;
+            }
+          }
+        }
+      },
+      onClick: function(evt, els){
+        if (!els.length) return;
+        var el = els[0];
+        var dataset = ds[el.datasetIndex];
+        if (!dataset || dataset.type !== 'scatter') return;
+        var m = dataset._markers[el.index];
+        // Cluster rings have no table row — skip scroll.
+        if (!m || !m.fingerprint || m.mtype === 'cluster') return;
+        var row = document.getElementById('txn-' + m.fingerprint);
+        if (row){
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          row.classList.add('pulse-highlight');
+          setTimeout(function(){ row.classList.remove('pulse-highlight'); }, 2000);
+        }
+      }
+    }
+  });
+
+  const vCtx = document.getElementById('volumeChart');
+  if (vCtx) {
+    window.__volChart = new Chart(vCtx, {
+      type: 'bar',
+      data: { labels: dates, datasets: [{ data: volumes, backgroundColor: '#cbd5e1' }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        }
+      }
+    });
+  }
+})();
+</script>
+
+</main>
+<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-05-15 13:21 UTC &middot; build local</footer>
+
+<script>
+(function(){
+  const $ = function(id){ return document.getElementById(id); };
+  let pollTimer = null;
+  let lastStatus = 'idle';
+
+  function setBtn(label, disabled){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    const lab = $('refreshBtnLabel');
+    if (lab) lab.textContent = label;
+    btn.disabled = !!disabled;
+    btn.classList.toggle('opacity-60', !!disabled);
+    btn.classList.toggle('cursor-not-allowed', !!disabled);
+  }
+  function showToast(msg, ok){
+    const t = document.createElement('div');
+    t.className = (ok ? 'bg-emerald-600' : 'bg-rose-600')
+      + ' fixed bottom-4 right-4 text-white text-xs px-4 py-2 rounded shadow-lg z-50';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, ok ? 4000 : 8000);
+  }
+  function startPolling(){
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(pollStatus, 5000);
+    pollStatus();
+  }
+  function stopPolling(){
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+  function pollStatus(){
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        lastStatus = s.status || 'idle';
+        if (lastStatus === 'running'){
+          const step = s.step_label || s.step || 'Working...';
+          setBtn('Refreshing - ' + step, true);
+        } else if (lastStatus === 'done'){
+          stopPolling();
+          showToast('Refresh complete. Reloading...', true);
+          setTimeout(function(){ window.location.reload(); }, 800);
+        } else if (lastStatus === 'error'){
+          stopPolling();
+          setBtn('Refresh', false);
+          showToast('Refresh failed: ' + (s.error || 'unknown'), false);
+        } else {
+          setBtn('Refresh', false);
+        }
+      }).catch(function(){ /* swallow */ });
+  }
+  function closeModal(){
+    const m = $('refreshModal');
+    if (m) m.remove();
+  }
+  function openConfirmModal(){
+    const modal = document.createElement('div');
+    modal.id = 'refreshModal';
+    modal.className = 'fixed inset-0 bg-slate-900/40 flex items-center '
+      + 'justify-center z-50';
+    modal.innerHTML =
+      '<div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">'
+      + '<h3 class="text-sm font-semibold text-slate-900 mb-2">'
+      + 'Run full refresh pipeline?</h3>'
+      + '<p class="text-xs text-slate-700 mb-3 leading-relaxed">'
+      + 'This will run the 6-step pipeline end-to-end:</p>'
+      + '<ol class="text-xs text-slate-700 mb-4 list-decimal pl-5 space-y-1">'
+      + '<li>Scrape Investegate RNS (last 60 days)</li>'
+      + '<li>Backfill share prices (Yahoo)</li>'
+      + '<li>Update sector benchmarks</li>'
+      + '<li>Recompute signal firings</li>'
+      + '<li>Rebuild signals/dealings JSON</li>'
+      + '<li>Regenerate dashboard HTML</li>'
+      + '</ol>'
+      + '<div class="bg-amber-50 border border-amber-200 rounded p-3 mb-4">'
+      + '<p class="text-[11px] text-amber-800 font-medium mb-1">'
+      + 'Heads up</p>'
+      + '<p class="text-[11px] text-amber-700 leading-relaxed">'
+      + 'Takes ~15-30 min. The scrape step uses Anthropic LLM credits '
+      + '(budget cap ~$50/run, set in run_scrape.py). Yahoo Finance may '
+      + 'rate-limit if run too often.</p>'
+      + '</div>'
+      + '<label class="flex items-center gap-2 text-xs text-slate-700 mb-4">'
+      + '<input id="refreshNoLlm" type="checkbox" class="rounded">'
+      + 'Skip LLM fallback (regex-only parsing)'
+      + '</label>'
+      + '<div class="flex justify-end gap-2">'
+      + '<button id="refreshCancel" class="px-3 py-1.5 text-xs border '
+      + 'border-slate-300 rounded text-slate-600 hover:bg-slate-50">'
+      + 'Cancel</button>'
+      + '<button id="refreshConfirm" class="px-3 py-1.5 text-xs '
+      + 'bg-indigo-600 text-white rounded hover:bg-indigo-700">'
+      + 'Run pipeline</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+    $('refreshCancel').onclick = closeModal;
+    $('refreshConfirm').onclick = function(){
+      const noLlm = $('refreshNoLlm').checked;
+      closeModal();
+      setBtn('Starting...', true);
+      fetch('/api/refresh-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ no_llm: noLlm })
+      }).then(function(resp){
+        if (resp.status === 409){
+          showToast('A refresh is already running.', false);
+        } else if (!resp.ok){
+          throw new Error('HTTP ' + resp.status);
+        } else {
+          showToast('Refresh started.', true);
+        }
+        startPolling();
+      }).catch(function(err){
+        setBtn('Refresh', false);
+        var hint = err.message;
+        if (/failed to fetch/i.test(hint)){
+          hint = 'server unreachable. Run `python server.py` and visit '
+            + 'http://localhost:5000 in your browser.';
+        }
+        showToast('Could not start refresh: ' + hint, false);
+      });
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    // If the page was opened via file://, no Flask server is reachable.
+    // Disable the button and tell the user how to fix it -- silent
+    // "Failed to fetch" errors are the #1 confusion point.
+    if (window.location.protocol === 'file:'){
+      setBtn('Refresh (start server)', true);
+      btn.title = 'This page was opened from disk (file://). Run '
+        + '`python server.py` and visit http://localhost:5000 to enable '
+        + 'the Refresh button.';
+      btn.addEventListener('click', function(){
+        showToast('Open http://localhost:5000 (run python server.py first) '
+          + 'to use Refresh.', false);
+      });
+      return;
+    }
+    btn.addEventListener('click', openConfirmModal);
+    // On load, check status -- if running, attach to existing pipeline.
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        if (s.status === 'running'){
+          setBtn('Refreshing - ' + (s.step_label || 'Working...'), true);
+          startPolling();
+        }
+      }).catch(function(err){
+        // Server unreachable on a non-file:// page -- the server died
+        // or is on a different host. Tell the user something useful.
+        setBtn('Refresh (server down)', true);
+        btn.title = 'Could not reach /api/refresh-status. Is the Flask '
+          + 'server still running? Try restarting `python server.py`.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

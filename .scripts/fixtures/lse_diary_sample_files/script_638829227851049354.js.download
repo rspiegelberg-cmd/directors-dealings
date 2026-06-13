@@ -1,0 +1,26 @@
+(function() {
+  var script = document.currentScript;
+  var config = JSON.parse(script.getAttribute('data-args'));
+  var parent = script.parentElement;
+
+
+(function (config, parent, clinchSdk) {
+	const externalScriptUrl = `https://cdn.clinch.co/a_client/1405/widget_js/clinch_legal_standard_tesco.js?${+new Date()}`;
+
+	fetch(externalScriptUrl)
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error("Network response was not ok: " + response.statusText);
+			}
+			return response.text();
+		})
+		.then((scriptText) => {
+			new Function("config", "parent", "clinchSdk", scriptText)(config, parent, clinchSdk);
+		})
+		.catch((error) => {
+			console.error("Error loading external script:", error);
+		});
+})(config, parent, clinchSdk);
+
+
+})();

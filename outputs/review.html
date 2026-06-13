@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Directors Dealings — PDMR Review</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<style>
+  html, body { background:#f8fafc; color:#0f172a; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+
+  .bk-could_not_classify { background:#fef3c7; color:#92400e; }
+  .bk-corporate_actions  { background:#dbeafe; color:#1e40af; }
+  .bk-data_quirks        { background:#f3e8ff; color:#6b21a8; }
+  .bk-multi_tranche      { background:#d1fae5; color:#065f46; }
+  .bk-other              { background:#f1f5f9; color:#475569; }
+  .bk-foreign_currency   { background:#fee2e2; color:#991b1b; }
+  .bk-bundled_multi_pdmr { background:#fce7f3; color:#9d174d; }
+
+  #viewer        { display:none; }
+  #viewer.active { display:flex; }
+
+  .form-input {
+    width:100%; border:1px solid #e2e8f0; border-radius:0.375rem;
+    padding:0.3rem 0.5rem; font-size:0.875rem; color:#0f172a;
+    background:#fff; transition:border-color .15s;
+  }
+  .form-input:focus { outline:none; border-color:#6366f1; box-shadow:0 0 0 2px #eef2ff; }
+  .form-input.error { border-color:#ef4444; }
+  .field-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:.05em; color:#64748b; }
+  .field-error { font-size:0.7rem; color:#dc2626; margin-top:1px; }
+  .field-warn  { font-size:0.7rem; color:#d97706; margin-top:1px; }
+
+  .tab-btn.active { border-bottom:2px solid #4f46e5; color:#4338ca; font-weight:600; }
+
+  /* Queue panel slide-up */
+  #queue-panel { max-height:0; overflow:hidden; transition:max-height .3s ease; }
+  #queue-panel.open { max-height:28rem; overflow-y:auto; }
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<!-- ── Header ──────────────────────────────────────────────────────────────── -->
+<header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-3 sticky top-0 z-30 flex-shrink-0">
+  <a href="/" class="text-slate-500 hover:text-indigo-600 text-sm">← Dashboard</a>
+  <span class="text-slate-300">|</span>
+  <h1 class="font-semibold text-slate-800">PDMR Review</h1>
+  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">Phase 4 — Complete</span>
+  <div class="ml-auto flex items-center gap-4 text-sm">
+    <span id="header-pending-count" class="text-slate-400"></span>
+    <button id="queue-toggle-btn"
+            class="flex items-center gap-1.5 px-3 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 text-sm text-slate-600"
+            onclick="toggleQueuePanel()">
+      <span id="queue-badge" class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">0</span>
+      edits staged
+    </button>
+    <button id="audit-toggle-btn"
+            class="flex items-center gap-1.5 px-3 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 text-sm text-slate-600"
+            onclick="toggleAuditPanel()">
+      ↺ Audit &amp; Undo
+    </button>
+  </div>
+</header>
+
+<!-- ── Staged-edits queue panel (collapsible) ──────────────────────────────── -->
+<div id="queue-panel" class="bg-amber-50 border-b border-amber-200 flex-shrink-0">
+  <div class="px-6 py-3 space-y-2">
+    <div class="flex items-center gap-3">
+      <span class="text-xs font-semibold text-amber-800 uppercase tracking-wider">Staged edits</span>
+      <span class="text-xs text-amber-600">Edits are queued — nothing written to the DB yet.</span>
+      <div class="ml-auto flex items-center gap-2">
+        <button id="btn-apply"
+                onclick="applyEdits()"
+                class="px-4 py-1.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed">
+          ✓ Apply &amp; publish
+        </button>
+      </div>
+    </div>
+    <!-- Progress bar (hidden when idle) -->
+    <div id="apply-progress" class="hidden rounded bg-white border border-amber-200 px-3 py-2 text-xs space-y-1.5">
+      <div class="flex items-center gap-2">
+        <div id="apply-spinner" class="w-3 h-3 border-2 border-emerald-300 border-t-emerald-600 rounded-full animate-spin flex-shrink-0"></div>
+        <span id="apply-step-label" class="text-slate-600 font-medium"></span>
+      </div>
+      <div class="w-full bg-slate-100 rounded-full h-1.5">
+        <div id="apply-bar" class="bg-emerald-500 h-1.5 rounded-full transition-all" style="width:0%"></div>
+      </div>
+      <div id="apply-steps-done" class="text-slate-400"></div>
+      <div class="pt-0.5">
+        <a id="apply-reset-link" href="#" onclick="_applyReset(event)"
+           class="text-slate-400 hover:text-rose-600 underline decoration-dotted">
+          Stuck? Reset</a>
+      </div>
+    </div>
+    <ul id="queue-list" class="space-y-1.5 text-sm"></ul>
+    <p id="queue-empty" class="text-xs text-amber-600 italic">No edits staged yet.</p>
+  </div>
+</div>
+
+<!-- ── Audit & Undo panel (collapsible) ─────────────────────────────────────── -->
+<div id="audit-panel" class="bg-slate-50 border-b border-slate-200 flex-shrink-0"
+     style="max-height:0;overflow:hidden;transition:max-height .3s ease;">
+  <div class="px-6 py-3 space-y-2">
+    <div class="flex items-center gap-3">
+      <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Applied edits (audit log)</span>
+      <span class="text-xs text-slate-400">Undo stages the inverse — you still need to click Apply &amp; publish.</span>
+      <button onclick="refreshAuditLog()" class="ml-auto text-xs text-slate-400 hover:text-indigo-600">⟳ Refresh</button>
+    </div>
+    <ul id="audit-list" class="space-y-1.5 text-sm max-h-72 overflow-y-auto"></ul>
+    <p id="audit-empty" class="text-xs text-slate-400 italic">No applied edits yet.</p>
+    <p id="audit-loading" class="text-xs text-slate-400 italic hidden">Loading…</p>
+  </div>
+</div>
+
+<!-- ── Tab strip ────────────────────────────────────────────────────────────── -->
+<div class="bg-white border-b border-slate-200 px-6 flex gap-6 flex-shrink-0">
+  <button id="tab-a-btn" class="tab-btn active py-3 text-sm text-indigo-700 border-b-2 border-indigo-600 font-semibold"
+          onclick="switchTab('a')">
+    Tab A — Pending queue <span id="tab-a-count" class="ml-1 text-xs text-slate-400"></span>
+  </button>
+  <button id="tab-b-btn" class="tab-btn py-3 text-sm text-slate-600 border-b-2 border-transparent"
+          onclick="switchTab('b')">
+    Tab B — Parsed transactions <span id="tab-b-count" class="ml-1 text-xs text-slate-400"></span>
+  </button>
+</div>
+
+<!-- ── Main layout ──────────────────────────────────────────────────────────── -->
+<div class="flex flex-1 overflow-hidden">
+
+  <!-- List pane -->
+  <div class="w-80 min-w-[18rem] flex-shrink-0 border-r border-slate-200 bg-white overflow-y-auto flex flex-col">
+    <div class="sticky top-0 bg-white border-b border-slate-100 p-3 z-10 space-y-2">
+      <input id="search-box" type="search" placeholder="Search…"
+             class="w-full text-sm border border-slate-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-400"
+             oninput="applyFilters()">
+      <div id="bucket-filters" class="flex flex-wrap gap-1"></div>
+      <!-- Tab A only: select-all row -->
+      <div id="select-all-row" class="hidden flex items-center gap-2 pt-0.5">
+        <input type="checkbox" id="check-all" class="accent-rose-500 cursor-pointer"
+               onclick="handleSelectAll(this)">
+        <label for="check-all" class="text-xs text-slate-500 cursor-pointer select-none">Select all</label>
+        <span id="select-all-count" class="text-xs text-slate-400 ml-1"></span>
+      </div>
+    </div>
+    <!-- Bulk action bar: shown when ≥1 Tab A item is checked -->
+    <div id="bulk-bar" class="hidden border-t border-rose-100 bg-rose-50 px-3 py-2 flex items-center gap-2 flex-wrap">
+      <span id="bulk-count" class="text-xs font-semibold text-rose-700">0 selected</span>
+      <button onclick="selectAllBulk()" class="text-xs text-slate-500 hover:text-indigo-600 underline decoration-dotted px-1">All</button>
+      <button onclick="clearBulkSelection()" class="text-xs text-slate-500 hover:text-rose-600 underline decoration-dotted px-1">Clear</button>
+      <select id="bulk-reason" class="ml-auto text-xs border border-slate-200 rounded px-1.5 py-1 bg-white text-slate-700">
+        <option value="junk">Junk / irrelevant</option>
+        <option value="boilerplate">Boilerplate</option>
+        <option value="foreign_currency">Foreign currency</option>
+        <option value="duplicate">Duplicate</option>
+        <option value="other">Other</option>
+      </select>
+      <button id="bulk-reject-btn" onclick="bulkRejectSelected()"
+              class="px-3 py-1 rounded bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold whitespace-nowrap">
+        Reject selected
+      </button>
+    </div>
+    <ul id="item-list" class="flex-1 divide-y divide-slate-50 text-sm"></ul>
+    <p id="list-empty"   class="hidden p-6 text-center text-slate-400 text-sm">No items match.</p>
+    <p id="list-loading" class="p-6 text-center text-slate-400 text-sm">Loading…</p>
+  </div>
+
+  <!-- Viewer idle -->
+  <div id="viewer-idle" class="flex-1 flex items-center justify-center text-slate-400 text-sm select-none bg-slate-50">
+    <div class="text-center space-y-2">
+      <div class="text-3xl">📋</div>
+      <p>Select an item from the list to open the side-by-side viewer.</p>
+    </div>
+  </div>
+
+  <!-- Side-by-side viewer -->
+  <div id="viewer" class="flex-1 flex overflow-hidden">
+
+    <!-- Left: original filing -->
+    <div class="w-1/2 flex flex-col border-r border-slate-200 overflow-hidden">
+      <div class="bg-slate-50 border-b border-slate-200 px-4 py-2 flex items-center gap-2 flex-shrink-0">
+        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Original Filing</span>
+        <a id="rns-external-link" href="#" target="_blank" rel="noopener"
+           class="ml-auto text-xs text-indigo-500 hover:text-indigo-700">↗ Open on Investegate</a>
+      </div>
+      <div id="rns-loading" class="hidden p-6 text-center text-slate-400 text-sm">Loading filing…</div>
+      <div id="rns-no-cache" class="hidden p-6 text-center text-slate-400 text-sm">
+        <p class="font-medium text-slate-600 mb-1">No cached copy available.</p>
+        <p>Use the link above to view the original on Investegate.</p>
+      </div>
+      <iframe id="rns-frame" sandbox="allow-same-origin" class="flex-1 bg-white hidden"></iframe>
+    </div>
+
+    <!-- Right: editable form -->
+    <div class="w-1/2 flex flex-col overflow-hidden">
+      <!-- Header + action buttons pinned at top -->
+      <div class="bg-slate-50 border-b border-slate-200 px-4 py-2 flex items-center gap-2 flex-shrink-0">
+        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider" id="form-pane-title">Edit Transaction</span>
+        <span id="form-status-chip" class="hidden px-2 py-0.5 rounded text-[10px] font-semibold"></span>
+      </div>
+
+      <div id="form-actions" class="hidden flex-shrink-0 border-b border-slate-200 bg-white px-4 py-2.5 flex items-center gap-2">
+        <button id="btn-stage" onclick="stageEdit()"
+                class="px-4 py-1.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+          Stage edit
+        </button>
+        <button id="btn-reject" onclick="openRejectDialog()"
+                class="hidden px-4 py-1.5 rounded border border-rose-300 hover:bg-rose-50 text-rose-600 text-sm font-medium">
+          Reject filing
+        </button>
+        <div id="form-spinner" class="hidden ml-1 w-4 h-4 border-2 border-indigo-300 border-t-indigo-600 rounded-full animate-spin"></div>
+        <span id="form-feedback" class="text-xs ml-1"></span>
+      </div>
+
+      <div id="fields-pane" class="flex-1 overflow-y-auto p-4">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Reject dialog ─────────────────────────────────────────────────────────── -->
+<div id="reject-dialog" class="hidden fixed inset-0 bg-black/30 z-50 flex items-center justify-center">
+  <div class="bg-white rounded-lg shadow-xl p-6 w-96 space-y-4">
+    <h2 class="font-semibold text-slate-800">Reject filing</h2>
+    <p class="text-sm text-slate-600">Mark this pending filing as not a real PDMR dealing. It will be excluded from future sweeps.</p>
+    <div>
+      <label class="field-label block mb-1">Reason</label>
+      <select id="reject-reason-select" class="form-input">
+        <option value="junk">Junk / irrelevant</option>
+        <option value="boilerplate">Boilerplate / non-dealing notification</option>
+        <option value="foreign_currency">Foreign currency — no GBP price</option>
+        <option value="duplicate">Duplicate of already-ingested filing</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="flex gap-2 justify-end">
+      <button onclick="closeRejectDialog()" class="px-3 py-1.5 rounded border border-slate-200 text-sm text-slate-600 hover:bg-slate-50">Cancel</button>
+      <button onclick="confirmReject()" class="px-3 py-1.5 rounded bg-rose-600 hover:bg-rose-700 text-white text-sm font-medium">Confirm reject</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────────────────────── -->
+<script>
+"use strict";
+
+// ── Constants ─────────────────────────────────────────────────────────────────
+const VALID_TYPES   = ["BUY", "SELL", "SELL_TAX", "EXERCISE", "GRANT", "SIP"];
+const KNOWN_SECTORS = [
+  "Communication Services", "Consumer Discretionary", "Consumer Staples",
+  "Energy", "Financials", "Health Care", "Industrials", "Materials",
+  "Real Estate", "Technology", "Utilities",
+];
+const BUCKET_LABEL = {
+  could_not_classify: "Cannot classify",
+  corporate_actions:  "Corporate actions",
+  data_quirks:        "Data quirks",
+  multi_tranche:      "Multi-tranche",
+  other:              "Other",
+  foreign_currency:   "Foreign currency",
+  bundled_multi_pdmr: "Bundled multi-PDMR",
+};
+const RECOVERABLE = ["could_not_classify", "corporate_actions", "data_quirks", "multi_tranche", "other"];
+const HOPELESS    = ["foreign_currency", "bundled_multi_pdmr"];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let S = {
+  tab:            "a",
+  pendingItems:   [],
+  pendingBuckets: [],
+  txItems:        [],
+  txLoaded:       false,
+  activeBuckets:  new Set(RECOVERABLE),
+  selected:       null,        // current item
+  currentTx:      null,        // full TX from /api/tx (Tab B)
+  bulkSelected:   new Set(),   // rns_ids checked in Tab A bulk mode
+  queue:          [],          // staged edits from /api/edit-queue
+  queueOpen:      false,
+};
+
+// ── Utils ─────────────────────────────────────────────────────────────────────
+const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const fmtGbp = v => v != null ? "£" + Number(v).toLocaleString("en-GB",{minimumFractionDigits:0,maximumFractionDigits:0}) : "—";
+const fmtNum = v => v != null ? Number(v).toLocaleString() : "—";
+
+// ── Queue panel ───────────────────────────────────────────────────────────────
+async function refreshQueue() {
+  try {
+    const r = await fetch("/api/edit-queue");
+    const q = await r.json();
+    S.queue = q.edits || [];
+    renderQueuePanel();
+  } catch { /* server may not be running */ }
+}
+
+// ── Apply & publish ───────────────────────────────────────────────────────────
+const PIPELINE_STEPS = ["eval_signals","backtest","export_dashboard_json","build_dashboard"];
+const PIPELINE_LABELS = {
+  eval_signals:          "Recomputing signals…",
+  backtest:              "Running backtests…",
+  export_dashboard_json: "Rebuilding JSON…",
+  build_dashboard:       "Generating HTML…",
+};
+let _applyPollTimer = null;
+
+async function applyEdits() {
+  const btn = document.getElementById("btn-apply");
+  btn.disabled = true;
+  try {
+    const r = await fetch("/api/apply-edits", { method: "POST",
+                          headers: {"Content-Type":"application/json"},
+                          body: JSON.stringify({}) });
+    const j = await r.json();
+    if (!j.ok) {
+      alert("Cannot apply: " + (j.error || j.reason));
+      btn.disabled = false;
+      return;
+    }
+    // Started — begin polling
+    document.getElementById("apply-progress").classList.remove("hidden");
+    _pollApplyStatus();
+  } catch (err) {
+    alert("Network error: " + err);
+    btn.disabled = false;
+  }
+}
+
+function _pollApplyStatus() {
+  if (_applyPollTimer) clearTimeout(_applyPollTimer);
+  _applyPollTimer = setTimeout(async () => {
+    try {
+      const r = await fetch("/api/apply-status");
+      const s = await r.json();
+      _updateApplyProgress(s);
+      if (s.status === "running") _pollApplyStatus();
+    } catch { _pollApplyStatus(); }
+  }, 1500);
+}
+
+function _updateApplyProgress(s) {
+  const label   = document.getElementById("apply-step-label");
+  const bar     = document.getElementById("apply-bar");
+  const done    = document.getElementById("apply-steps-done");
+  const progress = document.getElementById("apply-progress");
+  const btn     = document.getElementById("btn-apply");
+  const spinner = document.getElementById("apply-spinner");
+
+  const completed = s.completed || [];
+  const pct = s.status === "done" ? 100
+    : Math.round(((completed.length) / PIPELINE_STEPS.length) * 85 + 10);
+  bar.style.width = pct + "%";
+
+  if (s.status === "done") {
+    label.textContent = "Done — dashboard rebuilt!";
+    label.className = "text-emerald-600 font-semibold";
+    spinner.classList.add("hidden");
+    bar.className = "bg-emerald-500 h-1.5 rounded-full transition-all";
+    btn.disabled = false;
+    done.textContent = "All steps complete.";
+    refreshQueue();   // queue should now be empty
+    // B-131: resolved (add/reject) items must drop off Tab A immediately,
+    // without a manual page reload. Re-fetch the pending queue cache-busted.
+    loadPendingReview();
+    // Auto-hide after 5s
+    setTimeout(() => progress.classList.add("hidden"), 5000);
+  } else if (s.status === "error") {
+    label.textContent = "Error: " + (s.error || "unknown");
+    label.className = "text-rose-600 font-semibold";
+    spinner.classList.add("hidden");
+    bar.className = "bg-rose-500 h-1.5 rounded-full transition-all";
+    btn.disabled = false;
+  } else {
+    // running
+    const stepLabel = PIPELINE_LABELS[s.step] || s.step_label || s.step || "Working…";
+    label.textContent = stepLabel;
+    label.className = "text-slate-600 font-medium";
+    spinner.classList.remove("hidden");
+    done.textContent = completed.length
+      ? "Done: " + completed.join(", ")
+      : "Applying edits to database…";
+  }
+}
+
+// B-129: clear a stuck apply lock. POSTs /api/apply-reset (stale-aware on the
+// server) so the user can recover from a crashed apply without deleting files.
+async function _applyReset(ev) {
+  if (ev) ev.preventDefault();
+  try {
+    const r = await fetch("/api/apply-reset", { method: "POST" });
+    const j = await r.json();
+    if (!j.ok) {
+      alert("Cannot reset yet: a run is still in progress (" +
+            (j.reason || "running") + "). Wait a moment, then try again.");
+      return;
+    }
+  } catch (err) {
+    alert("Network error during reset: " + err);
+    return;
+  }
+  if (_applyPollTimer) clearTimeout(_applyPollTimer);
+  document.getElementById("apply-progress").classList.add("hidden");
+  document.getElementById("btn-apply").disabled = false;
+  refreshQueue();
+}
+
+function renderQueuePanel() {
+  const badge = document.getElementById("queue-badge");
+  const list  = document.getElementById("queue-list");
+  const empty = document.getElementById("queue-empty");
+  const n = S.queue.length;
+
+  badge.textContent = String(n);
+  badge.className = n
+    ? "px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-500 text-white"
+    : "px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500";
+
+  const applyBtn = document.getElementById("btn-apply");
+  if (applyBtn && !_applyPollTimer) applyBtn.disabled = n === 0;
+
+  if (!n) { list.innerHTML = ""; empty.classList.remove("hidden"); return; }
+  empty.classList.add("hidden");
+
+  list.innerHTML = S.queue.map(e => {
+    const actionLabel = { update: "Edit TX", add: "Add TX", reject: "Reject" }[e.action] || e.action;
+    const target = e.target_fingerprint
+      ? `fp:${e.target_fingerprint.slice(0,8)}…`
+      : `rns:${e.target_rns_id}`;
+    const fieldCount = Object.keys(e.fields || {}).length;
+    const summary = e.action === "reject"
+      ? `reason: ${e.reject_reason || "—"}`
+      : `${fieldCount} field${fieldCount !== 1 ? "s" : ""}`;
+    return `<li class="flex items-center gap-2 text-xs bg-white border border-amber-200 rounded px-2 py-1">
+      <span class="px-1 py-0.5 rounded text-[10px] font-semibold ${e.action === "reject" ? "bg-rose-100 text-rose-700" : "bg-indigo-100 text-indigo-700"}">${esc(actionLabel)}</span>
+      <span class="text-slate-600">${esc(target)}</span>
+      <span class="text-slate-400">${esc(summary)}</span>
+      <span class="ml-auto text-slate-300">${esc((e.staged_at||"").replace("T"," ").slice(0,16))}</span>
+      <button onclick="unstageEdit('${esc(e.edit_id)}')"
+              class="text-slate-300 hover:text-rose-500 ml-1" title="Unstage">✕</button>
+    </li>`;
+  }).join("");
+}
+
+function toggleQueuePanel() {
+  S.queueOpen = !S.queueOpen;
+  const p = document.getElementById("queue-panel");
+  p.classList.toggle("open", S.queueOpen);
+  if (S.queueOpen) refreshQueue();
+}
+
+async function unstageEdit(editId) {
+  const r = await fetch(`/api/edit-queue/${encodeURIComponent(editId)}`, { method: "DELETE" });
+  const j = await r.json();
+  if (j.ok) { await refreshQueue(); setFeedback("Edit unstaged.", false); }
+  else       { setFeedback("Error: " + j.error, true); }
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  S.tab = tab;
+  S.selected = null; S.currentTx = null;
+  S.bulkSelected.clear();
+  updateBulkBar();
+  updateSelectAllRow();
+  // Reset filters to each tab's defaults so Tab A bucket IDs (e.g.
+  // "bundled_multi_pdmr") don't bleed into Tab B's type filter and vice versa.
+  S.activeBuckets = (tab === "a") ? new Set(RECOVERABLE) : new Set();
+  ["a","b"].forEach(t => {
+    const active = t === tab;
+    document.getElementById(`tab-${t}-btn`).className =
+      "tab-btn py-3 text-sm border-b-2 " +
+      (active ? "text-indigo-700 border-indigo-600 font-semibold active"
+               : "text-slate-600 border-transparent");
+  });
+  closeViewer();
+  rebuildFilters();
+  if (tab === "b" && !S.txLoaded) loadTxIndex(); else renderList();
+}
+
+// ── Data loading ──────────────────────────────────────────────────────────────
+async function loadPendingReview() {
+  try {
+    const r = await fetch("data/pending_review.json?_=" + Date.now());
+    const d = await r.json();
+    S.pendingItems   = d.items   || [];
+    S.pendingBuckets = d.buckets || [];
+    document.getElementById("header-pending-count").textContent = (d.total||0).toLocaleString() + " pending";
+    document.getElementById("tab-a-count").textContent = "(" + S.pendingItems.length.toLocaleString() + ")";
+    document.getElementById("list-loading").classList.add("hidden");
+    rebuildFilters(); renderList();
+  } catch {
+    document.getElementById("list-loading").textContent = "Could not load pending_review.json — run export_dashboard_json.py first.";
+  }
+}
+
+async function loadTxIndex() {
+  document.getElementById("list-loading").classList.remove("hidden");
+  document.getElementById("list-loading").textContent = "Loading transactions…";
+  try {
+    const r = await fetch("data/tx_index.json?_=" + Date.now());
+    const d = await r.json();
+    S.txItems  = d.transactions || [];
+    S.txLoaded = true;
+    document.getElementById("tab-b-count").textContent = "(" + S.txItems.length.toLocaleString() + ")";
+    document.getElementById("list-loading").classList.add("hidden");
+    rebuildFilters(); renderList();
+  } catch {
+    document.getElementById("list-loading").textContent = "Could not load tx_index.json — run export_dashboard_json.py first.";
+  }
+}
+
+// ── Filters ───────────────────────────────────────────────────────────────────
+function rebuildFilters() {
+  const el = document.getElementById("bucket-filters");
+  el.innerHTML = "";
+  if (S.tab === "a") {
+    [...RECOVERABLE, ...HOPELESS].forEach(bid => {
+      const spec  = S.pendingBuckets.find(b => b.id === bid) || {count:0};
+      const on    = S.activeBuckets.has(bid);
+      const btn   = document.createElement("button");
+      btn.dataset.bucket = bid;
+      btn.textContent    = (BUCKET_LABEL[bid]||bid) + " " + (spec.count||0);
+      btn.className      = "px-2 py-0.5 rounded text-[10px] font-medium border " +
+        (on ? `bk-${bid} border-transparent` : "bg-white text-slate-400 border-slate-200");
+      btn.onclick = () => { toggleBucket(bid, btn); };
+      el.appendChild(btn);
+    });
+  } else {
+    const types = VALID_TYPES;
+    if (!S.activeBuckets.size) S.activeBuckets = new Set(types);
+    types.forEach(t => {
+      const on  = S.activeBuckets.has(t);
+      const btn = document.createElement("button");
+      btn.dataset.bucket = t;
+      btn.textContent    = t;
+      btn.className      = "px-2 py-0.5 rounded text-[10px] font-medium border " +
+        (on ? "bg-indigo-100 text-indigo-700 border-transparent" : "bg-white text-slate-400 border-slate-200");
+      btn.onclick = () => { toggleBucket(t, btn); };
+      el.appendChild(btn);
+    });
+  }
+}
+
+function toggleBucket(bid, btn) {
+  if (S.activeBuckets.has(bid)) {
+    if (S.activeBuckets.size === 1) return;
+    S.activeBuckets.delete(bid);
+    btn.className = "px-2 py-0.5 rounded text-[10px] font-medium border bg-white text-slate-400 border-slate-200";
+  } else {
+    S.activeBuckets.add(bid);
+    if (S.tab === "a")
+      btn.className = `px-2 py-0.5 rounded text-[10px] font-medium border bk-${bid} border-transparent`;
+    else
+      btn.className = "px-2 py-0.5 rounded text-[10px] font-medium border bg-indigo-100 text-indigo-700 border-transparent";
+  }
+  renderList();
+}
+
+function applyFilters() { renderList(); }
+
+function getFilteredItems() {
+  const q = (document.getElementById("search-box").value || "").toLowerCase().trim();
+  if (S.tab === "a") {
+    return S.pendingItems.filter(it => {
+      if (!S.activeBuckets.has(it.bucket)) return false;
+      if (!q) return true;
+      return it.rns_id.includes(q) || it.headline.toLowerCase().includes(q) ||
+             it.warnings.some(w => w.toLowerCase().includes(q));
+    });
+  } else {
+    return S.txItems.filter(it => {
+      if (!S.activeBuckets.has(it.type)) return false;
+      if (!q) return true;
+      return it.fingerprint.includes(q) || it.ticker.toLowerCase().includes(q) ||
+             it.company.toLowerCase().includes(q) || it.director.toLowerCase().includes(q) ||
+             (it.rns_id||"").includes(q);
+    });
+  }
+}
+
+// ── List rendering ────────────────────────────────────────────────────────────
+function renderList() {
+  const ul    = document.getElementById("item-list");
+  const empty = document.getElementById("list-empty");
+  const items = getFilteredItems();
+  if (!items.length) { ul.innerHTML = ""; empty.classList.remove("hidden"); return; }
+  empty.classList.add("hidden");
+  updateSelectAllRow();
+  const vis = items.slice(0, 300);
+  ul.innerHTML = vis.map(it => {
+    const sel = S.selected && (S.tab === "a"
+      ? S.selected.rns_id    === it.rns_id
+      : S.selected.fingerprint === it.fingerprint);
+    if (S.tab === "a") {
+      const w0   = it.warnings[0] || "";
+      const chkd = S.bulkSelected.has(it.rns_id) ? "checked" : "";
+      return `<li class="cursor-pointer px-3 py-2.5 hover:bg-slate-50 ${sel?"bg-indigo-50":""}"
+                  onclick='selectPending(${JSON.stringify(JSON.stringify(it))})'>
+        <div class="flex items-start gap-2">
+          <input type="checkbox" ${chkd} data-rns="${esc(it.rns_id)}"
+                 class="flex-shrink-0 mt-1 accent-rose-500 cursor-pointer"
+                 onclick="event.stopPropagation(); toggleBulkCheck('${esc(it.rns_id)}', this)">
+          <span class="mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bk-${esc(it.bucket)} flex-shrink-0">${esc(BUCKET_LABEL[it.bucket]||it.bucket)}</span>
+          <span class="font-medium text-slate-700 truncate">${esc(it.headline||it.rns_id)}</span>
+        </div>
+        <div class="mt-0.5 flex items-center gap-2 text-xs text-slate-400">
+          <span>#${esc(it.rns_id)}</span>
+          ${it.has_cache ? '<span class="text-emerald-500">● cached</span>' : '<span class="text-amber-500">○ no cache</span>'}
+          ${it.extracted_count ? `<span>${it.extracted_count} extracted</span>` : ""}
+        </div>
+        ${w0 ? `<div class="mt-0.5 text-xs text-slate-400 truncate">${esc(w0)}</div>` : ""}
+      </li>`;
+    } else {
+      const cls = it.type === "BUY"  ? "bg-emerald-100 text-emerald-700"
+                : it.type === "SELL" || it.type === "SELL_TAX" ? "bg-rose-100 text-rose-700"
+                : "bg-slate-100 text-slate-500";
+      return `<li class="cursor-pointer px-3 py-2.5 hover:bg-slate-50 ${sel?"bg-indigo-50":""}"
+                  onclick='selectTx(${JSON.stringify(JSON.stringify(it))})'>
+        <div class="flex items-center gap-2">
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${cls} flex-shrink-0">${esc(it.type)}</span>
+          <span class="font-medium text-slate-700 truncate">${esc(it.ticker)} — ${esc(it.director)}</span>
+        </div>
+        <div class="mt-0.5 text-xs text-slate-400 flex gap-2">
+          <span>${esc(it.date)}</span><span>${fmtGbp(it.value)}</span>
+          <span class="truncate">${esc(it.company)}</span>
+        </div>
+      </li>`;
+    }
+  }).join("") + (items.length > 300
+    ? `<li class="px-3 py-2 text-xs text-slate-400 text-center">Showing 300 of ${items.length.toLocaleString()} — narrow search.</li>`
+    : "");
+}
+
+// ── Viewer open/close ─────────────────────────────────────────────────────────
+function closeViewer() {
+  document.getElementById("viewer-idle").style.display = "";
+  document.getElementById("viewer").classList.remove("active");
+  document.getElementById("rns-frame").src = "about:blank";
+  document.getElementById("form-actions").classList.add("hidden");
+  S.selected = null; S.currentTx = null;
+}
+
+function showViewer() {
+  document.getElementById("viewer-idle").style.display = "none";
+  document.getElementById("viewer").classList.add("active");
+}
+
+function setRnsPane(url, rnsId, hasCache) {
+  const ext = document.getElementById("rns-external-link");
+  ext.href = url || "#"; ext.style.display = url ? "" : "none";
+  const frame   = document.getElementById("rns-frame");
+  const loading = document.getElementById("rns-loading");
+  const noCache = document.getElementById("rns-no-cache");
+  frame.classList.add("hidden"); noCache.classList.add("hidden");
+  loading.classList.remove("hidden");
+  if (rnsId && hasCache) {
+    frame.src = `/api/rns-html/${encodeURIComponent(rnsId)}`;
+    frame.onload = () => { loading.classList.add("hidden"); frame.classList.remove("hidden"); };
+  } else {
+    loading.classList.add("hidden"); noCache.classList.remove("hidden");
+  }
+}
+
+// ── Form builder ──────────────────────────────────────────────────────────────
+function buildTxForm(tx, action) {
+  // tx: current field values (or {} for blank add form)
+  // action: "update" | "add"
+  const f = tx || {};
+  const sectorOpts = ["", ...KNOWN_SECTORS].map(s =>
+    `<option value="${esc(s)}" ${(f.sector||"")===s?"selected":""}>${esc(s||"— select —")}</option>`).join("");
+  const typeOpts = VALID_TYPES.map(t =>
+    `<option value="${esc(t)}" ${(f.type||"")===t?"selected":""}>${t}</option>`).join("");
+
+  return `
+  <form id="tx-form" class="space-y-3" onsubmit="return false">
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label class="field-label block mb-0.5">Date <span class="text-rose-500">*</span></label>
+        <input id="f-date" class="form-input" type="text" placeholder="YYYY-MM-DD" value="${esc(f.date||"")}" oninput="autoComputeValue()">
+        <div class="field-error hidden" id="err-date"></div>
+      </div>
+      <div>
+        <label class="field-label block mb-0.5">Ticker <span class="text-rose-500">*</span></label>
+        <input id="f-ticker" class="form-input" type="text" placeholder="e.g. CARD" value="${esc(f.ticker||"")}" oninput="this.value=this.value.toUpperCase()">
+        <div class="field-error hidden" id="err-ticker"></div>
+      </div>
+    </div>
+    <div>
+      <label class="field-label block mb-0.5">Director <span class="text-rose-500">*</span></label>
+      <input id="f-director" class="form-input" type="text" placeholder="Full name" value="${esc(f.director||"")}">
+      <div class="field-error hidden" id="err-director"></div>
+    </div>
+    <div>
+      <label class="field-label block mb-0.5">Role</label>
+      <input id="f-role" class="form-input" type="text" placeholder="e.g. Chief Executive Officer" value="${esc(f.role||"")}">
+    </div>
+    <div>
+      <label class="field-label block mb-0.5">Company</label>
+      <input id="f-company" class="form-input" type="text" placeholder="Company name" value="${esc(f.company||"")}">
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label class="field-label block mb-0.5">Type <span class="text-rose-500">*</span></label>
+        <select id="f-type" class="form-input" onchange="autoComputeValue()">
+          <option value="">— select —</option>${typeOpts}
+        </select>
+        <div class="field-error hidden" id="err-type"></div>
+      </div>
+      <div>
+        <label class="field-label block mb-0.5">Sector</label>
+        <select id="f-sector" class="form-input"><option value="">— select —</option>${sectorOpts}</select>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-3">
+      <div>
+        <label class="field-label block mb-0.5">Shares <span class="text-rose-500">*</span></label>
+        <input id="f-shares" class="form-input" type="number" min="0" step="1" placeholder="0" value="${f.shares ?? ""}" oninput="autoComputeValue()">
+        <div class="field-error hidden" id="err-shares"></div>
+      </div>
+      <div>
+        <label class="field-label block mb-0.5">Price (GBP)</label>
+        <input id="f-price" class="form-input" type="number" min="0" step="any" placeholder="0 = undisclosed" value="${f.price ?? ""}" oninput="autoComputeValue()">
+        <div class="field-error hidden" id="err-price"></div>
+      </div>
+      <div>
+        <label class="field-label block mb-0.5">Value (GBP)</label>
+        <input id="f-value" class="form-input" type="number" min="0" step="any" placeholder="0" value="${f.value ?? ""}">
+        <div id="warn-value" class="field-warn hidden">⚠ shares × price mismatch</div>
+        <div class="field-error hidden" id="err-value"></div>
+      </div>
+    </div>
+    ${action === "update" && f.fingerprint ? `
+    <div class="rounded bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-500 space-y-0.5">
+      <div><span class="font-medium">Fingerprint:</span> <span class="font-mono">${esc(f.fingerprint)}</span></div>
+      <div><span class="font-medium">Parser source:</span> ${esc(f.parser_source||"—")}</div>
+      <div><span class="font-medium">Buy strictness:</span> ${esc(f.buy_strictness||"—")}</div>
+      <div class="text-amber-600">Editing date, ticker, director, type, or shares changes the fingerprint — apply_edits.py handles this as delete+insert.</div>
+    </div>` : ""}
+    ${action === "add" ? `
+    <div class="flex items-center gap-2 pt-1 border-t border-slate-100">
+      <button type="button" onclick="stageAndAddAnother()"
+              class="text-xs text-indigo-500 hover:text-indigo-700 font-medium">
+        + Stage &amp; add another director from this filing
+      </button>
+    </div>` : ""}
+    <div id="form-error-box" class="hidden rounded bg-rose-50 border border-rose-200 px-3 py-2 text-xs text-rose-700 space-y-0.5"></div>
+    <div id="form-success-box" class="hidden rounded bg-emerald-50 border border-emerald-200 px-3 py-2 text-xs text-emerald-700"></div>
+  </form>`;
+}
+
+function autoComputeValue() {
+  const shares = parseFloat(document.getElementById("f-shares")?.value);
+  const price  = parseFloat(document.getElementById("f-price")?.value);
+  const valEl  = document.getElementById("f-value");
+  const warnEl = document.getElementById("warn-value");
+  if (!valEl) return;
+  if (!isNaN(shares) && !isNaN(price) && price > 0 && shares > 0) {
+    const computed = +(shares * price).toFixed(2);
+    // Always overwrite the value field when shares × price are both valid —
+    // this keeps the three fields in sync as the user types.
+    valEl.value = computed;
+    warnEl?.classList.add("hidden");
+  }
+}
+
+// ── Collect form fields ───────────────────────────────────────────────────────
+function collectFields(originalTx) {
+  const g = id => document.getElementById(id)?.value?.trim() ?? "";
+  const all = {
+    date:      g("f-date"),
+    ticker:    g("f-ticker").toUpperCase(),
+    director:  g("f-director"),
+    role:      g("f-role"),
+    company:   g("f-company"),
+    type:      g("f-type"),
+    sector:    g("f-sector"),
+    shares:    g("f-shares"),
+    price:     g("f-price"),
+    value:     g("f-value"),
+  };
+  // For "update": only include fields that changed vs the original
+  if (originalTx) {
+    const changed = {};
+    for (const [k, v] of Object.entries(all)) {
+      const orig = k === "shares" ? String(originalTx[k] ?? "")
+                 : k === "price" || k === "value" ? String(parseFloat(originalTx[k] ?? 0).toFixed(2))
+                 : String(originalTx[k] ?? "");
+      const cur  = k === "shares" ? String(parseInt(v) || "")
+                 : k === "price" || k === "value" ? String(parseFloat(v) || "")
+                 : v;
+      if (v !== "" && cur !== orig) changed[k] = v;
+    }
+    return changed;
+  }
+  // For "add": include all non-empty fields
+  return Object.fromEntries(Object.entries(all).filter(([,v]) => v !== ""));
+}
+
+// ── Client-side validation ────────────────────────────────────────────────────
+function validateFields(fields, action) {
+  const errors = [];
+  const clearAll = () => {
+    ["date","ticker","director","type","shares","price","value"].forEach(f => {
+      document.getElementById(`err-${f}`)?.classList.add("hidden");
+      document.getElementById(`f-${f}`)?.classList.remove("error");
+    });
+  };
+  const addErr = (field, msg) => {
+    errors.push(msg);
+    const el = document.getElementById(`err-${field}`);
+    if (el) { el.textContent = msg; el.classList.remove("hidden"); }
+    document.getElementById(`f-${field}`)?.classList.add("error");
+  };
+  clearAll();
+
+  if (action === "add") {
+    if (!fields.date)     addErr("date",     "Date is required");
+    if (!fields.ticker)   addErr("ticker",   "Ticker is required");
+    if (!fields.director) addErr("director", "Director is required");
+    if (!fields.type)     addErr("type",     "Type is required");
+    if (fields.shares == null || fields.shares === "")
+                          addErr("shares",   "Shares is required");
+  }
+  if (fields.type && !VALID_TYPES.includes(fields.type))
+    addErr("type", "Must be BUY, SELL, SELL_TAX, EXERCISE, GRANT, or SIP");
+  if (fields.date && !/^\d{4}-\d{2}-\d{2}$/.test(fields.date))
+    addErr("date", "Must be YYYY-MM-DD");
+  if (fields.shares !== undefined && fields.shares !== "" && parseFloat(fields.shares) < 0)
+    addErr("shares", "Must be ≥ 0");
+  if (fields.price !== undefined && fields.price !== "" && parseFloat(fields.price) < 0)
+    addErr("price", "Must be ≥ 0");
+
+  return errors;
+}
+
+function showFormError(lines) {
+  const box = document.getElementById("form-error-box");
+  if (!box) return;
+  box.innerHTML = lines.map(l => `<div>${esc(l)}</div>`).join("");
+  box.classList.remove("hidden");
+  document.getElementById("form-success-box")?.classList.add("hidden");
+}
+
+function showFormSuccess(msg) {
+  const box = document.getElementById("form-success-box");
+  if (!box) return;
+  box.textContent = msg;
+  box.classList.remove("hidden");
+  document.getElementById("form-error-box")?.classList.add("hidden");
+}
+
+function setFeedback(msg, isErr) {
+  const el = document.getElementById("form-feedback");
+  if (!el) return;
+  el.textContent = msg;
+  el.className = "text-xs ml-2 " + (isErr ? "text-rose-500" : "text-emerald-600");
+  setTimeout(() => { el.textContent = ""; }, 4000);
+}
+
+// ── Select pending item (Tab A) ───────────────────────────────────────────────
+function selectPending(itemJson) {
+  let it; try { it = JSON.parse(itemJson); } catch { return; }
+  S.selected = it;
+  showViewer();
+  setRnsPane(it.url, it.rns_id, it.has_cache);
+
+  document.getElementById("form-pane-title").textContent = "Add / Reject Filing";
+  const actions = document.getElementById("form-actions");
+  actions.classList.remove("hidden");
+  document.getElementById("btn-stage").textContent = "Stage add";
+  document.getElementById("btn-reject").classList.remove("hidden");
+
+  // Pre-fill from first extracted row if available
+  const pre = (it.extracted && it.extracted[0]) ? {
+    date: it.extracted[0].date, ticker: it.extracted[0].ticker,
+    director: it.extracted[0].director, role: it.extracted[0].role,
+    company: it.extracted[0].company, type: it.extracted[0].type,
+    shares: it.extracted[0].shares, price: it.extracted[0].price,
+    value: it.extracted[0].value,
+  } : {};
+
+  document.getElementById("fields-pane").innerHTML = buildTxForm(pre, "add");
+  renderList();
+}
+
+// ── Select TX (Tab B) ─────────────────────────────────────────────────────────
+function selectTx(itemJson) {
+  let it; try { it = JSON.parse(itemJson); } catch { return; }
+  S.selected = it;
+  showViewer();
+  setRnsPane(it.url, it.rns_id, !!it.rns_id);
+
+  document.getElementById("form-pane-title").textContent = "Edit Transaction";
+  document.getElementById("fields-pane").innerHTML = `<p class="text-slate-400 text-sm">Loading…</p>`;
+  document.getElementById("form-actions").classList.add("hidden");
+  document.getElementById("btn-reject").classList.add("hidden");
+
+  fetchAndShowTx(it.fingerprint);
+  renderList();
+}
+
+async function fetchAndShowTx(fp) {
+  try {
+    const r = await fetch(`/api/tx/${encodeURIComponent(fp)}`);
+    if (!r.ok) { document.getElementById("fields-pane").innerHTML = `<p class="text-rose-500 text-sm">Error loading transaction.</p>`; return; }
+    const tx = await r.json();
+    S.currentTx = tx;
+    setRnsPane(tx.url, tx.rns_id, tx.has_cache);
+    document.getElementById("fields-pane").innerHTML = buildTxForm(tx, "update");
+    document.getElementById("form-actions").classList.remove("hidden");
+    document.getElementById("btn-stage").textContent = "Stage edit";
+    document.getElementById("btn-reject").classList.add("hidden");
+    renderList();
+  } catch {
+    document.getElementById("fields-pane").innerHTML = `<p class="text-rose-500 text-sm">Could not load transaction from server.</p>`;
+  }
+}
+
+// ── Stage edit ────────────────────────────────────────────────────────────────
+async function stageEdit() {
+  const btn = document.getElementById("btn-stage");
+  const spin = document.getElementById("form-spinner");
+
+  const action = S.tab === "b" ? "update" : "add";
+  const fields = collectFields(action === "update" ? S.currentTx : null);
+
+  const errors = validateFields(fields, action);
+  if (errors.length) { showFormError(errors); return; }
+
+  if (action === "update" && Object.keys(fields).length === 0) {
+    showFormError(["No fields have been changed — nothing to stage."]); return;
+  }
+
+  const body = {
+    action,
+    target_fingerprint: action === "update" ? S.currentTx?.fingerprint : undefined,
+    target_rns_id:      action === "add"    ? S.selected?.rns_id        : undefined,
+    fields,
+  };
+
+  btn.disabled = true; spin.classList.remove("hidden");
+  try {
+    const r   = await fetch("/api/stage-edit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const j = await r.json();
+    if (j.ok) {
+      showFormSuccess(`Staged ✓  (edit_id: ${j.edit_id})  —  ${j.queue_length} edit${j.queue_length!==1?"s":""} in queue`);
+      await refreshQueue();
+      // Re-open queue panel automatically so Rupert sees the entry
+      if (!S.queueOpen) toggleQueuePanel();
+    } else {
+      const lines = j.field_errors ? [j.error, ...j.field_errors] : [j.error];
+      showFormError(lines);
+    }
+  } catch (err) {
+    showFormError(["Network error — is the server running? " + String(err)]);
+  } finally {
+    btn.disabled = false; spin.classList.add("hidden");
+  }
+}
+
+// ── Stage & add another (multi-director bundled filings) ─────────────────────
+// Stages the current form, then clears director-specific fields (director,
+// role, shares, price, value) while keeping the shared fields (date, ticker,
+// company, sector, type). Lets Rupert quickly enter multiple directors from
+// the same RNS filing without re-typing company/date/ticker each time.
+async function stageAndAddAnother() {
+  // Run the normal stage flow
+  await stageEdit();
+  // If staging succeeded (success box is visible), clear per-director fields
+  const successBox = document.getElementById("form-success-box");
+  if (!successBox || successBox.classList.contains("hidden")) return;
+
+  // Clear the per-director fields, keep shared ones
+  const clear = ["f-director", "f-role", "f-shares", "f-price", "f-value"];
+  clear.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+  // Also clear success/error boxes and focus director field
+  successBox.classList.add("hidden");
+  document.getElementById("form-error-box")?.classList.add("hidden");
+  document.getElementById("f-director")?.focus();
+}
+
+// ── Bulk reject (Tab A) ───────────────────────────────────────────────────────
+function handleSelectAll(el) {
+  if (el.checked) selectAllBulk();
+  else clearBulkSelection();
+}
+
+function updateSelectAllRow() {
+  const row   = document.getElementById("select-all-row");
+  const box   = document.getElementById("check-all");
+  const count = document.getElementById("select-all-count");
+  if (!row) return;
+  if (S.tab !== "a") { row.classList.add("hidden"); return; }
+  row.classList.remove("hidden");
+  const items = getFilteredItems();
+  const n = items.length;
+  count.textContent = n ? "(" + n + " visible)" : "";
+  const sel = S.bulkSelected.size;
+  box.checked       = sel > 0 && sel >= n;
+  box.indeterminate = sel > 0 && sel < n;
+}
+
+function toggleBulkCheck(rnsId, el) {
+  if (el && el.checked) S.bulkSelected.add(rnsId);
+  else S.bulkSelected.delete(rnsId);
+  updateBulkBar();
+}
+
+function updateBulkBar() {
+  const bar   = document.getElementById("bulk-bar");
+  const count = document.getElementById("bulk-count");
+  if (!bar) return;
+  const n = S.bulkSelected.size;
+  if (n === 0 || S.tab !== "a") { bar.classList.add("hidden"); return; }
+  bar.classList.remove("hidden");
+  count.textContent = n + " selected";
+}
+
+function selectAllBulk() {
+  const items = getFilteredItems();
+  items.forEach(it => S.bulkSelected.add(it.rns_id));
+  renderList();
+  updateBulkBar();
+}
+
+function clearBulkSelection() {
+  S.bulkSelected.clear();
+  renderList();
+  updateBulkBar();
+}
+
+async function bulkRejectSelected() {
+  const ids = [...S.bulkSelected];
+  if (!ids.length) return;
+  const reason = document.getElementById("bulk-reason").value;
+  const btn    = document.getElementById("bulk-reject-btn");
+  btn.disabled = true;
+
+  let staged = 0, failed = 0;
+  for (const rns_id of ids) {
+    btn.textContent = `Staging ${staged + failed + 1}/${ids.length}...`;
+    try {
+      const r = await fetch("/api/stage-edit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "reject", target_rns_id: rns_id, reject_reason: reason, fields: {} }),
+      });
+      const j = await r.json();
+      if (j.ok) staged++; else failed++;
+    } catch { failed++; }
+  }
+
+  btn.disabled = false;
+  btn.textContent = "Reject selected";
+  S.bulkSelected.clear();
+  updateBulkBar();
+  await refreshQueue();
+  if (!S.queueOpen) toggleQueuePanel();
+  if (failed) setFeedback(`${staged} staged, ${failed} failed.`, true);
+  else        setFeedback(`${staged} reject${staged !== 1 ? "s" : ""} staged -- click Apply & publish.`, false);
+  renderList();
+}
+
+// ── Reject ────────────────────────────────────────────────────────────────────
+function openRejectDialog() {
+  document.getElementById("reject-dialog").classList.remove("hidden");
+}
+function closeRejectDialog() {
+  document.getElementById("reject-dialog").classList.add("hidden");
+}
+async function confirmReject() {
+  const reason = document.getElementById("reject-reason-select").value;
+  if (!S.selected?.rns_id) { closeRejectDialog(); return; }
+  closeRejectDialog();
+  const r = await fetch("/api/stage-edit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "reject", target_rns_id: S.selected.rns_id, reject_reason: reason, fields: {} }),
+  });
+  const j = await r.json();
+  if (j.ok) {
+    showFormSuccess(`Reject staged ✓  (${reason})  —  ${j.queue_length} edit${j.queue_length!==1?"s":""} in queue`);
+    await refreshQueue();
+    if (!S.queueOpen) toggleQueuePanel();
+  } else {
+    showFormError([j.error]);
+  }
+}
+
+// ── Audit & Undo panel ────────────────────────────────────────────────────────
+
+let _auditPanelOpen = false;
+let _auditEntries   = [];
+
+function toggleAuditPanel() {
+  _auditPanelOpen = !_auditPanelOpen;
+  const p = document.getElementById("audit-panel");
+  p.style.maxHeight = _auditPanelOpen ? "28rem" : "0";
+  p.style.overflowY = _auditPanelOpen ? "auto" : "hidden";
+  if (_auditPanelOpen) refreshAuditLog();
+}
+
+async function refreshAuditLog() {
+  const loading = document.getElementById("audit-loading");
+  const empty   = document.getElementById("audit-empty");
+  loading.classList.remove("hidden");
+  empty.classList.add("hidden");
+  try {
+    const r = await fetch("/api/audit-log?n=20");
+    const d = await r.json();
+    _auditEntries = d.entries || [];
+    renderAuditPanel();
+  } catch {
+    document.getElementById("audit-list").innerHTML =
+      '<li class="text-xs text-rose-500">Could not load audit log — is the server running?</li>';
+  } finally {
+    loading.classList.add("hidden");
+  }
+}
+
+function renderAuditPanel() {
+  const ul    = document.getElementById("audit-list");
+  const empty = document.getElementById("audit-empty");
+  if (!_auditEntries.length) {
+    ul.innerHTML = "";
+    empty.classList.remove("hidden");
+    return;
+  }
+  empty.classList.add("hidden");
+
+  const actionCls = {
+    update: "bg-indigo-100 text-indigo-700",
+    add:    "bg-emerald-100 text-emerald-700",
+    reject: "bg-rose-100 text-rose-700",
+    delete: "bg-amber-100 text-amber-700",
+  };
+
+  ul.innerHTML = _auditEntries.map((e, idx) => {
+    const label  = { update: "Edit", add: "Add", reject: "Reject", delete: "Delete" }[e.action] || e.action;
+    const cls    = actionCls[e.action] || "bg-slate-100 text-slate-500";
+    const ts     = (e.ts || "").replace("T"," ").slice(0,16);
+    const target = e.target_fingerprint
+      ? `fp:${e.target_fingerprint.slice(0,8)}…`
+      : e.target_rns_id ? `rns:${e.target_rns_id}` : "—";
+
+    // Summary: what changed
+    let summary = "";
+    if (e.action === "update") {
+      const changed = Object.keys(e.after || {}).filter(k =>
+        k !== "fingerprint" && k !== "parser_source" && k !== "last_seen"
+        && e.before && e.before[k] !== e.after[k]);
+      summary = changed.length ? changed.join(", ") : "no fields";
+    } else if (e.action === "add") {
+      summary = `${(e.after||{}).ticker || "?"} ${(e.after||{}).type || "?"} ${(e.after||{}).shares || "?"}`;
+    } else if (e.action === "reject") {
+      summary = `reason: ${e.reject_reason || "—"}`;
+    } else if (e.action === "delete") {
+      summary = `removed ${(e.before||{}).ticker || "?"} ${(e.before||{}).type || "?"}`;
+    }
+
+    // Undo availability
+    const canUndo = e.action === "update" || e.action === "add" || e.action === "delete";
+    const undoBtn = canUndo
+      ? `<button onclick="undoEdit(${idx})"
+                 class="ml-auto text-xs px-2 py-0.5 rounded border border-slate-200 hover:bg-amber-50 hover:border-amber-300 text-slate-500 hover:text-amber-700 flex-shrink-0"
+                 title="Stage the inverse of this edit">↺ Undo</button>`
+      : `<span class="ml-auto text-xs text-slate-300 flex-shrink-0" title="Reject cannot be auto-undone">↺ n/a</span>`;
+
+    return `<li class="flex items-center gap-2 text-xs bg-white border border-slate-200 rounded px-2 py-1.5">
+      <span class="px-1 py-0.5 rounded text-[10px] font-semibold flex-shrink-0 ${cls}">${esc(label)}</span>
+      <span class="text-slate-500 flex-shrink-0 font-mono">${esc(target)}</span>
+      <span class="text-slate-400 truncate">${esc(summary)}</span>
+      <span class="text-slate-300 flex-shrink-0">${esc(ts)}</span>
+      ${undoBtn}
+    </li>`;
+  }).join("");
+}
+
+async function undoEdit(idx) {
+  const e = _auditEntries[idx];
+  if (!e) return;
+
+  let body;
+
+  if (e.action === "update") {
+    // The current fingerprint is the "after" fingerprint (key may have changed)
+    const currentFp = (e.after && e.after.fingerprint) || e.target_fingerprint;
+    if (!currentFp) { alert("Cannot undo: missing fingerprint in audit entry."); return; }
+
+    // Revert fields to "before" values — only the editable fields
+    const EDITABLE = ["date","ticker","director","type","shares","role","company","price","value","sector","announced_at"];
+    const fields = {};
+    const before = e.before || {};
+    const after  = e.after  || {};
+    EDITABLE.forEach(k => {
+      if (k in before) fields[k] = before[k];
+    });
+    if (!Object.keys(fields).length) {
+      alert("Nothing to undo — no before-state recorded for this edit.");
+      return;
+    }
+    body = { action: "update", target_fingerprint: currentFp, fields };
+
+  } else if (e.action === "add") {
+    const fp = (e.after && e.after.fingerprint);
+    if (!fp) { alert("Cannot undo: missing fingerprint in audit entry."); return; }
+    body = { action: "delete", target_fingerprint: fp, fields: {} };
+
+  } else if (e.action === "delete") {
+    // Re-add the row from before state
+    const before = e.before || {};
+    const rns_id = e.target_rns_id || (before.url || "").split("/").pop() || "";
+    if (!rns_id) { alert("Cannot undo: missing rns_id in audit entry."); return; }
+    const fields = {
+      date:      before.date,
+      ticker:    before.ticker,
+      director:  before.director,
+      type:      before.type,
+      shares:    before.shares,
+      price:     before.price,
+      value:     before.value,
+      role:      before.role,
+      company:   before.company,
+    };
+    body = { action: "add", target_rns_id: rns_id, fields };
+
+  } else {
+    alert("Reject edits cannot be automatically undone.\n\nTo recover a rejected filing, re-run the scrape for that RNS ID.");
+    return;
+  }
+
+  const r = await fetch("/api/stage-edit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const j = await r.json();
+  if (j.ok) {
+    setFeedback(`Undo staged ✓ (${j.queue_length} edit${j.queue_length!==1?"s":""} in queue)`, false);
+    await refreshQueue();
+    if (!S.queueOpen) toggleQueuePanel();
+  } else {
+    setFeedback("Undo failed: " + (j.error || "unknown error"), true);
+  }
+}
+
+// ── URL params ────────────────────────────────────────────────────────────────
+async function handleUrlParams() {
+  const p   = new URLSearchParams(location.search);
+  const tab = p.get("tab") || "a";
+  const fp  = p.get("fp");
+  const rns = p.get("rns");
+  if (tab !== S.tab) switchTab(tab);
+  if (fp) {
+    showViewer();
+    document.getElementById("fields-pane").innerHTML = `<p class="text-slate-400 text-sm">Loading transaction…</p>`;
+    await fetchAndShowTx(fp);
+  } else if (rns) {
+    const it = S.pendingItems.find(x => x.rns_id === rns);
+    if (it) selectPending(JSON.stringify(it));
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", async () => {
+  // Resume progress display if apply_edits was already running
+  try {
+    const r = await fetch("/api/apply-status");
+    const s = await r.json();
+    if (s.status === "running") {
+      document.getElementById("apply-progress").classList.remove("hidden");
+      _updateApplyProgress(s);
+      _pollApplyStatus();
+    }
+  } catch { /* server not up yet */ }
+
+  await Promise.all([loadPendingReview(), refreshQueue()]);
+  await handleUrlParams();
+});
+</script>
+</body>
+</html>

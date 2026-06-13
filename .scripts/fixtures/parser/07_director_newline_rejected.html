@@ -1,0 +1,32 @@
+<!doctype html>
+<html><head><title>Test Fixture: director cell with newline (B-004)</title></head><body>
+<!--
+  B-003 / B-004 regression: the old regex parser captured across <td>
+  boundaries, producing director values like "Kingfisher plc\nb" — the
+  company name plus the next field label. The table-aware parser
+  (Sprint 3) reads only the matched <td> cell, but the validator must
+  also reject any candidate that still contains a newline as a defence
+  against future regressions. Fixture forces a newline INSIDE the
+  director cell to simulate the bleed.
+-->
+<table>
+  <tr><td>Name</td><td>Newline Holdings plc</td></tr>
+  <tr><td>Nature of the transaction</td><td>Acquisition of ordinary shares</td></tr>
+</table>
+<table>
+  <tr>
+    <th>Date of transaction</th>
+    <th>Name</th>
+    <th>Position</th>
+    <th>Price</th>
+    <th>Volume</th>
+  </tr>
+  <tr>
+    <td>5 May 2026</td>
+    <td>Newline Holdings plc<br/>b</td>
+    <td>Director</td>
+    <td>£10.00</td>
+    <td>1,000</td>
+  </tr>
+</table>
+</body></html>

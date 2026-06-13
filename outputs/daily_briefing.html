@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Directors Dealings -- Daily Briefing</title>
+<style>
+  :root {
+    --bg:      #0b0f14;
+    --panel:   #121823;
+    --panel-2: #182231;
+    --border:  #233246;
+    --text:    #e6edf3;
+    --muted:   #8b97a8;
+    --accent:  #4cc38a;
+    --warn:    #e5484d;
+    --gold:    #d4a73a;
+    --blue:    #4aa3ff;
+    --mono:    ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans:    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.5; }
+
+  /* Header */
+  header {
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(180deg, #0e141d 0%, var(--bg) 100%);
+  }
+  header h1 { font-size: 20px; letter-spacing: 0.4px; }
+  header h1 .tag { color: var(--gold); font-weight: 600; }
+
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .meta { text-align: right; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+  .meta .date { color: var(--text); font-size: 13px; }
+
+  #update-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 7px 16px; background: #152030;
+    border: 1px solid var(--blue); border-radius: 6px;
+    color: var(--blue); font-family: var(--mono); font-size: 12px;
+    font-weight: 600; cursor: pointer;
+    transition: background 0.15s, color 0.15s; white-space: nowrap;
+  }
+  #update-btn:hover:not(:disabled) { background: #1c3048; color: #90d0ff; }
+  #update-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  #update-btn.loading { border-color: var(--gold); color: var(--gold); background: #221800; }
+  #update-btn.success { border-color: var(--accent); color: var(--accent); background: #001a0f; }
+  #update-btn.error   { border-color: var(--warn);  color: var(--warn);  background: #1a0000; }
+
+  .spinner {
+    width: 12px; height: 12px;
+    border: 2px solid currentColor; border-top-color: transparent;
+    border-radius: 50%; animation: spin 0.7s linear infinite; display: none;
+  }
+  #update-btn.loading .spinner  { display: inline-block; }
+  #update-btn.loading .btn-icon { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #server-status {
+    font-size: 10px; font-family: var(--mono); color: var(--muted);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .status-dot.online  { background: var(--accent); box-shadow: 0 0 5px var(--accent); }
+  .status-dot.offline { background: var(--warn); }
+
+  main {
+    padding: 20px 28px; max-width: 1400px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr; gap: 18px;
+  }
+  .left-col  { display: grid; gap: 18px; }
+  .right-col { display: grid; gap: 18px; align-content: start; }
+
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .panel-head {
+    padding: 10px 16px; font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--muted); background: var(--panel-2);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: var(--border); color: var(--text); letter-spacing: 0.5px; }
+  .panel-body { padding: 14px 16px; }
+
+  .snapshot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 12px 14px; }
+  .stat { background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
+  .stat .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat .value { font-family: var(--mono); font-size: 17px; margin-top: 3px; }
+  .stat .chg   { font-size: 12px; margin-left: 4px; }
+
+  table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12.5px; }
+  th, td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.5px; }
+  tr:last-child td { border-bottom: none; }
+  td.r { text-align: right; }
+  .ticker { font-weight: 700; color: var(--blue); cursor: pointer; text-decoration: underline; text-decoration-style: dotted; }
+  .ticker:hover { color: var(--gold); }
+  .up   { color: var(--accent); }
+  .down { color: var(--warn); }
+  .flat { color: var(--muted); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10.5px; font-weight: 600; }
+  .pill.buy   { background: rgba(76,195,138,.15);  color: var(--accent); }
+  .pill.sell  { background: rgba(229,72,77,.15);   color: var(--warn); }
+  .pill.other { background: rgba(139,151,168,.15); color: var(--muted); }
+
+  #chart-panel { display: none; }
+  #chart-panel.visible { display: block; }
+  #tv-chart-container { width: 100%; height: 440px; }
+  #chart-close { cursor: pointer; color: var(--muted); font-size: 18px; line-height: 1; padding: 0 4px; }
+  #chart-close:hover { color: var(--warn); }
+
+  .news-list { list-style: none; }
+  .news-list li { padding: 9px 16px; border-bottom: 1px solid var(--border); }
+  .news-list li:last-child { border-bottom: none; }
+  .news-src  { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .news-time { color: var(--blue); font-family: var(--mono); font-size: 10.5px; margin-left: 6px; }
+  .news-title a { color: var(--text); text-decoration: none; font-size: 12.5px; }
+  .news-title a:hover { color: var(--gold); }
+
+  .empty { text-align: center; color: var(--muted); padding: 24px; font-size: 13px; }
+  footer { text-align: center; color: var(--muted); font-size: 11px; padding: 14px; border-top: 1px solid var(--border); margin-top: 8px; }
+
+  @media (max-width: 900px) {
+    main { grid-template-columns: 1fr; }
+    .snapshot-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Directors Dealings <span class="tag">// Daily Briefing</span></h1>
+  <div class="header-right">
+    <div class="meta">
+      <div class="date" id="hdr-date">--</div>
+      <div id="hdr-time">--</div>
+    </div>
+    <button id="update-btn" onclick="refreshData()" title="Fetch live data" disabled>
+      <span class="btn-icon">&#x21BB;</span>
+      <div class="spinner"></div>
+      <span id="btn-label">Refresh Data</span>
+    </button>
+    <div id="server-status">
+      <div class="status-dot" id="status-dot"></div>
+      <span id="status-label">checking server...</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="left-col">
+
+    <!-- MARKET SNAPSHOT -->
+    <div class="panel">
+      <div class="panel-head">Market Snapshot <span class="badge" id="market-badge">--</span></div>
+      <div class="snapshot-grid" id="snapshot-grid">
+        <div class="stat"><div class="label">Loading...</div><div class="value">--</div></div>
+      </div>
+    </div>
+
+    <!-- CHART PANEL (hidden until ticker clicked) -->
+    <div class="panel" id="chart-panel">
+      <div class="panel-head">
+        <span id="chart-title">Chart</span>
+        <span id="chart-close" onclick="closeChart()">&#x2715;</span>
+      </div>
+      <div id="tv-chart-container"></div>
+    </div>
+
+    <!-- DIRECTOR DEALINGS TABLE -->
+    <div class="panel">
+      <div class="panel-head">PDMR Transactions <span class="badge" id="dealings-badge">--</span></div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th><th>Ticker</th><th>Company</th><th>Director</th><th>Type</th>
+              <th class="r">Shares</th><th class="r">Value (GBP)</th><th class="r">Price</th>
+              <th class="r">Last Close</th><th class="r">Chg %</th>
+            </tr>
+          </thead>
+          <tbody id="dealings-body">
+            <tr><td colspan="10" class="empty">Loading dealings data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="right-col">
+
+    <!-- NEWS -->
+    <div class="panel">
+      <div class="panel-head">Latest News <span class="badge" id="news-badge">--</span></div>
+      <ul class="news-list" id="news-list">
+        <li class="empty">Loading news...</li>
+      </ul>
+    </div>
+
+    <!-- DATA INFO -->
+    <div class="panel">
+      <div class="panel-head">Data Info</div>
+      <div class="panel-body" style="font-size:12px; color:var(--muted); line-height:2;">
+        <div><span style="color:var(--text)">Prices</span> &mdash; OpenBB / Yahoo Finance</div>
+        <div><span style="color:var(--text)">Dealings</span> &mdash; DirectorDeals.co.uk</div>
+        <div><span style="color:var(--text)">Charts</span> &mdash; TradingView (click any ticker)</div>
+        <div><span style="color:var(--text)">Last updated</span> &mdash; <span id="info-updated">not yet</span></div>
+        <div style="margin-top:10px; padding:10px; background:var(--panel-2); border-radius:6px; border:1px solid var(--border);">
+          <div style="color:var(--gold); font-size:10px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">This load</div>
+          <div id="cache-status-body" style="line-height:1.9;">--</div>
+        </div>
+        <div style="margin-top:8px; padding:10px; background:var(--panel-2); border-radius:6px; border:1px solid var(--border);">
+          <div style="color:var(--gold); font-size:10px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Estimated API calls per open</div>
+          <div style="line-height:1.9;">
+            <div>Cold open (no cache) &mdash; <span style="color:var(--blue); font-family:var(--mono);">~3</span></div>
+            <div>Warm open (same day) &mdash; <span style="color:var(--accent); font-family:var(--mono);">0</span></div>
+            <div>Post 5pm (new close) &mdash; <span style="color:var(--blue); font-family:var(--mono);">2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  Directors Dealings &middot; Daily Briefing &middot; Prices via OpenBB &middot; Charts via TradingView
+</footer>
+
+<script src="https://s3.tradingview.com/tv.js"></script>
+
+<script>
+// ── Header clock ─────────────────────────────────────────────────────────────
+(function () {
+  var now  = new Date();
+  var opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('hdr-date').textContent = now.toLocaleDateString('en-GB', opts);
+  document.getElementById('hdr-time').textContent =
+    now.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }) + ' local';
+})();
+
+// ── Server check + auto smart-load on page open ───────────────────────────────
+var serverOnline = false;
+
+async function checkServer() {
+  var dot   = document.getElementById('status-dot');
+  var label = document.getElementById('status-label');
+  var btn   = document.getElementById('update-btn');
+  try {
+    var r = await fetch('/api/status', { signal: AbortSignal.timeout(2000) });
+    if (r.ok) {
+      serverOnline = true;
+      dot.className = 'status-dot online';
+      label.textContent = 'server online';
+      btn.disabled = false;
+      // Auto-load on page open -- 0 API calls if cache already fresh
+      await smartLoad();
+    }
+  } catch (e) {
+    serverOnline = false;
+    dot.className = 'status-dot offline';
+    label.textContent = 'server offline -- run start.bat';
+    btn.disabled = true;
+    document.getElementById('dealings-body').innerHTML =
+      '<tr><td colspan="10" class="empty">Server offline. Run <strong>start.bat</strong> then refresh.</td></tr>';
+    document.getElementById('news-list').innerHTML =
+      '<li class="empty">Server offline.</li>';
+  }
+}
+
+// Smart load -- calls /api/smart-update, uses cache where data is fresh
+async function smartLoad() {
+  var btn   = document.getElementById('update-btn');
+  var label = document.getElementById('btn-label');
+  btn.disabled = true;
+  btn.className = 'loading';
+  label.textContent = 'Loading...';
+  try {
+    var r = await fetch('/api/smart-update');
+    if (!r.ok) throw new Error('Server error: ' + r.status);
+    var data = await r.json();
+    window.DATA = data;
+    renderAll();
+    updateCachePanel(data.cache_status);
+    document.getElementById('info-updated').textContent = data.generated || '--';
+  } catch (err) {
+    console.warn('Smart load failed:', err);
+  } finally {
+    btn.disabled = false;
+    btn.className = '';
+    label.textContent = 'Refresh Data';
+  }
+}
+
+// Refresh button -- force=1 bypasses all cache
+async function refreshData() {
+  if (!serverOnline) {
+    alert('The local server is not running.\n\nDouble-click start.bat in your Directors Dealings folder to start it, then try again.');
+    return;
+  }
+  var btn   = document.getElementById('update-btn');
+  var label = document.getElementById('btn-label');
+  btn.disabled = true;
+  btn.className = 'loading';
+  label.textContent = 'Fetching...';
+  try {
+    var r = await fetch('/api/smart-update?force=1');
+    if (!r.ok) throw new Error('Server error: ' + r.status);
+    var data = await r.json();
+    window.DATA = data;
+    renderAll();
+    updateCachePanel(data.cache_status);
+    document.getElementById('info-updated').textContent = data.generated || new Date().toLocaleDateString('en-GB');
+    btn.className = 'success';
+    label.textContent = 'Updated!';
+    setTimeout(function () { btn.disabled = false; btn.className = ''; label.textContent = 'Refresh Data'; }, 3000);
+  } catch (err) {
+    btn.className = 'error';
+    label.textContent = 'Failed';
+    console.error('Update failed:', err);
+    setTimeout(function () { btn.disabled = false; btn.className = ''; label.textContent = 'Refresh Data'; }, 3000);
+  }
+}
+
+// ── Cache status panel ────────────────────────────────────────────────────────
+function updateCachePanel(cs) {
+  if (!cs) return;
+  var el = document.getElementById('cache-status-body');
+  if (!el) return;
+  var rnsTag   = cs.rns_from_cache    ? '<span style="color:var(--accent)">cache &#x2713;</span>' : '<span style="color:var(--gold)">live fetch</span>';
+  var priceTag = cs.prices_from_cache ? '<span style="color:var(--accent)">cache &#x2713;</span>' : '<span style="color:var(--gold)">live fetch</span>';
+  var closeTag = cs.is_post_close     ? '<span style="color:var(--accent)">yes &mdash; confirmed close</span>' : '<span style="color:var(--muted)">no &mdash; intraday</span>';
+  el.innerHTML =
+    '<div><span style="color:var(--text)">Dealings</span> &mdash; ' + rnsTag + '</div>' +
+    '<div><span style="color:var(--text)">Prices</span> &mdash; ' + priceTag + '</div>' +
+    '<div><span style="color:var(--text)">Post 5pm close</span> &mdash; ' + closeTag + '</div>' +
+    '<div><span style="color:var(--text)">API calls this load</span> &mdash; ' +
+      '<span style="color:var(--blue);font-family:var(--mono);">' + (cs.api_calls_made || 0) + '</span></div>';
+}
+
+// ── TradingView chart ─────────────────────────────────────────────────────────
+function openChart(tvSymbol, lbl) {
+  var panel = document.getElementById('chart-panel');
+  panel.classList.add('visible');
+  document.getElementById('chart-title').textContent = lbl + ' (' + tvSymbol + ')';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('tv-chart-container').innerHTML = '';
+  new TradingView.widget({
+    container_id: 'tv-chart-container',
+    width: '100%', height: 440,
+    symbol: tvSymbol,
+    interval: 'D',
+    timezone: 'Europe/London',
+    theme: 'dark',
+    style: '1',
+    locale: 'en',
+    toolbar_bg: '#182231',
+    allow_symbol_change: true,
+    save_image: false,
+    studies: ['RSI@tv-basicstudies', 'MASimple@tv-basicstudies'],
+  });
+}
+
+function closeChart() {
+  document.getElementById('chart-panel').classList.remove('visible');
+}
+
+// ── Formatting helpers ────────────────────────────────────────────────────────
+function fmtNum(n, dp) {
+  if (n == null) return '--';
+  dp = (dp === undefined) ? 2 : dp;
+  return Number(n).toLocaleString('en-GB', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+}
+function fmtPct(p) {
+  if (p == null) return '<span class="flat">--</span>';
+  var cls  = p > 0 ? 'up' : (p < 0 ? 'down' : 'flat');
+  var sign = p > 0 ? '+' : '';
+  return '<span class="' + cls + '">' + sign + fmtNum(p, 2) + '%</span>';
+}
+function fmtShares(s) {
+  if (!s) return '--';
+  var n = parseInt(String(s).replace(/,/g, ''), 10);
+  return isNaN(n) ? s : n.toLocaleString('en-GB');
+}
+function dealTypePill(t) {
+  if (!t) return '<span class="pill other">--</span>';
+  var up = t.toUpperCase();
+  if (up.indexOf('BUY') !== -1 || up === 'P')   return '<span class="pill buy">BUY</span>';
+  if (up.indexOf('SELL') !== -1 || up === 'S')  return '<span class="pill sell">SELL</span>';
+  return '<span class="pill other">' + t + '</span>';
+}
+function tickerLink(ticker, tv, company) {
+  var lbl = (company || ticker).replace(/'/g, "\\'");
+  return '<span class="ticker" onclick="openChart(\'' + tv + '\',\'' + lbl + '\')" title="Click for TradingView chart">' + ticker + '</span>';
+}
+
+// ── Render all panels ─────────────────────────────────────────────────────────
+function renderAll() {
+  if (typeof DATA === 'undefined') return;
+
+  // Market snapshot
+  var snap     = DATA.snapshot || {};
+  var snapKeys = Object.keys(snap);
+  document.getElementById('market-badge').textContent = DATA.generated || 'live';
+  var grid = document.getElementById('snapshot-grid');
+  if (snapKeys.length === 0) {
+    grid.innerHTML = '<div class="stat"><div class="label">No data</div><div class="value">--</div></div>';
+  } else {
+    grid.innerHTML = snapKeys.map(function (name) {
+      var s  = snap[name];
+      var dp = name.indexOf('/') !== -1 ? 4 : 2;
+      var val = s.value != null ? fmtNum(s.value, dp) : '--';
+      return '<div class="stat"><div class="label">' + name + '</div>' +
+             '<div class="value ' + (s.dir || '') + '">' + val +
+             ' <small class="chg">' + fmtPct(s.pct) + '</small></div></div>';
+    }).join('');
+  }
+
+  // Director dealings
+  var dealings = DATA.dealings || [];
+  var prices   = DATA.prices   || {};
+  document.getElementById('dealings-badge').textContent = dealings.length + ' transactions';
+  var tbody = document.getElementById('dealings-body');
+  if (dealings.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" class="empty">No dealings found for today. Click <strong>Refresh Data</strong> or check back on a trading day.</td></tr>';
+  } else {
+    tbody.innerHTML = dealings.map(function (d) {
+      var p  = prices[d.ticker_yf] || {};
+      var lc = p.price != null ? fmtNum(p.price, 2) : '--';
+
+      // Dealing price — strip trailing 'p' suffix and parse as float
+      var rawPrice = (d.price || '').replace(/p$/i, '').trim();
+      var dealPrice = rawPrice ? parseFloat(rawPrice) : NaN;
+      var priceStr  = isNaN(dealPrice) ? '--' : (rawPrice.endsWith ? fmtNum(dealPrice, 4).replace(/\.?0+$/, '') : rawPrice);
+      // Detect pence vs GBP: if last-close > 5 and deal price < 2, likely pence
+      var isPence   = !isNaN(dealPrice) && (d.price || '').match(/p$/i);
+      var priceGBP  = isNaN(dealPrice) ? NaN : (isPence ? dealPrice / 100 : dealPrice);
+      priceStr = isNaN(dealPrice) ? '--' : (isPence ? dealPrice + 'p' : '£' + fmtNum(dealPrice, 4).replace(/0+$/, '').replace(/\.$/, ''));
+
+      // Shares as integer
+      var sharesNum = parseInt(String(d.shares || '').replace(/,/g, ''), 10);
+
+      // Value: use stored value, else compute from price × shares
+      var storedVal = d.value ? parseFloat(String(d.value).replace(/,/g, '')) : NaN;
+      var computed  = (!isNaN(priceGBP) && sharesNum > 0) ? priceGBP * sharesNum : NaN;
+      var valGBP    = !isNaN(storedVal) && storedVal > 0 ? storedVal : computed;
+      var valStr    = (!isNaN(valGBP) && valGBP > 0) ? '£' + fmtNum(valGBP, 0) : '--';
+
+      return '<tr>' +
+        '<td style="color:var(--muted);font-size:11px;">' + (d.date || '--') + '</td>' +
+        '<td>' + tickerLink(d.ticker, d.ticker_tv, d.company) + '</td>' +
+        '<td style="color:var(--muted);font-size:11.5px;">' + (d.company || '--') + '</td>' +
+        '<td>' + (d.director || '--') + '</td>' +
+        '<td>' + dealTypePill(d.type) + '</td>' +
+        '<td class="r">' + fmtShares(d.shares) + '</td>' +
+        '<td class="r">' + valStr + '</td>' +
+        '<td class="r" style="color:var(--muted);">' + priceStr + '</td>' +
+        '<td class="r">' + lc + '</td>' +
+        '<td class="r">' + fmtPct(p.pct) + '</td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  // News
+  var newsItems = DATA.news || [];
+  document.getElementById('news-badge').textContent = newsItems.length + ' items';
+  var newsList = document.getElementById('news-list');
+  if (newsItems.length === 0) {
+    newsList.innerHTML = '<li class="empty">No news retrieved.</li>';
+  } else {
+    newsList.innerHTML = newsItems.map(function (n) {
+      return '<li>' +
+        '<span class="news-src">' + (n.source || 'News') + '</span>' +
+        '<span class="news-time">' + (n.time ? n.time.slice(11, 16) : '') + '</span>' +
+        '<a href="' + n.url + '" target="_blank" class="news-title">' + n.title + '</a>' +
+        '</li>';
+    }).join('');
+  }
+
+</script>
+</body>
+</html>

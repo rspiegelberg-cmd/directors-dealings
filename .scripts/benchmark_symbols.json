@@ -1,0 +1,22 @@
+{
+  "_comment": "Stage 3 sector -> Yahoo benchmark symbol map. Probed 2026-05-13: every candidate ^FTNMX* sub-index returned HTTP 404 on the anonymous chart endpoint, so this map collapses to _default. Sprint 26 (B-105): AIM stocks are handled via the is_aim override in fetch_sectors.py resolve() and backfill_ticker_meta.py — they use '^FTSC' as AIM benchmark. FTSE 100/250 membership benchmarks deferred until market_cap data is available from backfill_ticker_meta.py.",
+  "_aim_note": "AIM stocks use '^FTSC' (FTSE Small Cap) as proxy — '^AIM' (FTSE AIM All-Share) was confirmed delisted on Yahoo Finance 2026-06-07. Override is applied in fetch_sectors.resolve() when is_aim=1, and by backfill_ticker_meta.py via Yahoo quoteType.exchange detection.",
+  "_ftse100_note": "FTSE 100 members ('^FTSE') and FTSE 250 ('^FTMC') benchmarking deferred to Sprint 26 Phase B after market_cap_gbp is populated by backfill_ticker_meta.py.",
+  "_probed_dead_2026_05_13": [
+    "^FTNMX5710", "^FTNMX0500", "^FTNMX2010", "^FTNMX3010",
+    "^FTNMX1750", "^FTNMX9010", "^FTNMX2030", "^FTNMX4010",
+    "^FTNMX5510", "^FTNMX3510", "^FTNMX3030"
+  ],
+  "_default": "^FTAS",
+  "Financials": "^FTAS",
+  "Energy": "^FTAS",
+  "Health Care": "^FTAS",
+  "Industrials": "^FTAS",
+  "Consumer Discretionary": "^FTAS",
+  "Consumer Staples": "^FTAS",
+  "Materials": "^FTAS",
+  "Technology": "^FTAS",
+  "Utilities": "^FTAS",
+  "Communication Services": "^FTAS",
+  "Real Estate": "^FTAS"
+}

@@ -1,0 +1,16 @@
+{
+  "_doc": "Year-as-shares refix Step B (2026-05-31) — EMAN / Charles Dorfman 9581012. Multi-tranche MAR Article 19 template: nested Date|Price|Volume sub-table (50,000 + 5,583 + 71,500 = 127,083) with NO director column; PDMR name from the 'a) Name' KV row; labelled '- Aggregated volume' = 127,083. Pre-fix the parser fell through to the legacy regex and stored shares=2026 (the year bled in). Post-fix: ONE aggregated row, shares=127083, dated to the latest tranche (2026-05-20), shares must NOT equal 2026, no required_fields_missing.",
+  "ticker_hint": "EMAN",
+  "extracted_count": 1,
+  "rows": [
+    {"date": "2026-05-20", "shares": 127083, "director": "Charles Dorfman", "type": "BUY"}
+  ],
+  "rows_assert_not_equal": [
+    {"index": 0, "field": "shares", "value": 2026}
+  ],
+  "warnings_must_not_contain": [
+    "required_fields_missing",
+    "could_not_parse_tx_date",
+    "plausibility_rejected"
+  ]
+}

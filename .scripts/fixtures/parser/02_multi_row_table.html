@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><title>Test Fixture: multi-row transaction table</title></head><body>
+<!--
+  B-003 / B-001 regression: a transaction table with 3 data rows MUST
+  produce 3 extracted dicts, not just the first. National Grid filing
+  9541612 (Jacqueline Agg, DRIP) was the canonical real-world case that
+  surfaced this bug. We test with a structurally-identical synthetic
+  table so the fixture is small and self-contained.
+-->
+<table>
+  <tr><td>Name</td><td>Multirow Holdings plc</td></tr>
+  <tr><td>Nature of the transaction</td><td>Acquisition of ordinary shares</td></tr>
+</table>
+<table>
+  <tr>
+    <th>Date of the transaction</th>
+    <th>Name</th>
+    <th>Position</th>
+    <th>Price</th>
+    <th>Volume</th>
+  </tr>
+  <tr>
+    <td>13 August 2024</td>
+    <td>Bob Sample</td>
+    <td>Director</td>
+    <td>£10.00</td>
+    <td>100</td>
+  </tr>
+  <tr>
+    <td>12 February 2025</td>
+    <td>Bob Sample</td>
+    <td>Director</td>
+    <td>£11.00</td>
+    <td>200</td>
+  </tr>
+  <tr>
+    <td>13 August 2025</td>
+    <td>Bob Sample</td>
+    <td>Director</td>
+    <td>£12.00</td>
+    <td>300</td>
+  </tr>
+</table>
+</body></html>

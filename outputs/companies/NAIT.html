@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-sha" content="local">
+<title>NAIT - The North American Income Trust plc</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+<style>
+  html, body { background:#f8fafc; color:#0f172a; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .pulse-highlight { animation: pulseBg 2s ease-out 1; }
+  @keyframes pulseBg {
+    0%   { background-color: #fef3c7; }
+    100% { background-color: transparent; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+<header class="border-b border-slate-200 bg-white px-6 h-12 flex items-center justify-between">
+<h1 class="text-sm font-semibold text-slate-900 tracking-tight">NAIT - The North American Income Trust plc</h1>
+<nav class="flex items-center"><button id="refreshBtn" type="button" class="text-xs px-2.5 py-1 rounded border border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5" title="Run the full refresh pipeline (scrape -> parse -> backfill -> eval -> rebuild). Slow (~15+ min) and uses LLM credits."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span id="refreshBtnLabel">Refresh</span></button><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Today</a> <a href="../performance.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Performance</a></nav>
+</header>
+<main class="max-w-7xl mx-auto">
+<header class="border-b border-slate-200 bg-white px-6 py-4"><div class="flex items-center justify-between mb-1"><div class="flex items-center"><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 mr-4">&larr; Dashboard</a><h1 class="text-lg font-semibold text-slate-900 tabular-nums">NAIT</h1><span class="text-sm text-slate-600 ml-2">The North American Income Trust plc</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Unknown sector</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Main</span></div></div><div class="flex items-center justify-between"><div class="text-sm tabular-nums">Latest close: 4.02p <span class="text-rose-600 ml-2">&#9660; -0.49%</span></div><div class="text-[10px] text-slate-400">Last refresh: 2026-05-18T14:00:21Z</div></div></header><section class="m-6 bg-white border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-center mb-3"><h2 class="text-xs uppercase tracking-wide text-slate-500">Price (trailing window)</h2></div><div class="relative h-72"><canvas id="priceChart"></canvas></div><div class="relative h-16 mt-1"><canvas id="volumeChart"></canvas></div><script>window.__priceData = {"dates":["2025-04-15","2025-04-16","2025-04-17","2025-04-22","2025-04-23","2025-04-24","2025-04-25","2025-04-28","2025-04-29","2025-04-30","2025-05-01","2025-05-02","2025-05-06","2025-05-07","2025-05-08","2025-05-09","2025-05-12","2025-05-13","2025-05-14","2025-05-15","2025-05-16","2025-05-19","2025-05-20","2025-05-21","2025-05-22","2025-05-23","2025-05-27","2025-05-28","2025-05-29","2025-05-30","2025-06-02","2025-06-03","2025-06-04","2025-06-05","2025-06-06","2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-07","2025-07-08","2025-07-09","2025-07-10","2025-07-11","2025-07-14","2025-07-15","2025-07-16","2025-07-17","2025-07-18","2025-07-21","2025-07-22","2025-07-23","2025-07-24","2025-07-25","2025-07-28","2025-07-29","2025-07-30","2025-07-31","2025-08-01","2025-08-04","2025-08-05","2025-08-06","2025-08-07","2025-08-08","2025-08-11","2025-08-12","2025-08-13","2025-08-14","2025-08-15","2025-08-18","2025-08-19","2025-08-20","2025-08-21","2025-08-22","2025-08-26","2025-08-27","2025-08-28","2025-08-29","2025-09-01","2025-09-02","2025-09-03","2025-09-04","2025-09-05","2025-09-08","2025-09-09","2025-09-10","2025-09-11","2025-09-12","2025-09-15","2025-09-16","2025-09-17","2025-09-18","2025-09-19","2025-09-22","2025-09-23","2025-09-24","2025-09-25","2025-09-26","2025-09-29","2025-09-30","2025-10-01","2025-10-02","2025-10-03","2025-10-06","2025-10-07","2025-10-08","2025-10-09","2025-10-10","2025-10-13","2025-10-14","2025-10-15","2025-10-16","2025-10-17","2025-10-20","2025-10-21","2025-10-22","2025-10-23","2025-10-24","2025-10-27","2025-10-28","2025-10-29","2025-10-30","2025-10-31","2025-11-03","2025-11-04","2025-11-05","2025-11-06","2025-11-07","2025-11-10","2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-17","2025-11-18","2025-11-19","2025-11-20","2025-11-21","2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-22","2025-12-23","2025-12-24","2025-12-29","2025-12-30","2025-12-31","2026-01-02","2026-01-05","2026-01-06","2026-01-07","2026-01-08","2026-01-09","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-19","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15","2026-05-18"],"closes":[3.038525390625,3.018535461425781,2.923978271484375,2.8939886474609375,2.9939535522460936,2.9989520263671876,3.0189453125,2.9989520263671876,3.0189453125,3.063929138183594,3.0989169311523437,3.0989169311523437,3.093918762207031,3.083922119140625,3.118909912109375,3.1139117431640626,3.2138766479492187,3.1988818359375,3.153898010253906,3.1888858032226564,3.2088787841796873,3.1888858032226564,3.2038803100585938,3.168892517089844,3.1389028930664065,3.0889205932617188,3.128906555175781,3.1389028930664065,3.1439013671875,3.178888854980469,3.1588958740234374,3.1738909912109374,3.2038803100585938,3.1988818359375,3.1988818359375,3.2288720703125,3.2138766479492187,3.2138766479492187,3.2538626098632815,3.2388681030273436,3.2288720703125,3.2388681030273436,3.24886474609375,3.1988818359375,3.2388681030273436,3.2288720703125,3.2388681030273436,3.24886474609375,3.2091552734375,3.249144287109375,3.25414306640625,3.2791366577148438,3.329123229980469,3.329123229980469,3.2991314697265626,3.329123229980469,3.329123229980469,3.3191259765625,3.329123229980469,3.3391207885742187,3.3491180419921873,3.369112854003906,3.3341220092773436,3.38410888671875,3.3591156005859375,3.369112854003906,3.3491180419921873,3.369112854003906,3.374111328125,3.369112854003906,3.394106140136719,3.3791104125976563,3.394106140136719,3.4091021728515627,3.3641143798828126,3.389107360839844,3.394106140136719,3.399105224609375,3.3791104125976563,3.389107360839844,3.389107360839844,3.389107360839844,3.38410888671875,3.399105224609375,3.389107360839844,3.4091021728515627,3.399105224609375,3.434095764160156,3.4390945434570312,3.4690866088867187,3.4590890502929685,3.4590890502929685,3.4690866088867187,3.449091796875,3.449091796875,3.4640878295898436,3.4640878295898436,3.474085388183594,3.4640878295898436,3.449091796875,3.429096984863281,3.454090576171875,3.4640878295898436,3.4840826416015624,3.474085388183594,3.444093017578125,3.454090576171875,3.499078369140625,3.499078369140625,3.51407470703125,3.519073181152344,3.5390679931640623,3.5290707397460936,3.51407470703125,3.5240719604492186,3.5340695190429687,3.564061279296875,3.539346008300781,3.5443450927734377,3.539346008300781,3.5693408203125,3.5793386840820314,3.5793386840820314,3.5793386840820314,3.5443450927734377,3.574339599609375,3.5943359375,3.5893368530273437,3.559342346191406,3.5893368530273437,3.5893368530273437,3.5893368530273437,3.599335021972656,3.63432861328125,3.6393276977539064,3.6193313598632812,3.5793386840820314,3.559342346191406,3.5693408203125,3.559342346191406,3.5643414306640624,3.5693408203125,3.549344482421875,3.5193496704101563,3.574339599609375,3.599335021972656,3.6393276977539064,3.599335021972656,3.574339599609375,3.5793386840820314,3.5193496704101563,3.559342346191406,3.5893368530273437,3.539346008300781,3.599335021972656,3.5893368530273437,3.63432861328125,3.6443267822265626,3.659324035644531,3.6493258666992188,3.6443267822265626,3.609333190917969,3.6243304443359374,3.6443267822265626,3.6293295288085936,3.659324035644531,3.63432861328125,3.659324035644531,3.6693218994140624,3.6643231201171873,3.6393276977539064,3.654324951171875,3.6493258666992188,3.6893182373046876,3.6693218994140624,3.6843194580078125,3.6293295288085936,3.679604187011719,3.6546066284179686,3.679604187011719,3.694602355957031,3.7645950317382812,3.7595953369140624,3.799591064453125,3.799591064453125,3.819588928222656,3.8495858764648436,3.83458740234375,3.814589538574219,3.8595846557617186,3.8645840454101563,3.8295880126953126,3.804590759277344,3.824588623046875,3.824588623046875,3.814589538574219,3.7945916748046873,3.769594421386719,3.8495858764648436,3.809590148925781,3.799591064453125,3.8495858764648436,3.869583740234375,3.8545852661132813,3.9345767211914064,3.9495748901367187,3.9495748901367187,3.96957275390625,3.9770721435546874,3.997070007324219,3.9545745849609375,3.9795718383789063,4.0245669555664065,4.059563293457031,4.034566040039063,4.029566345214843,4.049564208984375,4.0395654296875,4.049564208984375,4.079561157226562,4.079561157226562,4.084560546875,4.019567565917969,4.049564208984375,4.014568176269531,3.9395761108398437,3.87958251953125,3.9395761108398437,3.8495858764648436,3.8545852661132813,3.87958251953125,3.87958251953125,3.8845819091796874,3.844586181640625,3.799591064453125,3.769594421386719,3.7945916748046873,3.769594421386719,3.799591064453125,3.769594421386719,3.709600830078125,3.7245993041992187,3.7595953369140624,3.7945916748046873,3.779593200683594,3.8295880126953126,3.899580383300781,3.869583740234375,3.899580383300781,3.899580383300781,3.9795718383789063,4.029566345214843,3.9895706176757812,4.069562072753906,4.079561157226562,4.1095578002929685,4.079561157226562,4.079561157226562,4.099559020996094,4.089559936523438,4.069562072753906,4.089559936523438,4.079561157226562,4.069562072753906,4.049564208984375,4.089559936523438,4.03,4.05,4.01,4.04,4.07,4.07,4.04,4.020199890136719],"volumes":[144488,153288,119669,120277,127560,200191,112337,108058,87920,118640,46746,162855,226048,101178,145951,64438,156762,95979,186242,88868,90280,278908,97573,71980,162567,85018,74492,124792,133969,80485,110590,74166,88118,158774,149230,86813,99466,98485,222629,88757,62940,629256,134054,54278,164668,202040,375563,288766,120508,138994,432377,124160,219664,177376,48215,244712,192427,182294,410089,252581,273307,384595,254350,240769,82287,108720,145635,203479,164589,366020,290838,392665,286979,387476,176840,373308,315430,342638,220372,54556,257983,129014,156622,2614860,190936,181273,120356,176819,105111,268293,257002,91725,216101,97141,160407,166818,161844,120084,114219,296906,134970,84317,106420,142306,117629,111207,189814,93379,282116,69954,114406,99528,195967,142742,176679,93942,285917,71267,100195,153139,373993,195775,391629,96783,173015,79838,116649,90224,149263,98799,146205,148038,117671,318674,223539,138065,719888,698724,217376,363655,341782,343247,253446,460443,280845,236706,185859,308273,283792,268395,182114,312703,175226,133038,193359,120134,77048,66642,75526,117474,87316,53543,70486,73566,162804,187234,57853,99586,85578,69656,56128,108302,61634,138769,277138,101295,39413,75956,71928,18661,105502,138924,234197,150266,70043,127938,80313,46499,235279,219211,177154,101727,114309,152158,101345,91915,132274,70782,96230,70677,80031,164306,189848,122180,125976,250805,277069,100847,95173,308627,144472,90488,53892,190133,100813,131512,92863,146589,77075,57727,178783,262615,118016,163056,63783,98198,178035,202262,83246,99497,87701,60005,163508,80749,37683,160198,176409,75025,124324,94991,51119,103139,186899,185070,125231,368415,91712,104986,321115,54498,161036,116452,137411,215702,94602,209405,238710,101068,176440,131622,234876,56036,160717,136200,83330,148540,116807,168322,103642,49233,100651,119302,255886,7814],"markers":[{"date":"2026-04-24","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"John Adebiyi","role":"Director","shares":12100,"price":4.111103,"value":49744.35,"signals":["f1","t2"],"fingerprint":"224c3a4e1eed625f"},{"date":"2026-02-03","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"John Adebiyi","role":"Director","shares":117,"price":3.866499,"value":452.38,"signals":["f1","s1"],"fingerprint":"2e8770af24399c3a"},{"date":"2026-01-30","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"Susannah Nicklin","role":"Director","shares":3,"price":3.8005,"value":11.4,"signals":["f1","s1"],"fingerprint":"40d408abc0779ada"},{"date":"2025-12-22","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"John Adebiyi","role":"Director","shares":10755,"price":3.699999,"value":39793.49,"signals":["f1","t2"],"fingerprint":"1a9d46bb36a9e8a1"},{"date":"2025-11-07","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"John Adebiyi","role":"Director","shares":5638,"price":3.52855,"value":19893.96,"signals":["f1"],"fingerprint":"6577f71cf8e54cb3"},{"date":"2026-02-03","type":"CLUSTER","mtype":"cluster","color":"#7c3aed","director":"","role":"","shares":0,"price":0,"value":0,"signals":["s1"],"fingerprint":""},{"date":"2026-02-12","type":"CLUSTER","mtype":"cluster","color":"#7c3aed","director":"","role":"","shares":0,"price":0,"value":0,"signals":["s1"],"fingerprint":""}]};</script></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Transactions</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Date</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-left">Role</th><th class="px-3 py-2 text-left">Type</th><th class="px-3 py-2 text-right">Shares</th><th class="px-3 py-2 text-right">Price (p)</th><th class="px-3 py-2 text-right">Value (&pound;)</th><th class="px-3 py-2 text-left">Signals</th><th class="px-3 py-2 text-center">Source</th></tr></thead><tbody><tr id="txn-224c3a4e1eed625f" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">24 Apr 2026</td><td class="px-3 py-2 text-slate-700">John Adebiyi</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">12,100</td><td class="px-3 py-2 text-right tabular-nums">4.11</td><td class="px-3 py-2 text-right tabular-nums">&pound;49,744</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T2 - Other exec buy (Chair, Group, Director) &gt;= GBP25k. Mid-conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-500 text-white">T2</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/north-american-income-trust-the---nait/director-pdmr-shareholding/9537786" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/north-american-income-trust-the---nait/director-pdmr-shareholding/9537786">&#8599;</a></td></tr><tr id="txn-2e8770af24399c3a" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">03 Feb 2026</td><td class="px-3 py-2 text-slate-700">John Adebiyi</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">117</td><td class="px-3 py-2 text-right tabular-nums">3.87</td><td class="px-3 py-2 text-right tabular-nums">&pound;452</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/north-american-income-trust-the---nait/director-pdmr-shareholding/9405266" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/north-american-income-trust-the---nait/director-pdmr-shareholding/9405266">&#8599;</a></td></tr><tr id="txn-40d408abc0779ada" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">30 Jan 2026</td><td class="px-3 py-2 text-slate-700">Susannah Nicklin</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">3</td><td class="px-3 py-2 text-right tabular-nums">3.80</td><td class="px-3 py-2 text-right tabular-nums">&pound;11</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/north-american-income-trust-the---nait/director-pdmr-shareholding/9428225" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/north-american-income-trust-the---nait/director-pdmr-shareholding/9428225">&#8599;</a></td></tr><tr id="txn-1a9d46bb36a9e8a1" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">22 Dec 2025</td><td class="px-3 py-2 text-slate-700">John Adebiyi</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">10,755</td><td class="px-3 py-2 text-right tabular-nums">3.70</td><td class="px-3 py-2 text-right tabular-nums">&pound;39,793</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T2 - Other exec buy (Chair, Group, Director) &gt;= GBP25k. Mid-conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-500 text-white">T2</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/north-american-income-trust-the---nait/director-pdmr-shareholding/9313657" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/north-american-income-trust-the---nait/director-pdmr-shareholding/9313657">&#8599;</a></td></tr><tr id="txn-6577f71cf8e54cb3" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">07 Nov 2025</td><td class="px-3 py-2 text-slate-700">John Adebiyi</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">5,638</td><td class="px-3 py-2 text-right tabular-nums">3.53</td><td class="px-3 py-2 text-right tabular-nums">&pound;19,894</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/north-american-income-trust-the---nait/director-pdmr-shareholding/9227057" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/north-american-income-trust-the---nait/director-pdmr-shareholding/9227057">&#8599;</a></td></tr></tbody></table></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Signal-firing history</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Fired</th><th class="px-3 py-2 text-left">Signal</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-right">T+1</th><th class="px-3 py-2 text-right">T+21</th><th class="px-3 py-2 text-right">T+90</th><th class="px-3 py-2 text-right">T+252</th></tr></thead><tbody><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">11 Nov 2025</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">John Adebiyi</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-1.10%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+1.53%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+3.88%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-07-22">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">22 Dec 2025</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">John Adebiyi</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.31%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-0.86%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+4.84%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-09-01">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">22 Dec 2025</td><td class="px-3 py-2"><span title="T2 - Other exec buy (Chair, Group, Director) &gt;= GBP25k. Mid-conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-500 text-white">T2</span></td><td class="px-3 py-2 text-slate-700">John Adebiyi</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.31%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-0.86%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+4.84%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-09-01">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">03 Feb 2026</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">John Adebiyi</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+1.97%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+3.36%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-05-05">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-10-14">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">03 Feb 2026</td><td class="px-3 py-2"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span></td><td class="px-3 py-2 text-slate-700">John Adebiyi</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+1.97%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+3.36%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-05-05">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-10-14">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">12 Feb 2026</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Susannah Nicklin</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-0.57%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-1.09%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-05-14">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-10-23">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">12 Feb 2026</td><td class="px-3 py-2"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span></td><td class="px-3 py-2 text-slate-700">Susannah Nicklin</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-0.57%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-1.09%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-05-14">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-10-23">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">24 Apr 2026</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">John Adebiyi</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-1.50%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-05-18">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-07-26">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2027-01-04">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">24 Apr 2026</td><td class="px-3 py-2"><span title="T2 - Other exec buy (Chair, Group, Director) &gt;= GBP25k. Mid-conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-500 text-white">T2</span></td><td class="px-3 py-2 text-slate-700">John Adebiyi</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-1.50%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-05-18">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-07-26">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2027-01-04">-</span></td></tr></tbody></table><div class="bg-slate-50 border-t border-slate-100 px-4 py-3 text-xs flex gap-6"><div><span class="text-slate-500">Firings:</span> <span class="font-medium tabular-nums">9</span></div><div><span class="text-slate-500">Hit % @ T+21:</span> <span class="font-medium tabular-nums text-emerald-600">42.9%</span></div><div><span class="text-slate-500">Median CAR @ T+21:</span> <span class="text-rose-600">-0.86%</span></div></div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Cluster history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No clusters detected for this ticker.</div></section><footer class="px-6 py-4 text-[10px] text-slate-400 border-t border-slate-200"><p>Generated by build_dashboard.py 2026-05-18T14:00:21Z.</p><p>Data: Investegate RNS feed &middot; Yahoo Finance &middot; FTSE All-Share benchmark.</p><p class="mt-2">Historic insider-trading outcomes are not predictive. Net-of-cost CAR assumes 50bps round-trip + 0.5% UK stamp on non-AIM buys.</p></footer>
+<script>
+(function(){
+  const d = window.__priceData || {};
+  const dates = d.dates || [];
+  if (!dates.length) return;
+  const closes = d.closes || [];
+  const volumes = d.volumes || [];
+  const markers = d.markers || [];
+
+  // Build close-by-date map for marker yValue.
+  const closeMap = {};
+  dates.forEach(function(dt, i){ closeMap[dt] = closes[i]; });
+
+  // U4 vivid marker palette — keyed by mtype.
+  // exec_buy/ned_buy: triangle-up, white halo.
+  // sell: triangle-down, white halo.
+  // grant: square (rect), white halo.
+  // cluster: circle ring, violet stroke, no fill, drawn BEHIND transactions.
+  var MSTYLE = {
+    exec_buy: { label:'Exec Buy',   bg:'#16a34a',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:7,  ord:1 },
+    ned_buy:  { label:'NED Buy',    bg:'#4ade80',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:6,  ord:1 },
+    sell:     { label:'Sell',       bg:'#dc2626',        bc:'#ffffff', bw:3,   ps:'triangle', rot:180, r:7,  ord:1 },
+    grant:    { label:'Grant/SIP',  bg:'#d97706',        bc:'#ffffff', bw:2.5, ps:'rect',     rot:0,   r:5,  ord:1 },
+    cluster:  { label:'S1 Cluster', bg:'rgba(0,0,0,0)',  bc:'#7c3aed', bw:2.5, ps:'circle',   rot:0,   r:11, ord:2 }
+  };
+
+  // Group markers by mtype.
+  var markerDatasets = {};
+  markers.forEach(function(m){
+    var mtype = m.mtype || 'exec_buy';
+    if (!markerDatasets[mtype]){
+      var st = MSTYLE[mtype] || MSTYLE.exec_buy;
+      markerDatasets[mtype] = {
+        label: st.label,
+        type: 'scatter',
+        data: [],
+        backgroundColor: st.bg,
+        borderColor: st.bc,
+        borderWidth: st.bw,
+        pointStyle: st.ps,
+        rotation: st.rot,
+        pointRotation: st.rot,
+        radius: st.r,
+        hoverRadius: st.r + 2,
+        showLine: false,
+        order: st.ord,
+        _markers: []
+      };
+    }
+    var y = closeMap[m.date];
+    markerDatasets[mtype].data.push({ x: m.date, y: y });
+    markerDatasets[mtype]._markers.push(m);
+  });
+
+  const pCtx = document.getElementById('priceChart');
+  if (!pCtx) return;
+
+  // Price line first (order:0), then transaction markers (order:1),
+  // then cluster rings on top (order:2 — drawn last so ring encircles marker).
+  var markerList = Object.keys(markerDatasets)
+    .sort(function(a,b){ return (markerDatasets[a].order||1)-(markerDatasets[b].order||1); })
+    .map(function(k){ return markerDatasets[k]; });
+
+  const ds = [{
+    label: 'Close',
+    type: 'line',
+    data: dates.map(function(dt, i){ return { x: dt, y: closes[i] }; }),
+    borderColor: '#475569', borderWidth: 1.5, pointRadius: 0, tension: 0, order: 0
+  }].concat(markerList);
+
+  window.__priceChart = new Chart(pCtx, {
+    type: 'line',
+    data: { datasets: ds },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      parsing: false,
+      scales: {
+        x: { type: 'category', labels: dates, ticks: { maxRotation: 0, font: { size: 10 } } },
+        y: { ticks: { font: { size: 10 } } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx){
+              if (ctx.dataset.type !== 'scatter') return ctx.dataset.label + ': ' + ctx.parsed.y;
+              var idx = ctx.dataIndex;
+              var m = ctx.dataset._markers[idx] || {};
+              if (m.mtype === 'cluster'){
+                return ['S1 Cluster signal fired', 'Date: ' + m.date];
+              }
+              var lines = [];
+              if (m.director) lines.push(m.director + (m.role ? ' (' + m.role + ')' : ''));
+              lines.push(m.type + (m.shares ? ' ' + m.shares + ' sh @ ' + (m.price||0).toFixed(2) + 'p' : ''));
+              if (m.value) lines.push('£' + (m.value||0).toLocaleString());
+              if (m.signals && m.signals.length) lines.push('Signal: ' + m.signals.join(', '));
+              return lines;
+            }
+          }
+        }
+      },
+      onClick: function(evt, els){
+        if (!els.length) return;
+        var el = els[0];
+        var dataset = ds[el.datasetIndex];
+        if (!dataset || dataset.type !== 'scatter') return;
+        var m = dataset._markers[el.index];
+        // Cluster rings have no table row — skip scroll.
+        if (!m || !m.fingerprint || m.mtype === 'cluster') return;
+        var row = document.getElementById('txn-' + m.fingerprint);
+        if (row){
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          row.classList.add('pulse-highlight');
+          setTimeout(function(){ row.classList.remove('pulse-highlight'); }, 2000);
+        }
+      }
+    }
+  });
+
+  const vCtx = document.getElementById('volumeChart');
+  if (vCtx) {
+    window.__volChart = new Chart(vCtx, {
+      type: 'bar',
+      data: { labels: dates, datasets: [{ data: volumes, backgroundColor: '#cbd5e1' }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        }
+      }
+    });
+  }
+})();
+</script>
+
+</main>
+<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-05-18 14:00 UTC &middot; build local</footer>
+
+<script>
+(function(){
+  const $ = function(id){ return document.getElementById(id); };
+  let pollTimer = null;
+  let lastStatus = 'idle';
+
+  function setBtn(label, disabled){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    const lab = $('refreshBtnLabel');
+    if (lab) lab.textContent = label;
+    btn.disabled = !!disabled;
+    btn.classList.toggle('opacity-60', !!disabled);
+    btn.classList.toggle('cursor-not-allowed', !!disabled);
+  }
+  function showToast(msg, ok){
+    const t = document.createElement('div');
+    t.className = (ok ? 'bg-emerald-600' : 'bg-rose-600')
+      + ' fixed bottom-4 right-4 text-white text-xs px-4 py-2 rounded shadow-lg z-50';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, ok ? 4000 : 8000);
+  }
+  function startPolling(){
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(pollStatus, 5000);
+    pollStatus();
+  }
+  function stopPolling(){
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+  function pollStatus(){
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        lastStatus = s.status || 'idle';
+        if (lastStatus === 'running'){
+          const step = s.step_label || s.step || 'Working...';
+          setBtn('Refreshing - ' + step, true);
+        } else if (lastStatus === 'done'){
+          stopPolling();
+          showToast('Refresh complete. Reloading...', true);
+          setTimeout(function(){ window.location.reload(); }, 800);
+        } else if (lastStatus === 'error'){
+          stopPolling();
+          setBtn('Refresh', false);
+          showToast('Refresh failed: ' + (s.error || 'unknown'), false);
+        } else {
+          setBtn('Refresh', false);
+        }
+      }).catch(function(){ /* swallow */ });
+  }
+  function closeModal(){
+    const m = $('refreshModal');
+    if (m) m.remove();
+  }
+  function openConfirmModal(){
+    const modal = document.createElement('div');
+    modal.id = 'refreshModal';
+    modal.className = 'fixed inset-0 bg-slate-900/40 flex items-center '
+      + 'justify-center z-50';
+    modal.innerHTML =
+      '<div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">'
+      + '<h3 class="text-sm font-semibold text-slate-900 mb-2">'
+      + 'Run full refresh pipeline?</h3>'
+      + '<p class="text-xs text-slate-700 mb-3 leading-relaxed">'
+      + 'This will run the 6-step pipeline end-to-end:</p>'
+      + '<ol class="text-xs text-slate-700 mb-4 list-decimal pl-5 space-y-1">'
+      + '<li>Scrape Investegate RNS (last 60 days)</li>'
+      + '<li>Backfill share prices (Yahoo)</li>'
+      + '<li>Update sector benchmarks</li>'
+      + '<li>Recompute signal firings</li>'
+      + '<li>Rebuild signals/dealings JSON</li>'
+      + '<li>Regenerate dashboard HTML</li>'
+      + '</ol>'
+      + '<div class="bg-amber-50 border border-amber-200 rounded p-3 mb-4">'
+      + '<p class="text-[11px] text-amber-800 font-medium mb-1">'
+      + 'Heads up</p>'
+      + '<p class="text-[11px] text-amber-700 leading-relaxed">'
+      + 'Takes ~15-30 min. The scrape step uses Anthropic LLM credits '
+      + '(budget cap ~$50/run, set in run_scrape.py). Yahoo Finance may '
+      + 'rate-limit if run too often.</p>'
+      + '</div>'
+      + '<label class="flex items-center gap-2 text-xs text-slate-700 mb-4">'
+      + '<input id="refreshNoLlm" type="checkbox" class="rounded">'
+      + 'Skip LLM fallback (regex-only parsing)'
+      + '</label>'
+      + '<div class="flex justify-end gap-2">'
+      + '<button id="refreshCancel" class="px-3 py-1.5 text-xs border '
+      + 'border-slate-300 rounded text-slate-600 hover:bg-slate-50">'
+      + 'Cancel</button>'
+      + '<button id="refreshConfirm" class="px-3 py-1.5 text-xs '
+      + 'bg-indigo-600 text-white rounded hover:bg-indigo-700">'
+      + 'Run pipeline</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+    $('refreshCancel').onclick = closeModal;
+    $('refreshConfirm').onclick = function(){
+      const noLlm = $('refreshNoLlm').checked;
+      closeModal();
+      setBtn('Starting...', true);
+      fetch('/api/refresh-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ no_llm: noLlm })
+      }).then(function(resp){
+        if (resp.status === 409){
+          showToast('A refresh is already running.', false);
+        } else if (!resp.ok){
+          throw new Error('HTTP ' + resp.status);
+        } else {
+          showToast('Refresh started.', true);
+        }
+        startPolling();
+      }).catch(function(err){
+        setBtn('Refresh', false);
+        var hint = err.message;
+        if (/failed to fetch/i.test(hint)){
+          hint = 'server unreachable. Run `python server.py` and visit '
+            + 'http://localhost:5000 in your browser.';
+        }
+        showToast('Could not start refresh: ' + hint, false);
+      });
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    // If the page was opened via file://, no Flask server is reachable.
+    // Disable the button and tell the user how to fix it -- silent
+    // "Failed to fetch" errors are the #1 confusion point.
+    if (window.location.protocol === 'file:'){
+      setBtn('Refresh (start server)', true);
+      btn.title = 'This page was opened from disk (file://). Run '
+        + '`python server.py` and visit http://localhost:5000 to enable '
+        + 'the Refresh button.';
+      btn.addEventListener('click', function(){
+        showToast('Open http://localhost:5000 (run python server.py first) '
+          + 'to use Refresh.', false);
+      });
+      return;
+    }
+    btn.addEventListener('click', openConfirmModal);
+    // On load, check status -- if running, attach to existing pipeline.
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        if (s.status === 'running'){
+          setBtn('Refreshing - ' + (s.step_label || 'Working...'), true);
+          startPolling();
+        }
+      }).catch(function(err){
+        // Server unreachable on a non-file:// page -- the server died
+        // or is on a different host. Tell the user something useful.
+        setBtn('Refresh (server down)', true);
+        btn.title = 'Could not reach /api/refresh-status. Is the Flask '
+          + 'server still running? Try restarting `python server.py`.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

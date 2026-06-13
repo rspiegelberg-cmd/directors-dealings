@@ -1,0 +1,150 @@
+# Investment-trust exclusion draft list
+# Source: brainstorm pass 2026-05-15, generated from Investegate URL slug + sector_map.csv heuristics
+# Status: DRAFT — needs human eyeball pass before commit
+# Method:
+#   1. Scanned 6,859 cached Investegate announcements for company name patterns:
+#      "investment trust", "investment company", "income trust", "growth trust", "capital trust",
+#      "investments plc", "REIT", asset-manager prefixes (JPMorgan, BlackRock, abrdn, Baillie Gifford,
+#      Henderson, Schroders, Fidelity, Polar Capital, ...)
+#   2. Added Financials sector tickers from sector_map.csv with >=4 char tickers
+#   3. Manually removed false positives: STB (Secure Trust Bank — operating bank), ABF, BATS, ABDN, SDR,
+#      SJG, BLND, CLIG, POLR, INOV, CMCL, IPX, PMI (these are operating businesses or fund managers
+#      that are listed but not themselves investment trusts)
+#
+# Action required before commit:
+#   - Cross-check against the AIC (Association of Investment Companies) member list
+#   - Spot-check ~10 random tickers from this list to confirm they're trusts
+#   - Add any AIM trusts that weren't in the sector_map
+#
+AAS
+AEEE
+AEI
+AGT
+AIE
+AJOT
+ALW
+ANII
+ATR
+AUSC
+BASC
+BEMO
+BGCG
+BGFD
+BGO
+BGS
+BGUK
+BMD
+BNKR
+BRAI
+BRFI
+BRIG
+BSC
+BUT
+BVT
+CBA
+CCJI
+CGO
+CGT
+CHI
+CHRY
+CIC
+CLDN
+CMPG
+CMPI
+CTHT
+CTPE
+CTUK
+DIG
+DUKE
+EDIN
+EGL
+EJFI
+EJFZ
+ESCT
+FCIT
+FCSS
+FDEV
+FGT
+GCP
+GHV1
+GHV2
+GRID
+GSCT
+GWI
+HAN
+HFEL
+HGT
+HHI
+HSL
+IBT
+JAGI
+JAM
+JARE
+JCGI
+JEDT
+JEGI
+JFJ
+JGGI
+JIGI
+JMGI
+JUGI
+JUSC
+LTI
+LWI
+MAFL
+MAJE
+MGCI
+MMIT
+MIGO
+MNKS
+MNL
+MRC
+MRCH
+MTE
+MTU
+MUT
+MYI
+NAIT
+NAS
+OBE
+OIG
+OIT
+OXIG
+ORIT
+PCFT
+PCGH
+PCT
+PNL
+PPET
+PREM
+PRIM
+RAT
+RECI
+RGL
+RICA
+SBO
+SCF
+SCP
+SCT
+SDV
+SEQI
+SERE
+SMT
+SOHO
+SOI
+SSIT
+SSON
+SST
+STS
+TAVI
+TEM
+TMIP
+TMPL
+TMT
+TORG
+TRY
+UEM
+UTL
+VEIL
+VIP
+VCT

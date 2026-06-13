@@ -1,0 +1,36 @@
+<!doctype html>
+<html><head><title>Test Fixture: bundled-PDMR PCA pattern (B-023)</title></head><body>
+<!--
+  B-003 / B-023 regression: Anglo American filing 8950385 mixes the
+  long form 'Details of PDMR / person closely associated (PCA)' on
+  section 1 with the SHORT form 'Details of PDMR / PCA' on sections 2
+  and 3. Before the 2026-05-19 fix, the bundled-PDMR detector only
+  matched the long form, so multi_details=1 and the detector silently
+  let the filing fan out as a single-row mis-extraction.
+
+  This fixture uses the SAME mixed phrasing (one long + two short),
+  so any regression of the regex narrowing would re-fail it.
+-->
+<table>
+  <tr><td>Name</td><td>Anglo Sample plc</td></tr>
+</table>
+
+<h3>Details of PDMR / person closely associated (PCA)</h3>
+<p>Name: Stuart Section-One</p>
+<p>Position: Director</p>
+
+<h3>Details of PDMR / PCA</h3>
+<p>Name: Magali Section-Two</p>
+<p>Position: Director</p>
+
+<h3>Details of PDMR / PCA</h3>
+<p>Name: Nonkululeko Section-Three</p>
+<p>Position: Director</p>
+
+<!-- Even though there's a transaction table below, the parser must
+     refuse to fan out the first row across all three PDMRs. -->
+<table>
+  <tr><th>Date of transaction</th><th>Name</th><th>Position</th><th>Price</th><th>Volume</th></tr>
+  <tr><td>5 May 2026</td><td>Stuart Section-One</td><td>Director</td><td>£10.00</td><td>100</td></tr>
+</table>
+</body></html>

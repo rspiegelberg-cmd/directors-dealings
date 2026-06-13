@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><title>Test Fixture: dot-separated date</title></head><body>
+<!--
+  B-003 fixture for the dot-separated date pattern (B-005's positive case
+  and the original 2026-05-15 parser bug). A 2-digit-year dotted date like
+  "05.05.26" must extract as 2026-05-05. This is Layout A: a 2-cell
+  ['Name', '<company>'] issuer row plus a transaction table.
+-->
+<table>
+  <tr><td>Name</td><td>Acme Test plc</td></tr>
+  <tr><td>Nature of the transaction</td><td>Acquisition of ordinary shares</td></tr>
+</table>
+<table>
+  <tr>
+    <th>Date of transaction</th>
+    <th>Name</th>
+    <th>Position</th>
+    <th>Price</th>
+    <th>Volume</th>
+  </tr>
+  <tr>
+    <td>05.05.26</td>
+    <td>Alice Example</td>
+    <td>Chief Financial Officer</td>
+    <td>£12.34</td>
+    <td>1,000</td>
+  </tr>
+</table>
+</body></html>

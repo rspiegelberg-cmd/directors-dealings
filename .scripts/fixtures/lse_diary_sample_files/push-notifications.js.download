@@ -1,0 +1,194 @@
+if (!('serviceWorker' in navigator)) {
+    console.log('Service Worker isn\'t supported on this browser.');
+} 
+
+if (!('PushManager' in window)) {
+    console.log('Push isn\'t supported on this browser.');
+}
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js');
+    //console.log('Service worker Registered ' + moment().toISOString());
+    
+    navigator.serviceWorker.ready.then((registration) => {
+        registration.pushManager
+        .getSubscription()
+        .then((sub) => {
+            if (Notification.permission == 'denied') {
+                console.log('Push has been blocked by the user.');
+                return;
+            }
+
+            if (!sub) {
+                populateAlerts(null);
+                return;
+            }
+
+            for (let i = 0; i < pushNotifications.length; i++) {
+                if (sub.endpoint === pushNotifications[i].endpoint) {
+                    populateAlerts(pushNotifications[i].alerts);
+                    return;
+                }
+            }
+
+            populateAlerts(null);
+        }).catch((err) => {
+            console.log('Error during getSubscription()', err);
+        });
+    });
+
+    function subscribePush(alertCode) {
+        if (alertCode == '' || alertCode == null || alertCode == undefined) {
+            throw new Error('Alert permission is undefined.');
+        }
+
+        return new Promise(function(resolve, reject) {
+            var permissionResult = Notification.requestPermission(function(result) {
+                resolve(result);
+            });
+
+            if (permissionResult) {
+                permissionResult.then(resolve, reject);
+            }
+        })
+        .then(function(permissionResult) {
+            if (permissionResult !== 'granted') {
+                throw new Error('Permission not granted.');
+            }
+
+            subscribeUserToPush(alertCode);
+        });
+    }
+
+    function getNotificationPermissionState() {
+        if (navigator.permissions) {
+            return navigator.permissions.query({name: 'notifications'})
+            .then((result) => {
+                return result.state;
+            });
+        }
+
+        return new Promise((resolve) => {
+            resolve(Notification.permission);
+        });
+    }
+
+    function subscribeUserToPush(alertCode) {
+        navigator.serviceWorker.ready.then((registration) => {
+            var subscribeOptions = {
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(
+                    vapidPublicKey
+                )
+            };
+
+            return registration.pushManager.subscribe(subscribeOptions);
+        })
+        .then(function(pushSubscription) {
+            postSubscription(pushSubscription, alertCode, true);
+            updateButton(alertCode, true);
+            toastr.success('Thanks for subscribing to Push Notifications!', 'Success!')
+        });
+    }
+
+    function unsubscribeFromPush() {
+        navigator.serviceWorker.ready.then((registration) => {
+            registration.pushManager.getSubscription().then((subscription) => {
+                subscription.unsubscribe()
+                .then(() => {
+                    postSubscription(subscription, 'ALL', false);
+                    toastr.success('All Push Notifications succesfully disabled', 'Success!')
+                })
+                .catch((err) => {
+                    console.log('Error during unsubscribe()', err);
+                });
+            });
+        });
+    }
+
+    function expirePush(alertCode) {
+        navigator.serviceWorker.ready.then((registration) => {
+            registration.pushManager.getSubscription().then((subscription) => {
+                postSubscription(subscription, alertCode, false);
+                updateButton(alertCode, false);
+                toastr.success('Push Notifications succesfully disabled for this alert', 'Success!')
+            });
+        });
+    }
+
+    function urlBase64ToUint8Array(base64String) {
+        var padding = '='.repeat((4 - base64String.length % 4) % 4);
+        var base64 = (base64String + padding)
+            .replace(/\-/g, '+')
+            .replace(/_/g, '/');
+
+        var rawData = window.atob(base64);
+        var outputArray = new Uint8Array(rawData.length);
+
+        for (var i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
+    function postSubscription(subscription, alertCode, subscribe) {
+        $.post(sSiteURL + 'ajax/savePushNotification.html', {
+            'body' : JSON.stringify(subscription),
+            'alert' : alertCode,
+            'subscribe' : subscribe
+        }, function(response) { 
+            var data = JSON.parse(response);
+
+            if (data.errors.length > 0) {
+                throw new Error('Server returned error - ' + data.errors);
+            }
+
+            if (!data.status) {
+                throw new Error('Server returned error.');
+            } 
+        });
+    }
+
+    function populateAlerts(alerts) {
+        $.each($('[data-smallPush]'), (i, ele) => {
+            let alertCode = $(ele).attr('data-alert');
+            if (alerts !== null) {
+                if (!(alerts.includes(alertCode))) {
+                    updateButton(alertCode, false);
+                } else {
+                    updateButton(alertCode, true);
+                }
+            } else {
+                updateButton(alertCode, false);
+            }  
+        });
+
+        /*$.each($('[data-pushNotification]'), (i, ele) => {
+            let sub = '<img data-alert="' + $(ele).attr('data-alert') + '" onclick="subscribePush(\''  + $(ele).attr('data-alert') +  '\');" src="' + sStaticURL + 'images/icons/sp-action-alerts.svg" alt="" style="width:50px;cursor:pointer;">';
+            let unsub = '<img data-alert="' + $(ele).attr('data-alert') + '" onclick="expirePush(\''  + $(ele).attr('data-alert') +  '\');" src="' + sStaticURL + 'images/icons/sp-action-buy-shares.svg" alt="" style="width:50px;cursor:pointer;">';
+
+            if (alerts !== null) 
+            {
+                if (!(alerts.includes($(ele).attr('data-alert')))) {
+                    $(ele).replaceWith(sub);
+                } else {
+                    $(ele).replaceWith(unsub);
+                }
+            } else {
+                $(ele).replaceWith(sub);
+            }  
+        });*/
+    }
+
+    function updateButton(alertCode, subscribe)
+    {
+        let sub = '<a href="javascript:void(0);" data-alert="' + alertCode + '" onclick="subscribePush(\''  + alertCode +  '\');"><i class="fa fa-bell alerts__icon" aria-hidden="true" style="color:#AD191A;"></i></a> ';
+        let unsub = '<a href="javascript:void(0);" data-alert="' + alertCode + '" onclick="expirePush(\''  + alertCode +  '\');"><i class="fa fa-bell-slash alerts__icon" aria-hidden="true" style="color:#AD191A;"></i></a> ';
+
+        if (subscribe) {
+            $('[data-alert="' + alertCode + '"]').replaceWith(unsub);
+        } else {
+            $('[data-alert="' + alertCode + '"]').replaceWith(sub);
+        }
+    }
+}

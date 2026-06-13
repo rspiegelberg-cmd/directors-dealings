@@ -1,0 +1,171 @@
+class SizeMapping {
+    constructor() {
+       this.aMapping = [];   
+    }
+   
+
+    addSize(aScreenSize, aAdSize) {
+       this.aMapping.push([aScreenSize, aAdSize]);
+
+       return this;
+    }
+
+    getAdSize(iScreenWidth, iScreenHeight) {
+       for(var i = this.aMapping.length - 1; i >= 0; i--) {
+          if(iScreenWidth >= this.aMapping[i][0][0] && iScreenHeight >= this.aMapping[i][0][1]) {               
+             return this.aMapping[i][1];
+          }
+       }
+       
+       return null; 
+    }
+ }
+
+ class AdvertSource {
+    constructor() {
+       this.aSlots = [];   
+       this.aTargeting = [];
+
+       this.adServerURL = 'https://www.advertsource.co.uk/';
+
+       this.previewCreative = getParameterByName('preview');
+    }
+   
+
+    defineSlot(sTag, id, oSizeMapping) {
+       this.aSlots.push([sTag, id, oSizeMapping, false]);
+    }
+
+    setTargeting(sKey, sValue) {
+      if(sKey.length > 0) {
+         this.aTargeting[sKey] = sValue;
+      }
+    }
+
+
+    display(id) {
+       for(var i = 0; i < this.aSlots.length; i++) {
+          if(this.aSlots[i][1] === id) {
+             var aSize = this.aSlots[i][2].getAdSize(window.innerWidth, window.innerHeight);
+             //console.log(aSize);
+             if(aSize != null) {
+                var link = this.adServerURL + "ad/" + this.aSlots[i][0] + aSize[0] + '/' + aSize[1] + '/' + aSize[2] + '/';
+
+                var sTargeting = '';
+
+                for(var key in this.aTargeting) {
+                  if(key.length > 0 && this.aTargeting[key].length > 0) {
+                     if(sTargeting.length > 0) {
+                        sTargeting += ';';     
+                     }
+
+                     sTargeting += key + '=' + this.aTargeting[key];   
+                  }
+                }
+
+                if(sTargeting.length > 0) {
+                  link += encodeURIComponent(btoa(sTargeting)) + '/';
+                }
+
+                if(this.previewCreative != null && this.previewCreative.length > 0) {
+                  link += '?preview=' + this.previewCreative;
+                }
+
+                //console.log(link);
+
+                var iframe = document.createElement('iframe');
+                iframe.id = id + '-iframe';
+                iframe.frameBorder=0;
+                iframe.width=aSize[0] + "px";
+                iframe.height=aSize[1] + "px";
+                iframe.setAttribute("src", link);
+                document.getElementById(this.aSlots[i][1]).appendChild(iframe);
+
+
+                if(window.attachEvent) {
+                  // Internet Explorer
+                  window.attachEvent('load', function(){ advertsource.adLoad(id); advertsource.inView(id); window.attachEvent('scroll', function(){ advertsource.inView(id); }); setTimeout(function() { advertsource.inView(id); }, 200); });
+                } else {
+                  // Opera/Mozilla/Webkit
+                  window.addEventListener('load', function(){ advertsource.adLoad(id); advertsource.inView(id); window.addEventListener('scroll', function(){ advertsource.inView(id); }); setTimeout(function() { advertsource.inView(id); }, 200); });
+                }
+                
+             }
+          }
+       }
+    }
+
+    collapseAdUnit(sTag) {
+       for(var i = 0; i < this.aSlots.length; i++) {
+          if(this.aSlots[i][0] === sTag) {
+             document.getElementById(this.aSlots[i][1]).innerHTML = '';
+             
+             return;
+          }
+       }
+    } 
+
+    adLoad(id) {
+	 try {
+         	var iframeWin = document.getElementById(id + '-iframe').contentWindow;
+
+                iframeWin.postMessage({ 'type' : 'parenturl', 'url' : window.location.origin }, this.adServerURL);
+	 } catch(err) {
+		//collapsed ad unit
+	 }
+    }
+    
+    inView(id) {
+      for(var i = 0; i < this.aSlots.length; i++) {
+         if(this.aSlots[i][1] === id) {
+            if(!this.aSlots[i][3]) {
+               var rect = document.getElementById(id).getBoundingClientRect();
+
+               if(rect.top + ((rect.height / 4) * 3) <= window.innerHeight) {
+                  this.aSlots[i][3] = true;
+
+		  try {
+                  	var iframeWin = document.getElementById(id + '-iframe').contentWindow;
+
+                  	iframeWin.postMessage({ 'type' : 'inview' }, this.adServerURL);
+		  } catch(err) {
+			//collapsed ad unit
+		  }
+               }
+            }
+
+            break;
+         }
+      }
+   }
+ }
+
+ if(window.attachEvent) {
+    // Internet Explorer
+    window.attachEvent('onmessage',receiveCollapseMessage);
+ } else {
+    // Opera/Mozilla/Webkit
+    window.addEventListener("message", function(event) { receiveCollapseMessage(event); });
+ }
+
+ function receiveCollapseMessage(event)
+ {
+    // do something with event.data;
+    var collapse = event.data.toString();
+
+    //console.log(collapse);
+
+    if(collapse.startsWith("collapse_")) {
+       advertsource.collapseAdUnit(collapse.substr("collapse_".length));
+    }
+ }
+
+ function getParameterByName(name, url) {
+   if (!url) url = window.location.href;
+   name = name.replace(/[\[\]]/g, '\\$&');
+   var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+       results = regex.exec(url);
+   if (!results) return null;
+   if (!results[2]) return '';
+   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}

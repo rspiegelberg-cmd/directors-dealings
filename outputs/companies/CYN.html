@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-sha" content="local">
+<title>CYN - CQS Natural Resources Growth and Income PLC</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+<style>
+  html, body { background:#f8fafc; color:#0f172a; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .pulse-highlight { animation: pulseBg 2s ease-out 1; }
+  @keyframes pulseBg {
+    0%   { background-color: #fef3c7; }
+    100% { background-color: transparent; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+<header class="border-b border-slate-200 bg-white px-6 h-12 flex items-center justify-between">
+<h1 class="text-sm font-semibold text-slate-900 tracking-tight">CYN - CQS Natural Resources Growth and Income PLC</h1>
+<nav class="flex items-center"><button id="refreshBtn" type="button" class="text-xs px-2.5 py-1 rounded border border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5" title="Run the full refresh pipeline (scrape -> parse -> backfill -> eval -> rebuild). Slow (~15+ min) and uses LLM credits."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span id="refreshBtnLabel">Refresh</span></button><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Today</a> <a href="../performance.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Performance</a></nav>
+</header>
+<main class="max-w-7xl mx-auto">
+<header class="border-b border-slate-200 bg-white px-6 py-4"><div class="flex items-center justify-between mb-1"><div class="flex items-center"><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 mr-4">&larr; Dashboard</a><h1 class="text-lg font-semibold text-slate-900 tabular-nums">CYN</h1><span class="text-sm text-slate-600 ml-2">CQS Natural Resources Growth and Income PLC</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Unknown sector</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Main</span></div></div><div class="flex items-center justify-between"><div class="text-sm tabular-nums">Latest close: 3.97p <span class="text-rose-600 ml-2">&#9660; -0.57%</span></div><div class="text-[10px] text-slate-400">Last refresh: 2026-05-18T14:00:21Z</div></div></header><section class="m-6 bg-white border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-center mb-3"><h2 class="text-xs uppercase tracking-wide text-slate-500">Price (trailing window)</h2></div><div class="relative h-72"><canvas id="priceChart"></canvas></div><div class="relative h-16 mt-1"><canvas id="volumeChart"></canvas></div><script>window.__priceData = {"dates":["2025-04-15","2025-04-16","2025-04-17","2025-04-22","2025-04-23","2025-04-24","2025-04-25","2025-04-28","2025-04-29","2025-04-30","2025-05-01","2025-05-02","2025-05-06","2025-05-07","2025-05-08","2025-05-09","2025-05-12","2025-05-13","2025-05-14","2025-05-15","2025-05-16","2025-05-19","2025-05-20","2025-05-21","2025-05-22","2025-05-23","2025-05-27","2025-05-28","2025-05-29","2025-05-30","2025-06-02","2025-06-03","2025-06-04","2025-06-05","2025-06-06","2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-07","2025-07-08","2025-07-09","2025-07-10","2025-07-11","2025-07-14","2025-07-15","2025-07-16","2025-07-17","2025-07-18","2025-07-21","2025-07-22","2025-07-23","2025-07-24","2025-07-25","2025-07-28","2025-07-29","2025-07-30","2025-07-31","2025-08-01","2025-08-04","2025-08-05","2025-08-06","2025-08-07","2025-08-08","2025-08-11","2025-08-12","2025-08-13","2025-08-14","2025-08-15","2025-08-18","2025-08-19","2025-08-20","2025-08-21","2025-08-22","2025-08-26","2025-08-27","2025-08-28","2025-08-29","2025-09-01","2025-09-02","2025-09-03","2025-09-04","2025-09-05","2025-09-08","2025-09-09","2025-09-10","2025-09-11","2025-09-12","2025-09-15","2025-09-16","2025-09-17","2025-09-18","2025-09-19","2025-09-22","2025-09-23","2025-09-24","2025-09-25","2025-09-26","2025-09-29","2025-09-30","2025-10-01","2025-10-02","2025-10-03","2025-10-06","2025-10-07","2025-10-08","2025-10-09","2025-10-10","2025-10-13","2025-10-14","2025-10-15","2025-10-16","2025-10-17","2025-10-20","2025-10-21","2025-10-22","2025-10-23","2025-10-24","2025-10-27","2025-10-28","2025-10-29","2025-10-30","2025-10-31","2025-11-03","2025-11-04","2025-11-05","2025-11-06","2025-11-07","2025-11-10","2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-17","2025-11-18","2025-11-19","2025-11-20","2025-11-21","2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-22","2025-12-23","2025-12-24","2025-12-29","2025-12-30","2025-12-31","2026-01-02","2026-01-05","2026-01-06","2026-01-07","2026-01-08","2026-01-09","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-19","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15","2026-05-18"],"closes":[1.7385060119628906,1.7684803771972657,1.813441619873047,1.858402862548828,1.8883772277832032,1.8733900451660157,1.8484115600585938,1.8983685302734374,1.8983685302734374,1.918351287841797,1.898493194580078,1.9184773254394532,1.9384616088867188,1.9384616088867188,1.9834257507324218,1.9684376525878906,1.9884217834472657,1.9834257507324218,1.9584457397460937,1.9284693908691406,1.9109834289550782,1.903489227294922,1.903489227294922,1.9084854125976562,1.9234733581542969,1.9284693908691406,1.9534495544433594,2.000911865234375,1.99341796875,2.008406066894531,1.9734336853027343,1.9984140014648437,2.0433782958984374,2.0483743286132814,2.0683584594726563,2.078350372314453,2.058366394042969,2.0683584594726563,2.028390197753906,2.0483743286132814,2.038382110595703,2.0683584594726563,2.1582872009277345,2.0983346557617186,2.088342742919922,2.078350372314453,2.0983346557617186,2.028390197753906,2.038382110595703,2.0183979797363283,1.99341796875,2.0483743286132814,2.0483743286132814,2.088342742919922,2.088342742919922,2.0683584594726563,2.0483743286132814,2.028390197753906,2.0433782958984374,2.0483743286132814,2.0433782958984374,2.038382110595703,2.03338623046875,2.028390197753906,2.058366394042969,2.078350372314453,2.1083265686035157,2.1832672119140626,2.2382235717773438,2.1982553100585935,2.2382235717773438,2.1832672119140626,2.188263397216797,2.11373291015625,2.088747863769531,2.093744812011719,2.0987417602539065,2.1587059020996096,2.1387179565429686,2.1337208557128906,2.178694000244141,2.1886878967285157,2.2186700439453126,2.1936849975585937,2.1886878967285157,2.208675994873047,2.183690948486328,2.208675994873047,2.208675994873047,2.2536489868164065,2.2886280822753906,2.2886280822753906,2.3286041259765624,2.3585861206054686,2.5084962463378906,2.4685203552246096,2.5184902954101562,2.528484191894531,2.5484722900390624,2.6384182739257813,2.6983822631835936,2.778334655761719,2.7583465576171875,2.738358459472656,2.70837646484375,2.7183706665039065,2.7283645629882813,2.738358459472656,2.7183706665039065,2.8782745361328126,2.988208923339844,3.058166809082031,3.058166809082031,3.018190612792969,3.028184814453125,3.028184814453125,3.0681610107421875,3.0681610107421875,3.0981427001953126,3.1780950927734377,3.1780950927734377,3.208077087402344,3.1880889892578126,3.018190612792969,3.028184814453125,3.028184814453125,3.048172912597656,3.0881488037109377,3.058166809082031,3.0381790161132813,2.7183706665039065,2.618430480957031,2.6883883666992188,2.6584066772460937,2.6384182739257813,2.678394470214844,2.8782745361328126,2.8288958740234373,2.8788763427734376,2.9488491821289062,2.8988687133789064,2.838891906738281,2.85888427734375,2.818899841308594,2.9288568115234375,2.848888244628906,2.9488491821289062,2.95884521484375,2.95884521484375,2.9488491821289062,2.838891906738281,2.8288958740234373,2.838891906738281,2.738930969238281,2.698946533203125,2.743929138183594,2.80890380859375,2.838891906738281,2.968841247558594,3.0388140869140625,3.08379638671875,3.1987515258789063,3.168763427734375,3.218743896484375,3.1787594604492186,3.2387359619140623,3.2787203979492188,3.268724365234375,3.3287008666992186,3.358689270019531,3.218743896484375,3.258728332519531,3.2787203979492188,3.3386968994140624,3.468646240234375,3.518626708984375,3.5885995483398436,3.5686074829101564,3.5486151123046876,3.5486151123046876,3.538619079589844,3.638580017089844,3.6485760498046873,3.6085916137695313,3.6085916137695313,3.7185488891601564,3.8385015869140626,3.8584939575195314,3.8884823608398436,3.928466491699219,3.8584939575195314,3.958454895019531,4.008435363769531,4.148380737304688,4.148380737304688,4.208357543945312,4.348302917480469,4.2583380126953125,4.2983224487304685,4.248341674804688,3.9084744262695312,3.6585723876953127,3.8884823608398436,3.818509826660156,3.5592633056640626,3.6892364501953123,3.9191888427734374,4.019168090820313,4.06915771484375,4.0291659545898435,4.019168090820313,4.049161987304688,4.039163818359375,4.06915771484375,4.159139099121094,4.219126586914062,4.309107971191406,4.289112243652344,4.359097595214844,4.389091491699219,4.39908935546875,4.39908935546875,4.079155578613281,4.0291659545898435,3.909190979003906,3.7792178344726564,3.5992550659179687,3.5992550659179687,3.5992550659179687,3.6292486572265625,3.6292486572265625,3.5992550659179687,3.709232177734375,3.6692404174804687,3.5492654418945313,3.4692819213867185,3.389298400878906,3.40929443359375,3.5892572021484375,3.5592633056640626,3.579259033203125,3.649244689941406,3.729228210449219,3.949182434082031,3.9391845703125,3.9291867065429686,4.039163818359375,3.949182434082031,4.0291659545898435,3.979176330566406,4.099151611328125,4.139143371582032,4.159139099121094,4.32910400390625,4.229124755859375,4.249120483398437,4.169136962890625,4.199130859375,4.199130859375,4.109149475097656,3.9591806030273435,4.0291659545898435,3.95,4.03,3.96,4.06,3.99,3.99,3.94,3.94,4.05,4.08,3.99,3.9671139526367187],"volumes":[325009,100593,21313,102498,141904,73233,75448,108569,153978,73534,48999,36668,56895,18824,57043,73047,165297,65529,84738,65895,95449,98584,76959,5478,27032,53254,172152,343754,27221,49105,234023,70933,343412,601601,73811,130196,135906,56182,73951,282628,83508,170884,863640,219528,114538,175982,115153,282984,94990,89719,101571,66803,117631,73258,91390,131801,138370,35246,67303,91568,71646,59173,51542,30060,74687,39406,75263,275405,154727,35259,92948,183749,51683,65678,111303,56961,62444,146190,155238,145321,66072,58457,31199,45678,44789,53853,28537,225454,297001,120645,175702,99104,121626,84246,355326,390843,316622,197848,315580,353858,206140,307865,271259,222993,232034,135036,283708,193880,93569,256135,231057,173492,229309,127117,185258,125181,29411635,95970,99295,132815,87670,474265,152589,265619,220433,49191,147239,120705,116118,241971,350767,386067,210777,334167,223130,163260,436897,77097,148875,197871,223302,108463,74841,39160,139210,84625,175614,96742,47792,164368,142022,206669,116350,148108,70553,52275,101436,64731,89005,103810,140447,89406,44320,157254,76265,168684,152875,198123,170357,235066,128247,106650,83446,349361,227026,108988,114711,190844,483527,26205,71874,127858,144456,182023,134019,150504,202736,218791,165325,119634,78495,236008,211460,315952,178632,325095,424766,344977,215507,355162,646831,723858,251749,276896,418216,200316,182908,139779,193003,102943,100028,100885,70626,71618,103401,68467,281171,161249,104311,100701,128998,345999,400236,425137,164054,701766,700319,380765,156636,272443,222944,321133,112368,195505,657234,219263,358321,262552,286870,173822,99069,133280,64808,197390,209364,111245,250485,249443,55883,126059,155322,144903,89115,86489,129638,52833,76697,44538,87199,92554,148105,83811,71205,42552,60576,128029,91612,92160,135242,49474,142473,76005,98632,26657],"markers":[{"date":"2026-02-27","type":"BUY","mtype":"ned_buy","color":"#4ade80","director":"Seema Paterson","role":"Non-executive Director","shares":114,"price":4.4679899999999995,"value":509.35,"signals":["f1"],"fingerprint":"d0dc958b1201fd13"},{"date":"2026-02-11","type":"BUY","mtype":"ned_buy","color":"#4ade80","director":"Seema Paterson","role":"Non-executive Director","shares":1216,"price":3.82,"value":4645.12,"signals":["f1"],"fingerprint":"3b33948832db8d08"},{"date":"2025-11-28","type":"BUY","mtype":"ned_buy","color":"#4ade80","director":"Seema Paterson","role":"Non-executive Director","shares":153,"price":2.8893,"value":442.06,"signals":["f1","s1"],"fingerprint":"4de44bde3c333b0e"},{"date":"2025-10-30","type":"BUY","mtype":"ned_buy","color":"#4ade80","director":"Louise Drummond Hall","role":"Non-executive Director","shares":4000,"price":2.84,"value":11360.0,"signals":["f1","s1","t3"],"fingerprint":"381d04a23fe954f1"},{"date":"2025-10-28","type":"BUY","mtype":"ned_buy","color":"#4ade80","director":"Seema Paterson","role":"Non-executive Director","shares":732,"price":2.66,"value":1947.12,"signals":["f1","s1"],"fingerprint":"e4e1b7ca8993f6e8"},{"date":"2025-10-28","type":"CLUSTER","mtype":"cluster","color":"#7c3aed","director":"","role":"","shares":0,"price":0,"value":0,"signals":["s1"],"fingerprint":""},{"date":"2025-10-31","type":"CLUSTER","mtype":"cluster","color":"#7c3aed","director":"","role":"","shares":0,"price":0,"value":0,"signals":["s1"],"fingerprint":""},{"date":"2025-12-01","type":"CLUSTER","mtype":"cluster","color":"#7c3aed","director":"","role":"","shares":0,"price":0,"value":0,"signals":["s1"],"fingerprint":""}]};</script></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Transactions</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Date</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-left">Role</th><th class="px-3 py-2 text-left">Type</th><th class="px-3 py-2 text-right">Shares</th><th class="px-3 py-2 text-right">Price (p)</th><th class="px-3 py-2 text-right">Value (&pound;)</th><th class="px-3 py-2 text-left">Signals</th><th class="px-3 py-2 text-center">Source</th></tr></thead><tbody><tr id="txn-d0dc958b1201fd13" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">27 Feb 2026</td><td class="px-3 py-2 text-slate-700">Seema Paterson</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Non-executive Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">114</td><td class="px-3 py-2 text-right tabular-nums">4.47</td><td class="px-3 py-2 text-right tabular-nums">&pound;509</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/cqs-natural-resources-growth-and-income--cyn/director-pdmr-shareholding/9451447" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/cqs-natural-resources-growth-and-income--cyn/director-pdmr-shareholding/9451447">&#8599;</a></td></tr><tr id="txn-3b33948832db8d08" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">11 Feb 2026</td><td class="px-3 py-2 text-slate-700">Seema Paterson</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Non-executive Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">1,216</td><td class="px-3 py-2 text-right tabular-nums">3.82</td><td class="px-3 py-2 text-right tabular-nums">&pound;4,645</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/cqs-natural-resources-growth-and-income--cyn/director-pdmr-shareholding/9428916" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/cqs-natural-resources-growth-and-income--cyn/director-pdmr-shareholding/9428916">&#8599;</a></td></tr><tr id="txn-4de44bde3c333b0e" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">28 Nov 2025</td><td class="px-3 py-2 text-slate-700">Seema Paterson</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Non-executive Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">153</td><td class="px-3 py-2 text-right tabular-nums">2.89</td><td class="px-3 py-2 text-right tabular-nums">&pound;442</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/cqs-natural-resources-growth-and-income--cyn/director-pdmr-shareholding/9267442" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/cqs-natural-resources-growth-and-income--cyn/director-pdmr-shareholding/9267442">&#8599;</a></td></tr><tr id="txn-381d04a23fe954f1" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">30 Oct 2025</td><td class="px-3 py-2 text-slate-700">Louise Drummond Hall</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Non-executive Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">4,000</td><td class="px-3 py-2 text-right tabular-nums">2.84</td><td class="px-3 py-2 text-right tabular-nums">&pound;11,360</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T3 - NED (non-executive director) buy &gt;= GBP10k. Lower conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500 text-white">T3</span><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/cqs-natural-resources-growth-and-income--cyn/director-pdmr-shareholding/9207110" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/cqs-natural-resources-growth-and-income--cyn/director-pdmr-shareholding/9207110">&#8599;</a></td></tr><tr id="txn-e4e1b7ca8993f6e8" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">28 Oct 2025</td><td class="px-3 py-2 text-slate-700">Seema Paterson</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Non-executive Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">732</td><td class="px-3 py-2 text-right tabular-nums">2.66</td><td class="px-3 py-2 text-right tabular-nums">&pound;1,947</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/cqs-natural-resources-growth-and-income--cyn/director-pdmr-shareholding/9206896" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/cqs-natural-resources-growth-and-income--cyn/director-pdmr-shareholding/9206896">&#8599;</a></td></tr></tbody></table></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Signal-firing history</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Fired</th><th class="px-3 py-2 text-left">Signal</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-right">T+1</th><th class="px-3 py-2 text-right">T+21</th><th class="px-3 py-2 text-right">T+90</th><th class="px-3 py-2 text-right">T+252</th></tr></thead><tbody><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">31 Oct 2025</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Seema Paterson</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.75%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+3.64%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+16.56%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-07-13">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">28 Oct 2025</td><td class="px-3 py-2"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span></td><td class="px-3 py-2 text-slate-700">Seema Paterson</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.75%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+3.64%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+16.56%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-07-13">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">31 Oct 2025</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Louise Drummond Hall</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.75%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+3.64%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+16.56%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-07-13">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">31 Oct 2025</td><td class="px-3 py-2"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span></td><td class="px-3 py-2 text-slate-700">Louise Drummond Hall</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.75%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+3.64%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+16.56%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-07-13">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">31 Oct 2025</td><td class="px-3 py-2"><span title="T3 - NED (non-executive director) buy &gt;= GBP10k. Lower conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500 text-white">T3</span></td><td class="px-3 py-2 text-slate-700">Louise Drummond Hall</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.75%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+3.64%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+16.56%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-07-13">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">28 Nov 2025</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Seema Paterson</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+2.81%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+13.91%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+23.30%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-08-11">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">01 Dec 2025</td><td class="px-3 py-2"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span></td><td class="px-3 py-2 text-slate-700">Seema Paterson</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+2.81%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+13.91%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+23.30%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-08-11">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">11 Feb 2026</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Seema Paterson</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-0.46%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-9.65%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-05-14">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-10-23">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">27 Feb 2026</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Seema Paterson</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-5.49%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-10.18%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-05-31">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-11-09">-</span></td></tr></tbody></table><div class="bg-slate-50 border-t border-slate-100 px-4 py-3 text-xs flex gap-6"><div><span class="text-slate-500">Firings:</span> <span class="font-medium tabular-nums">9</span></div><div><span class="text-slate-500">Hit % @ T+21:</span> <span class="font-medium tabular-nums text-emerald-600">77.8%</span></div><div><span class="text-slate-500">Median CAR @ T+21:</span> <span class="text-emerald-600">+3.64%</span></div></div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Cluster history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No clusters detected for this ticker.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="px-4 py-3 text-xs uppercase tracking-wide text-slate-500 border-b border-slate-100">Pending review &mdash; 1 CYN filing excluded from signals</h2><p class="px-4 pt-3 pb-1 text-xs text-slate-600 leading-relaxed">&#8627; PDMR announcements for this ticker the parser couldn't cleanly extract &mdash; usually genuine edge cases. Summary below.</p><table class="w-full text-xs tabular-nums" id="pendingDiagTicker"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left w-[55%]">Category</th><th class="px-3 py-2 text-right w-[12%]">Count</th><th class="px-3 py-2 text-right w-[10%]">%</th><th class="px-3 py-2 text-left w-[23%]">Recoverable?</th></tr></thead><tbody><tr class="border-t border-slate-100 odd:bg-slate-50"><td class="px-3 py-2 text-slate-700" title="Filing names multiple directors in one announcement -- D-STRICT refuses to split">Bundled multi-PDMR</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">1</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">100.0%</td><td class="px-3 py-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-200 text-slate-700">No</span></td></tr></tbody></table><div class="text-[10px] text-slate-500 px-4 py-2 border-t border-slate-100">Recoverable column flags which buckets v2 parser work could unlock vs. which are case-by-case manual review.</div></section><footer class="px-6 py-4 text-[10px] text-slate-400 border-t border-slate-200"><p>Generated by build_dashboard.py 2026-05-18T14:00:21Z.</p><p>Data: Investegate RNS feed &middot; Yahoo Finance &middot; FTSE All-Share benchmark.</p><p class="mt-2">Historic insider-trading outcomes are not predictive. Net-of-cost CAR assumes 50bps round-trip + 0.5% UK stamp on non-AIM buys.</p></footer>
+<script>
+(function(){
+  const d = window.__priceData || {};
+  const dates = d.dates || [];
+  if (!dates.length) return;
+  const closes = d.closes || [];
+  const volumes = d.volumes || [];
+  const markers = d.markers || [];
+
+  // Build close-by-date map for marker yValue.
+  const closeMap = {};
+  dates.forEach(function(dt, i){ closeMap[dt] = closes[i]; });
+
+  // U4 vivid marker palette — keyed by mtype.
+  // exec_buy/ned_buy: triangle-up, white halo.
+  // sell: triangle-down, white halo.
+  // grant: square (rect), white halo.
+  // cluster: circle ring, violet stroke, no fill, drawn BEHIND transactions.
+  var MSTYLE = {
+    exec_buy: { label:'Exec Buy',   bg:'#16a34a',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:7,  ord:1 },
+    ned_buy:  { label:'NED Buy',    bg:'#4ade80',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:6,  ord:1 },
+    sell:     { label:'Sell',       bg:'#dc2626',        bc:'#ffffff', bw:3,   ps:'triangle', rot:180, r:7,  ord:1 },
+    grant:    { label:'Grant/SIP',  bg:'#d97706',        bc:'#ffffff', bw:2.5, ps:'rect',     rot:0,   r:5,  ord:1 },
+    cluster:  { label:'S1 Cluster', bg:'rgba(0,0,0,0)',  bc:'#7c3aed', bw:2.5, ps:'circle',   rot:0,   r:11, ord:2 }
+  };
+
+  // Group markers by mtype.
+  var markerDatasets = {};
+  markers.forEach(function(m){
+    var mtype = m.mtype || 'exec_buy';
+    if (!markerDatasets[mtype]){
+      var st = MSTYLE[mtype] || MSTYLE.exec_buy;
+      markerDatasets[mtype] = {
+        label: st.label,
+        type: 'scatter',
+        data: [],
+        backgroundColor: st.bg,
+        borderColor: st.bc,
+        borderWidth: st.bw,
+        pointStyle: st.ps,
+        rotation: st.rot,
+        pointRotation: st.rot,
+        radius: st.r,
+        hoverRadius: st.r + 2,
+        showLine: false,
+        order: st.ord,
+        _markers: []
+      };
+    }
+    var y = closeMap[m.date];
+    markerDatasets[mtype].data.push({ x: m.date, y: y });
+    markerDatasets[mtype]._markers.push(m);
+  });
+
+  const pCtx = document.getElementById('priceChart');
+  if (!pCtx) return;
+
+  // Price line first (order:0), then transaction markers (order:1),
+  // then cluster rings on top (order:2 — drawn last so ring encircles marker).
+  var markerList = Object.keys(markerDatasets)
+    .sort(function(a,b){ return (markerDatasets[a].order||1)-(markerDatasets[b].order||1); })
+    .map(function(k){ return markerDatasets[k]; });
+
+  const ds = [{
+    label: 'Close',
+    type: 'line',
+    data: dates.map(function(dt, i){ return { x: dt, y: closes[i] }; }),
+    borderColor: '#475569', borderWidth: 1.5, pointRadius: 0, tension: 0, order: 0
+  }].concat(markerList);
+
+  window.__priceChart = new Chart(pCtx, {
+    type: 'line',
+    data: { datasets: ds },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      parsing: false,
+      scales: {
+        x: { type: 'category', labels: dates, ticks: { maxRotation: 0, font: { size: 10 } } },
+        y: { ticks: { font: { size: 10 } } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx){
+              if (ctx.dataset.type !== 'scatter') return ctx.dataset.label + ': ' + ctx.parsed.y;
+              var idx = ctx.dataIndex;
+              var m = ctx.dataset._markers[idx] || {};
+              if (m.mtype === 'cluster'){
+                return ['S1 Cluster signal fired', 'Date: ' + m.date];
+              }
+              var lines = [];
+              if (m.director) lines.push(m.director + (m.role ? ' (' + m.role + ')' : ''));
+              lines.push(m.type + (m.shares ? ' ' + m.shares + ' sh @ ' + (m.price||0).toFixed(2) + 'p' : ''));
+              if (m.value) lines.push('£' + (m.value||0).toLocaleString());
+              if (m.signals && m.signals.length) lines.push('Signal: ' + m.signals.join(', '));
+              return lines;
+            }
+          }
+        }
+      },
+      onClick: function(evt, els){
+        if (!els.length) return;
+        var el = els[0];
+        var dataset = ds[el.datasetIndex];
+        if (!dataset || dataset.type !== 'scatter') return;
+        var m = dataset._markers[el.index];
+        // Cluster rings have no table row — skip scroll.
+        if (!m || !m.fingerprint || m.mtype === 'cluster') return;
+        var row = document.getElementById('txn-' + m.fingerprint);
+        if (row){
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          row.classList.add('pulse-highlight');
+          setTimeout(function(){ row.classList.remove('pulse-highlight'); }, 2000);
+        }
+      }
+    }
+  });
+
+  const vCtx = document.getElementById('volumeChart');
+  if (vCtx) {
+    window.__volChart = new Chart(vCtx, {
+      type: 'bar',
+      data: { labels: dates, datasets: [{ data: volumes, backgroundColor: '#cbd5e1' }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        }
+      }
+    });
+  }
+})();
+</script>
+
+</main>
+<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-05-18 14:00 UTC &middot; build local</footer>
+
+<script>
+(function(){
+  const $ = function(id){ return document.getElementById(id); };
+  let pollTimer = null;
+  let lastStatus = 'idle';
+
+  function setBtn(label, disabled){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    const lab = $('refreshBtnLabel');
+    if (lab) lab.textContent = label;
+    btn.disabled = !!disabled;
+    btn.classList.toggle('opacity-60', !!disabled);
+    btn.classList.toggle('cursor-not-allowed', !!disabled);
+  }
+  function showToast(msg, ok){
+    const t = document.createElement('div');
+    t.className = (ok ? 'bg-emerald-600' : 'bg-rose-600')
+      + ' fixed bottom-4 right-4 text-white text-xs px-4 py-2 rounded shadow-lg z-50';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, ok ? 4000 : 8000);
+  }
+  function startPolling(){
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(pollStatus, 5000);
+    pollStatus();
+  }
+  function stopPolling(){
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+  function pollStatus(){
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        lastStatus = s.status || 'idle';
+        if (lastStatus === 'running'){
+          const step = s.step_label || s.step || 'Working...';
+          setBtn('Refreshing - ' + step, true);
+        } else if (lastStatus === 'done'){
+          stopPolling();
+          showToast('Refresh complete. Reloading...', true);
+          setTimeout(function(){ window.location.reload(); }, 800);
+        } else if (lastStatus === 'error'){
+          stopPolling();
+          setBtn('Refresh', false);
+          showToast('Refresh failed: ' + (s.error || 'unknown'), false);
+        } else {
+          setBtn('Refresh', false);
+        }
+      }).catch(function(){ /* swallow */ });
+  }
+  function closeModal(){
+    const m = $('refreshModal');
+    if (m) m.remove();
+  }
+  function openConfirmModal(){
+    const modal = document.createElement('div');
+    modal.id = 'refreshModal';
+    modal.className = 'fixed inset-0 bg-slate-900/40 flex items-center '
+      + 'justify-center z-50';
+    modal.innerHTML =
+      '<div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">'
+      + '<h3 class="text-sm font-semibold text-slate-900 mb-2">'
+      + 'Run full refresh pipeline?</h3>'
+      + '<p class="text-xs text-slate-700 mb-3 leading-relaxed">'
+      + 'This will run the 6-step pipeline end-to-end:</p>'
+      + '<ol class="text-xs text-slate-700 mb-4 list-decimal pl-5 space-y-1">'
+      + '<li>Scrape Investegate RNS (last 60 days)</li>'
+      + '<li>Backfill share prices (Yahoo)</li>'
+      + '<li>Update sector benchmarks</li>'
+      + '<li>Recompute signal firings</li>'
+      + '<li>Rebuild signals/dealings JSON</li>'
+      + '<li>Regenerate dashboard HTML</li>'
+      + '</ol>'
+      + '<div class="bg-amber-50 border border-amber-200 rounded p-3 mb-4">'
+      + '<p class="text-[11px] text-amber-800 font-medium mb-1">'
+      + 'Heads up</p>'
+      + '<p class="text-[11px] text-amber-700 leading-relaxed">'
+      + 'Takes ~15-30 min. The scrape step uses Anthropic LLM credits '
+      + '(budget cap ~$50/run, set in run_scrape.py). Yahoo Finance may '
+      + 'rate-limit if run too often.</p>'
+      + '</div>'
+      + '<label class="flex items-center gap-2 text-xs text-slate-700 mb-4">'
+      + '<input id="refreshNoLlm" type="checkbox" class="rounded">'
+      + 'Skip LLM fallback (regex-only parsing)'
+      + '</label>'
+      + '<div class="flex justify-end gap-2">'
+      + '<button id="refreshCancel" class="px-3 py-1.5 text-xs border '
+      + 'border-slate-300 rounded text-slate-600 hover:bg-slate-50">'
+      + 'Cancel</button>'
+      + '<button id="refreshConfirm" class="px-3 py-1.5 text-xs '
+      + 'bg-indigo-600 text-white rounded hover:bg-indigo-700">'
+      + 'Run pipeline</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+    $('refreshCancel').onclick = closeModal;
+    $('refreshConfirm').onclick = function(){
+      const noLlm = $('refreshNoLlm').checked;
+      closeModal();
+      setBtn('Starting...', true);
+      fetch('/api/refresh-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ no_llm: noLlm })
+      }).then(function(resp){
+        if (resp.status === 409){
+          showToast('A refresh is already running.', false);
+        } else if (!resp.ok){
+          throw new Error('HTTP ' + resp.status);
+        } else {
+          showToast('Refresh started.', true);
+        }
+        startPolling();
+      }).catch(function(err){
+        setBtn('Refresh', false);
+        var hint = err.message;
+        if (/failed to fetch/i.test(hint)){
+          hint = 'server unreachable. Run `python server.py` and visit '
+            + 'http://localhost:5000 in your browser.';
+        }
+        showToast('Could not start refresh: ' + hint, false);
+      });
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    // If the page was opened via file://, no Flask server is reachable.
+    // Disable the button and tell the user how to fix it -- silent
+    // "Failed to fetch" errors are the #1 confusion point.
+    if (window.location.protocol === 'file:'){
+      setBtn('Refresh (start server)', true);
+      btn.title = 'This page was opened from disk (file://). Run '
+        + '`python server.py` and visit http://localhost:5000 to enable '
+        + 'the Refresh button.';
+      btn.addEventListener('click', function(){
+        showToast('Open http://localhost:5000 (run python server.py first) '
+          + 'to use Refresh.', false);
+      });
+      return;
+    }
+    btn.addEventListener('click', openConfirmModal);
+    // On load, check status -- if running, attach to existing pipeline.
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        if (s.status === 'running'){
+          setBtn('Refreshing - ' + (s.step_label || 'Working...'), true);
+          startPolling();
+        }
+      }).catch(function(err){
+        // Server unreachable on a non-file:// page -- the server died
+        // or is on a different host. Tell the user something useful.
+        setBtn('Refresh (server down)', true);
+        btn.title = 'Could not reach /api/refresh-status. Is the Flask '
+          + 'server still running? Try restarting `python server.py`.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-sha" content="local">
+<title>NANO - Nanoco Group PLC</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+<style>
+  html, body { background:#f8fafc; color:#0f172a; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .pulse-highlight { animation: pulseBg 2s ease-out 1; }
+  @keyframes pulseBg {
+    0%   { background-color: #fef3c7; }
+    100% { background-color: transparent; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+<header class="border-b border-slate-200 bg-white px-6 h-12 flex items-center justify-between">
+<h1 class="text-sm font-semibold text-slate-900 tracking-tight">NANO - Nanoco Group PLC</h1>
+<nav class="flex items-center"><button id="refreshBtn" type="button" class="text-xs px-2.5 py-1 rounded border border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5" title="Run the full refresh pipeline (scrape -> parse -> backfill -> eval -> rebuild). Slow (~15+ min) and uses LLM credits."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span id="refreshBtnLabel">Refresh</span></button><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Today</a> <a href="../performance.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Performance</a></nav>
+</header>
+<main class="max-w-7xl mx-auto">
+<header class="border-b border-slate-200 bg-white px-6 py-4"><div class="flex items-center justify-between mb-1"><div class="flex items-center"><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 mr-4">&larr; Dashboard</a><h1 class="text-lg font-semibold text-slate-900 tabular-nums">NANO</h1><span class="text-sm text-slate-600 ml-2">Nanoco Group PLC</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Unknown sector</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Main</span></div></div><div class="flex items-center justify-between"><div class="text-sm tabular-nums">Latest close: 0.07p <span class="text-rose-600 ml-2">&#9660; -2.03%</span></div><div class="text-[10px] text-slate-400">Last refresh: 2026-05-15T07:38:59Z</div></div></header><section class="m-6 bg-white border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-center mb-3"><h2 class="text-xs uppercase tracking-wide text-slate-500">Price (trailing window)</h2></div><div class="relative h-72"><canvas id="priceChart"></canvas></div><div class="relative h-16 mt-1"><canvas id="volumeChart"></canvas></div><script>window.__priceData = {"dates":["2025-04-15","2025-04-16","2025-04-17","2025-04-22","2025-04-23","2025-04-24","2025-04-25","2025-04-28","2025-04-29","2025-04-30","2025-05-01","2025-05-02","2025-05-06","2025-05-07","2025-05-08","2025-05-09","2025-05-12","2025-05-13","2025-05-14","2025-05-15","2025-05-16","2025-05-19","2025-05-20","2025-05-21","2025-05-22","2025-05-23","2025-05-27","2025-05-28","2025-05-29","2025-05-30","2025-06-02","2025-06-03","2025-06-04","2025-06-05","2025-06-06","2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-07","2025-07-08","2025-07-09","2025-07-10","2025-07-11","2025-07-14","2025-07-15","2025-07-16","2025-07-17","2025-07-18","2025-07-21","2025-07-22","2025-07-23","2025-07-24","2025-07-25","2025-07-28","2025-07-29","2025-07-30","2025-07-31","2025-08-01","2025-08-04","2025-08-05","2025-08-06","2025-08-07","2025-08-08","2025-08-11","2025-08-12","2025-08-13","2025-08-14","2025-08-15","2025-08-18","2025-08-19","2025-08-20","2025-08-21","2025-08-22","2025-08-26","2025-08-27","2025-08-28","2025-08-29","2025-09-01","2025-09-02","2025-09-03","2025-09-04","2025-09-05","2025-09-08","2025-09-09","2025-09-10","2025-09-11","2025-09-12","2025-09-15","2025-09-16","2025-09-17","2025-09-18","2025-09-19","2025-09-22","2025-09-23","2025-09-24","2025-09-25","2025-09-26","2025-09-29","2025-09-30","2025-10-01","2025-10-02","2025-10-03","2025-10-06","2025-10-07","2025-10-08","2025-10-09","2025-10-10","2025-10-13","2025-10-14","2025-10-15","2025-10-16","2025-10-17","2025-10-20","2025-10-21","2025-10-22","2025-10-23","2025-10-24","2025-10-27","2025-10-28","2025-10-29","2025-10-30","2025-10-31","2025-11-03","2025-11-04","2025-11-05","2025-11-06","2025-11-07","2025-11-10","2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-17","2025-11-18","2025-11-19","2025-11-20","2025-11-21","2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-22","2025-12-23","2025-12-24","2025-12-29","2025-12-30","2025-12-31","2026-01-02","2026-01-05","2026-01-06","2026-01-07","2026-01-08","2026-01-09","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-19","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13"],"closes":[0.07800000190734863,0.07710000038146973,0.0775,0.07690000057220459,0.07409999847412109,0.07570000171661377,0.085,0.09399999618530273,0.09300000190734864,0.09600000381469727,0.10375,0.12300000190734864,0.13199999809265137,0.1275,0.12350000381469727,0.12399999618530273,0.13,0.12699999809265136,0.12850000381469726,0.12875,0.13024999618530272,0.12399999618530273,0.12800000190734864,0.1275,0.1275,0.12850000381469726,0.12100000381469726,0.12175000190734864,0.11324999809265136,0.11449999809265136,0.11300000190734863,0.11,0.11399999618530274,0.11199999809265136,0.105,0.10375,0.10399999618530273,0.10550000190734864,0.10475000381469726,0.10399999618530273,0.10375,0.10324999809265137,0.10449999809265137,0.10449999809265137,0.10300000190734863,0.09895000457763672,0.10125,0.09699999809265136,0.10164999961853027,0.09739999771118164,0.10055000305175782,0.09800000190734863,0.09640000343322754,0.12300000190734864,0.12899999618530272,0.13899999618530273,0.13850000381469726,0.13600000381469726,0.125,0.125,0.13300000190734862,0.13050000190734865,0.13199999809265137,0.13050000190734865,0.13300000190734862,0.13375,0.13300000190734862,0.13425000190734862,0.13649999618530273,0.13625,0.13399999618530273,0.135,0.13274999618530273,0.13399999618530273,0.13475000381469726,0.1375,0.14149999618530273,0.13800000190734862,0.13475000381469726,0.13225000381469726,0.13475000381469726,0.13725000381469726,0.13800000190734862,0.13399999618530273,0.13449999809265137,0.1325,0.12949999809265136,0.13149999618530273,0.12649999618530272,0.12975000381469726,0.13100000381469726,0.13100000381469726,0.12850000381469726,0.12649999618530272,0.11975000381469726,0.11600000381469727,0.11800000190734863,0.115,0.11149999618530274,0.11050000190734863,0.11,0.11,0.10899999618530273,0.10899999618530273,0.1075,0.10600000381469726,0.10550000190734864,0.10550000190734864,0.10524999618530273,0.10449999809265137,0.10274999618530273,0.099399995803833,0.09899999618530274,0.09789999961853027,0.09670000076293946,0.09520000457763672,0.09760000228881836,0.09630000114440918,0.09649999618530274,0.09739999771118164,0.099399995803833,0.1,0.10899999618530273,0.10574999809265137,0.10699999809265137,0.10225000381469726,0.09994999885559082,0.099399995803833,0.09520000457763672,0.09640000343322754,0.095,0.09630000114440918,0.10050000190734863,0.1,0.10085000038146973,0.10199999809265137,0.10314999580383301,0.10090000152587891,0.09875,0.09760000228881836,0.09760000228881836,0.09729999542236328,0.09520000457763672,0.09960000038146972,0.09739999771118164,0.09699999809265136,0.09739999771118164,0.09859999656677246,0.0975,0.1,0.09239999771118164,0.09199999809265137,0.09600000381469727,0.09399999618530273,0.09560000419616699,0.09479999542236328,0.09399999618530273,0.09350000381469727,0.08899999618530273,0.08789999961853028,0.08039999961853027,0.08100000381469727,0.07900000095367432,0.084399995803833,0.08619999885559082,0.08600000381469726,0.08649999618530274,0.08600000381469726,0.08539999961853027,0.08399999618530274,0.08399999618530274,0.08550000190734863,0.08199999809265136,0.08260000228881836,0.07980000019073487,0.07769999980926513,0.07780000209808349,0.07460000038146973,0.07710000038146973,0.08260000228881836,0.08119999885559082,0.08130000114440918,0.08090000152587891,0.07980000019073487,0.08119999885559082,0.07980000019073487,0.08420000076293946,0.08229999542236328,0.08109999656677246,0.0825,0.08340000152587891,0.08180000305175782,0.07800000190734863,0.08,0.08310000419616699,0.08600000381469726,0.06760000228881836,0.06760000228881836,0.06559999942779542,0.06590000152587891,0.06349999904632568,0.061100001335144045,0.06039999961853027,0.058699998855590824,0.06139999866485596,0.05940000057220459,0.05429999828338623,0.056599998474121095,0.05510000228881836,0.056599998474121095,0.05679999828338623,0.05510000228881836,0.055399999618530274,0.05739999771118164,0.058000001907348636,0.058699998855590824,0.05900000095367432,0.0571999979019165,0.06,0.05849999904632568,0.055500001907348634,0.05400000095367432,0.05179999828338623,0.057699999809265136,0.0575,0.05900000095367432,0.05389999866485596,0.05559999942779541,0.0575,0.05739999771118164,0.05619999885559082,0.05599999904632568,0.05849999904632568,0.05760000228881836,0.05849999904632568,0.058000001907348636,0.05190000057220459,0.05269999980926514,0.05590000152587891,0.05489999771118164,0.05760000228881836,0.05590000152587891,0.05300000190734863,0.04840000152587891,0.04704999923706055,0.04820000171661377,0.04880000114440918,0.04739999771118164,0.047849998474121094,0.05079999923706055,0.05179999828338623,0.053600001335144046,0.053600001335144046,0.050999999046325684,0.05239999771118164,0.05239999771118164,0.05179999828338623,0.053600001335144046,0.052249999046325685,0.049200000762939455,0.05059999942779541,0.05,0.049050002098083495,0.053249998092651366,0.05489999771118164,0.05400000095367432,0.059600000381469724,0.07159999847412109,0.075,0.06900000095367431,0.06760000228881836],"volumes":[4687828,352747,255047,789473,580659,747857,3569436,2345414,628116,392090,1814117,2619769,2546800,962310,555103,179237,1039343,486973,201855,114030,234533,557672,87438,427600,43881,82438,434486,210263,426501,765202,58370,120400,101819,112332,670289,187230,193093,103004,34402,100925,138937,259119,144302,111459,462618,464944,361714,553185,246610,627415,76951,747241,399968,3004417,2214789,3830654,2381081,309986,1425377,1033555,1272516,776197,62688,142036,294473,60362,736405,29856,151085,151940,121998,488473,514672,466599,722851,289964,259779,630952,93207,91018,54219,315941,82647,148663,131035,84389,715755,242437,135220,76387,60212,121417,306659,99938,845575,18289,49898,526861,582312,239961,300618,185788,997221,125805,573722,310487,276268,45901,120984,325839,880724,570850,677771,690589,204263,198617,843642,161513,157744,489922,687677,500065,472083,469088,202600,415035,416717,55332,536161,424128,488057,26757,275131,202505,305583,112479,209305,566904,205068,207248,901479,546630,266143,569221,379773,187725,188133,297277,350406,468098,922756,360583,2013602,243807,365293,91647,110752,454429,1163896,365735,781327,364449,95740,160749,703301,54389,198217,15236,432277,152052,141353,102003,312837,661902,482271,867558,218744,408102,108289,297849,810270,186264,18165,38176,151754,277086,454001,87146,389539,2057202,304660,228622,405509,16872,192548,698035,5425173,278026,847538,163946,1442867,587563,331499,608585,550856,198872,918133,237461,223452,947450,69575,302012,387150,504733,115883,605714,175435,73907,333191,762710,1301514,365382,420135,1101564,666228,126178,122601,112596,114023,40352,60532,144014,280357,266883,326957,1085988,2111522,1081174,135525,134083,646408,1695644,786880,982259,472497,431313,753528,1132571,174797,350352,701099,781696,259961,401851,1257479,519530,616762,166080,315005,235460,126917,112387,86520,990814,1079109,805739,2186408,1887377,2175109,2569768,2311392],"markers":[{"date":"2026-04-20","type":"GRANT","color":"#94a3b8","director":"Liam Gray","role":"Interim Chief Executive Officer","shares":628591,"price":0,"value":0,"signals":[],"fingerprint":"d4a1577f27fc6670"}]};</script></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Transactions</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Date</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-left">Role</th><th class="px-3 py-2 text-left">Type</th><th class="px-3 py-2 text-right">Shares</th><th class="px-3 py-2 text-right">Price (p)</th><th class="px-3 py-2 text-right">Value (&pound;)</th><th class="px-3 py-2 text-left">Signals</th><th class="px-3 py-2 text-center">Source</th></tr></thead><tbody><tr id="txn-d4a1577f27fc6670" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">20 Apr 2026</td><td class="px-3 py-2 text-slate-700">Liam Gray</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Interim Chief Executive Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">GRANT</span></td><td class="px-3 py-2 text-right tabular-nums">628,591</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/nanoco-group--nano/director-pdmr-shareholding/9529086" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/nanoco-group--nano/director-pdmr-shareholding/9529086">&#8599;</a></td></tr></tbody></table></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Signal-firing history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No signals have fired for this ticker.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Cluster history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No clusters detected for this ticker.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="px-4 py-3 text-xs uppercase tracking-wide text-slate-500 border-b border-slate-100">Pending review &mdash; 1 NANO filing excluded from signals</h2><p class="px-4 pt-3 pb-1 text-xs text-slate-600 leading-relaxed">&#8627; PDMR announcements for this ticker the parser couldn't cleanly extract &mdash; usually genuine edge cases. Summary below.</p><table class="w-full text-xs tabular-nums" id="pendingDiagTicker"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left w-[55%]">Category</th><th class="px-3 py-2 text-right w-[12%]">Count</th><th class="px-3 py-2 text-right w-[10%]">%</th><th class="px-3 py-2 text-left w-[23%]">Recoverable?</th></tr></thead><tbody><tr class="border-t border-slate-100 odd:bg-slate-50"><td class="px-3 py-2 text-slate-700" title="Parser could not extract ticker / company / type / required fields -- case-by-case review">Could not classify / extract</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">1</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">100.0%</td><td class="px-3 py-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 text-amber-800">Manual</span></td></tr></tbody></table><div class="text-[10px] text-slate-500 px-4 py-2 border-t border-slate-100">Recoverable column flags which buckets v2 parser work could unlock vs. which are case-by-case manual review.</div></section><footer class="px-6 py-4 text-[10px] text-slate-400 border-t border-slate-200"><p>Generated by build_dashboard.py 2026-05-15T07:38:59Z.</p><p>Data: Investegate RNS feed &middot; Yahoo Finance &middot; FTSE All-Share benchmark.</p><p class="mt-2">Historic insider-trading outcomes are not predictive. Net-of-cost CAR assumes 50bps round-trip + 0.5% UK stamp on non-AIM buys.</p></footer>
+<script>
+(function(){
+  const d = window.__priceData || {};
+  const dates = d.dates || [];
+  if (!dates.length) return;
+  const closes = d.closes || [];
+  const volumes = d.volumes || [];
+  const markers = d.markers || [];
+
+  // Build close-by-date map for marker yValue.
+  const closeMap = {};
+  dates.forEach(function(dt, i){ closeMap[dt] = closes[i]; });
+
+  // Use scatter overlay for markers via second dataset on the same chart.
+  const markerDatasets = {};
+  markers.forEach(function(m){
+    const key = m.type + '_' + m.color;
+    if (!markerDatasets[key]){
+      markerDatasets[key] = {
+        label: m.type,
+        type: 'scatter',
+        data: [],
+        backgroundColor: m.color,
+        borderColor: '#ffffff',
+        borderWidth: 1.5,
+        pointStyle: m.type === 'SELL' ? 'triangle' : 'triangle',
+        pointRotation: m.type === 'SELL' ? 180 : 0,
+        radius: 6,
+        showLine: false,
+        order: 0,
+        _markers: []
+      };
+    }
+    markerDatasets[key].data.push({ x: m.date, y: closeMap[m.date] });
+    markerDatasets[key]._markers.push(m);
+  });
+
+  const pCtx = document.getElementById('priceChart');
+  if (!pCtx) return;
+  const ds = [{
+    label: 'Close',
+    type: 'line',
+    data: dates.map(function(dt, i){ return { x: dt, y: closes[i] }; }),
+    borderColor: '#475569', borderWidth: 1.5, pointRadius: 0, tension: 0, order: 1
+  }].concat(Object.keys(markerDatasets).map(function(k){ return markerDatasets[k]; }));
+
+  window.__priceChart = new Chart(pCtx, {
+    type: 'line',
+    data: { datasets: ds },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      parsing: false,
+      scales: {
+        x: { type: 'category', labels: dates, ticks: { maxRotation: 0, font: { size: 10 } } },
+        y: { ticks: { font: { size: 10 } } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx){
+              if (ctx.dataset.type !== 'scatter') return ctx.dataset.label + ': ' + ctx.parsed.y;
+              const idx = ctx.dataIndex;
+              const m = ctx.dataset._markers[idx] || {};
+              return [
+                m.director + ' (' + m.role + ')',
+                m.type + ' ' + m.shares + ' sh @ ' + m.price.toFixed(2) + 'p',
+                'GBP ' + (m.value||0).toLocaleString(),
+                'Signals: ' + (m.signals || []).join(', ')
+              ];
+            }
+          }
+        }
+      },
+      onClick: function(evt, els){
+        if (!els.length) return;
+        const el = els[0];
+        const dsx = el.datasetIndex;
+        const dataset = ds[dsx];
+        if (dataset.type !== 'scatter') return;
+        const m = dataset._markers[el.index];
+        if (!m || !m.fingerprint) return;
+        const row = document.getElementById('txn-' + m.fingerprint);
+        if (row){
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          row.classList.add('pulse-highlight');
+          setTimeout(function(){ row.classList.remove('pulse-highlight'); }, 2000);
+        }
+      }
+    }
+  });
+
+  const vCtx = document.getElementById('volumeChart');
+  if (vCtx) {
+    window.__volChart = new Chart(vCtx, {
+      type: 'bar',
+      data: { labels: dates, datasets: [{ data: volumes, backgroundColor: '#cbd5e1' }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        }
+      }
+    });
+  }
+})();
+</script>
+
+</main>
+<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-05-15 07:38 UTC &middot; build local</footer>
+
+<script>
+(function(){
+  const $ = function(id){ return document.getElementById(id); };
+  let pollTimer = null;
+  let lastStatus = 'idle';
+
+  function setBtn(label, disabled){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    const lab = $('refreshBtnLabel');
+    if (lab) lab.textContent = label;
+    btn.disabled = !!disabled;
+    btn.classList.toggle('opacity-60', !!disabled);
+    btn.classList.toggle('cursor-not-allowed', !!disabled);
+  }
+  function showToast(msg, ok){
+    const t = document.createElement('div');
+    t.className = (ok ? 'bg-emerald-600' : 'bg-rose-600')
+      + ' fixed bottom-4 right-4 text-white text-xs px-4 py-2 rounded shadow-lg z-50';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, ok ? 4000 : 8000);
+  }
+  function startPolling(){
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(pollStatus, 5000);
+    pollStatus();
+  }
+  function stopPolling(){
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+  function pollStatus(){
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        lastStatus = s.status || 'idle';
+        if (lastStatus === 'running'){
+          const step = s.step_label || s.step || 'Working...';
+          setBtn('Refreshing - ' + step, true);
+        } else if (lastStatus === 'done'){
+          stopPolling();
+          showToast('Refresh complete. Reloading...', true);
+          setTimeout(function(){ window.location.reload(); }, 800);
+        } else if (lastStatus === 'error'){
+          stopPolling();
+          setBtn('Refresh', false);
+          showToast('Refresh failed: ' + (s.error || 'unknown'), false);
+        } else {
+          setBtn('Refresh', false);
+        }
+      }).catch(function(){ /* swallow */ });
+  }
+  function closeModal(){
+    const m = $('refreshModal');
+    if (m) m.remove();
+  }
+  function openConfirmModal(){
+    const modal = document.createElement('div');
+    modal.id = 'refreshModal';
+    modal.className = 'fixed inset-0 bg-slate-900/40 flex items-center '
+      + 'justify-center z-50';
+    modal.innerHTML =
+      '<div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">'
+      + '<h3 class="text-sm font-semibold text-slate-900 mb-2">'
+      + 'Run full refresh pipeline?</h3>'
+      + '<p class="text-xs text-slate-700 mb-3 leading-relaxed">'
+      + 'This will run the 6-step pipeline end-to-end:</p>'
+      + '<ol class="text-xs text-slate-700 mb-4 list-decimal pl-5 space-y-1">'
+      + '<li>Scrape Investegate RNS (last 60 days)</li>'
+      + '<li>Backfill share prices (Yahoo)</li>'
+      + '<li>Update sector benchmarks</li>'
+      + '<li>Recompute signal firings</li>'
+      + '<li>Rebuild signals/dealings JSON</li>'
+      + '<li>Regenerate dashboard HTML</li>'
+      + '</ol>'
+      + '<div class="bg-amber-50 border border-amber-200 rounded p-3 mb-4">'
+      + '<p class="text-[11px] text-amber-800 font-medium mb-1">'
+      + 'Heads up</p>'
+      + '<p class="text-[11px] text-amber-700 leading-relaxed">'
+      + 'Takes ~15-30 min. The scrape step uses Anthropic LLM credits '
+      + '(budget cap ~$50/run, set in run_scrape.py). Yahoo Finance may '
+      + 'rate-limit if run too often.</p>'
+      + '</div>'
+      + '<label class="flex items-center gap-2 text-xs text-slate-700 mb-4">'
+      + '<input id="refreshNoLlm" type="checkbox" class="rounded">'
+      + 'Skip LLM fallback (regex-only parsing)'
+      + '</label>'
+      + '<div class="flex justify-end gap-2">'
+      + '<button id="refreshCancel" class="px-3 py-1.5 text-xs border '
+      + 'border-slate-300 rounded text-slate-600 hover:bg-slate-50">'
+      + 'Cancel</button>'
+      + '<button id="refreshConfirm" class="px-3 py-1.5 text-xs '
+      + 'bg-indigo-600 text-white rounded hover:bg-indigo-700">'
+      + 'Run pipeline</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+    $('refreshCancel').onclick = closeModal;
+    $('refreshConfirm').onclick = function(){
+      const noLlm = $('refreshNoLlm').checked;
+      closeModal();
+      setBtn('Starting...', true);
+      fetch('/api/refresh-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scrape_days: 60, no_llm: noLlm })
+      }).then(function(resp){
+        if (resp.status === 409){
+          showToast('A refresh is already running.', false);
+        } else if (!resp.ok){
+          throw new Error('HTTP ' + resp.status);
+        } else {
+          showToast('Refresh started.', true);
+        }
+        startPolling();
+      }).catch(function(err){
+        setBtn('Refresh', false);
+        var hint = err.message;
+        if (/failed to fetch/i.test(hint)){
+          hint = 'server unreachable. Run `python server.py` and visit '
+            + 'http://localhost:5000 in your browser.';
+        }
+        showToast('Could not start refresh: ' + hint, false);
+      });
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    // If the page was opened via file://, no Flask server is reachable.
+    // Disable the button and tell the user how to fix it -- silent
+    // "Failed to fetch" errors are the #1 confusion point.
+    if (window.location.protocol === 'file:'){
+      setBtn('Refresh (start server)', true);
+      btn.title = 'This page was opened from disk (file://). Run '
+        + '`python server.py` and visit http://localhost:5000 to enable '
+        + 'the Refresh button.';
+      btn.addEventListener('click', function(){
+        showToast('Open http://localhost:5000 (run python server.py first) '
+          + 'to use Refresh.', false);
+      });
+      return;
+    }
+    btn.addEventListener('click', openConfirmModal);
+    // On load, check status -- if running, attach to existing pipeline.
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        if (s.status === 'running'){
+          setBtn('Refreshing - ' + (s.step_label || 'Working...'), true);
+          startPolling();
+        }
+      }).catch(function(err){
+        // Server unreachable on a non-file:// page -- the server died
+        // or is on a different host. Tell the user something useful.
+        setBtn('Refresh (server down)', true);
+        btn.title = 'Could not reach /api/refresh-status. Is the Flask '
+          + 'server still running? Try restarting `python server.py`.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

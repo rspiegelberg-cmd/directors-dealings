@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-sha" content="local">
+<title>AML - Aston Martin Lagonda Global Holdings plc</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+<style>
+  html, body { background:#f8fafc; color:#0f172a; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .pulse-highlight { animation: pulseBg 2s ease-out 1; }
+  @keyframes pulseBg {
+    0%   { background-color: #fef3c7; }
+    100% { background-color: transparent; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+<header class="border-b border-slate-200 bg-white px-4 sm:px-6 h-auto min-h-[48px] py-2 sm:py-0 sm:h-12 flex items-center justify-between gap-2">
+<h1 class="text-sm font-semibold text-slate-900 tracking-tight min-w-0 truncate">AML - Aston Martin Lagonda Global Holdings plc</h1>
+<nav class="flex items-center flex-shrink-0"><button id="refreshBtn" type="button" class="text-xs px-2.5 py-1 rounded border border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5" title="Run the full refresh pipeline (scrape -> parse -> backfill -> eval -> rebuild). Slow (~15+ min) and uses LLM credits."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span id="refreshBtnLabel">Refresh</span></button><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Today</a> <a href="../performance_small.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Small Cap</a> <a href="../performance_large.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Large Cap</a> <a href="../performance.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">All</a> <a href="../baskets.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Baskets</a> <a href="/review" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Review</a></nav>
+</header>
+<main class="max-w-7xl mx-auto">
+<header class="border-b border-slate-200 bg-white px-6 py-4"><div class="flex items-center justify-between mb-1"><div class="flex items-center flex-wrap gap-y-1"><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 mr-4">&larr; Dashboard</a><h1 class="text-lg font-semibold text-slate-900 tabular-nums">AML</h1><span class="text-sm text-slate-600 ml-2">Aston Martin Lagonda Global Holdings plc</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Unknown sector</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Main</span><span class="text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 ml-2" title="Market cap">mktcap &pound;416m</span></div><div class="flex items-center"><a href="https://www.astonmartinlagonda.com" target="_blank" rel="noopener" class="text-[10px] px-2 py-0.5 rounded border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-400 ml-2" title="https://www.astonmartinlagonda.com">Website &#8599;</a></div></div><div class="flex items-center justify-between"><div class="text-sm tabular-nums">Latest close: 0.42p <span class="text-emerald-600 ml-2">&#9650; +2.13%</span></div><div class="text-[10px] text-slate-400">Last refresh: 2026-06-13T07:36:21Z</div></div></header><section class="m-6 bg-white border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-center mb-3"><h2 class="text-xs uppercase tracking-wide text-slate-500">Price (trailing window)</h2><div class="flex flex-wrap gap-1 items-center text-[10px]"><span class="text-slate-400 mr-1 uppercase tracking-wide">Markers:</span><button type="button" data-mtype="buy" class="chart-marker-filter chart-marker-filter--active px-2 py-0.5 rounded border border-emerald-600 bg-emerald-600 text-white">Buy</button><button type="button" data-mtype="sell" class="chart-marker-filter chart-marker-filter--active px-2 py-0.5 rounded border border-rose-600 bg-rose-600 text-white">Sell</button><button type="button" data-mtype="other" class="chart-marker-filter px-2 py-0.5 rounded border border-slate-300 bg-white text-slate-500 hover:bg-slate-50">Other</button></div></div><div class="relative h-72"><canvas id="priceChart"></canvas></div><div class="relative h-16 mt-1"><canvas id="volumeChart"></canvas></div><script>window.__priceData = {"dates":["2025-05-09","2025-05-12","2025-05-13","2025-05-14","2025-05-15","2025-05-16","2025-05-19","2025-05-20","2025-05-21","2025-05-22","2025-05-23","2025-05-27","2025-05-28","2025-05-29","2025-05-30","2025-06-02","2025-06-03","2025-06-04","2025-06-05","2025-06-06","2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-07","2025-07-08","2025-07-09","2025-07-10","2025-07-11","2025-07-14","2025-07-15","2025-07-16","2025-07-17","2025-07-18","2025-07-21","2025-07-22","2025-07-23","2025-07-24","2025-07-25","2025-07-28","2025-07-29","2025-07-30","2025-07-31","2025-08-01","2025-08-04","2025-08-05","2025-08-06","2025-08-07","2025-08-08","2025-08-11","2025-08-12","2025-08-13","2025-08-14","2025-08-15","2025-08-18","2025-08-19","2025-08-20","2025-08-21","2025-08-22","2025-08-26","2025-08-27","2025-08-28","2025-08-29","2025-09-01","2025-09-02","2025-09-03","2025-09-04","2025-09-05","2025-09-08","2025-09-09","2025-09-10","2025-09-11","2025-09-12","2025-09-15","2025-09-16","2025-09-17","2025-09-18","2025-09-19","2025-09-22","2025-09-23","2025-09-24","2025-09-25","2025-09-26","2025-09-29","2025-09-30","2025-10-01","2025-10-02","2025-10-03","2025-10-06","2025-10-07","2025-10-08","2025-10-09","2025-10-10","2025-10-13","2025-10-14","2025-10-15","2025-10-16","2025-10-17","2025-10-20","2025-10-21","2025-10-22","2025-10-23","2025-10-24","2025-10-27","2025-10-28","2025-10-29","2025-10-30","2025-10-31","2025-11-03","2025-11-04","2025-11-05","2025-11-06","2025-11-07","2025-11-10","2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-17","2025-11-18","2025-11-19","2025-11-20","2025-11-21","2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-22","2025-12-23","2025-12-24","2025-12-29","2025-12-30","2025-12-31","2026-01-02","2026-01-05","2026-01-06","2026-01-07","2026-01-08","2026-01-09","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-19","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15","2026-05-18","2026-05-19","2026-05-20","2026-05-21","2026-05-22","2026-05-26","2026-05-27","2026-05-28","2026-05-29","2026-06-01","2026-06-02","2026-06-03","2026-06-04","2026-06-05","2026-06-08","2026-06-09","2026-06-10","2026-06-11","2026-06-12"],"closes":[0.8030000305175782,0.7909999847412109,0.8384999847412109,0.8334999847412109,0.7959999847412109,0.7819999694824219,0.7525,0.7630000305175781,0.7759999847412109,0.7555000305175781,0.7525,0.7819999694824219,0.785,0.803499984741211,0.8419999694824218,0.8340000152587891,0.8319999694824218,0.8094999694824219,0.813499984741211,0.8375,0.8230000305175781,0.8719999694824219,0.88,0.8655000305175782,0.845,0.856500015258789,0.846500015258789,0.8675,0.8340000152587891,0.8419999694824218,0.8125,0.8005000305175781,0.811500015258789,0.8144999694824219,0.8159999847412109,0.8,0.8194999694824219,0.8109999847412109,0.8384999847412109,0.8094999694824219,0.805,0.8009999847412109,0.798499984741211,0.8175,0.8030000305175782,0.8090000152587891,0.799000015258789,0.74,0.7669999694824219,0.7644999694824218,0.7644999694824218,0.749000015258789,0.81,0.83,0.8484999847412109,0.8175,0.7875,0.710999984741211,0.7005000305175781,0.6705000305175781,0.715999984741211,0.7034999847412109,0.7125,0.725999984741211,0.749000015258789,0.7380000305175781,0.725999984741211,0.7319999694824219,0.7575,0.7525,0.7534999847412109,0.7805000305175781,0.76,0.7619999694824219,0.7825,0.783499984741211,0.7630000305175781,0.7680000305175781,0.731500015258789,0.7375,0.7275,0.7219999694824218,0.7269999694824218,0.7325,0.7269999694824218,0.7125,0.71,0.730999984741211,0.7355000305175782,0.75,0.76,0.8194999694824219,0.82,0.8069999694824219,0.795,0.8140000152587891,0.803499984741211,0.793499984741211,0.8094999694824219,0.83,0.8240000152587891,0.815,0.8594999694824219,0.8130000305175781,0.730999984741211,0.705,0.67,0.5854999923706055,0.596500015258789,0.6455000305175781,0.635,0.6295000076293945,0.6565000152587891,0.638499984741211,0.6379999923706055,0.6275,0.6345000076293945,0.6334999847412109,0.6455000305175781,0.6379999923706055,0.6509999847412109,0.643499984741211,0.64,0.6295000076293945,0.62,0.5840000152587891,0.6170000076293946,0.5975,0.5925,0.6,0.6,0.5984999847412109,0.5979999923706054,0.5934999847412109,0.6020000076293945,0.5970000076293945,0.5979999923706054,0.5970000076293945,0.615999984741211,0.6265000152587891,0.600999984741211,0.6029999923706054,0.6265000152587891,0.6375,0.6370000076293946,0.6309999847412109,0.6415000152587891,0.6419999694824219,0.6544999694824218,0.6430000305175781,0.64,0.638499984741211,0.6365000152587891,0.6245000076293945,0.6279999923706054,0.634000015258789,0.6325,0.6265000152587891,0.6195000076293945,0.638499984741211,0.6215000152587891,0.6175,0.6334999847412109,0.6370000076293946,0.6354999923706055,0.6455000305175781,0.6465000152587891,0.6279999923706054,0.6480000305175782,0.6480000305175782,0.6270000076293946,0.629000015258789,0.62,0.625999984741211,0.6329999923706054,0.635,0.610999984741211,0.6104999923706055,0.6070000076293945,0.6334999847412109,0.62,0.62,0.6234999847412109,0.6204999923706055,0.6129999923706054,0.6129999923706054,0.6190000152587891,0.6070000076293945,0.61,0.6029999923706054,0.6045000076293945,0.6025,0.6320000076293946,0.64,0.6370000076293946,0.6329999923706054,0.6054999923706055,0.5975,0.596500015258789,0.595999984741211,0.5875,0.5790000152587891,0.5690000152587891,0.5525,0.4809999847412109,0.46299999237060546,0.43380001068115237,0.40279998779296877,0.4420000076293945,0.425,0.42119998931884767,0.4168000030517578,0.4384000015258789,0.4308000183105469,0.4168000030517578,0.39720001220703127,0.39619998931884765,0.41060001373291016,0.39479999542236327,0.38220001220703126,0.36700000762939455,0.40119998931884765,0.37439998626708987,0.37279998779296875,0.3770000076293945,0.36259998321533204,0.3729999923706055,0.3629999923706055,0.37259998321533205,0.38419998168945313,0.3747999954223633,0.40360000610351565,0.40200000762939453,0.4209999847412109,0.4072000122070312,0.4370000076293945,0.44799999237060545,0.44560001373291014,0.4663999938964844,0.4552000045776367,0.45220001220703127,0.44860000610351564,0.447599983215332,0.43020000457763674,0.4179999923706055,0.39939998626708983,0.41220001220703123,0.40439998626708984,0.4136000061035156,0.4191999816894531,0.4463999938964844,0.46180000305175783,0.4702000045776367,0.4663999938964844,0.4684000015258789,0.47080001831054685,0.4931999969482422,0.49259998321533205,0.49,0.4599760055541992,0.43099998474121093,0.4665999984741211,0.47119998931884766,0.47439998626708985,0.47248001098632814,0.48520000457763673,0.44459999084472657,0.45220001220703127,0.45599998474121095,0.42060001373291017,0.4259999847412109,0.41119998931884766,0.41380001068115235,0.41200000762939454,0.41459999084472654,0.4129999923706055,0.4218000030517578],"volumes":[4492931,2970428,3072119,2304064,2141274,1437164,1664600,1343933,1188942,994836,1539870,2148969,798995,1307393,2992798,1189307,1559446,1818731,794848,1654633,1624467,2018961,1257115,903886,1352514,1300730,1267615,1059387,767582,11422282,2073845,2166155,1668440,1218120,1429243,1579504,1364125,2792524,1295423,1789231,1403751,1405660,1123254,2368254,2072474,809310,1613788,2603342,1564855,979157,867769,866606,2918474,2073062,1548632,1903381,2372792,5260930,2452160,2553835,2400211,1414609,1351263,724786,1167763,966266,713315,786118,1682603,789160,508368,1676588,1203401,581826,1322250,1312224,707879,1126954,2230082,1193993,1751797,700061,817342,429969,505961,882002,1039220,1074610,764156,885437,1092216,3008382,1518120,3219343,635464,1686640,1170967,613715,563019,3070278,1035010,951806,1563745,1857002,4585941,2660335,4693140,9381274,5836458,2934917,1518708,1493880,1634489,1057337,1833242,943554,1353835,1097586,1153403,1201270,1548535,4229146,3189269,1137168,1604770,3692652,2020125,1092154,957479,618927,1222343,1440229,1132618,3499817,1407215,1994993,844576,643188,2526113,1789520,1545142,2572839,2145183,1380206,1269052,1080058,1307386,1756083,1203550,1183846,1109409,831573,722821,1162622,880507,904428,986117,1410214,886807,1042734,771922,520381,1092869,768723,506138,1820512,2114940,864598,1998017,897158,2566847,1015506,762720,1185573,1208419,983011,1510953,1012024,1249311,3509942,1351003,1064692,673885,576711,1304135,962787,1444856,1236930,1022968,2019614,775219,711181,2309727,1763369,1937729,899410,1431872,4628797,1110135,1269956,2957961,1955749,2539078,3313991,12587181,8577738,3729193,5037489,6135451,3470350,2031217,2080490,1502728,2366854,1972885,2664725,1315632,2220678,1293040,2137706,2938569,2739914,2499063,2906918,1595122,1929229,1256226,2191059,3207454,2137023,2457966,3359452,3019176,3093527,1801781,2905061,1690344,2265880,3006037,1745616,1310904,1592937,1149102,1379492,1468765,2106267,3446657,2823438,1374932,2262414,3733786,4617206,1853714,2260009,1406549,1336924,3661835,233361,266976,168274,637619,415779,941467,108123,69960,1476639,13890298,1638956,1539790,3451212,384051,2059587,780847,1675394,106228,33339,2158987],"markers":[{"date":"2026-06-08","type":"GRANT","mtype":"grant","color":"#d97706","director":"Adrian Hallmark","role":"Chief Executive Officer","role_normalized":null,"shares":1000,"price":0,"value":0,"signals":[],"fingerprint":"5ec8deb3ffee478b"},{"date":"2026-06-08","type":"GRANT","mtype":"grant","color":"#d97706","director":"Doug Lafferty","role":"Chief Financial Officer","role_normalized":null,"shares":112548,"price":0,"value":0,"signals":[],"fingerprint":"d13e4eb4659d6863"},{"date":"2025-09-09","type":"GRANT","mtype":"grant","color":"#d97706","director":"Adrian Hallmark","role":"Chief Executive Officer","role_normalized":null,"shares":500,"price":0,"value":0,"signals":[],"fingerprint":"053b755d67360414"},{"date":"2025-09-09","type":"GRANT","mtype":"grant","color":"#d97706","director":"Doug Lafferty","role":"Chief Financial Officer","role_normalized":null,"shares":500,"price":0,"value":0,"signals":[],"fingerprint":"9e09d4d4816a71e2"},{"date":"2025-05-23","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"Adrian Hallmark","role":"Chief Executive Officer","role_normalized":null,"shares":199117,"price":0.753324,"value":149999.61,"signals":["b2","f1","s1","t0","t1a"],"fingerprint":"0861c21671297220"},{"date":"2025-05-22","type":"GRANT","mtype":"grant","color":"#d97706","director":"Adrian Hallmark","role":"Chief Executive Officer","role_normalized":null,"shares":981889,"price":0,"value":0,"signals":[],"fingerprint":"08ebf360c1f4b1ce"},{"date":"2025-05-22","type":"GRANT","mtype":"grant","color":"#d97706","director":"Doug Lafferty","role":"Chief Financial Officer","role_normalized":null,"shares":14875,"price":0,"value":0,"signals":[],"fingerprint":"7d5f4a3d1044d6b5"},{"date":"2025-05-09","type":"BUY","mtype":"ned_buy","color":"#4ade80","director":"Cyrus Jilla","role":"Non-executive director","role_normalized":null,"shares":113000,"price":0.7,"value":79100.0,"signals":["f1","s1","t3"],"fingerprint":"3dc2acafb7060b5d"},{"date":"2025-05-09","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"Saint-Alexander Sarl","role":"","role_normalized":null,"shares":1500000,"price":0.7,"value":1050000.0,"signals":["f1","s1","t4"],"fingerprint":"c71ff1c57c40c023"},{"date":"2025-05-13","type":"CLUSTER","mtype":"cluster","color":"#7c3aed","director":"","role":"","shares":0,"price":0,"value":0,"signals":["s1"],"fingerprint":""},{"date":"2025-05-27","type":"CLUSTER","mtype":"cluster","color":"#7c3aed","director":"","role":"","shares":0,"price":0,"value":0,"signals":["s1"],"fingerprint":""}],"earnings_markers":[{"date":"2026-02-25","confidence":"confirmed","type":"PRELIM"},{"date":"2026-02-20","confidence":"confirmed","type":"TRADING_STMT"},{"date":"2025-10-06","confidence":"confirmed","type":"TRADING_STMT"},{"date":"2025-07-30","confidence":"confirmed","type":"INTERIM"}]};</script></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Transactions</h2><div class="px-4 py-2 flex flex-wrap gap-1 items-center border-b border-slate-100 bg-slate-50/50"><span class="text-[10px] uppercase tracking-wide text-slate-400 mr-1">Filter:</span><button type="button" data-txn-filter="BUY" class="txn-filter txn-filter--active px-2 py-0.5 rounded border text-[10px] bg-emerald-600 text-white border-emerald-600">Buy</button><button type="button" data-txn-filter="GRANT" class="txn-filter txn-filter--active px-2 py-0.5 rounded border text-[10px] bg-slate-600 text-white border-slate-600">Grant</button></div><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Date</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-left">Role</th><th class="px-3 py-2 text-left">Type</th><th class="px-3 py-2 text-right">Shares</th><th class="px-3 py-2 text-right">Price (&pound;)</th><th class="px-3 py-2 text-right">Value (&pound;)</th><th class="px-3 py-2 text-right" title="B-098: Gross stock return vs the director's deal price. Raw stock move only, no benchmark or cost adjustment.">Rtn*</th><th class="px-3 py-2 text-right" title="B113: Sector benchmark return over the same period as Rtn (deal date to latest close). BUY rows only.">Bmk**</th><th class="px-3 py-2 text-left">Signals</th><th class="px-3 py-2 text-center">Source</th><th class="px-3 py-2 text-center" title="Open in PDMR review">Review</th></tr></thead><tbody><tr id="txn-5ec8deb3ffee478b" data-txn-type="GRANT" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">08 Jun 2026</td><td class="px-3 py-2 text-slate-700">Adrian Hallmark</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Executive Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">GRANT</span></td><td class="px-3 py-2 text-right tabular-nums">1,000</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/9609303" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/9609303">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=5ec8deb3ffee478b" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-d13e4eb4659d6863" data-txn-type="GRANT" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">08 Jun 2026</td><td class="px-3 py-2 text-slate-700">Doug Lafferty</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Financial Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">GRANT</span></td><td class="px-3 py-2 text-right tabular-nums">112,548</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/9609303" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/9609303">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=d13e4eb4659d6863" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-053b755d67360414" data-txn-type="GRANT" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">09 Sep 2025</td><td class="px-3 py-2 text-slate-700">Adrian Hallmark</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Executive Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">GRANT</span></td><td class="px-3 py-2 text-right tabular-nums">500</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/9099376" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/9099376">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=053b755d67360414" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-9e09d4d4816a71e2" data-txn-type="GRANT" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">09 Sep 2025</td><td class="px-3 py-2 text-slate-700">Doug Lafferty</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Financial Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">GRANT</span></td><td class="px-3 py-2 text-right tabular-nums">500</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/9099376" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/9099376">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=9e09d4d4816a71e2" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-0861c21671297220" data-txn-type="BUY" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">23 May 2025</td><td class="px-3 py-2 text-slate-700">Adrian Hallmark</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Executive Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">199,117</td><td class="px-3 py-2 text-right tabular-nums">0.75</td><td class="px-3 py-2 text-right tabular-nums">&pound;150,000</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">&#9660; -44.00%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+19.20%</span></td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T0 - Cluster + opportunistic combo. High-conviction buy (T1a/T1b/T7) inside a multi-director cluster (S1) within 30 days. Highest conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-600 text-white">T0</span><span title="T1a - CEO / Founder buy &gt;= GBP100k. Top-of-pyramid decision-maker conviction signal." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-500 text-white">T1A</span><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span><span title="B2 - Crowded Cluster Kill. &gt;=4 distinct directors buy the same ticker within 30 days. All other signals suppressed for 60 days on this ticker — cluster is too crowded to be a clean conviction trade." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-600 text-white">B2</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8898305" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8898305">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=0861c21671297220" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-08ebf360c1f4b1ce" data-txn-type="GRANT" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">22 May 2025</td><td class="px-3 py-2 text-slate-700">Adrian Hallmark</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Executive Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">GRANT</span></td><td class="px-3 py-2 text-right tabular-nums">981,889</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8898310" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8898310">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=08ebf360c1f4b1ce" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-7d5f4a3d1044d6b5" data-txn-type="GRANT" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">22 May 2025</td><td class="px-3 py-2 text-slate-700">Doug Lafferty</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Financial Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">GRANT</span></td><td class="px-3 py-2 text-right tabular-nums">14,875</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8898310" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8898310">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=7d5f4a3d1044d6b5" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-3dc2acafb7060b5d" data-txn-type="BUY" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">09 May 2025</td><td class="px-3 py-2 text-slate-700">Cyrus Jilla</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Non-executive director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">113,000</td><td class="px-3 py-2 text-right tabular-nums">0.70</td><td class="px-3 py-2 text-right tabular-nums">&pound;79,100</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">&#9660; -39.70%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+21.30%</span></td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T3 - NED (non-executive director, incl. SID + Supervisory Board) buy &gt;= GBP10k. Lower-conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500 text-white">T3</span><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8875330" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8875330">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=3dc2acafb7060b5d" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-c71ff1c57c40c023" data-txn-type="BUY" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">09 May 2025</td><td class="px-3 py-2 text-slate-700">Saint-Alexander Sarl</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">1,500,000</td><td class="px-3 py-2 text-right tabular-nums">0.70</td><td class="px-3 py-2 text-right tabular-nums">&pound;1,050,000</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">&#9660; -39.70%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+21.30%</span></td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T4 - Other discretionary buy &gt;= GBP1k. Catch-all." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-400 text-white">T4</span><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8875297" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8875297">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=c71ff1c57c40c023" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-40ec6baa0ae2fbc1" data-txn-type="BUY" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">06 May 2025</td><td class="px-3 py-2 text-slate-700">Sir Nigel Boardman</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Non-executive Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">43,639</td><td class="px-3 py-2 text-right tabular-nums">0.68</td><td class="px-3 py-2 text-right tabular-nums">&pound;29,849</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">&#9660; -38.30%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+21.30%</span></td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T3 - NED (non-executive director, incl. SID + Supervisory Board) buy &gt;= GBP10k. Lower-conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500 text-white">T3</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8865991" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/director-pdmr-shareholding/8865991">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=40ec6baa0ae2fbc1" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr></tbody></table><div class="text-[10px] text-slate-400 px-4 py-2 border-t border-slate-100">*Rtn: gross stock return from director's deal price to today's close (BUY rows only). **Bmk: sector benchmark return over the same period. Neither adjusts for costs. See Signal-firing history below for CAR, which uses market entry price and a fixed past horizon &mdash; divergence between Rtn and CAR is expected.</div><script>(function(){var btns = document.querySelectorAll(".txn-filter");var rowsEl = document.querySelectorAll(".txn-row");var state = {};btns.forEach(function(b){  state[b.getAttribute("data-txn-filter")] = true;  b.addEventListener("click", function(){    var k = b.getAttribute("data-txn-filter");    state[k] = !state[k];    b.classList.toggle("txn-filter--active");    if (!state[k]) {      b.classList.add("opacity-40");    } else {      b.classList.remove("opacity-40");    }    rowsEl.forEach(function(r){      var rk = r.getAttribute("data-txn-type");      r.style.display = state[rk] === false ? "none" : "";    });  });});})();</script></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Signal-firing history</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Fired</th><th class="px-3 py-2 text-left">Signal</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-right" title="Net CAR at T+1: cumulative abnormal return vs sector benchmark at 1 trading day after market entry. Entry = first market close after announcement date. Net of 50-100bps trading costs.">T+1</th><th class="px-3 py-2 text-right" title="Net CAR at T+30: ~1 month (21 trading days) from market entry. Entry = first market close after announcement. Net of costs.">T+30</th><th class="px-3 py-2 text-right" title="Net CAR at T+90: ~3 months (63 trading days) from market entry. Entry = first market close after announcement. Net of costs.">T+90</th><th class="px-3 py-2 text-right" title="Net CAR at T+365: ~1 year (252 trading days) from market entry. Entry = first market close after announcement. Net of costs.">T+365</th></tr></thead><tbody><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">07 May 2025</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Sir Nigel Boardman</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-0.06%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-0.90%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-18.54%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-62.00%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">07 May 2025</td><td class="px-3 py-2"><span title="T3 - NED (non-executive director, incl. SID + Supervisory Board) buy &gt;= GBP10k. Lower-conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500 text-white">T3</span></td><td class="px-3 py-2 text-slate-700">Sir Nigel Boardman</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-0.06%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-0.90%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-18.54%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-62.00%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">13 May 2025</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Saint-Alexander Sarl</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-6.00%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.55%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-20.24%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-63.28%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">13 May 2025</td><td class="px-3 py-2"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span></td><td class="px-3 py-2 text-slate-700">Saint-Alexander Sarl</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-6.00%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.55%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-20.24%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-63.28%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">13 May 2025</td><td class="px-3 py-2"><span title="T4 - Other discretionary buy &gt;= GBP1k. Catch-all." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-400 text-white">T4</span></td><td class="px-3 py-2 text-slate-700">Saint-Alexander Sarl</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-6.00%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.55%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-20.24%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-63.28%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">13 May 2025</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Cyrus Jilla</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-6.00%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.55%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-20.24%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-63.28%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">13 May 2025</td><td class="px-3 py-2"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span></td><td class="px-3 py-2 text-slate-700">Cyrus Jilla</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-6.00%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.55%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-20.24%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-63.28%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">13 May 2025</td><td class="px-3 py-2"><span title="T3 - NED (non-executive director, incl. SID + Supervisory Board) buy &gt;= GBP10k. Lower-conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500 text-white">T3</span></td><td class="px-3 py-2 text-slate-700">Cyrus Jilla</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-6.00%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.55%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-20.24%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-63.28%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">27 May 2025</td><td class="px-3 py-2"><span title="B2 - Crowded Cluster Kill. &gt;=4 distinct directors buy the same ticker within 30 days. All other signals suppressed for 60 days on this ticker — cluster is too crowded to be a clean conviction trade." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-600 text-white">B2</span></td><td class="px-3 py-2 text-slate-700">Adrian Hallmark</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+0.84%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+1.73%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-7.73%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-60.45%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">27 May 2025</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Adrian Hallmark</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+0.84%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+1.73%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-7.73%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-60.45%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">27 May 2025</td><td class="px-3 py-2"><span title="S1 - Cluster. &gt;=2 distinct directors buying same ticker, dates within 30 days." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500 text-white">S1</span></td><td class="px-3 py-2 text-slate-700">Adrian Hallmark</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+0.84%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+1.73%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-7.73%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-60.45%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">27 May 2025</td><td class="px-3 py-2"><span title="T0 - Cluster + opportunistic combo. High-conviction buy (T1a/T1b/T7) inside a multi-director cluster (S1) within 30 days. Highest conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-600 text-white">T0</span></td><td class="px-3 py-2 text-slate-700">Adrian Hallmark</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+0.84%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+1.73%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-7.73%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-60.45%</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">27 May 2025</td><td class="px-3 py-2"><span title="T1a - CEO / Founder buy &gt;= GBP100k. Top-of-pyramid decision-maker conviction signal." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-500 text-white">T1A</span></td><td class="px-3 py-2 text-slate-700">Adrian Hallmark</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+0.84%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+1.73%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-7.73%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-60.45%</span></td></tr></tbody></table><div class="bg-slate-50 border-t border-slate-100 px-4 py-3 text-xs flex gap-6"><div><span class="text-slate-500">Firings:</span> <span class="font-medium tabular-nums">13</span></div><div><span class="text-slate-500">Hit % @ T+30:</span> <span class="font-medium tabular-nums text-emerald-600">38.5%</span></div><div><span class="text-slate-500">Median CAR @ T+30:</span> <span class="text-rose-600">-0.90%</span></div></div><div class="text-[10px] text-slate-400 px-4 py-2 border-t border-slate-100">CAR = Cumulative Abnormal Return vs sector benchmark, net of trading costs (50bps AIM / 100bps main market). Entry price = market close on first trading day after announcement &mdash; <em>not</em> the director's deal price. T+N is a fixed past horizon, not today. The Rtn column in Transactions uses the director's deal price as entry and today's close as exit &mdash; different start, different end, so divergence from CAR is normal and expected.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Cluster history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No clusters detected for this ticker.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="px-4 py-3 text-xs uppercase tracking-wide text-slate-500 border-b border-slate-100">Pending review &mdash; 2 AML filings excluded from signals</h2><p class="px-4 pt-3 pb-1 text-xs text-slate-600 leading-relaxed">&#8627; PDMR announcements for this ticker the parser couldn't cleanly extract &mdash; usually genuine edge cases. Summary below.</p><table class="w-full text-xs tabular-nums" id="pendingDiagTicker"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left w-[55%]">Category</th><th class="px-3 py-2 text-right w-[12%]">Count</th><th class="px-3 py-2 text-right w-[10%]">%</th><th class="px-3 py-2 text-left w-[23%]">Recoverable?</th></tr></thead><tbody><tr class="border-t border-slate-100 odd:bg-slate-50"><td class="px-3 py-2 text-slate-700" title="Filing names multiple directors in one announcement -- D-STRICT refuses to split">Bundled multi-PDMR</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">2</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">100.0%</td><td class="px-3 py-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-200 text-slate-700">No</span></td></tr></tbody></table><div class="text-[10px] text-slate-500 px-4 py-2 border-t border-slate-100">Recoverable column flags which buckets v2 parser work could unlock vs. which are case-by-case manual review.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Earnings History</h2><table class="w-full text-left"><thead><tr class="border-b border-slate-100"><th class="px-4 py-2 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Date</th><th class="px-4 py-2 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Statement</th><th class="px-4 py-2 text-[10px] uppercase tracking-wide text-slate-400 font-medium text-right">Filing</th></tr></thead><tbody><tr class="hover:bg-slate-50 border-b border-slate-100 last:border-0"><td class="px-4 py-2 text-[11px] text-slate-700 whitespace-nowrap">25 Feb 2026</td><td class="px-4 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700">Preliminary Results</span></td><td class="px-4 py-2 text-right"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/preliminary-results-fy2025/9445384" target="_blank" rel="noopener noreferrer" class="text-amber-600 hover:text-amber-800 hover:underline text-[11px]">View filing &#8599;</a></td></tr><tr class="hover:bg-slate-50 border-b border-slate-100 last:border-0"><td class="px-4 py-2 text-[11px] text-slate-700 whitespace-nowrap">20 Feb 2026</td><td class="px-4 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700">Trading Statement</span></td><td class="px-4 py-2 text-right"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/notice-of-gm-and-fy-2025-trading-update/9439283" target="_blank" rel="noopener noreferrer" class="text-amber-600 hover:text-amber-800 hover:underline text-[11px]">View filing &#8599;</a></td></tr><tr class="hover:bg-slate-50 border-b border-slate-100 last:border-0"><td class="px-4 py-2 text-[11px] text-slate-700 whitespace-nowrap">06 Oct 2025</td><td class="px-4 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700">Trading Statement</span></td><td class="px-4 py-2 text-right"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/q3-2025-trading-update-and-revised-outlook/9151448" target="_blank" rel="noopener noreferrer" class="text-amber-600 hover:text-amber-800 hover:underline text-[11px]">View filing &#8599;</a></td></tr><tr class="hover:bg-slate-50 border-b border-slate-100 last:border-0"><td class="px-4 py-2 text-[11px] text-slate-700 whitespace-nowrap">30 Jul 2025</td><td class="px-4 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700">Interim Results</span></td><td class="px-4 py-2 text-right"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/interim-results/9011312" target="_blank" rel="noopener noreferrer" class="text-amber-600 hover:text-amber-800 hover:underline text-[11px]">View filing &#8599;</a></td></tr><tr class="hover:bg-slate-50 border-b border-slate-100 last:border-0"><td class="px-4 py-2 text-[11px] text-slate-700 whitespace-nowrap">26 Feb 2025</td><td class="px-4 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700">Preliminary Results</span></td><td class="px-4 py-2 text-right"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/preliminary-results-year-ended-31-december-2024/8752547" target="_blank" rel="noopener noreferrer" class="text-amber-600 hover:text-amber-800 hover:underline text-[11px]">View filing &#8599;</a></td></tr><tr class="hover:bg-slate-50 border-b border-slate-100 last:border-0"><td class="px-4 py-2 text-[11px] text-slate-700 whitespace-nowrap">30 Sep 2024</td><td class="px-4 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700">Trading Statement</span></td><td class="px-4 py-2 text-right"><a href="https://www.investegate.co.uk/announcement/rns/aston-martin-lagonda-global-holdings--aml/trading-update-and-adjustment-to-fy-2024-guidance/8448122" target="_blank" rel="noopener noreferrer" class="text-amber-600 hover:text-amber-800 hover:underline text-[11px]">View filing &#8599;</a></td></tr></tbody></table></section><footer class="px-6 py-4 text-[10px] text-slate-400 border-t border-slate-200"><p>Generated by build_dashboard.py 2026-06-13T07:36:21Z.</p><p>Data: Investegate RNS feed &middot; Yahoo Finance &middot; FTSE All-Share benchmark.</p><p class="mt-2">Historic insider-trading outcomes are not predictive. Net-of-cost CAR assumes 50bps round-trip + 0.5% UK stamp on non-AIM buys.</p></footer>
+<script>
+(function(){
+  const d = window.__priceData || {};
+  const dates = d.dates || [];
+  if (!dates.length) return;
+  const closes = d.closes || [];
+  const volumes = d.volumes || [];
+  const markers = d.markers || [];
+
+  // Build close-by-date map for marker yValue.
+  const closeMap = {};
+  dates.forEach(function(dt, i){ closeMap[dt] = closes[i]; });
+
+  // U4 vivid marker palette — keyed by mtype.
+  // exec_buy/ned_buy: triangle-up, white halo.
+  // sell: triangle-down, white halo.
+  // grant: square (rect), white halo.
+  // cluster: circle ring, violet stroke, no fill, drawn BEHIND transactions.
+  //
+  // B-053 (2026-05-22): radii bumped ~40-50% over the original 5-7 set so
+  // markers stand out more clearly against the price line. Cluster ring
+  // scaled proportionally so it still encircles the transaction markers
+  // without overlapping its neighbours.
+  var MSTYLE = {
+    exec_buy: { label:'Exec Buy',   bg:'#16a34a',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:10, ord:1 },
+    ned_buy:  { label:'NED Buy',    bg:'#4ade80',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:9,  ord:1 },
+    sell:     { label:'Sell',       bg:'#dc2626',        bc:'#ffffff', bw:3,   ps:'triangle', rot:180, r:10, ord:1 },
+    grant:    { label:'Grant/SIP',  bg:'#d97706',        bc:'#ffffff', bw:2.5, ps:'rect',     rot:0,   r:8,  ord:1 },
+    cluster:  { label:'S1 Cluster', bg:'rgba(0,0,0,0)',  bc:'#7c3aed', bw:2.5, ps:'circle',   rot:0,   r:14, ord:2 }
+  };
+
+  // Group markers by mtype.
+  // A.3 — only BUY and SELL markers on the price chart.
+  // GRANT / SIP / EXERCISE / DRIP markers (mtype === 'grant') are omitted;
+  // cluster rings (mtype === 'cluster') always pass through so they overlay
+  // the BUY markers they annotate.
+  var CHART_MARKER_TYPES = new Set(['exec_buy', 'ned_buy', 'sell']);
+  var markerDatasets = {};
+  markers.forEach(function(m){
+    var mtype = m.mtype || 'exec_buy';
+    if (mtype !== 'cluster' && !CHART_MARKER_TYPES.has(mtype)) return;
+    if (!markerDatasets[mtype]){
+      var st = MSTYLE[mtype] || MSTYLE.exec_buy;
+      markerDatasets[mtype] = {
+        label: st.label,
+        type: 'scatter',
+        data: [],
+        backgroundColor: st.bg,
+        borderColor: st.bc,
+        borderWidth: st.bw,
+        pointStyle: st.ps,
+        rotation: st.rot,
+        pointRotation: st.rot,
+        radius: st.r,
+        hoverRadius: st.r + 3,
+        showLine: false,
+        order: st.ord,
+        _markers: []
+      };
+    }
+    var y = closeMap[m.date];
+    markerDatasets[mtype].data.push({ x: m.date, y: y });
+    markerDatasets[mtype]._markers.push(m);
+  });
+
+  const pCtx = document.getElementById('priceChart');
+  if (!pCtx) return;
+
+  // Price line first (order:0), then transaction markers (order:1),
+  // then cluster rings on top (order:2 — drawn last so ring encircles marker).
+  var markerList = Object.keys(markerDatasets)
+    .sort(function(a,b){ return (markerDatasets[a].order||1)-(markerDatasets[b].order||1); })
+    .map(function(k){ return markerDatasets[k]; });
+
+  // Earnings dates as a scatter dataset: diamond at the close price on each
+  // reporting date.  Label prefixed '__' so the marker-filter ignores it and
+  // the legend (hidden) skips it.  Confirmed = amber, est = slate.
+  var _EARNINGS_TYPE_LABELS = {
+    'INTERIM':        'Interim Results',
+    'FINAL':          'Final Results',
+    'PRELIM':         'Preliminary Results',
+    'TRADING_UPDATE': 'Trading Update',
+    'TRADING_STMT':   'Trading Statement',
+    'EARNINGS':       'Earnings',
+    'QUARTERLY':      'Quarterly Results'
+  };
+  var earningsData = (d.earnings_markers || []);
+  var earningsDataset = earningsData.length ? {
+    label: '__earnings',
+    type: 'scatter',
+    data: earningsData.map(function(em){ return { x: em.date, y: closeMap[em.date] || null }; }),
+    backgroundColor: earningsData.map(function(em){ return em.confidence === 'est' ? '#94a3b8' : '#f59e0b'; }),
+    borderColor: '#ffffff',
+    borderWidth: 2,
+    pointStyle: 'rectRot',  // diamond
+    radius: 6,
+    hoverRadius: 9,
+    showLine: false,
+    order: 0.5,
+    _earnings: earningsData
+  } : null;
+
+  const ds = [{
+    label: 'Close',
+    type: 'line',
+    data: dates.map(function(dt, i){ return { x: dt, y: closes[i] }; }),
+    borderColor: '#475569', borderWidth: 1.5, pointRadius: 0, tension: 0, order: 0
+  }].concat(earningsDataset ? [earningsDataset] : []).concat(markerList);
+
+  // Inline plugin: draw vertical dashed lines at earnings/results dates.
+  // The diamond marker is handled by the scatter dataset above (tooltip-enabled).
+  // Confirmed → amber (#f59e0b), est → slate (#94a3b8).
+  var earningsLines = {
+    id: 'earningsLines',
+    afterDraw: function(chart) {
+      var em = (d.earnings_markers || []);
+      if (!em.length) return;
+      var ctx2 = chart.ctx;
+      var xScale = chart.scales.x;
+      var yScale = chart.scales.y;
+      if (!xScale || !yScale) return;
+      var top = yScale.top;
+      var bottom = yScale.bottom;
+      em.forEach(function(ev) {
+        var x = xScale.getPixelForValue(ev.date);
+        if (x === undefined || isNaN(x)) return;
+        var isEst = ev.confidence === 'est';
+        var color = isEst ? '#94a3b8' : '#f59e0b';
+        ctx2.save();
+        ctx2.strokeStyle = color;
+        ctx2.lineWidth = 1;
+        ctx2.setLineDash(isEst ? [3, 3] : [5, 3]);
+        ctx2.beginPath();
+        ctx2.moveTo(x, top);
+        ctx2.lineTo(x, bottom);
+        ctx2.stroke();
+        ctx2.restore();
+      });
+    }
+  };
+
+  window.__priceChart = new Chart(pCtx, {
+    type: 'line',
+    data: { datasets: ds },
+    plugins: [earningsLines],
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      parsing: false,
+      scales: {
+        x: { type: 'category', labels: dates, ticks: { maxRotation: 0, font: { size: 10 } } },
+        y: { ticks: { font: { size: 10 } } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx){
+              // Earnings date marker — show statement type + date.
+              if (ctx.dataset.label === '__earnings') {
+                var idx = ctx.dataIndex;
+                var em = ctx.dataset._earnings[idx] || {};
+                var typeStr = _EARNINGS_TYPE_LABELS[em.type] || em.type || 'Results';
+                var confStr = em.confidence === 'est' ? ' (est)' : '';
+                return [typeStr + confStr, em.date];
+              }
+              if (ctx.dataset.type !== 'scatter') return ctx.dataset.label + ': ' + ctx.parsed.y;
+              var idx = ctx.dataIndex;
+              var m = ctx.dataset._markers[idx] || {};
+              if (m.mtype === 'cluster'){
+                return ['S1 Cluster signal fired', 'Date: ' + m.date];
+              }
+              var lines = [];
+              if (m.director) lines.push(m.director + (m.role ? ' (' + m.role + ')' : ''));
+              lines.push(m.type + (m.shares ? ' ' + m.shares + ' sh @ £' + (m.price||0).toFixed(2) : ''));
+              if (m.value) lines.push('£' + (m.value||0).toLocaleString());
+              if (m.signals && m.signals.length) lines.push('Signal: ' + m.signals.join(', '));
+              return lines;
+            }
+          }
+        }
+      },
+      onClick: function(evt, els){
+        if (!els.length) return;
+        var el = els[0];
+        var dataset = ds[el.datasetIndex];
+        if (!dataset || dataset.type !== 'scatter') return;
+        var m = dataset._markers[el.index];
+        // Cluster rings have no table row — skip scroll.
+        if (!m || !m.fingerprint || m.mtype === 'cluster') return;
+        var row = document.getElementById('txn-' + m.fingerprint);
+        if (row){
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          row.classList.add('pulse-highlight');
+          setTimeout(function(){ row.classList.remove('pulse-highlight'); }, 2000);
+        }
+      }
+    }
+  });
+
+  // ── Sprint 11 A.3: marker-filter widget wiring ───────────────────────
+  // The chips above the chart toggle visibility of marker datasets by
+  // dataset label. Cluster rings (label "S1 Cluster") are excluded
+  // from the filter and always remain visible (Gate 1 Q4 decision).
+  // State is per-visit only — no localStorage.
+  var __markerFilter = { buy: true, sell: true, other: false };
+  function __applyMarkerFilter(){
+    if (!window.__priceChart) return;
+    window.__priceChart.data.datasets.forEach(function(dset){
+      if (dset.type !== 'scatter') return;            // skip price line
+      if (dset.label === 'S1 Cluster') return;        // always visible (Q4)
+      if (dset.label.startsWith('__')) return;        // internal datasets (earnings etc.)
+      var hidden;
+      if (dset.label === 'Exec Buy' || dset.label === 'NED Buy') {
+        hidden = !__markerFilter.buy;
+      } else if (dset.label === 'Sell') {
+        hidden = !__markerFilter.sell;
+      } else if (dset.label === 'Grant/SIP') {
+        hidden = !__markerFilter.other;
+      } else {
+        hidden = !__markerFilter.other;               // unknown -> "other"
+      }
+      dset.hidden = hidden;
+    });
+    window.__priceChart.update('none');
+  }
+  // Initial application — hides Other markers per default state.
+  __applyMarkerFilter();
+  // Click handlers on the chip buttons.
+  document.querySelectorAll('.chart-marker-filter').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var key = btn.getAttribute('data-mtype');
+      if (!(key in __markerFilter)) return;
+      __markerFilter[key] = !__markerFilter[key];
+      // Toggle active styling: when ON, coloured fill; when OFF, ghost outline.
+      if (__markerFilter[key]) {
+        btn.classList.add('chart-marker-filter--active');
+        if (key === 'buy') {
+          btn.classList.add('bg-emerald-600', 'text-white', 'border-emerald-600');
+          btn.classList.remove('bg-white', 'text-slate-500', 'border-slate-300');
+        } else if (key === 'sell') {
+          btn.classList.add('bg-rose-600', 'text-white', 'border-rose-600');
+          btn.classList.remove('bg-white', 'text-slate-500', 'border-slate-300');
+        } else {
+          btn.classList.add('bg-amber-600', 'text-white', 'border-amber-600');
+          btn.classList.remove('bg-white', 'text-slate-500', 'border-slate-300');
+        }
+      } else {
+        btn.classList.remove('chart-marker-filter--active');
+        btn.classList.remove('bg-emerald-600', 'bg-rose-600', 'bg-amber-600',
+                             'border-emerald-600', 'border-rose-600',
+                             'border-amber-600', 'text-white');
+        btn.classList.add('bg-white', 'text-slate-500', 'border-slate-300');
+      }
+      __applyMarkerFilter();
+    });
+  });
+
+  const vCtx = document.getElementById('volumeChart');
+  if (vCtx) {
+    window.__volChart = new Chart(vCtx, {
+      type: 'bar',
+      data: { labels: dates, datasets: [{ data: volumes, backgroundColor: '#cbd5e1' }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        }
+      }
+    });
+  }
+})();
+</script>
+
+</main>
+<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-06-13 07:36 UTC &middot; build local</footer>
+
+<script>
+(function(){
+  const $ = function(id){ return document.getElementById(id); };
+  let pollTimer = null;
+  let lastStatus = 'idle';
+
+  function setBtn(label, disabled){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    const lab = $('refreshBtnLabel');
+    if (lab) lab.textContent = label;
+    btn.disabled = !!disabled;
+    btn.classList.toggle('opacity-60', !!disabled);
+    btn.classList.toggle('cursor-not-allowed', !!disabled);
+  }
+  function showToast(msg, ok){
+    const t = document.createElement('div');
+    t.className = (ok ? 'bg-emerald-600' : 'bg-rose-600')
+      + ' fixed bottom-4 right-4 text-white text-xs px-4 py-2 rounded shadow-lg z-50';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, ok ? 4000 : 8000);
+  }
+  function startPolling(){
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(pollStatus, 5000);
+    pollStatus();
+  }
+  function stopPolling(){
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+  function pollStatus(){
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        lastStatus = s.status || 'idle';
+        if (lastStatus === 'running'){
+          const step = s.step_label || s.step || 'Working...';
+          setBtn('Refreshing - ' + step, true);
+        } else if (lastStatus === 'done'){
+          stopPolling();
+          showToast('Refresh complete. Reloading...', true);
+          setTimeout(function(){ window.location.reload(); }, 800);
+        } else if (lastStatus === 'error'){
+          stopPolling();
+          setBtn('Refresh', false);
+          showToast('Refresh failed: ' + (s.error || 'unknown'), false);
+        } else {
+          setBtn('Refresh', false);
+        }
+      }).catch(function(){ /* swallow */ });
+  }
+  function closeModal(){
+    const m = $('refreshModal');
+    if (m) m.remove();
+  }
+  function openConfirmModal(){
+    const modal = document.createElement('div');
+    modal.id = 'refreshModal';
+    modal.className = 'fixed inset-0 bg-slate-900/40 flex items-center '
+      + 'justify-center z-50';
+    modal.innerHTML =
+      '<div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">'
+      + '<h3 class="text-sm font-semibold text-slate-900 mb-2">'
+      + 'Run full refresh pipeline?</h3>'
+      + '<p class="text-xs text-slate-700 mb-3 leading-relaxed">'
+      + 'This will run the 6-step pipeline end-to-end:</p>'
+      + '<ol class="text-xs text-slate-700 mb-4 list-decimal pl-5 space-y-1">'
+      + '<li>Scrape Investegate RNS (last 60 days)</li>'
+      + '<li>Backfill share prices (Yahoo)</li>'
+      + '<li>Update sector benchmarks</li>'
+      + '<li>Recompute signal firings</li>'
+      + '<li>Rebuild signals/dealings JSON</li>'
+      + '<li>Regenerate dashboard HTML</li>'
+      + '</ol>'
+      + '<div class="bg-amber-50 border border-amber-200 rounded p-3 mb-4">'
+      + '<p class="text-[11px] text-amber-800 font-medium mb-1">'
+      + 'Heads up</p>'
+      + '<p class="text-[11px] text-amber-700 leading-relaxed">'
+      + 'Takes ~15-30 min. The scrape step uses Anthropic LLM credits '
+      + '(budget cap ~$50/run, set in run_scrape.py). Yahoo Finance may '
+      + 'rate-limit if run too often.</p>'
+      + '</div>'
+      + '<label class="flex items-center gap-2 text-xs text-slate-700 mb-4">'
+      + '<input id="refreshNoLlm" type="checkbox" class="rounded">'
+      + 'Skip LLM fallback (regex-only parsing)'
+      + '</label>'
+      + '<div class="flex justify-end gap-2">'
+      + '<button id="refreshCancel" class="px-3 py-1.5 text-xs border '
+      + 'border-slate-300 rounded text-slate-600 hover:bg-slate-50">'
+      + 'Cancel</button>'
+      + '<button id="refreshConfirm" class="px-3 py-1.5 text-xs '
+      + 'bg-indigo-600 text-white rounded hover:bg-indigo-700">'
+      + 'Run pipeline</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+    $('refreshCancel').onclick = closeModal;
+    $('refreshConfirm').onclick = function(){
+      const noLlm = $('refreshNoLlm').checked;
+      closeModal();
+      setBtn('Starting...', true);
+      fetch('/api/refresh-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ no_llm: noLlm })
+      }).then(function(resp){
+        if (resp.status === 409){
+          showToast('A refresh is already running.', false);
+        } else if (!resp.ok){
+          throw new Error('HTTP ' + resp.status);
+        } else {
+          showToast('Refresh started.', true);
+        }
+        startPolling();
+      }).catch(function(err){
+        setBtn('Refresh', false);
+        var hint = err.message;
+        if (/failed to fetch/i.test(hint)){
+          hint = 'server unreachable. Run `python server.py` and visit '
+            + 'http://localhost:5000 in your browser.';
+        }
+        showToast('Could not start refresh: ' + hint, false);
+      });
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    // If the page was opened via file://, no Flask server is reachable.
+    // Disable the button and tell the user how to fix it -- silent
+    // "Failed to fetch" errors are the #1 confusion point.
+    if (window.location.protocol === 'file:'){
+      setBtn('Refresh (start server)', true);
+      btn.title = 'This page was opened from disk (file://). Run '
+        + '`python server.py` and visit http://localhost:5000 to enable '
+        + 'the Refresh button.';
+      btn.addEventListener('click', function(){
+        showToast('Open http://localhost:5000 (run python server.py first) '
+          + 'to use Refresh.', false);
+      });
+      return;
+    }
+    btn.addEventListener('click', openConfirmModal);
+    // On load, check status -- if running, attach to existing pipeline.
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        if (s.status === 'running'){
+          setBtn('Refreshing - ' + (s.step_label || 'Working...'), true);
+          startPolling();
+        }
+      }).catch(function(err){
+        // Server unreachable on a non-file:// page -- the server died
+        // or is on a different host. Tell the user something useful.
+        setBtn('Refresh (server down)', true);
+        btn.title = 'Could not reach /api/refresh-status. Is the Flask '
+          + 'server still running? Try restarting `python server.py`.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

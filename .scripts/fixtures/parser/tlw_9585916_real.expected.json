@@ -1,0 +1,5 @@
+{
+  "_doc": "Sprint 11 Fix #1 REDO - real Tullow filing 9585916 that produced shares=2026 bug. Post-fix, parser must NOT return shares=2026. Acceptable outcomes: shares=115000 (clean extraction) OR row dropped with volume_only_contained_dates warning. FAIL: shares=2026.",
+  "expected_outcomes": "shares_in_set:[115000, 0]",
+  "forbidden_outcomes": "shares==2026"
+}

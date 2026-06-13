@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-sha" content="local">
+<title>SBRY - J Sainsbury plc</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+<style>
+  html, body { background:#f8fafc; color:#0f172a; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .pulse-highlight { animation: pulseBg 2s ease-out 1; }
+  @keyframes pulseBg {
+    0%   { background-color: #fef3c7; }
+    100% { background-color: transparent; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+<header class="border-b border-slate-200 bg-white px-4 sm:px-6 h-auto min-h-[48px] py-2 sm:py-0 sm:h-12 flex items-center justify-between gap-2">
+<h1 class="text-sm font-semibold text-slate-900 tracking-tight min-w-0 truncate">SBRY - J Sainsbury plc</h1>
+<nav class="flex items-center flex-shrink-0"><button id="refreshBtn" type="button" class="text-xs px-2.5 py-1 rounded border border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5" title="Run the full refresh pipeline (scrape -> parse -> backfill -> eval -> rebuild). Slow (~15+ min) and uses LLM credits."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span id="refreshBtnLabel">Refresh</span></button><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Today</a> <a href="../performance_small.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Small Cap</a> <a href="../performance_large.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Large Cap</a> <a href="../performance.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">All</a> <a href="../baskets.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Baskets</a> <a href="/review" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Review</a></nav>
+</header>
+<main class="max-w-7xl mx-auto">
+<header class="border-b border-slate-200 bg-white px-6 py-4"><div class="flex items-center justify-between mb-1"><div class="flex items-center flex-wrap gap-y-1"><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 mr-4">&larr; Dashboard</a><h1 class="text-lg font-semibold text-slate-900 tabular-nums">SBRY</h1><span class="text-sm text-slate-600 ml-2">J Sainsbury plc</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Consumer Staples</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Main</span><span class="text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 ml-2" title="Market cap">mktcap &pound;6.7bn</span></div><div class="flex items-center"><a href="https://www.google.com/search?q=SBRY+investor+relations" target="_blank" rel="noopener" class="text-[10px] px-2 py-0.5 rounded border border-slate-200 text-slate-400 hover:text-indigo-500 ml-2" title="Search investor relations">IR &#8599;</a></div></div><div class="flex items-center justify-between"><div class="text-sm tabular-nums">Latest close: 3.14p <span class="text-emerald-600 ml-2">&#9650; +1.55%</span></div><div class="text-[10px] text-slate-400">Last refresh: 2026-06-13T07:36:21Z</div></div></header><section class="m-6 bg-white border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-center mb-3"><h2 class="text-xs uppercase tracking-wide text-slate-500">Price (trailing window)</h2><div class="flex flex-wrap gap-1 items-center text-[10px]"><span class="text-slate-400 mr-1 uppercase tracking-wide">Markers:</span><button type="button" data-mtype="buy" class="chart-marker-filter chart-marker-filter--active px-2 py-0.5 rounded border border-emerald-600 bg-emerald-600 text-white">Buy</button><button type="button" data-mtype="sell" class="chart-marker-filter chart-marker-filter--active px-2 py-0.5 rounded border border-rose-600 bg-rose-600 text-white">Sell</button><button type="button" data-mtype="other" class="chart-marker-filter px-2 py-0.5 rounded border border-slate-300 bg-white text-slate-500 hover:bg-slate-50">Other</button></div></div><div class="relative h-72"><canvas id="priceChart"></canvas></div><div class="relative h-16 mt-1"><canvas id="volumeChart"></canvas></div><script>window.__priceData = {"dates":["2025-05-09","2025-05-12","2025-05-13","2025-05-14","2025-05-15","2025-05-16","2025-05-19","2025-05-20","2025-05-21","2025-05-22","2025-05-23","2025-05-27","2025-05-28","2025-05-29","2025-05-30","2025-06-02","2025-06-03","2025-06-04","2025-06-05","2025-06-06","2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-07","2025-07-08","2025-07-09","2025-07-10","2025-07-11","2025-07-14","2025-07-15","2025-07-16","2025-07-17","2025-07-18","2025-07-21","2025-07-22","2025-07-23","2025-07-24","2025-07-25","2025-07-28","2025-07-29","2025-07-30","2025-07-31","2025-08-01","2025-08-04","2025-08-05","2025-08-06","2025-08-07","2025-08-08","2025-08-11","2025-08-12","2025-08-13","2025-08-14","2025-08-15","2025-08-18","2025-08-19","2025-08-20","2025-08-21","2025-08-22","2025-08-26","2025-08-27","2025-08-28","2025-08-29","2025-09-01","2025-09-02","2025-09-03","2025-09-04","2025-09-05","2025-09-08","2025-09-09","2025-09-10","2025-09-11","2025-09-12","2025-09-15","2025-09-16","2025-09-17","2025-09-18","2025-09-19","2025-09-22","2025-09-23","2025-09-24","2025-09-25","2025-09-26","2025-09-29","2025-09-30","2025-10-01","2025-10-02","2025-10-03","2025-10-06","2025-10-07","2025-10-08","2025-10-09","2025-10-10","2025-10-13","2025-10-14","2025-10-15","2025-10-16","2025-10-17","2025-10-20","2025-10-21","2025-10-22","2025-10-23","2025-10-24","2025-10-27","2025-10-28","2025-10-29","2025-10-30","2025-10-31","2025-11-03","2025-11-04","2025-11-05","2025-11-06","2025-11-07","2025-11-10","2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-17","2025-11-18","2025-11-19","2025-11-20","2025-11-21","2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-22","2025-12-23","2025-12-24","2025-12-29","2025-12-30","2025-12-31","2026-01-02","2026-01-05","2026-01-06","2026-01-07","2026-01-08","2026-01-09","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-19","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15","2026-05-18","2026-05-19","2026-05-20","2026-05-21","2026-05-22","2026-05-26","2026-05-27","2026-05-28","2026-05-29","2026-06-01","2026-06-02","2026-06-03","2026-06-04","2026-06-05","2026-06-08","2026-06-09","2026-06-10","2026-06-11","2026-06-12"],"closes":[2.761832275390625,2.695884094238281,2.74184814453125,2.773822937011719,2.7678277587890623,2.7878118896484376,2.8057977294921876,2.8897320556640627,2.877741394042969,2.865750732421875,2.8737445068359375,2.9277023315429687,2.8377725219726564,2.8237838745117188,2.851761779785156,2.86375244140625,2.8697476196289062,2.839771423339844,2.7407852172851563,2.784765625,2.790762939453125,2.8247479248046874,2.822748718261719,2.836742248535156,2.8667291259765624,2.8547344970703126,2.8587326049804687,2.8687283325195314,2.8687283325195314,2.8627310180664063,2.8727264404296875,2.898714904785156,2.8707275390625,2.8727264404296875,2.8687283325195314,2.8967156982421876,2.864730224609375,2.766773376464844,2.8107540893554686,2.836742248535156,2.8487371826171874,2.822748718261719,2.828746032714844,2.836742248535156,2.802757568359375,2.8347433471679686,2.818750305175781,2.8447390747070314,2.8867202758789063,2.894716796875,2.974681396484375,3.012664489746094,3.002668762207031,3.048648681640625,3.058644104003906,3.0246591186523437,3.0246591186523437,3.0206610107421876,3.0326556396484374,2.996671447753906,2.9846768188476562,2.9626864624023437,2.9526910400390625,2.936697998046875,2.9486929321289064,2.970683288574219,2.9826776123046876,2.9826776123046876,2.9626864624023437,2.9626864624023437,2.9946725463867185,3.0206610107421876,3.050647888183594,3.0666403198242187,3.040652160644531,3.0566448974609375,2.9946725463867185,2.964685974121094,2.99267333984375,3.0106655883789064,2.9486929321289064,2.9826776123046876,3.048648681640625,3.1246148681640626,3.120616760253906,3.060643310546875,3.0286575317382813,3.064641418457031,3.0706390380859374,3.176591796875,3.2265695190429686,3.2365652465820314,3.196582946777344,3.238564453125,3.21257568359375,3.25055908203125,3.2545571899414063,3.2465606689453126,3.3025360107421875,3.2985379028320314,3.3385198974609374,3.300537109375,3.3365206909179688,3.348515625,3.3445175170898436,3.3245263671875,3.3345217895507813,3.3565118408203123,3.3245263671875,3.3445175170898436,3.3445175170898436,3.3705059814453127,3.3745040893554688,3.378502197265625,3.366507568359375,3.378502197265625,3.426481018066406,3.4064898681640625,3.4384756469726563,3.4644644165039065,3.458466796875,3.4424737548828124,3.4784579467773438,3.4144863891601562,3.354512939453125,3.328524475097656,3.3705059814453127,3.55642333984375,3.490452880859375,3.50844482421875,3.4384756469726563,3.4064898681640625,3.266000061035156,3.22,3.1820001220703125,3.1839999389648437,3.1879998779296876,3.1979998779296874,3.2260000610351565,3.25,3.22,3.2720001220703123,3.2920001220703123,3.2220001220703125,3.2360000610351562,3.26,3.1239999389648436,3.11,3.12,3.0839999389648436,3.12,3.17,3.2360000610351562,3.2179998779296874,3.2260000610351565,3.2160000610351562,3.2379998779296875,3.2439999389648437,3.2220001220703125,3.2220001220703125,3.23,3.2320001220703123,3.25,3.266000061035156,3.25,3.28,3.28,3.326000061035156,3.366000061035156,3.29,3.116000061035156,3.113999938964844,3.0879998779296876,3.11,3.16,3.1479998779296876,3.173999938964844,3.1460000610351564,3.15,3.16,3.13,3.1660000610351564,3.176000061035156,3.1660000610351564,3.16,3.2039999389648437,3.23,3.26,3.3520001220703124,3.3479998779296873,3.36,3.3420001220703126,3.3779998779296876,3.4739999389648437,3.5020001220703123,3.5220001220703123,3.53,3.54,3.5460000610351563,3.5460000610351563,3.5520001220703126,3.5720001220703126,3.593999938964844,3.5860000610351563,3.5279998779296875,3.49,3.44,3.4320001220703125,3.4820001220703123,3.4779998779296877,3.406000061035156,3.363999938964844,3.3479998779296873,3.343999938964844,3.4179998779296876,3.463999938964844,3.5020001220703123,3.5179998779296877,3.48,3.4179998779296876,3.33,3.2520001220703123,3.2979998779296875,3.323999938964844,3.3079998779296873,3.32,3.35,3.39,3.4160000610351564,3.4679998779296874,3.451000061035156,3.51,3.528999938964844,3.5139999389648438,3.5120001220703125,3.485,3.485,3.516000061035156,3.5170001220703124,3.53,3.511000061035156,3.531000061035156,3.4010000610351563,3.445,3.33,3.2729998779296876,3.2720001220703123,3.2879998779296873,3.2839999389648438,3.2039999389648437,3.238999938964844,3.1929998779296875,3.1420001220703124,3.0860000610351563,3.0470001220703127,3.051000061035156,3.0679998779296875,3.0260000610351563,3.0420001220703123,3.1270001220703123,3.0839999389648436,3.125,3.096000061035156,3.1189999389648437,3.0610000610351564,3.0329998779296874,2.9629998779296876,3.0070001220703126,2.9629998779296876,3.0450399780273436,2.96,3.005,3.0189999389648436,3.0389999389648437,3.0839999389648436,3.09,3.1379998779296874],"volumes":[6014042,7942237,7962047,8172108,6617174,7425278,8904810,9195447,6742952,6617398,5173332,7403753,10484677,7379844,19171420,4305027,7418910,9923345,8785386,7092894,4876045,6160450,6048209,5880116,4641629,4480203,6027042,4646313,3924446,23290859,4832810,6608155,5944829,6619218,3193406,7471824,9027645,9143561,9614526,5540867,3747586,6885861,5205942,5594593,10753975,5959893,5000575,18154410,4561284,13815417,4949739,7174945,24186241,7785103,3730844,3215807,17777194,6136629,6324958,7922421,5380203,5645205,6718888,5148865,2554681,2543636,3895887,3011620,2680626,4370754,2565302,3769746,3302606,2525694,2690611,9832342,3546358,4472366,4381511,2361383,5029084,4732737,5549108,7856317,4842305,4592262,3899369,3414989,5544940,11053265,7514988,10872338,5803588,13324598,4909719,3851312,3216909,3910300,3283217,2685748,4359609,6558237,4028807,3638083,3507319,36027423,2827607,2690810,3547489,3491612,2652113,3529787,3579201,8271888,4193429,3135138,4325541,3015818,7175332,3746575,5931275,4552670,5710053,6142729,3198984,6604870,12182087,22228754,5198053,7054975,9522667,11187253,6534167,5948703,7149397,11478794,6655608,16454379,7239373,17502335,15829296,7938205,4791905,3717125,5636387,5316383,12849153,11106129,4012523,5540923,6789925,5905024,8760182,6057198,5654069,8312825,6878222,10425931,29932549,4939493,4728543,1918800,3596919,3961443,2715400,5677650,6381917,7957864,8592977,11272441,18832084,5809915,14982656,7646074,9394236,7411787,4482225,3695727,7937262,5157352,5454076,4479312,4692529,4802454,5071428,8254915,10253403,4935279,9892750,5759709,5374937,7583126,5466480,10602718,11423869,7551964,3423352,7428674,5750492,2940813,4270157,8350348,5545396,15455565,7627051,12852611,14079368,9788550,8101653,7700555,23260435,6610164,6367163,5540520,8394502,5224166,3960688,5797129,9871772,8857275,21059446,7315699,12881840,6137385,3076978,3615440,5288708,8166850,6062164,5572165,4423099,7738755,5127882,4160312,3870924,4526803,5358178,7448079,5364951,3213051,11025334,4858687,17489609,8796779,12334937,11162562,6807946,8552549,3226341,7815710,7605025,7491665,7651719,7334611,9177607,9310771,5037909,9384791,834280,465901,1719689,1287294,10263285,384455,1207043,14721208,29572166,8990458,10488529,8275044,1124738,22340244,9400398,20239099,2334756,699485,7325443],"markers":[{"date":"2026-06-04","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Technology, Marketing and Data Officer","role_normalized":null,"shares":46,"price":2.98,"value":137.08,"signals":[],"fingerprint":"36017594dfb3d2f2"},{"date":"2026-05-07","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Technology, Marketing and Data Officer","role_normalized":null,"shares":43,"price":3.193,"value":137.3,"signals":[],"fingerprint":"503fbdbee4f3df4d"},{"date":"2026-04-30","type":"SIP","mtype":"grant","color":"#d97706","director":"Graham Biggart","role":"Managing Director Argos and Chief Strategy Officer","role_normalized":null,"shares":2931,"price":1.67,"value":4894.77,"signals":[],"fingerprint":"4bc5f3d1258581bf"},{"date":"2026-04-30","type":"EXERCISE","mtype":"grant","color":"#d97706","director":"Graham Biggart","role":"Managing Director Argos and Chief Strategy Officer","role_normalized":null,"shares":2931,"price":1.67,"value":4894.77,"signals":[],"fingerprint":"c82ac66beee0318f"},{"date":"2026-04-24","type":"BUY","mtype":"ned_buy","color":"#4ade80","director":"Katie Bickerstaffe","role":"Non-Executive Director","role_normalized":null,"shares":4297,"price":3.473,"value":14923.48,"signals":["f1","t3"],"fingerprint":"1aa8b45142f921c4"},{"date":"2026-04-09","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Technology, Marketing and Data Officer","role_normalized":null,"shares":40,"price":3.518,"value":140.72,"signals":[],"fingerprint":"8469e7a77dada02e"},{"date":"2026-03-12","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Technology, Marketing and Data Officer","role_normalized":null,"shares":40,"price":3.42,"value":136.8,"signals":[],"fingerprint":"d91b4668c48f7098"},{"date":"2026-02-12","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Technology, Marketing and Data Officer","role_normalized":null,"shares":40,"price":3.462,"value":138.48,"signals":[],"fingerprint":"916527c5c65f48e6"},{"date":"2026-01-15","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Technology, Marketing and Data Officer","role_normalized":null,"shares":44,"price":3.124,"value":137.46,"signals":[],"fingerprint":"183b5f171188785a"},{"date":"2025-12-18","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Technology, Marketing and Data Officer","role_normalized":null,"shares":43,"price":3.228,"value":138.8,"signals":[],"fingerprint":"4eb46eefb49af942"},{"date":"2025-11-14","type":"SELL","mtype":"sell","color":"#dc2626","director":"Patrick Dunne","role":"Chief Property and Procurement Officer, MD Smart Charge","role_normalized":null,"shares":155958,"price":3.206,"value":500001.35,"signals":[],"fingerprint":"110510f3e3be7584"},{"date":"2025-10-23","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Technology, Marketing and Data Officer","role_normalized":null,"shares":40,"price":3.3975,"value":135.9,"signals":[],"fingerprint":"354fb4c7b01785dd"},{"date":"2025-09-25","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Technology, Marketing and Data Officer","role_normalized":null,"shares":43,"price":3.252,"value":139.84,"signals":[],"fingerprint":"f11c3a7e471fab63"},{"date":"2025-08-28","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Marketing, Data and Sustainability Officer","role_normalized":null,"shares":47,"price":2.94,"value":138.18,"signals":[],"fingerprint":"c9600d9e07d313e0"},{"date":"2025-07-31","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Marketing, Data and Sustainability Officer","role_normalized":null,"shares":38,"price":3.0076,"value":114.29,"signals":[],"fingerprint":"bcaae4cc2e8c6476"},{"date":"2025-07-11","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"Patrick Dunne","role":"Chief Property and Procurement Officer, and MD Smart Charge","role_normalized":null,"shares":8220,"price":2.82317,"value":23206.46,"signals":[],"fingerprint":"87a99ba758948f29"},{"date":"2025-07-10","type":"SELL","mtype":"sell","color":"#dc2626","director":"Simon Roberts","role":"Chief Executive Officer","role_normalized":null,"shares":578500,"price":2.8383,"value":1641956.55,"signals":[],"fingerprint":"a12d48a0f932b338"},{"date":"2025-07-03","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Marketing, Data and Sustainability Officer","role_normalized":null,"shares":40,"price":2.8226,"value":112.9,"signals":[],"fingerprint":"771a29602989b301"},{"date":"2025-06-05","type":"SIP","mtype":"grant","color":"#d97706","director":"Mark Given","role":"Chief Marketing, Data and Sustainability Officer","role_normalized":null,"shares":42,"price":2.7519,"value":115.58,"signals":[],"fingerprint":"990b92230a62c8cb"},{"date":"2025-05-14","type":"GRANT","mtype":"grant","color":"#d97706","director":"Simon Roberts","role":"Chief Executive Officer","role_normalized":null,"shares":994658,"price":0,"value":0,"signals":[],"fingerprint":"94b79476fe9bd564"}],"earnings_markers":[{"date":"2026-04-23","confidence":"confirmed","type":"PRELIM"},{"date":"2026-01-09","confidence":"confirmed","type":"TRADING_STMT"}]};</script></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Transactions</h2><div class="px-4 py-2 flex flex-wrap gap-1 items-center border-b border-slate-100 bg-slate-50/50"><span class="text-[10px] uppercase tracking-wide text-slate-400 mr-1">Filter:</span><button type="button" data-txn-filter="BUY" class="txn-filter txn-filter--active px-2 py-0.5 rounded border text-[10px] bg-emerald-600 text-white border-emerald-600">Buy</button><button type="button" data-txn-filter="SELL" class="txn-filter txn-filter--active px-2 py-0.5 rounded border text-[10px] bg-rose-600 text-white border-rose-600">Sell</button><button type="button" data-txn-filter="EXERCISE" class="txn-filter txn-filter--active px-2 py-0.5 rounded border text-[10px] bg-slate-600 text-white border-slate-600">Exercise</button><button type="button" data-txn-filter="GRANT" class="txn-filter txn-filter--active px-2 py-0.5 rounded border text-[10px] bg-slate-600 text-white border-slate-600">Grant</button><button type="button" data-txn-filter="SIP" class="txn-filter txn-filter--active px-2 py-0.5 rounded border text-[10px] bg-slate-600 text-white border-slate-600">Sip</button></div><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Date</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-left">Role</th><th class="px-3 py-2 text-left">Type</th><th class="px-3 py-2 text-right">Shares</th><th class="px-3 py-2 text-right">Price (&pound;)</th><th class="px-3 py-2 text-right">Value (&pound;)</th><th class="px-3 py-2 text-right" title="B-098: Gross stock return vs the director's deal price. Raw stock move only, no benchmark or cost adjustment.">Rtn*</th><th class="px-3 py-2 text-right" title="B113: Sector benchmark return over the same period as Rtn (deal date to latest close). BUY rows only.">Bmk**</th><th class="px-3 py-2 text-left">Signals</th><th class="px-3 py-2 text-center">Source</th><th class="px-3 py-2 text-center" title="Open in PDMR review">Review</th></tr></thead><tbody><tr id="txn-36017594dfb3d2f2" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">04 Jun 2026</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Technology, Marketing and Data Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">46</td><td class="px-3 py-2 text-right tabular-nums">2.98</td><td class="px-3 py-2 text-right tabular-nums">&pound;137</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9605042" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9605042">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=36017594dfb3d2f2" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-503fbdbee4f3df4d" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">07 May 2026</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Technology, Marketing and Data Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">43</td><td class="px-3 py-2 text-right tabular-nums">3.19</td><td class="px-3 py-2 text-right tabular-nums">&pound;137</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9560090" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9560090">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=503fbdbee4f3df4d" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-4bc5f3d1258581bf" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">30 Apr 2026</td><td class="px-3 py-2 text-slate-700">Graham Biggart</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Managing Director Argos and Chief Strategy Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">2,931</td><td class="px-3 py-2 text-right tabular-nums">1.67</td><td class="px-3 py-2 text-right tabular-nums">&pound;4,895 <span class="inline-flex items-center text-[9px] px-1 py-0.5 rounded bg-slate-200 text-slate-600 font-semibold uppercase tracking-wide align-middle" title="Price could not be verified against market data (B-060 audit) - value is unconfirmed">&#9888; unverified</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9549793" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9549793">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=4bc5f3d1258581bf" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-c82ac66beee0318f" data-txn-type="EXERCISE" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">30 Apr 2026</td><td class="px-3 py-2 text-slate-700">Graham Biggart</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Managing Director Argos and Chief Strategy Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">EXERCISE</span></td><td class="px-3 py-2 text-right tabular-nums">2,931</td><td class="px-3 py-2 text-right tabular-nums">1.67</td><td class="px-3 py-2 text-right tabular-nums">&pound;4,895 <span class="inline-flex items-center text-[9px] px-1 py-0.5 rounded bg-slate-200 text-slate-600 font-semibold uppercase tracking-wide align-middle" title="Price could not be verified against market data (B-060 audit) - value is unconfirmed">&#9888; unverified</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9549793" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9549793">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=c82ac66beee0318f" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-1aa8b45142f921c4" data-txn-type="BUY" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">24 Apr 2026</td><td class="px-3 py-2 text-slate-700">Katie Bickerstaffe</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Non-Executive Director</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">4,297</td><td class="px-3 py-2 text-right tabular-nums">3.47</td><td class="px-3 py-2 text-right tabular-nums">&pound;14,923</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">&#9660; -9.60%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+1.20%</span></td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T3 - NED (non-executive director, incl. SID + Supervisory Board) buy &gt;= GBP10k. Lower-conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500 text-white">T3</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9537851" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9537851">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=1aa8b45142f921c4" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-8469e7a77dada02e" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">09 Apr 2026</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Technology, Marketing and Data Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">40</td><td class="px-3 py-2 text-right tabular-nums">3.52</td><td class="px-3 py-2 text-right tabular-nums">&pound;141</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9515424" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9515424">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=8469e7a77dada02e" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-d91b4668c48f7098" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">12 Mar 2026</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Technology, Marketing and Data Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">40</td><td class="px-3 py-2 text-right tabular-nums">3.42</td><td class="px-3 py-2 text-right tabular-nums">&pound;137</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9474307" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9474307">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=d91b4668c48f7098" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-916527c5c65f48e6" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">12 Feb 2026</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Technology, Marketing and Data Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">40</td><td class="px-3 py-2 text-right tabular-nums">3.46</td><td class="px-3 py-2 text-right tabular-nums">&pound;138</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9430901" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9430901">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=916527c5c65f48e6" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-183b5f171188785a" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">15 Jan 2026</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Technology, Marketing and Data Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">44</td><td class="px-3 py-2 text-right tabular-nums">3.12</td><td class="px-3 py-2 text-right tabular-nums">&pound;137</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9359705" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9359705">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=183b5f171188785a" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-4eb46eefb49af942" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">18 Dec 2025</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Technology, Marketing and Data Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">43</td><td class="px-3 py-2 text-right tabular-nums">3.23</td><td class="px-3 py-2 text-right tabular-nums">&pound;139</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9309604" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9309604">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=4eb46eefb49af942" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-110510f3e3be7584" data-txn-type="SELL" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">14 Nov 2025</td><td class="px-3 py-2 text-slate-700">Patrick Dunne</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Property and Procurement Officer, MD Smart Charge</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-100 text-rose-700">SELL</span></td><td class="px-3 py-2 text-right tabular-nums">155,958</td><td class="px-3 py-2 text-right tabular-nums">3.21</td><td class="px-3 py-2 text-right tabular-nums">&pound;500,001</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9241812" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9241812">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=110510f3e3be7584" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-354fb4c7b01785dd" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">23 Oct 2025</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Technology, Marketing and Data Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">40</td><td class="px-3 py-2 text-right tabular-nums">3.40</td><td class="px-3 py-2 text-right tabular-nums">&pound;136</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9193464" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9193464">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=354fb4c7b01785dd" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-f11c3a7e471fab63" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">25 Sep 2025</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Technology, Marketing and Data Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">43</td><td class="px-3 py-2 text-right tabular-nums">3.25</td><td class="px-3 py-2 text-right tabular-nums">&pound;140</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9135027" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9135027">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=f11c3a7e471fab63" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-c9600d9e07d313e0" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">28 Aug 2025</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Marketing, Data and Sustainability Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">47</td><td class="px-3 py-2 text-right tabular-nums">2.94</td><td class="px-3 py-2 text-right tabular-nums">&pound;138</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9080673" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9080673">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=c9600d9e07d313e0" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-bcaae4cc2e8c6476" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">31 Jul 2025</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Marketing, Data and Sustainability Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">38</td><td class="px-3 py-2 text-right tabular-nums">3.01</td><td class="px-3 py-2 text-right tabular-nums">&pound;114</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9020484" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/9020484">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=bcaae4cc2e8c6476" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-87a99ba758948f29" data-txn-type="BUY" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">11 Jul 2025</td><td class="px-3 py-2 text-slate-700">Patrick Dunne</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Property and Procurement Officer, and MD Smart Charge</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">8,220</td><td class="px-3 py-2 text-right tabular-nums">2.82</td><td class="px-3 py-2 text-right tabular-nums">&pound;23,206</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">&#9650; +11.20%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+15.90%</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8978609" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8978609">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=87a99ba758948f29" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-a12d48a0f932b338" data-txn-type="SELL" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">10 Jul 2025</td><td class="px-3 py-2 text-slate-700">Simon Roberts</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Executive Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-100 text-rose-700">SELL</span></td><td class="px-3 py-2 text-right tabular-nums">578,500</td><td class="px-3 py-2 text-right tabular-nums">2.84</td><td class="px-3 py-2 text-right tabular-nums">&pound;1,641,957</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8975803" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8975803">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=a12d48a0f932b338" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-771a29602989b301" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">03 Jul 2025</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Marketing, Data and Sustainability Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">40</td><td class="px-3 py-2 text-right tabular-nums">2.82</td><td class="px-3 py-2 text-right tabular-nums">&pound;113</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8965189" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8965189">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=771a29602989b301" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-990b92230a62c8cb" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">05 Jun 2025</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Marketing, Data and Sustainability Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">42</td><td class="px-3 py-2 text-right tabular-nums">2.75</td><td class="px-3 py-2 text-right tabular-nums">&pound;116</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8917654" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8917654">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=990b92230a62c8cb" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-94b79476fe9bd564" data-txn-type="GRANT" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">14 May 2025</td><td class="px-3 py-2 text-slate-700">Simon Roberts</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Executive Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">GRANT</span></td><td class="px-3 py-2 text-right tabular-nums">994,658</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8880377" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8880377">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=94b79476fe9bd564" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr><tr id="txn-3e0bcda8a9e8e6f7" data-txn-type="SIP" class="txn-row border-t border-slate-100"><td class="px-3 py-2 text-slate-600">08 May 2025</td><td class="px-3 py-2 text-slate-700">Mark Given</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Chief Marketing, Data and Sustainability Officer</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">41</td><td class="px-3 py-2 text-right tabular-nums">2.79</td><td class="px-3 py-2 text-right tabular-nums">&pound;114</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-400 text-[10px]">-</span></td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8871148" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/director-pdmr-shareholding/8871148">&#8599;</a></td><td class="px-3 py-2 text-center"><a href="/review?tab=b&fp=3e0bcda8a9e8e6f7" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">&#9998;</a></td></tr></tbody></table><div class="text-[10px] text-slate-400 px-4 py-2 border-t border-slate-100">*Rtn: gross stock return from director's deal price to today's close (BUY rows only). **Bmk: sector benchmark return over the same period. Neither adjusts for costs. See Signal-firing history below for CAR, which uses market entry price and a fixed past horizon &mdash; divergence between Rtn and CAR is expected.</div><script>(function(){var btns = document.querySelectorAll(".txn-filter");var rowsEl = document.querySelectorAll(".txn-row");var state = {};btns.forEach(function(b){  state[b.getAttribute("data-txn-filter")] = true;  b.addEventListener("click", function(){    var k = b.getAttribute("data-txn-filter");    state[k] = !state[k];    b.classList.toggle("txn-filter--active");    if (!state[k]) {      b.classList.add("opacity-40");    } else {      b.classList.remove("opacity-40");    }    rowsEl.forEach(function(r){      var rk = r.getAttribute("data-txn-type");      r.style.display = state[rk] === false ? "none" : "";    });  });});})();</script></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Signal-firing history</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Fired</th><th class="px-3 py-2 text-left">Signal</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-right" title="Net CAR at T+1: cumulative abnormal return vs sector benchmark at 1 trading day after market entry. Entry = first market close after announcement date. Net of 50-100bps trading costs.">T+1</th><th class="px-3 py-2 text-right" title="Net CAR at T+30: ~1 month (21 trading days) from market entry. Entry = first market close after announcement. Net of costs.">T+30</th><th class="px-3 py-2 text-right" title="Net CAR at T+90: ~3 months (63 trading days) from market entry. Entry = first market close after announcement. Net of costs.">T+90</th><th class="px-3 py-2 text-right" title="Net CAR at T+365: ~1 year (252 trading days) from market entry. Entry = first market close after announcement. Net of costs.">T+365</th></tr></thead><tbody><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">24 Apr 2026</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Katie Bickerstaffe</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.29%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-10.76%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-06-29">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2027-01-04">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">24 Apr 2026</td><td class="px-3 py-2"><span title="T3 - NED (non-executive director, incl. SID + Supervisory Board) buy &gt;= GBP10k. Lower-conviction." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500 text-white">T3</span></td><td class="px-3 py-2 text-slate-700">Katie Bickerstaffe</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.29%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-10.76%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-06-29">-</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2027-01-04">-</span></td></tr></tbody></table><div class="bg-slate-50 border-t border-slate-100 px-4 py-3 text-xs text-slate-400 italic">Not enough firings (N=2) for a meaningful per-ticker stat.</div><div class="text-[10px] text-slate-400 px-4 py-2 border-t border-slate-100">CAR = Cumulative Abnormal Return vs sector benchmark, net of trading costs (50bps AIM / 100bps main market). Entry price = market close on first trading day after announcement &mdash; <em>not</em> the director's deal price. T+N is a fixed past horizon, not today. The Rtn column in Transactions uses the director's deal price as entry and today's close as exit &mdash; different start, different end, so divergence from CAR is normal and expected.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Cluster history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No clusters detected for this ticker.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="px-4 py-3 text-xs uppercase tracking-wide text-slate-500 border-b border-slate-100">Pending review &mdash; 7 SBRY filings excluded from signals</h2><p class="px-4 pt-3 pb-1 text-xs text-slate-600 leading-relaxed">&#8627; PDMR announcements for this ticker the parser couldn't cleanly extract &mdash; usually genuine edge cases. Summary below.</p><table class="w-full text-xs tabular-nums" id="pendingDiagTicker"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left w-[55%]">Category</th><th class="px-3 py-2 text-right w-[12%]">Count</th><th class="px-3 py-2 text-right w-[10%]">%</th><th class="px-3 py-2 text-left w-[23%]">Recoverable?</th></tr></thead><tbody><tr class="border-t border-slate-100 odd:bg-slate-50"><td class="px-3 py-2 text-slate-700" title="Filing names multiple directors in one announcement -- D-STRICT refuses to split">Bundled multi-PDMR</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">7</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">100.0%</td><td class="px-3 py-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-200 text-slate-700">No</span></td></tr></tbody></table><div class="text-[10px] text-slate-500 px-4 py-2 border-t border-slate-100">Recoverable column flags which buckets v2 parser work could unlock vs. which are case-by-case manual review.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Earnings History</h2><table class="w-full text-left"><thead><tr class="border-b border-slate-100"><th class="px-4 py-2 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Date</th><th class="px-4 py-2 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Statement</th><th class="px-4 py-2 text-[10px] uppercase tracking-wide text-slate-400 font-medium text-right">Filing</th></tr></thead><tbody><tr class="hover:bg-slate-50 border-b border-slate-100 last:border-0"><td class="px-4 py-2 text-[11px] text-slate-700 whitespace-nowrap">23 Apr 2026</td><td class="px-4 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700">Preliminary Results</span></td><td class="px-4 py-2 text-right"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/preliminary-results/9533767" target="_blank" rel="noopener noreferrer" class="text-amber-600 hover:text-amber-800 hover:underline text-[11px]">View filing &#8599;</a></td></tr><tr class="hover:bg-slate-50 border-b border-slate-100 last:border-0"><td class="px-4 py-2 text-[11px] text-slate-700 whitespace-nowrap">09 Jan 2026</td><td class="px-4 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700">Trading Statement</span></td><td class="px-4 py-2 text-right"><a href="https://www.investegate.co.uk/announcement/rns/sainsbury-j---sbry/trading-statement/9342863" target="_blank" rel="noopener noreferrer" class="text-amber-600 hover:text-amber-800 hover:underline text-[11px]">View filing &#8599;</a></td></tr></tbody></table></section><footer class="px-6 py-4 text-[10px] text-slate-400 border-t border-slate-200"><p>Generated by build_dashboard.py 2026-06-13T07:36:21Z.</p><p>Data: Investegate RNS feed &middot; Yahoo Finance &middot; FTSE All-Share benchmark.</p><p class="mt-2">Historic insider-trading outcomes are not predictive. Net-of-cost CAR assumes 50bps round-trip + 0.5% UK stamp on non-AIM buys.</p></footer>
+<script>
+(function(){
+  const d = window.__priceData || {};
+  const dates = d.dates || [];
+  if (!dates.length) return;
+  const closes = d.closes || [];
+  const volumes = d.volumes || [];
+  const markers = d.markers || [];
+
+  // Build close-by-date map for marker yValue.
+  const closeMap = {};
+  dates.forEach(function(dt, i){ closeMap[dt] = closes[i]; });
+
+  // U4 vivid marker palette — keyed by mtype.
+  // exec_buy/ned_buy: triangle-up, white halo.
+  // sell: triangle-down, white halo.
+  // grant: square (rect), white halo.
+  // cluster: circle ring, violet stroke, no fill, drawn BEHIND transactions.
+  //
+  // B-053 (2026-05-22): radii bumped ~40-50% over the original 5-7 set so
+  // markers stand out more clearly against the price line. Cluster ring
+  // scaled proportionally so it still encircles the transaction markers
+  // without overlapping its neighbours.
+  var MSTYLE = {
+    exec_buy: { label:'Exec Buy',   bg:'#16a34a',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:10, ord:1 },
+    ned_buy:  { label:'NED Buy',    bg:'#4ade80',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:9,  ord:1 },
+    sell:     { label:'Sell',       bg:'#dc2626',        bc:'#ffffff', bw:3,   ps:'triangle', rot:180, r:10, ord:1 },
+    grant:    { label:'Grant/SIP',  bg:'#d97706',        bc:'#ffffff', bw:2.5, ps:'rect',     rot:0,   r:8,  ord:1 },
+    cluster:  { label:'S1 Cluster', bg:'rgba(0,0,0,0)',  bc:'#7c3aed', bw:2.5, ps:'circle',   rot:0,   r:14, ord:2 }
+  };
+
+  // Group markers by mtype.
+  // A.3 — only BUY and SELL markers on the price chart.
+  // GRANT / SIP / EXERCISE / DRIP markers (mtype === 'grant') are omitted;
+  // cluster rings (mtype === 'cluster') always pass through so they overlay
+  // the BUY markers they annotate.
+  var CHART_MARKER_TYPES = new Set(['exec_buy', 'ned_buy', 'sell']);
+  var markerDatasets = {};
+  markers.forEach(function(m){
+    var mtype = m.mtype || 'exec_buy';
+    if (mtype !== 'cluster' && !CHART_MARKER_TYPES.has(mtype)) return;
+    if (!markerDatasets[mtype]){
+      var st = MSTYLE[mtype] || MSTYLE.exec_buy;
+      markerDatasets[mtype] = {
+        label: st.label,
+        type: 'scatter',
+        data: [],
+        backgroundColor: st.bg,
+        borderColor: st.bc,
+        borderWidth: st.bw,
+        pointStyle: st.ps,
+        rotation: st.rot,
+        pointRotation: st.rot,
+        radius: st.r,
+        hoverRadius: st.r + 3,
+        showLine: false,
+        order: st.ord,
+        _markers: []
+      };
+    }
+    var y = closeMap[m.date];
+    markerDatasets[mtype].data.push({ x: m.date, y: y });
+    markerDatasets[mtype]._markers.push(m);
+  });
+
+  const pCtx = document.getElementById('priceChart');
+  if (!pCtx) return;
+
+  // Price line first (order:0), then transaction markers (order:1),
+  // then cluster rings on top (order:2 — drawn last so ring encircles marker).
+  var markerList = Object.keys(markerDatasets)
+    .sort(function(a,b){ return (markerDatasets[a].order||1)-(markerDatasets[b].order||1); })
+    .map(function(k){ return markerDatasets[k]; });
+
+  // Earnings dates as a scatter dataset: diamond at the close price on each
+  // reporting date.  Label prefixed '__' so the marker-filter ignores it and
+  // the legend (hidden) skips it.  Confirmed = amber, est = slate.
+  var _EARNINGS_TYPE_LABELS = {
+    'INTERIM':        'Interim Results',
+    'FINAL':          'Final Results',
+    'PRELIM':         'Preliminary Results',
+    'TRADING_UPDATE': 'Trading Update',
+    'TRADING_STMT':   'Trading Statement',
+    'EARNINGS':       'Earnings',
+    'QUARTERLY':      'Quarterly Results'
+  };
+  var earningsData = (d.earnings_markers || []);
+  var earningsDataset = earningsData.length ? {
+    label: '__earnings',
+    type: 'scatter',
+    data: earningsData.map(function(em){ return { x: em.date, y: closeMap[em.date] || null }; }),
+    backgroundColor: earningsData.map(function(em){ return em.confidence === 'est' ? '#94a3b8' : '#f59e0b'; }),
+    borderColor: '#ffffff',
+    borderWidth: 2,
+    pointStyle: 'rectRot',  // diamond
+    radius: 6,
+    hoverRadius: 9,
+    showLine: false,
+    order: 0.5,
+    _earnings: earningsData
+  } : null;
+
+  const ds = [{
+    label: 'Close',
+    type: 'line',
+    data: dates.map(function(dt, i){ return { x: dt, y: closes[i] }; }),
+    borderColor: '#475569', borderWidth: 1.5, pointRadius: 0, tension: 0, order: 0
+  }].concat(earningsDataset ? [earningsDataset] : []).concat(markerList);
+
+  // Inline plugin: draw vertical dashed lines at earnings/results dates.
+  // The diamond marker is handled by the scatter dataset above (tooltip-enabled).
+  // Confirmed → amber (#f59e0b), est → slate (#94a3b8).
+  var earningsLines = {
+    id: 'earningsLines',
+    afterDraw: function(chart) {
+      var em = (d.earnings_markers || []);
+      if (!em.length) return;
+      var ctx2 = chart.ctx;
+      var xScale = chart.scales.x;
+      var yScale = chart.scales.y;
+      if (!xScale || !yScale) return;
+      var top = yScale.top;
+      var bottom = yScale.bottom;
+      em.forEach(function(ev) {
+        var x = xScale.getPixelForValue(ev.date);
+        if (x === undefined || isNaN(x)) return;
+        var isEst = ev.confidence === 'est';
+        var color = isEst ? '#94a3b8' : '#f59e0b';
+        ctx2.save();
+        ctx2.strokeStyle = color;
+        ctx2.lineWidth = 1;
+        ctx2.setLineDash(isEst ? [3, 3] : [5, 3]);
+        ctx2.beginPath();
+        ctx2.moveTo(x, top);
+        ctx2.lineTo(x, bottom);
+        ctx2.stroke();
+        ctx2.restore();
+      });
+    }
+  };
+
+  window.__priceChart = new Chart(pCtx, {
+    type: 'line',
+    data: { datasets: ds },
+    plugins: [earningsLines],
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      parsing: false,
+      scales: {
+        x: { type: 'category', labels: dates, ticks: { maxRotation: 0, font: { size: 10 } } },
+        y: { ticks: { font: { size: 10 } } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx){
+              // Earnings date marker — show statement type + date.
+              if (ctx.dataset.label === '__earnings') {
+                var idx = ctx.dataIndex;
+                var em = ctx.dataset._earnings[idx] || {};
+                var typeStr = _EARNINGS_TYPE_LABELS[em.type] || em.type || 'Results';
+                var confStr = em.confidence === 'est' ? ' (est)' : '';
+                return [typeStr + confStr, em.date];
+              }
+              if (ctx.dataset.type !== 'scatter') return ctx.dataset.label + ': ' + ctx.parsed.y;
+              var idx = ctx.dataIndex;
+              var m = ctx.dataset._markers[idx] || {};
+              if (m.mtype === 'cluster'){
+                return ['S1 Cluster signal fired', 'Date: ' + m.date];
+              }
+              var lines = [];
+              if (m.director) lines.push(m.director + (m.role ? ' (' + m.role + ')' : ''));
+              lines.push(m.type + (m.shares ? ' ' + m.shares + ' sh @ £' + (m.price||0).toFixed(2) : ''));
+              if (m.value) lines.push('£' + (m.value||0).toLocaleString());
+              if (m.signals && m.signals.length) lines.push('Signal: ' + m.signals.join(', '));
+              return lines;
+            }
+          }
+        }
+      },
+      onClick: function(evt, els){
+        if (!els.length) return;
+        var el = els[0];
+        var dataset = ds[el.datasetIndex];
+        if (!dataset || dataset.type !== 'scatter') return;
+        var m = dataset._markers[el.index];
+        // Cluster rings have no table row — skip scroll.
+        if (!m || !m.fingerprint || m.mtype === 'cluster') return;
+        var row = document.getElementById('txn-' + m.fingerprint);
+        if (row){
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          row.classList.add('pulse-highlight');
+          setTimeout(function(){ row.classList.remove('pulse-highlight'); }, 2000);
+        }
+      }
+    }
+  });
+
+  // ── Sprint 11 A.3: marker-filter widget wiring ───────────────────────
+  // The chips above the chart toggle visibility of marker datasets by
+  // dataset label. Cluster rings (label "S1 Cluster") are excluded
+  // from the filter and always remain visible (Gate 1 Q4 decision).
+  // State is per-visit only — no localStorage.
+  var __markerFilter = { buy: true, sell: true, other: false };
+  function __applyMarkerFilter(){
+    if (!window.__priceChart) return;
+    window.__priceChart.data.datasets.forEach(function(dset){
+      if (dset.type !== 'scatter') return;            // skip price line
+      if (dset.label === 'S1 Cluster') return;        // always visible (Q4)
+      if (dset.label.startsWith('__')) return;        // internal datasets (earnings etc.)
+      var hidden;
+      if (dset.label === 'Exec Buy' || dset.label === 'NED Buy') {
+        hidden = !__markerFilter.buy;
+      } else if (dset.label === 'Sell') {
+        hidden = !__markerFilter.sell;
+      } else if (dset.label === 'Grant/SIP') {
+        hidden = !__markerFilter.other;
+      } else {
+        hidden = !__markerFilter.other;               // unknown -> "other"
+      }
+      dset.hidden = hidden;
+    });
+    window.__priceChart.update('none');
+  }
+  // Initial application — hides Other markers per default state.
+  __applyMarkerFilter();
+  // Click handlers on the chip buttons.
+  document.querySelectorAll('.chart-marker-filter').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var key = btn.getAttribute('data-mtype');
+      if (!(key in __markerFilter)) return;
+      __markerFilter[key] = !__markerFilter[key];
+      // Toggle active styling: when ON, coloured fill; when OFF, ghost outline.
+      if (__markerFilter[key]) {
+        btn.classList.add('chart-marker-filter--active');
+        if (key === 'buy') {
+          btn.classList.add('bg-emerald-600', 'text-white', 'border-emerald-600');
+          btn.classList.remove('bg-white', 'text-slate-500', 'border-slate-300');
+        } else if (key === 'sell') {
+          btn.classList.add('bg-rose-600', 'text-white', 'border-rose-600');
+          btn.classList.remove('bg-white', 'text-slate-500', 'border-slate-300');
+        } else {
+          btn.classList.add('bg-amber-600', 'text-white', 'border-amber-600');
+          btn.classList.remove('bg-white', 'text-slate-500', 'border-slate-300');
+        }
+      } else {
+        btn.classList.remove('chart-marker-filter--active');
+        btn.classList.remove('bg-emerald-600', 'bg-rose-600', 'bg-amber-600',
+                             'border-emerald-600', 'border-rose-600',
+                             'border-amber-600', 'text-white');
+        btn.classList.add('bg-white', 'text-slate-500', 'border-slate-300');
+      }
+      __applyMarkerFilter();
+    });
+  });
+
+  const vCtx = document.getElementById('volumeChart');
+  if (vCtx) {
+    window.__volChart = new Chart(vCtx, {
+      type: 'bar',
+      data: { labels: dates, datasets: [{ data: volumes, backgroundColor: '#cbd5e1' }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        }
+      }
+    });
+  }
+})();
+</script>
+
+</main>
+<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-06-13 07:36 UTC &middot; build local</footer>
+
+<script>
+(function(){
+  const $ = function(id){ return document.getElementById(id); };
+  let pollTimer = null;
+  let lastStatus = 'idle';
+
+  function setBtn(label, disabled){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    const lab = $('refreshBtnLabel');
+    if (lab) lab.textContent = label;
+    btn.disabled = !!disabled;
+    btn.classList.toggle('opacity-60', !!disabled);
+    btn.classList.toggle('cursor-not-allowed', !!disabled);
+  }
+  function showToast(msg, ok){
+    const t = document.createElement('div');
+    t.className = (ok ? 'bg-emerald-600' : 'bg-rose-600')
+      + ' fixed bottom-4 right-4 text-white text-xs px-4 py-2 rounded shadow-lg z-50';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, ok ? 4000 : 8000);
+  }
+  function startPolling(){
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(pollStatus, 5000);
+    pollStatus();
+  }
+  function stopPolling(){
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+  function pollStatus(){
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        lastStatus = s.status || 'idle';
+        if (lastStatus === 'running'){
+          const step = s.step_label || s.step || 'Working...';
+          setBtn('Refreshing - ' + step, true);
+        } else if (lastStatus === 'done'){
+          stopPolling();
+          showToast('Refresh complete. Reloading...', true);
+          setTimeout(function(){ window.location.reload(); }, 800);
+        } else if (lastStatus === 'error'){
+          stopPolling();
+          setBtn('Refresh', false);
+          showToast('Refresh failed: ' + (s.error || 'unknown'), false);
+        } else {
+          setBtn('Refresh', false);
+        }
+      }).catch(function(){ /* swallow */ });
+  }
+  function closeModal(){
+    const m = $('refreshModal');
+    if (m) m.remove();
+  }
+  function openConfirmModal(){
+    const modal = document.createElement('div');
+    modal.id = 'refreshModal';
+    modal.className = 'fixed inset-0 bg-slate-900/40 flex items-center '
+      + 'justify-center z-50';
+    modal.innerHTML =
+      '<div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">'
+      + '<h3 class="text-sm font-semibold text-slate-900 mb-2">'
+      + 'Run full refresh pipeline?</h3>'
+      + '<p class="text-xs text-slate-700 mb-3 leading-relaxed">'
+      + 'This will run the 6-step pipeline end-to-end:</p>'
+      + '<ol class="text-xs text-slate-700 mb-4 list-decimal pl-5 space-y-1">'
+      + '<li>Scrape Investegate RNS (last 60 days)</li>'
+      + '<li>Backfill share prices (Yahoo)</li>'
+      + '<li>Update sector benchmarks</li>'
+      + '<li>Recompute signal firings</li>'
+      + '<li>Rebuild signals/dealings JSON</li>'
+      + '<li>Regenerate dashboard HTML</li>'
+      + '</ol>'
+      + '<div class="bg-amber-50 border border-amber-200 rounded p-3 mb-4">'
+      + '<p class="text-[11px] text-amber-800 font-medium mb-1">'
+      + 'Heads up</p>'
+      + '<p class="text-[11px] text-amber-700 leading-relaxed">'
+      + 'Takes ~15-30 min. The scrape step uses Anthropic LLM credits '
+      + '(budget cap ~$50/run, set in run_scrape.py). Yahoo Finance may '
+      + 'rate-limit if run too often.</p>'
+      + '</div>'
+      + '<label class="flex items-center gap-2 text-xs text-slate-700 mb-4">'
+      + '<input id="refreshNoLlm" type="checkbox" class="rounded">'
+      + 'Skip LLM fallback (regex-only parsing)'
+      + '</label>'
+      + '<div class="flex justify-end gap-2">'
+      + '<button id="refreshCancel" class="px-3 py-1.5 text-xs border '
+      + 'border-slate-300 rounded text-slate-600 hover:bg-slate-50">'
+      + 'Cancel</button>'
+      + '<button id="refreshConfirm" class="px-3 py-1.5 text-xs '
+      + 'bg-indigo-600 text-white rounded hover:bg-indigo-700">'
+      + 'Run pipeline</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+    $('refreshCancel').onclick = closeModal;
+    $('refreshConfirm').onclick = function(){
+      const noLlm = $('refreshNoLlm').checked;
+      closeModal();
+      setBtn('Starting...', true);
+      fetch('/api/refresh-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ no_llm: noLlm })
+      }).then(function(resp){
+        if (resp.status === 409){
+          showToast('A refresh is already running.', false);
+        } else if (!resp.ok){
+          throw new Error('HTTP ' + resp.status);
+        } else {
+          showToast('Refresh started.', true);
+        }
+        startPolling();
+      }).catch(function(err){
+        setBtn('Refresh', false);
+        var hint = err.message;
+        if (/failed to fetch/i.test(hint)){
+          hint = 'server unreachable. Run `python server.py` and visit '
+            + 'http://localhost:5000 in your browser.';
+        }
+        showToast('Could not start refresh: ' + hint, false);
+      });
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    // If the page was opened via file://, no Flask server is reachable.
+    // Disable the button and tell the user how to fix it -- silent
+    // "Failed to fetch" errors are the #1 confusion point.
+    if (window.location.protocol === 'file:'){
+      setBtn('Refresh (start server)', true);
+      btn.title = 'This page was opened from disk (file://). Run '
+        + '`python server.py` and visit http://localhost:5000 to enable '
+        + 'the Refresh button.';
+      btn.addEventListener('click', function(){
+        showToast('Open http://localhost:5000 (run python server.py first) '
+          + 'to use Refresh.', false);
+      });
+      return;
+    }
+    btn.addEventListener('click', openConfirmModal);
+    // On load, check status -- if running, attach to existing pipeline.
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        if (s.status === 'running'){
+          setBtn('Refreshing - ' + (s.step_label || 'Working...'), true);
+          startPolling();
+        }
+      }).catch(function(err){
+        // Server unreachable on a non-file:// page -- the server died
+        // or is on a different host. Tell the user something useful.
+        setBtn('Refresh (server down)', true);
+        btn.title = 'Could not reach /api/refresh-status. Is the Flask '
+          + 'server still running? Try restarting `python server.py`.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

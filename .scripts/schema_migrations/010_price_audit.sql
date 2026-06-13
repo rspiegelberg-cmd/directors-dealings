@@ -1,0 +1,23 @@
+-- Migration 010: add transactions.price_audit (B-060 -- pence/pounds value fix).
+--
+-- Records the outcome of price-unit reconciliation (price_reconcile.py),
+-- written by backfill_price_units.py:
+--   NULL / 'ok_pounds'  -- price trusted as stored (pounds); no change
+--   'corrected_pence'   -- was pence-as-pounds; price & value divided by 100
+--   'unresolved'        -- neither reading matches market close (garbage / Mode B)
+--   'no_market'         -- no market close available to decide
+--
+-- Rows flagged 'unresolved' / 'no_market' are EXCLUDED from signal firing
+-- (eval_signals candidate query) and carry value=NULL so they drop out of all
+-- value metrics (cohort value buckets, VW means, cluster aggregate, monthly
+-- totals) via the existing NULL-value handling. The original price is left in
+-- place for audit; the flag is fully reversible.
+--
+-- Additive nullable column -> plain ALTER, no table rebuild. Idempotency is
+-- handled by db._run_migration_step (skips this step if the column already
+-- exists).
+--
+-- B-060 -- Sprint 35 -- 2026-06-05. Zone B: applied by db.connect() on the next
+-- pipeline run (Rupert runs it).
+
+ALTER TABLE transactions ADD COLUMN price_audit TEXT;

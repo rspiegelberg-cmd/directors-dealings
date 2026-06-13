@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="build-sha" content="local">
+  <title>Directors Dealings · Performance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <style>
+    body { font-family: ui-sans-serif, system-ui, sans-serif; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    /* Status pill dot */
+    .pill-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+    /* Sparkline */
+    .sparkline-wrap svg { display: block; }
+    /* Deprecate button */
+    .dep-btn { font-size: 10px; padding: 2px 8px; border-radius: 4px; border: 1px solid #cbd5e1; color: #475569; background: white; cursor: pointer; }
+    .dep-btn:hover:not(:disabled) { border-color: #f87171; color: #dc2626; }
+    .dep-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    /* Modal backdrop */
+    #deprecateModal { display: none; }
+    #deprecateModal.open { display: flex; }
+    /* Toast */
+    .toast { animation: fadeInUp 0.2s ease; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    /* Legend items */
+    .leg-item { cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; user-select: none; font-size: 11px; color: #475569; }
+    .leg-item:hover { background: #f1f5f9; }
+    .leg-item.active { border-bottom: 1.5px solid currentColor; }
+    .leg-swatch { display: inline-block; width: 14px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+    /* kill? row tint */
+    .kill-row { background-color: rgba(255, 228, 230, 0.45); }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<!-- ===================== HEADER ===================== -->
+<header class="border-b border-slate-200 bg-white px-6 h-12 flex items-center justify-between sticky top-0 z-40">
+
+  <!-- Left: back nav + page title -->
+  <div class="flex items-center gap-3">
+    <a href="index.html" class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">← Today</a>
+    <span class="text-slate-300 text-xs">|</span>
+    <h1 class="text-sm font-semibold text-slate-900 tracking-tight">Performance</h1>
+  </div>
+
+  <!-- Centre: freshness chip (U3 — identical to index.html) -->
+  <div id="freshness" class="text-xs flex items-center gap-1.5 px-3 py-1 rounded-full border bg-slate-100 border-slate-300 text-slate-500">
+    <i class="ti ti-clock text-sm"></i>
+    <span id="freshness-text">Loading…</span>
+    <span class="utc text-[10px] opacity-60"></span>
+  </div>
+
+  <!-- Right: horizon dropdown -->
+  <div class="flex items-center gap-2">
+    <span class="text-xs text-slate-500">Horizon:</span>
+    <select id="horizonSelect" class="text-xs border border-slate-300 rounded px-2 py-1 bg-white tabular-nums">
+      <option value="t1">T+1 (next session)</option>
+      <option value="t21" selected>T+21 (≈1 month)</option>
+      <option value="t90">T+90 (≈4.5 months)</option>
+      <option value="t252">T+252 (≈1 year)</option>
+    </select>
+  </div>
+</header>
+
+<!-- ===================== MAIN ===================== -->
+<main>
+
+  <!-- ── Per-signal scoreboard ── -->
+  <section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden">
+    <h2 class="px-4 py-3 text-xs uppercase tracking-wide text-slate-500 border-b border-slate-100">Per-signal scoreboard</h2>
+    <table class="w-full text-xs tabular-nums" id="scoreboardTable">
+      <thead>
+        <tr class="bg-slate-50 text-slate-500 uppercase tracking-wide text-[10px] border-b border-slate-200">
+          <th class="text-left px-3 py-2 font-medium" style="width:8%">Signal</th>
+          <th class="text-right px-3 py-2 font-medium" style="width:8%">N</th>
+          <th class="text-right px-3 py-2 font-medium" style="width:13%">Hit / Base</th>
+          <th class="text-right px-3 py-2 font-medium" style="width:11%">Med CAR</th>
+          <th class="text-right px-3 py-2 font-medium" style="width:11%">Mean CAR</th>
+          <th class="text-right px-3 py-2 font-medium" style="width:10%" title="edge = mean_car − benchmark mean over same horizon">Edge</th>
+          <th class="text-center px-3 py-2 font-medium" style="width:14%">12w trend</th>
+          <th class="text-left px-3 py-2 font-medium" style="width:10%">Status</th>
+          <th class="text-center px-3 py-2 font-medium" style="width:15%">Deprecate</th>
+        </tr>
+      </thead>
+      <tbody id="scoreboardBody">
+        <tr><td colspan="9" class="text-center py-8 text-slate-400 text-xs">Loading…</td></tr>
+      </tbody>
+    </table>
+    <div id="scoreboardFooter" class="text-[10px] text-slate-400 px-4 py-2 border-t border-slate-100"></div>
+  </section>
+
+  <!-- ── Diagnostics chart ── -->
+  <section class="m-6 bg-white border border-slate-200 rounded-lg p-4">
+    <h2 id="diagChartTitle" class="text-xs uppercase tracking-wide text-slate-500 mb-3">
+      Cumulative net CAR — trailing 12 months
+    </h2>
+    <div class="relative h-64">
+      <canvas id="diagChart"></canvas>
+      <div id="diagChartEmpty"
+           class="absolute inset-0 hidden items-center justify-center text-xs text-slate-400 text-center px-8">
+        Diagnostics series not yet exported — re-run dashboard exporter.
+      </div>
+    </div>
+    <div id="diagLegend" class="flex flex-wrap gap-1 mt-3"></div>
+  </section>
+
+  <!-- ── Cohort cuts (2-column grid) ── -->
+  <div class="m-6 grid grid-cols-2 gap-4">
+
+    <!-- Block A: by transaction value bucket -->
+    <section class="bg-white border border-slate-200 rounded-lg p-4">
+      <h2 class="text-xs uppercase tracking-wide text-slate-500 mb-3">By director's transaction value</h2>
+      <div class="relative h-40">
+        <canvas id="cohortValueChart"></canvas>
+        <div id="cohortValueEmpty"
+             class="absolute inset-0 hidden items-center justify-center text-xs text-slate-400">
+          Cohort data not yet exported — see Stage 4.6.
+        </div>
+      </div>
+    </section>
+
+    <!-- Block B: by sector -->
+    <section class="bg-white border border-slate-200 rounded-lg p-4">
+      <h2 class="text-xs uppercase tracking-wide text-slate-500 mb-3">By sector — hit % @ T+21</h2>
+      <ul id="sectorList" class="space-y-2"></ul>
+    </section>
+  </div>
+
+  <!-- ── Model assessment ── -->
+  <section class="m-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
+    <h2 class="text-xs uppercase tracking-wide text-amber-700 mb-3">Model assessment</h2>
+    <div id="modelAssessment" class="text-xs text-slate-700 space-y-2">
+      <span class="text-slate-400">Loading…</span>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="px-6 py-3 text-right text-[11px] text-slate-400" id="pageFooter">Loading…</footer>
+
+<!-- ===================== DEPRECATE MODAL ===================== -->
+<div id="deprecateModal" class="fixed inset-0 bg-slate-900/40 items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
+    <h3 class="text-sm font-semibold text-slate-900 mb-2" id="modalTitle">Deprecate signal?</h3>
+    <p class="text-xs text-slate-700 mb-4 leading-relaxed" id="modalBody"></p>
+    <div class="flex justify-end gap-2">
+      <button onclick="hideModal()" class="px-3 py-1.5 text-xs border border-slate-300 rounded text-slate-600 hover:bg-slate-50">Cancel</button>
+      <button id="modalConfirm" class="px-3 py-1.5 text-xs bg-rose-600 text-white rounded hover:bg-rose-700">Deprecate signal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TOAST CONTAINER ===================== -->
+<div id="toastContainer" class="fixed bottom-4 right-4 flex flex-col gap-2 z-50 pointer-events-none"></div>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+// ============================================================
+// CONSTANTS (identical to index.html)
+// ============================================================
+const SIGNAL_ORDER = ['t0','t1','t2','t3','t4','s1','f1'];
+
+const SIGNAL_META = {
+  t0: { label:'T0', bg:'#dc2626', fg:'#fff', tooltip:'Cluster + opportunistic combo. CEO/CFO/exec buy (T1/T2) inside a multi-director cluster (S1) within 30 days. Highest conviction.' },
+  t1: { label:'T1', bg:'#ef4444', fg:'#fff', tooltip:'CEO/CFO buy ≥£100k. Strongest single-trade insider signal.' },
+  t2: { label:'T2', bg:'#f59e0b', fg:'#fff', tooltip:'Other exec buy (Chair, Group, Director) ≥£25k. Mid-conviction.' },
+  t3: { label:'T3', bg:'#10b981', fg:'#fff', tooltip:'NED (non-executive director) buy ≥£10k. Lower conviction.' },
+  t4: { label:'T4', bg:'#94a3b8', fg:'#fff', tooltip:'Other discretionary buy ≥£1k. Catch-all.' },
+  s1: { label:'S1', bg:'#3b82f6', fg:'#fff', tooltip:'Cluster — ≥2 distinct directors buying same ticker, dates within 30 days.' },
+  f1: { label:'F1', bg:'#a855f7', fg:'#fff', tooltip:"First-time buy — director's first-ever buy of this ticker." }
+};
+
+const HORIZON_LABELS = {
+  t1:   'T+1 (next session)',
+  t21:  'T+21 (≈1 month)',
+  t90:  'T+90 (≈4.5 months)',
+  t252: 'T+252 (≈1 year)'
+};
+
+// Diagnostics chart dataset definitions (per §1.2.3)
+const DIAG_DATASETS_META = [
+  { key: 't0',   label: 'T0',       color: '#dc2626', width: 2,   dash: []     },
+  { key: 't1',   label: 'T1',       color: '#ef4444', width: 2,   dash: []     },
+  { key: 't2',   label: 'T2',       color: '#f59e0b', width: 2,   dash: []     },
+  { key: 't3',   label: 'T3',       color: '#10b981', width: 2,   dash: []     },
+  { key: 't4',   label: 'T4',       color: '#94a3b8', width: 1.5, dash: []     },
+  { key: 's1',   label: 'S1',       color: '#3b82f6', width: 2,   dash: []     },
+  { key: 'f1',   label: 'F1',       color: '#a855f7', width: 2,   dash: []     },
+  { key: 'ftas', label: 'FTSE A-S', color: '#888780', width: 1,   dash: [6,4]  }
+];
+
+const DIAG_X_LABELS = ['M-12','M-11','M-10','M-9','M-8','M-7','M-6','M-5','M-4','M-3','M-2','M-1','Now'];
+const FTAS_IDX = DIAG_DATASETS_META.length - 1; // index of FTSE dataset (last)
+
+// ============================================================
+// STATE
+// ============================================================
+const state = {
+  horizon:      't21',
+  signals:      null,
+  signalStatus: {}
+};
+
+let diagChart   = null;
+let cohortChart = null;
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+  setupHorizonDropdown();
+  await loadData();
+  // Subscribe to horizonChange: scoreboard + chart both re-render
+  window.addEventListener('horizonChange', e => {
+    state.horizon = e.detail;
+    renderScoreboard();
+    buildDiagChart();          // destroy + rebuild on horizon change (resets legend state cleanly)
+    updateDiagTitle();
+  });
+}
+
+// ============================================================
+// DATA LOADING
+// ============================================================
+async function loadData() {
+  const results = await Promise.allSettled([
+    fetch('data/signals.json').then(r => r.json()),
+    fetch('../.data/signal_status.json').then(r => r.json()).catch(() => ({}))
+  ]);
+
+  if (results[0].status === 'fulfilled') {
+    state.signals = results[0].value;
+    renderFreshness(state.signals.generated_at);
+    renderScoreboard();
+    buildDiagChart();
+    updateDiagTitle();
+    renderCohortCuts();
+    renderModelAssessment();
+    renderFooter();
+  } else {
+    document.getElementById('freshness-text').textContent = 'Failed to load data';
+    document.getElementById('scoreboardBody').innerHTML =
+      '<tr><td colspan="9" class="text-center py-8 text-rose-500 text-xs">Could not load data/signals.json — check the file exists.</td></tr>';
+    document.getElementById('modelAssessment').innerHTML =
+      '<span class="text-rose-500">Could not load signals.json.</span>';
+  }
+
+  if (results[1].status === 'fulfilled') {
+    state.signalStatus = results[1].value || {};
+    if (state.signals) renderScoreboard(); // re-render with deprecation state
+  }
+}
+
+// ============================================================
+// HORIZON DROPDOWN
+// ============================================================
+function setupHorizonDropdown() {
+  const sel = document.getElementById('horizonSelect');
+  sel.value = state.horizon;
+  sel.addEventListener('change', () => {
+    state.horizon = sel.value;
+    window.dispatchEvent(new CustomEvent('horizonChange', { detail: state.horizon }));
+  });
+}
+
+function updateDiagTitle() {
+  const el = document.getElementById('diagChartTitle');
+  if (el) el.textContent = `Cumulative net CAR @ ${HORIZON_LABELS[state.horizon] || state.horizon} — trailing 12 months`;
+}
+
+// ============================================================
+// SHARED COMPONENT: renderBadge (identical to index.html)
+// ============================================================
+function renderBadge(sid) {
+  const m = SIGNAL_META[sid];
+  if (!m) return `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-200 text-slate-700">${sid.toUpperCase()}</span>`;
+  return `<span title="${m.tooltip}" class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold" style="background:${m.bg};color:${m.fg}">${m.label}</span>`;
+}
+
+// ============================================================
+// SHARED COMPONENT: renderFreshness (U3 — identical to index.html)
+// ============================================================
+function renderFreshness(generatedAt) {
+  if (!generatedAt) return;
+  const ageMin = Math.floor((Date.now() - new Date(generatedAt)) / 60000);
+  const ageH   = (ageMin / 60).toFixed(1);
+  const utc    = new Date(generatedAt).toISOString().slice(11, 16) + ' UTC';
+  let cls, icon, text;
+  if (ageMin < 120) {
+    cls  = 'bg-emerald-50 border-emerald-300 text-emerald-700';
+    icon = 'ti-refresh';
+    text = `Updated ${ageMin} min ago`;
+  } else if (ageMin < 240) {
+    cls  = 'bg-amber-50 border-amber-300 text-amber-700';
+    icon = 'ti-clock';
+    text = `Updated ${ageH} h ago — re-run refresh?`;
+  } else {
+    cls  = 'bg-rose-50 border-rose-300 text-rose-700';
+    icon = 'ti-alert-triangle';
+    text = `Updated ${ageH} h ago — data may be stale`;
+  }
+  const el = document.getElementById('freshness');
+  el.className = `text-xs flex items-center gap-1.5 px-3 py-1 rounded-full border ${cls}`;
+  el.querySelector('i').className = `ti ${icon} text-sm`;
+  document.getElementById('freshness-text').textContent = text;
+  el.querySelector('.utc').textContent = utc;
+}
+
+// ============================================================
+// SHARED COMPONENT: renderSparkline (identical to index.html)
+// ============================================================
+function renderSparkline(data, sid) {
+  const m     = SIGNAL_META[sid];
+  const color = m ? m.bg : '#94a3b8';
+  if (!data || data.every(v => v === null || v === 0)) {
+    return `<div class="sparkline-wrap"><svg width="60" height="20" viewBox="0 0 60 20" preserveAspectRatio="none"
+      title="Sparkline series not yet populated — see Stage 4.6 sparkline emit.">
+      <line x1="0" y1="10" x2="60" y2="10" stroke="#cbd5e1" stroke-width="1"/>
+    </svg></div>`;
+  }
+  const vals  = data.map(v => v === null ? 0 : v);
+  const minV  = Math.min(...vals);
+  const maxV  = Math.max(...vals);
+  const range = maxV - minV;
+  const latest = vals[vals.length - 1];
+  const pctStr = latest.toFixed(2) + '%';
+  const title  = `30d rolling median CAR @ ${HORIZON_LABELS[state.horizon] || state.horizon}, latest = ${pctStr}`;
+  const pts = vals.map((v, i) => {
+    const x = i * (60 / 8);
+    const y = range === 0 ? 10 : 19 - ((v - minV) / range) * 18;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  return `<div class="sparkline-wrap"><svg width="60" height="20" viewBox="0 0 60 20" preserveAspectRatio="none" title="${title}">
+    <polyline fill="none" stroke="${color}" stroke-width="1.5" points="${pts}"/>
+  </svg></div>`;
+}
+
+// ============================================================
+// SHARED COMPONENT: renderStatusPill (identical to index.html)
+// ============================================================
+function renderStatusPill(status) {
+  const map = {
+    live:       { cls:'bg-emerald-100 text-emerald-700', dot:'bg-emerald-500' },
+    review:     { cls:'bg-amber-100 text-amber-700',     dot:'bg-amber-500'   },
+    'kill?':    { cls:'bg-rose-100 text-rose-700',       dot:'bg-rose-500'    },
+    gated:      { cls:'bg-slate-100 text-slate-500',     dot:'bg-slate-400'   },
+    deprecated: { cls:'bg-slate-100 text-slate-500',     dot:'bg-slate-400'   }
+  };
+  const s = map[status] || map['gated'];
+  return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${s.cls}">
+    <span class="pill-dot ${s.dot}"></span>${status}
+  </span>`;
+}
+
+// ============================================================
+// FORMATTING HELPERS (identical to index.html)
+// ============================================================
+function fmtPct(v, decimals = 2) {
+  if (v === null || v === undefined) return '—';
+  return v.toFixed(decimals) + '%';
+}
+
+function carClass(v) {
+  if (v === null || v === undefined) return 'text-slate-300';
+  if (v >  0.05) return 'text-emerald-600';
+  if (v < -0.05) return 'text-rose-600';
+  return 'text-slate-500';
+}
+
+function hitClass(hit, base) {
+  if (hit === null || hit === undefined) return 'text-slate-300';
+  if (hit >= base)        return 'text-emerald-600';
+  if (hit < base * 0.85)  return 'text-rose-600';
+  return 'text-slate-700';
+}
+
+// ============================================================
+// SCOREBOARD (identical logic to index.html)
+// ============================================================
+function renderScoreboard() {
+  if (!state.signals) return;
+  const horizonData = state.signals.horizon_aggregates[state.horizon];
+  if (!horizonData) return;
+
+  const { base_rate, signals } = horizonData;
+  const tbody = document.getElementById('scoreboardBody');
+  const rows  = [];
+
+  SIGNAL_ORDER.forEach(sid => {
+    const sig       = (signals && signals[sid]) ? signals[sid] : null;
+    const depStatus = state.signalStatus[sid];
+    const effStatus = depStatus === 'deprecated' ? 'deprecated' : (sig ? sig.status : 'gated');
+    const isGated   = effStatus === 'gated' || effStatus === 'deprecated';
+    const isKill    = effStatus === 'kill?';
+    const rowBg     = isKill ? 'kill-row' : '';
+
+    // N cell
+    let tradesHtml = '—';
+    if (sig && sig.trades !== null) {
+      tradesHtml = `${sig.trades}`;
+      if (sig.trades < 20) tradesHtml += ` <span class="ml-0.5 text-amber-600" title="N<20 — preliminary, wait for more firings">&#9888;</span>`;
+    }
+
+    // Hit / Base cell
+    let hitHtml = '—';
+    if (!isGated && sig && sig.hit_pct !== null) {
+      const hc = hitClass(sig.hit_pct, base_rate);
+      hitHtml = `<span class="${hc}">${sig.hit_pct.toFixed(1)}%</span> / ${base_rate.toFixed(1)}%`;
+    }
+
+    // Median CAR
+    let medHtml = '<span class="text-slate-300">—</span>';
+    if (!isGated && sig && sig.median_car !== null) {
+      medHtml = `<span class="${carClass(sig.median_car)}">${fmtPct(sig.median_car)}</span>`;
+    }
+
+    // Mean CAR
+    let meanHtml = '<span class="text-slate-300">—</span>';
+    if (!isGated && sig && sig.mean_car !== null) {
+      meanHtml = `<span class="${carClass(sig.mean_car)}">${fmtPct(sig.mean_car)}</span>`;
+      if (sig.outlier_flag) {
+        meanHtml += ` <span class="text-amber-600" title="Outlier — top single trade may dominate; review Stage 4.5">&#9888;</span>`;
+      }
+    }
+
+    // Edge
+    let edgeHtml = '<span class="text-slate-300">—</span>';
+    if (!isGated && sig && sig.edge !== null) {
+      edgeHtml = `<span class="${carClass(sig.edge)}">${fmtPct(sig.edge)}</span>`;
+    }
+
+    // Sparkline + status + deprecate
+    const sparkHtml = isGated ? renderSparkline(null, sid) : renderSparkline(sig ? sig.sparkline : null, sid);
+    const pillHtml  = renderStatusPill(effStatus);
+    const depDisabled = isGated || effStatus === 'deprecated';
+    const depHtml = `<button class="dep-btn" data-sid="${sid}" onclick="onDeprecateClick(event)"
+      title="Stop new evaluations of this signal. Existing firings preserved."
+      ${depDisabled ? 'disabled' : ''}>Deprecate</button>`;
+
+    rows.push(`
+      <tr class="border-t border-slate-100 hover:bg-indigo-50 ${rowBg}">
+        <td class="px-3 py-2">${renderBadge(sid)}</td>
+        <td class="px-3 py-2 text-right">${tradesHtml}</td>
+        <td class="px-3 py-2 text-right">${hitHtml}</td>
+        <td class="px-3 py-2 text-right">${medHtml}</td>
+        <td class="px-3 py-2 text-right">${meanHtml}</td>
+        <td class="px-3 py-2 text-right">${edgeHtml}</td>
+        <td class="px-3 py-2 flex justify-center items-center">${sparkHtml}</td>
+        <td class="px-3 py-2">${pillHtml}</td>
+        <td class="px-3 py-2 text-center">${depHtml}</td>
+      </tr>`);
+  });
+
+  tbody.innerHTML = rows.join('');
+
+  // Footer caption
+  const hlLabel = HORIZON_LABELS[state.horizon] || state.horizon;
+  const baseStr = base_rate.toFixed(1);
+  document.getElementById('scoreboardFooter').innerHTML =
+    `Window: ${hlLabel} &nbsp;&middot;&nbsp; base rate ${baseStr}% = % of random ${hlLabel} FTSE All-Share holds positive.
+     Hit % shows percent of trades that beat that base. &#9888; = N&lt;20 or single-outlier domination.
+     ${state.horizon === 't90' ? '<br><em>Base rate at T+90 is artifactually high (trailing bull run) &mdash; interpret hit-% comparison cautiously.</em>' : ''}`;
+}
+
+// ============================================================
+// DIAGNOSTICS CHART (§1.2.3 + U2)
+// ============================================================
+function buildDiagChart() {
+  if (!state.signals) return;
+
+  // Destroy any existing chart so we start clean (safe for horizon changes)
+  if (diagChart) { diagChart.destroy(); diagChart = null; }
+
+  const horizonData = state.signals.horizon_aggregates[state.horizon];
+  const series      = horizonData && horizonData.diagnostics_series;
+
+  const canvas  = document.getElementById('diagChart');
+  const emptyEl = document.getElementById('diagChartEmpty');
+
+  if (!series) {
+    // No series data: show empty overlay
+    canvas.style.display = 'none';
+    emptyEl.classList.remove('hidden');
+    emptyEl.classList.add('flex');
+    document.getElementById('diagLegend').innerHTML = '';
+    return;
+  }
+
+  // Data present — show canvas, hide overlay
+  canvas.style.display = '';
+  emptyEl.classList.add('hidden');
+  emptyEl.classList.remove('flex');
+
+  // Build datasets
+  const datasets = DIAG_DATASETS_META.map(ds => ({
+    label:       ds.label,
+    data:        (series[ds.key] && series[ds.key].length === 13) ? series[ds.key] : Array(13).fill(null),
+    borderColor: ds.color,
+    borderWidth: ds.width,
+    borderDash:  ds.dash,
+    tension:     ds.dash.length ? 0 : 0.3,
+    pointRadius: 0,
+    fill:        false,
+    _origColor:  ds.color,   // stored for interactive legend reset
+    _origWidth:  ds.width
+  }));
+
+  diagChart = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: { labels: DIAG_X_LABELS, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 10 }, color: '#94a3b8' }
+        },
+        y: {
+          grid: { color: '#f1f5f9' },
+          ticks: {
+            font: { size: 10 },
+            color: '#64748b',
+            callback: v => v.toFixed(1) + '%'
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },  // we build a custom HTML legend
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: ctx => ctx.dataset.label + ': ' +
+              (ctx.parsed.y !== null ? ctx.parsed.y.toFixed(2) + '%' : '—')
+          }
+        }
+      },
+      interaction: { mode: 'index', intersect: false }
+    }
+  });
+
+  // Store original colours, then build interactive legend (U2)
+  diagChart.data.datasets.forEach(d => { d._origColor = d.borderColor; d._origWidth = d.borderWidth; });
+  buildDiagLegend(diagChart);
+}
+
+// ============================================================
+// INTERACTIVE LEGEND (U2 — per stage-05-roadmap-v1.md §U2)
+// ============================================================
+function buildDiagLegend(chart) {
+  const el = document.getElementById('diagLegend');
+  el.innerHTML = '';
+
+  chart.data.datasets.forEach((ds, i) => {
+    const meta      = DIAG_DATASETS_META[i];
+    const isDashed  = meta.dash && meta.dash.length > 0;
+
+    // Swatch: solid or dashed stripe
+    const swatchStyle = isDashed
+      ? `background: repeating-linear-gradient(90deg, ${meta.color} 0 5px, transparent 5px 8px); height: 2px; margin-top: 1px;`
+      : `background: ${meta.color};`;
+
+    const item = document.createElement('span');
+    item.className = 'leg-item';
+    item.innerHTML =
+      `<span class="leg-swatch" style="${swatchStyle}"></span>` +
+      `<span>${ds.label}</span>`;
+
+    item.addEventListener('click', () => {
+      const isActive = item.classList.contains('active');
+
+      // Reset all datasets to original colours + widths
+      chart.data.datasets.forEach((d, j) => {
+        d.borderColor = d._origColor;
+        d.borderWidth = d._origWidth;
+      });
+      el.querySelectorAll('.leg-item').forEach(x => x.classList.remove('active'));
+
+      if (!isActive) {
+        // Highlight clicked, fade others (FTSE never below 60%)
+        chart.data.datasets.forEach((d, j) => {
+          const isFtas   = j === FTAS_IDX;
+          const isTarget = j === i;
+          if (isTarget) {
+            d.borderColor = d._origColor;
+            d.borderWidth = 3;
+          } else if (isFtas) {
+            d.borderColor = d._origColor + '99';  // 60% opacity
+            d.borderWidth = d._origWidth;
+          } else {
+            d.borderColor = d._origColor + '26';  // 15% opacity
+            d.borderWidth = d._origWidth;
+          }
+        });
+        item.classList.add('active');
+      }
+
+      chart.update('none'); // skip animation
+    });
+
+    el.appendChild(item);
+  });
+}
+
+// ============================================================
+// COHORT CUTS
+// ============================================================
+function renderCohortCuts() {
+  if (!state.signals) return;
+  const cohorts = state.signals.cohorts || null;
+  renderCohortValueChart(cohorts);
+  renderSectorList(cohorts);
+}
+
+function renderCohortValueChart(cohorts) {
+  const canvas  = document.getElementById('cohortValueChart');
+  const emptyEl = document.getElementById('cohortValueEmpty');
+  const byValue = cohorts && cohorts.by_value_bucket;
+
+  if (!byValue) {
+    canvas.style.display = 'none';
+    emptyEl.classList.remove('hidden');
+    emptyEl.classList.add('flex');
+    return;
+  }
+
+  canvas.style.display = '';
+  emptyEl.classList.add('hidden');
+  emptyEl.classList.remove('flex');
+
+  const BUCKETS = [
+    { key: '1k-25k',    label: '£1–25k'    },
+    { key: '25k-100k',  label: '£25–100k'  },
+    { key: '100k-500k', label: '£100–500k' },
+    { key: '500k+',     label: '£500k+'    }
+  ];
+
+  const data   = BUCKETS.map(b => byValue[b.key] !== undefined ? byValue[b.key] : null);
+  const colors = data.map(v => v === null ? '#e2e8f0' : v >= 0 ? '#10b981' : '#ef4444');
+
+  if (cohortChart) { cohortChart.destroy(); cohortChart = null; }
+
+  cohortChart = new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: BUCKETS.map(b => b.label),
+      datasets: [{
+        data,
+        backgroundColor: colors,
+        borderRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: {
+          ticks: {
+            font: { size: 10 },
+            callback: v => v.toFixed(2) + '%'
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.parsed.y !== null
+              ? ctx.parsed.y.toFixed(2) + '%'
+              : 'N too small'
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderSectorList(cohorts) {
+  const list    = document.getElementById('sectorList');
+  const sectors = cohorts && cohorts.by_sector;
+
+  if (!sectors || sectors.length === 0) {
+    list.innerHTML = `<li class="text-xs text-slate-400">Sector mapping not yet wired — see Stage 4.6.</li>`;
+    return;
+  }
+
+  // Reference: T+21 base rate
+  const hd21     = state.signals && state.signals.horizon_aggregates && state.signals.horizon_aggregates['t21'];
+  const baseRate = hd21 ? hd21.base_rate : 51;
+
+  const items = sectors.slice(0, 5).map(s => {
+    const hit     = s.hit_pct || 0;
+    const bgCls   = hit >= baseRate ? 'bg-emerald-400' : 'bg-rose-400';
+    const sector  = s.sector || 'Unknown';
+    const trimmed = sector.length > 18 ? sector.slice(0, 18) + '…' : sector;
+    return `<li class="flex items-center gap-2 text-xs">
+      <span class="w-28 shrink-0 truncate text-slate-700" title="${sector}">${trimmed}</span>
+      <div class="flex-1 h-3 bg-slate-100 rounded-sm relative">
+        <div class="absolute inset-y-0 left-0 rounded-sm ${bgCls}" style="width:${Math.min(hit,100)}%"></div>
+        <div class="absolute inset-y-0" style="left:${Math.min(baseRate,100)}%;width:1px;background:#475569"
+             title="Base rate ${baseRate.toFixed(1)}%"></div>
+      </div>
+      <span class="tabular-nums text-slate-700 w-10 text-right shrink-0">${hit.toFixed(1)}%</span>
+    </li>`;
+  });
+
+  list.innerHTML = items.join('');
+}
+
+// ============================================================
+// MODEL ASSESSMENT (auto-computed from signals.json)
+// ============================================================
+function renderModelAssessment() {
+  const el = document.getElementById('modelAssessment');
+  if (!state.signals) { el.innerHTML = '<span class="text-slate-400">No data.</span>'; return; }
+
+  const h90   = state.signals.horizon_aggregates && state.signals.horizon_aggregates['t90'];
+  const h21   = state.signals.horizon_aggregates && state.signals.horizon_aggregates['t21'];
+
+  if (!h90 && !h21) {
+    el.innerHTML = '<span class="text-slate-400">No horizon data available for assessment.</span>';
+    return;
+  }
+
+  const kills   = [];
+  const watches = [];
+  const caveats = [];
+
+  SIGNAL_ORDER.forEach(sid => {
+    const sig90  = h90 && h90.signals && h90.signals[sid];
+    const base90 = h90 ? h90.base_rate : null;
+
+    // Skip gated signals
+    if (!sig90 || sig90.status === 'gated') return;
+
+    const n90   = sig90.trades || 0;
+    const mean  = sig90.mean_car;
+    const hit   = sig90.hit_pct;
+
+    // Kill rule: N≥20, mean<0 AND hit<base at T+90
+    if (n90 >= 20 && mean !== null && mean < 0 && hit !== null && base90 !== null && hit < base90) {
+      kills.push({ sid, n: n90, mean, hit, base: base90 });
+    }
+    // Watch rule: N≥20 and one (but not both) kill flags
+    else if (n90 >= 20 && ((mean !== null && mean < 0) || (hit !== null && base90 !== null && hit < base90))) {
+      watches.push({ sid, n: n90, mean, hit });
+    }
+
+    // Caveats: outlier flag
+    if (sig90.outlier_flag) {
+      caveats.push(`${sid.toUpperCase()}: outlier domination at T+90 — single trade may distort mean`);
+    }
+    // Caveats: small N
+    if (n90 > 0 && n90 < 20) {
+      caveats.push(`${sid.toUpperCase()}: N=${n90} at T+90 — preliminary, wait for more firings before acting`);
+    }
+  });
+
+  let html = '';
+
+  if (kills.length) {
+    html += `<div><p class="font-medium text-rose-700 mb-1">Kill candidates</p><ul class="space-y-1">`;
+    kills.forEach(k => {
+      html += `<li class="flex items-start gap-1.5">
+        <span class="text-rose-500 mt-0.5 shrink-0">●</span>
+        <span>${renderBadge(k.sid)} — N=${k.n}, mean net CAR ${fmtPct(k.mean)}, hit ${k.hit.toFixed(1)}% vs base ${k.base.toFixed(1)}%</span>
+      </li>`;
+    });
+    html += `</ul></div>`;
+  }
+
+  if (watches.length) {
+    html += `<div><p class="font-medium text-amber-700 mb-1">Watch</p><ul class="space-y-1">`;
+    watches.forEach(w => {
+      const hitStr = w.hit !== null ? w.hit.toFixed(1) + '%' : '—';
+      html += `<li class="flex items-start gap-1.5">
+        <span class="text-amber-500 mt-0.5 shrink-0">●</span>
+        <span>${renderBadge(w.sid)} — N=${w.n}, mean ${fmtPct(w.mean)}, hit ${hitStr}</span>
+      </li>`;
+    });
+    html += `</ul></div>`;
+  }
+
+  if (caveats.length) {
+    html += `<div><p class="font-medium text-slate-600 mb-1">Caveats</p><ul class="space-y-1">`;
+    caveats.slice(0, 8).forEach(c => {
+      html += `<li class="flex items-start gap-1.5">
+        <span class="text-slate-400 mt-0.5 shrink-0">●</span>
+        <span class="text-slate-600">${c}</span>
+      </li>`;
+    });
+    html += `</ul></div>`;
+  }
+
+  if (!html) {
+    html = `<div class="text-emerald-700">All signals within tolerance at current data volume.</div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+// ============================================================
+// FOOTER
+// ============================================================
+function renderFooter() {
+  if (!state.signals) return;
+  const d   = new Date(state.signals.generated_at);
+  const ts  = d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
+  const sha = document.querySelector('meta[name="build-sha"]')?.content || 'local';
+  document.getElementById('pageFooter').textContent = `Generated ${ts} · build ${sha}`;
+}
+
+// ============================================================
+// DEPRECATE FLOW (identical to index.html)
+// ============================================================
+function onDeprecateClick(e) {
+  const sid = e.currentTarget.dataset.sid;
+  const m   = SIGNAL_META[sid];
+  if (!m) return;
+  document.getElementById('modalTitle').innerHTML = `Deprecate ${renderBadge(sid)}?`;
+  document.getElementById('modalBody').innerHTML =
+    `This will write <code class="bg-slate-100 px-1 rounded">${sid} = "deprecated"</code> to
+     <code class="bg-slate-100 px-1 rounded">.data/signal_status.json</code>.<br><br>
+     The signal engine will skip <strong>${m.label}</strong> on its next eval pass.
+     Existing fired rows in the signals table are preserved.<br><br>
+     This is reversible — edit <code class="bg-slate-100 px-1 rounded">signal_status.json</code> by hand to undeprecate.`;
+  document.getElementById('modalConfirm').onclick = () => confirmDeprecate(sid);
+  document.getElementById('deprecateModal').classList.add('open');
+}
+
+function hideModal() {
+  document.getElementById('deprecateModal').classList.remove('open');
+}
+
+async function confirmDeprecate(sid) {
+  const btn = document.querySelector(`button[data-sid="${sid}"]`);
+  if (btn) {
+    btn.disabled = true;
+    const row = btn.closest('tr');
+    if (row) row.classList.add('opacity-50', 'pointer-events-none');
+  }
+  hideModal();
+
+  try {
+    const resp = await fetch('http://127.0.0.1:8765/api/deprecate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ signal_id: sid, deprecated_by: 'dashboard-ui', timestamp: new Date().toISOString() })
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      state.signalStatus[sid] = 'deprecated';
+      renderScoreboard();
+      showToast(`Signal ${sid.toUpperCase()} deprecated.`, false);
+    } else {
+      if (btn) { btn.disabled = false; const row = btn.closest('tr'); if (row) row.classList.remove('opacity-50','pointer-events-none'); }
+      showToast(`Could not deprecate ${sid}: ${data.error}. Edit .data/signal_status.json manually.`, true);
+    }
+  } catch (err) {
+    if (btn) { btn.disabled = false; const row = btn.closest('tr'); if (row) row.classList.remove('opacity-50','pointer-events-none'); }
+    showToast('Sidecar not running. Run: python -m dashboard.api', true);
+  }
+}
+
+// ============================================================
+// TOAST (identical to index.html)
+// ============================================================
+function showToast(msg, isError) {
+  const cls = isError ? 'bg-rose-600' : 'bg-emerald-600';
+  const dur = isError ? 6000 : 3000;
+  const div = document.createElement('div');
+  div.className = `toast ${cls} text-white text-xs px-4 py-2 rounded shadow-lg pointer-events-auto max-w-xs`;
+  div.textContent = msg;
+  document.getElementById('toastContainer').appendChild(div);
+  setTimeout(() => div.remove(), dur);
+}
+
+// Close modal on backdrop click
+document.getElementById('deprecateModal').addEventListener('click', function(e) {
+  if (e.target === this) hideModal();
+});
+</script>
+
+</body>
+</html>

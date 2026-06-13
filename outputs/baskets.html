@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-sha" content="local">
+<title>Basket Report — Small-Cap Conviction</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+
+<style>
+  html, body { background:#f8fafc; color:#0f172a; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .pulse-highlight { animation: pulseBg 2s ease-out 1; }
+  @keyframes pulseBg {
+    0%   { background-color: #fef3c7; }
+    100% { background-color: transparent; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+<header class="border-b border-slate-200 bg-white px-4 sm:px-6 h-auto min-h-[48px] py-2 sm:py-0 sm:h-12 flex items-center justify-between gap-2">
+<h1 class="text-sm font-semibold text-slate-900 tracking-tight min-w-0 truncate">Basket Report — Small-Cap Conviction</h1>
+<nav class="flex items-center flex-shrink-0"><button id="refreshBtn" type="button" class="text-xs px-2.5 py-1 rounded border border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5" title="Run the full refresh pipeline (scrape -> parse -> backfill -> eval -> rebuild). Slow (~15+ min) and uses LLM credits."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span id="refreshBtnLabel">Refresh</span></button><a href="index.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Today</a> <a href="performance_small.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Small Cap</a> <a href="performance_large.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Large Cap</a> <a href="performance.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">All</a> <a href="baskets.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Baskets</a> <a href="/review" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Review</a></nav>
+</header>
+<main class="max-w-7xl mx-auto">
+
+<div class="px-4 sm:px-6 py-6">
+
+  <!-- Page header -->
+  <div class="mb-6">
+    <h2 class="text-xl font-bold text-slate-900">
+      Basket Report &mdash; Small-Cap Conviction
+    </h2>
+    <p class="text-sm text-slate-500 mt-1">
+      Pre-registered signal baskets, ranked by median net CAR at T+90
+      vs FTSE All-Share / AIM benchmark. Small-cap = market cap &lt; &pound;500m.
+    </p>
+  </div>
+
+  <!-- Basket cards -->
+  <div class="max-w-4xl">
+    <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-5 mb-4"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] font-medium text-slate-400 bg-slate-100 rounded px-1.5 py-0.5">#1</span> <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">n = 127</span></div><h2 class="text-base font-semibold text-slate-900 mt-1">NED buyers — small cap</h2><p class="text-xs text-slate-500 mt-0.5">Non-executive director buying, market cap &lt; £500m</p></div></div><div class="flex items-center gap-0 divide-x divide-slate-100 mt-3"><div class="text-center px-4"><div class="text-xs text-slate-500 mb-0.5">Median net CAR T+21</div><div class="text-2xl font-bold tabular-nums text-rose-600">-3.70%</div></div><div class="text-center px-4"><div class="text-xs text-slate-500 mb-0.5">Median net CAR T+90</div><div class="text-2xl font-bold tabular-nums text-rose-600">-4.99%</div></div><div class="flex items-center gap-0 divide-x divide-slate-100"><div class="text-center px-3"><div class="text-xs text-slate-500 mb-0.5">% pos T+21</div><div class="text-base font-semibold tabular-nums text-rose-600">32%</div></div><div class="text-center px-3"><div class="text-xs text-slate-500 mb-0.5">% pos T+90</div><div class="text-base font-semibold tabular-nums text-rose-600">37%</div></div></div></div><details class="mt-3"><summary class="text-xs text-slate-500 cursor-pointer hover:text-slate-700 select-none">Latest 10 firings &#9660;</summary><div class="mt-3 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-[11px] text-slate-400 uppercase tracking-wide"><th class="py-1 px-2 font-medium">Date</th><th class="py-1 px-2 font-medium">Ticker</th><th class="py-1 px-2 font-medium text-right">Value</th><th class="py-1 px-2 font-medium text-right">T+21 CAR</th><th class="py-1 px-2 font-medium text-right">T+90 CAR</th><th class="py-1 px-2 font-medium text-right">Mkt Cap</th></tr></thead><tbody><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-06-04</td><td class="py-1 px-2"><a href="companies/PANR.html" class="text-blue-600 hover:underline font-mono text-xs">PANR</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;730k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;239m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-06-04</td><td class="py-1 px-2"><a href="companies/VLG.html" class="text-blue-600 hover:underline font-mono text-xs">VLG</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;55k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;80m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-06-02</td><td class="py-1 px-2"><a href="companies/GSCU.html" class="text-blue-600 hover:underline font-mono text-xs">GSCU</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;21k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;22m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-06-02</td><td class="py-1 px-2"><a href="companies/UTL.html" class="text-blue-600 hover:underline font-mono text-xs">UTL</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;70k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;187m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-06-01</td><td class="py-1 px-2"><a href="companies/CLX.html" class="text-blue-600 hover:underline font-mono text-xs">CLX</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;20k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;60m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-28</td><td class="py-1 px-2"><a href="companies/BPM.html" class="text-blue-600 hover:underline font-mono text-xs">BPM</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;50k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;247m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-22</td><td class="py-1 px-2"><a href="companies/EPP.html" class="text-blue-600 hover:underline font-mono text-xs">EPP</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;10k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;20m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-21</td><td class="py-1 px-2"><a href="companies/TMG.html" class="text-blue-600 hover:underline font-mono text-xs">TMG</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;15k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;16m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-20</td><td class="py-1 px-2"><a href="companies/TMG.html" class="text-blue-600 hover:underline font-mono text-xs">TMG</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;11k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;16m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-15</td><td class="py-1 px-2"><a href="companies/CHRY.html" class="text-blue-600 hover:underline font-mono text-xs">CHRY</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;53k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;366m</td></tr></tbody></table></div></details></div><div class="bg-white rounded-lg border border-slate-200 shadow-sm p-5 mb-4"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] font-medium text-slate-400 bg-slate-100 rounded px-1.5 py-0.5">#2</span> <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">n = 438</span></div><h2 class="text-base font-semibold text-slate-900 mt-1">First-time buyers — small cap</h2><p class="text-xs text-slate-500 mt-0.5">Director&#x27;s first recorded buy in this company, market cap &lt; £500m</p></div></div><div class="flex items-center gap-0 divide-x divide-slate-100 mt-3"><div class="text-center px-4"><div class="text-xs text-slate-500 mb-0.5">Median net CAR T+21</div><div class="text-2xl font-bold tabular-nums text-rose-600">-2.75%</div></div><div class="text-center px-4"><div class="text-xs text-slate-500 mb-0.5">Median net CAR T+90</div><div class="text-2xl font-bold tabular-nums text-rose-600">-9.89%</div></div><div class="flex items-center gap-0 divide-x divide-slate-100"><div class="text-center px-3"><div class="text-xs text-slate-500 mb-0.5">% pos T+21</div><div class="text-base font-semibold tabular-nums text-rose-600">33%</div></div><div class="text-center px-3"><div class="text-xs text-slate-500 mb-0.5">% pos T+90</div><div class="text-base font-semibold tabular-nums text-rose-600">24%</div></div></div></div><details class="mt-3"><summary class="text-xs text-slate-500 cursor-pointer hover:text-slate-700 select-none">Latest 10 firings &#9660;</summary><div class="mt-3 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-[11px] text-slate-400 uppercase tracking-wide"><th class="py-1 px-2 font-medium">Date</th><th class="py-1 px-2 font-medium">Ticker</th><th class="py-1 px-2 font-medium text-right">Value</th><th class="py-1 px-2 font-medium text-right">T+21 CAR</th><th class="py-1 px-2 font-medium text-right">T+90 CAR</th><th class="py-1 px-2 font-medium text-right">Mkt Cap</th></tr></thead><tbody><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-06-04</td><td class="py-1 px-2"><a href="companies/PANR.html" class="text-blue-600 hover:underline font-mono text-xs">PANR</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;730k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;239m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-06-02</td><td class="py-1 px-2"><a href="companies/GSCU.html" class="text-blue-600 hover:underline font-mono text-xs">GSCU</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;21k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;22m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-06-02</td><td class="py-1 px-2"><a href="companies/QUBE.html" class="text-blue-600 hover:underline font-mono text-xs">QUBE</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;16k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;18m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-06-01</td><td class="py-1 px-2"><a href="companies/CLX.html" class="text-blue-600 hover:underline font-mono text-xs">CLX</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;20k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;60m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-06-01</td><td class="py-1 px-2"><a href="companies/CAD.html" class="text-blue-600 hover:underline font-mono text-xs">CAD</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;660</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;10m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-30</td><td class="py-1 px-2"><a href="companies/CLI.html" class="text-blue-600 hover:underline font-mono text-xs">CLI</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;462</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;185m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-29</td><td class="py-1 px-2"><a href="companies/ULTP.html" class="text-blue-600 hover:underline font-mono text-xs">ULTP</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;13k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;37m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-29</td><td class="py-1 px-2"><a href="companies/NIOX.html" class="text-blue-600 hover:underline font-mono text-xs">NIOX</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;20k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;253m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-28</td><td class="py-1 px-2"><a href="companies/ULTP.html" class="text-blue-600 hover:underline font-mono text-xs">ULTP</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;12k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;37m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-28</td><td class="py-1 px-2"><a href="companies/OPTI.html" class="text-blue-600 hover:underline font-mono text-xs">OPTI</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;10k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;6m</td></tr></tbody></table></div></details></div><div class="bg-white rounded-lg border border-slate-200 shadow-sm p-5 mb-4"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] font-medium text-slate-400 bg-slate-100 rounded px-1.5 py-0.5">#3</span> <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">n = 273</span></div><h2 class="text-base font-semibold text-slate-900 mt-1">Cluster buyers — small cap</h2><p class="text-xs text-slate-500 mt-0.5">Multiple directors buying within 30 days, market cap &lt; £500m</p></div></div><div class="flex items-center gap-0 divide-x divide-slate-100 mt-3"><div class="text-center px-4"><div class="text-xs text-slate-500 mb-0.5">Median net CAR T+21</div><div class="text-2xl font-bold tabular-nums text-rose-600">-3.04%</div></div><div class="text-center px-4"><div class="text-xs text-slate-500 mb-0.5">Median net CAR T+90</div><div class="text-2xl font-bold tabular-nums text-rose-600">-10.97%</div></div><div class="flex items-center gap-0 divide-x divide-slate-100"><div class="text-center px-3"><div class="text-xs text-slate-500 mb-0.5">% pos T+21</div><div class="text-base font-semibold tabular-nums text-rose-600">29%</div></div><div class="text-center px-3"><div class="text-xs text-slate-500 mb-0.5">% pos T+90</div><div class="text-base font-semibold tabular-nums text-rose-600">21%</div></div></div></div><details class="mt-3"><summary class="text-xs text-slate-500 cursor-pointer hover:text-slate-700 select-none">Latest 10 firings &#9660;</summary><div class="mt-3 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-[11px] text-slate-400 uppercase tracking-wide"><th class="py-1 px-2 font-medium">Date</th><th class="py-1 px-2 font-medium">Ticker</th><th class="py-1 px-2 font-medium text-right">Value</th><th class="py-1 px-2 font-medium text-right">T+21 CAR</th><th class="py-1 px-2 font-medium text-right">T+90 CAR</th><th class="py-1 px-2 font-medium text-right">Mkt Cap</th></tr></thead><tbody><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-06-03</td><td class="py-1 px-2"><a href="companies/SHI.html" class="text-blue-600 hover:underline font-mono text-xs">SHI</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;2k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;94m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-30</td><td class="py-1 px-2"><a href="companies/CLI.html" class="text-blue-600 hover:underline font-mono text-xs">CLI</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;462</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;185m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-29</td><td class="py-1 px-2"><a href="companies/ULTP.html" class="text-blue-600 hover:underline font-mono text-xs">ULTP</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;13k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;37m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-29</td><td class="py-1 px-2"><a href="companies/EMAN.html" class="text-blue-600 hover:underline font-mono text-xs">EMAN</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;24k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;34m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-28</td><td class="py-1 px-2"><a href="companies/ULTP.html" class="text-blue-600 hover:underline font-mono text-xs">ULTP</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;12k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;37m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-28</td><td class="py-1 px-2"><a href="companies/SHI.html" class="text-blue-600 hover:underline font-mono text-xs">SHI</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;17k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;94m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-27</td><td class="py-1 px-2"><a href="companies/YNGA.html" class="text-blue-600 hover:underline font-mono text-xs">YNGA</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;20k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;457m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-27</td><td class="py-1 px-2"><a href="companies/CLI.html" class="text-blue-600 hover:underline font-mono text-xs">CLI</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;9k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;185m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-26</td><td class="py-1 px-2"><a href="companies/YNGA.html" class="text-blue-600 hover:underline font-mono text-xs">YNGA</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;10k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;457m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-22</td><td class="py-1 px-2"><a href="companies/SHI.html" class="text-blue-600 hover:underline font-mono text-xs">SHI</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;9k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;94m</td></tr></tbody></table></div></details></div><div class="bg-white rounded-lg border border-slate-200 shadow-sm p-5 mb-4"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] font-medium text-slate-400 bg-slate-100 rounded px-1.5 py-0.5">#4</span> <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-700 border border-amber-300">n = 11</span></div><h2 class="text-base font-semibold text-slate-900 mt-1">Chair buyers — small cap</h2><p class="text-xs text-slate-500 mt-0.5">Chairman buying, market cap &lt; £500m</p></div></div><div class="flex items-center gap-0 divide-x divide-slate-100 mt-3"><div class="text-center px-4"><div class="text-xs text-slate-500 mb-0.5">Median net CAR T+21</div><div class="text-2xl font-bold tabular-nums text-rose-600">-6.98%</div></div><div class="text-center px-4"><div class="text-xs text-slate-500 mb-0.5">Median net CAR T+90</div><div class="text-2xl font-bold tabular-nums text-rose-600">-25.71%</div></div><div class="flex items-center gap-0 divide-x divide-slate-100"><div class="text-center px-3"><div class="text-xs text-slate-500 mb-0.5">% pos T+21</div><div class="text-base font-semibold tabular-nums text-rose-600">33%</div></div><div class="text-center px-3"><div class="text-xs text-slate-500 mb-0.5">% pos T+90</div><div class="text-base font-semibold tabular-nums text-slate-700">50%</div></div></div></div><div class="mt-3 px-3 py-2 rounded bg-amber-50 border border-amber-200 text-xs text-amber-800 flex items-start gap-2"><span class="font-bold shrink-0">&#9888;</span><span>Insufficient data for statistical confidence (n = 11, need n &ge; 30). Stats shown for completeness only.</span></div><details class="mt-3"><summary class="text-xs text-slate-500 cursor-pointer hover:text-slate-700 select-none">Latest 10 firings &#9660;</summary><div class="mt-3 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-left text-[11px] text-slate-400 uppercase tracking-wide"><th class="py-1 px-2 font-medium">Date</th><th class="py-1 px-2 font-medium">Ticker</th><th class="py-1 px-2 font-medium text-right">Value</th><th class="py-1 px-2 font-medium text-right">T+21 CAR</th><th class="py-1 px-2 font-medium text-right">T+90 CAR</th><th class="py-1 px-2 font-medium text-right">Mkt Cap</th></tr></thead><tbody><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-28</td><td class="py-1 px-2"><a href="companies/ASC.html" class="text-blue-600 hover:underline font-mono text-xs">ASC</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;246k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;331m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-14</td><td class="py-1 px-2"><a href="companies/ASAI.html" class="text-blue-600 hover:underline font-mono text-xs">ASAI</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;50k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;192m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-05-01</td><td class="py-1 px-2"><a href="companies/RWA.html" class="text-blue-600 hover:underline font-mono text-xs">RWA</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;28k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-rose-600">&#9660; -6.98%</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;57m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-04-30</td><td class="py-1 px-2"><a href="companies/ATOM.html" class="text-blue-600 hover:underline font-mono text-xs">ATOM</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;2.9m</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-rose-600">&#9660; -19.47%</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;53m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-04-28</td><td class="py-1 px-2"><a href="companies/RWA.html" class="text-blue-600 hover:underline font-mono text-xs">RWA</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;29k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-rose-600">&#9660; -12.63%</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;57m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-04-17</td><td class="py-1 px-2"><a href="companies/BRK.html" class="text-blue-600 hover:underline font-mono text-xs">BRK</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;99k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-rose-600">&#9660; -2.14%</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;205m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-03-25</td><td class="py-1 px-2"><a href="companies/BIRD.html" class="text-blue-600 hover:underline font-mono text-xs">BIRD</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;49k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-emerald-600">&#9650; +5.46%</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;9m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-03-24</td><td class="py-1 px-2"><a href="companies/YOU.html" class="text-blue-600 hover:underline font-mono text-xs">YOU</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;48k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-emerald-600">&#9650; +9.26%</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;248m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2026-02-03</td><td class="py-1 px-2"><a href="companies/SYS.html" class="text-blue-600 hover:underline font-mono text-xs">SYS</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;100k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-rose-600">&#9660; -8.85%</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-slate-300">-</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;15m</td></tr><tr class="border-t border-slate-100 hover:bg-slate-50"><td class="py-1 px-2 text-xs text-slate-500">2025-10-08</td><td class="py-1 px-2"><a href="companies/CPAI.html" class="text-blue-600 hover:underline font-mono text-xs">CPAI</a></td><td class="py-1 px-2 text-xs text-right tabular-nums">&pound;77k</td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-rose-600">&#9660; -33.16%</span></td><td class="py-1 px-2 text-xs text-right tabular-nums"><span class="text-rose-600">&#9660; -76.13%</span></td><td class="py-1 px-2 text-xs text-right tabular-nums text-slate-500">&pound;3m</td></tr></tbody></table></div></details></div>
+  </div>
+
+  <!-- Footer caveat -->
+  <div class="max-w-4xl mt-6 p-4 rounded bg-slate-50 border border-slate-200 text-xs text-slate-500">
+    <strong class="text-slate-700">Methodology note:</strong>
+    Performance is historical and net of 50 bps spread + 0.5% stamp duty on Main Market buys.
+    Median used (not mean) to reduce outlier distortion. Baskets with n &lt; 30
+    are marked with a warning badge and lack statistical significance.
+    Not investment advice.
+  </div>
+
+</div>
+
+</main>
+<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-06-07 18:48 UTC &middot; build local</footer>
+
+<script>
+(function(){
+  const $ = function(id){ return document.getElementById(id); };
+  let pollTimer = null;
+  let lastStatus = 'idle';
+
+  function setBtn(label, disabled){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    const lab = $('refreshBtnLabel');
+    if (lab) lab.textContent = label;
+    btn.disabled = !!disabled;
+    btn.classList.toggle('opacity-60', !!disabled);
+    btn.classList.toggle('cursor-not-allowed', !!disabled);
+  }
+  function showToast(msg, ok){
+    const t = document.createElement('div');
+    t.className = (ok ? 'bg-emerald-600' : 'bg-rose-600')
+      + ' fixed bottom-4 right-4 text-white text-xs px-4 py-2 rounded shadow-lg z-50';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, ok ? 4000 : 8000);
+  }
+  function startPolling(){
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(pollStatus, 5000);
+    pollStatus();
+  }
+  function stopPolling(){
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+  function pollStatus(){
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        lastStatus = s.status || 'idle';
+        if (lastStatus === 'running'){
+          const step = s.step_label || s.step || 'Working...';
+          setBtn('Refreshing - ' + step, true);
+        } else if (lastStatus === 'done'){
+          stopPolling();
+          showToast('Refresh complete. Reloading...', true);
+          setTimeout(function(){ window.location.reload(); }, 800);
+        } else if (lastStatus === 'error'){
+          stopPolling();
+          setBtn('Refresh', false);
+          showToast('Refresh failed: ' + (s.error || 'unknown'), false);
+        } else {
+          setBtn('Refresh', false);
+        }
+      }).catch(function(){ /* swallow */ });
+  }
+  function closeModal(){
+    const m = $('refreshModal');
+    if (m) m.remove();
+  }
+  function openConfirmModal(){
+    const modal = document.createElement('div');
+    modal.id = 'refreshModal';
+    modal.className = 'fixed inset-0 bg-slate-900/40 flex items-center '
+      + 'justify-center z-50';
+    modal.innerHTML =
+      '<div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">'
+      + '<h3 class="text-sm font-semibold text-slate-900 mb-2">'
+      + 'Run full refresh pipeline?</h3>'
+      + '<p class="text-xs text-slate-700 mb-3 leading-relaxed">'
+      + 'This will run the 6-step pipeline end-to-end:</p>'
+      + '<ol class="text-xs text-slate-700 mb-4 list-decimal pl-5 space-y-1">'
+      + '<li>Scrape Investegate RNS (last 60 days)</li>'
+      + '<li>Backfill share prices (Yahoo)</li>'
+      + '<li>Update sector benchmarks</li>'
+      + '<li>Recompute signal firings</li>'
+      + '<li>Rebuild signals/dealings JSON</li>'
+      + '<li>Regenerate dashboard HTML</li>'
+      + '</ol>'
+      + '<div class="bg-amber-50 border border-amber-200 rounded p-3 mb-4">'
+      + '<p class="text-[11px] text-amber-800 font-medium mb-1">'
+      + 'Heads up</p>'
+      + '<p class="text-[11px] text-amber-700 leading-relaxed">'
+      + 'Takes ~15-30 min. The scrape step uses Anthropic LLM credits '
+      + '(budget cap ~$50/run, set in run_scrape.py). Yahoo Finance may '
+      + 'rate-limit if run too often.</p>'
+      + '</div>'
+      + '<label class="flex items-center gap-2 text-xs text-slate-700 mb-4">'
+      + '<input id="refreshNoLlm" type="checkbox" class="rounded">'
+      + 'Skip LLM fallback (regex-only parsing)'
+      + '</label>'
+      + '<div class="flex justify-end gap-2">'
+      + '<button id="refreshCancel" class="px-3 py-1.5 text-xs border '
+      + 'border-slate-300 rounded text-slate-600 hover:bg-slate-50">'
+      + 'Cancel</button>'
+      + '<button id="refreshConfirm" class="px-3 py-1.5 text-xs '
+      + 'bg-indigo-600 text-white rounded hover:bg-indigo-700">'
+      + 'Run pipeline</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+    $('refreshCancel').onclick = closeModal;
+    $('refreshConfirm').onclick = function(){
+      const noLlm = $('refreshNoLlm').checked;
+      closeModal();
+      setBtn('Starting...', true);
+      fetch('/api/refresh-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ no_llm: noLlm })
+      }).then(function(resp){
+        if (resp.status === 409){
+          showToast('A refresh is already running.', false);
+        } else if (!resp.ok){
+          throw new Error('HTTP ' + resp.status);
+        } else {
+          showToast('Refresh started.', true);
+        }
+        startPolling();
+      }).catch(function(err){
+        setBtn('Refresh', false);
+        var hint = err.message;
+        if (/failed to fetch/i.test(hint)){
+          hint = 'server unreachable. Run `python server.py` and visit '
+            + 'http://localhost:5000 in your browser.';
+        }
+        showToast('Could not start refresh: ' + hint, false);
+      });
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    // If the page was opened via file://, no Flask server is reachable.
+    // Disable the button and tell the user how to fix it -- silent
+    // "Failed to fetch" errors are the #1 confusion point.
+    if (window.location.protocol === 'file:'){
+      setBtn('Refresh (start server)', true);
+      btn.title = 'This page was opened from disk (file://). Run '
+        + '`python server.py` and visit http://localhost:5000 to enable '
+        + 'the Refresh button.';
+      btn.addEventListener('click', function(){
+        showToast('Open http://localhost:5000 (run python server.py first) '
+          + 'to use Refresh.', false);
+      });
+      return;
+    }
+    btn.addEventListener('click', openConfirmModal);
+    // On load, check status -- if running, attach to existing pipeline.
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        if (s.status === 'running'){
+          setBtn('Refreshing - ' + (s.step_label || 'Working...'), true);
+          startPolling();
+        }
+      }).catch(function(err){
+        // Server unreachable on a non-file:// page -- the server died
+        // or is on a different host. Tell the user something useful.
+        setBtn('Refresh (server down)', true);
+        btn.title = 'Could not reach /api/refresh-status. Is the Flask '
+          + 'server still running? Try restarting `python server.py`.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

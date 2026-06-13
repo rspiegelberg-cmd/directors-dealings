@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOCKUP · Performance (v1 redesign)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <style>
+    body { font-family: ui-sans-serif, system-ui, sans-serif; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    .mock-banner { background: #fef3c7; border-bottom: 1px solid #fde68a; }
+    tr.clickable { position: relative; }
+    tr.clickable .chev {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      opacity: 0; transition: opacity 0.15s; color: #94a3b8; pointer-events: none;
+    }
+    tr.clickable:hover .chev { opacity: 0.6; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<!-- MOCKUP BANNER -->
+<div class="mock-banner px-4 py-1.5 text-[11px] text-amber-800 text-center">
+  <i class="ti ti-eye"></i> <strong>MOCKUP</strong> &mdash; visual design preview, no live data. See <code>docs/specs/performance-page-redesign-v1.md</code>.
+</div>
+
+<!-- ===================== HEADER (matches existing performance.html) ===================== -->
+<header class="border-b border-slate-200 bg-white px-6 h-12 flex items-center justify-between sticky top-0 z-40">
+  <div class="flex items-center gap-3">
+    <a href="#" class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">&larr; Today</a>
+    <span class="text-slate-300 text-xs">|</span>
+    <h1 class="text-sm font-semibold text-slate-900 tracking-tight">Performance</h1>
+  </div>
+  <div class="text-xs flex items-center gap-1.5 px-3 py-1 rounded-full border bg-emerald-50 border-emerald-300 text-emerald-700">
+    <i class="ti ti-refresh text-sm"></i>
+    <span>Updated 14 min ago</span>
+    <span class="text-[10px] opacity-60">14:00 UTC</span>
+  </div>
+  <div class="flex items-center gap-2">
+    <span class="text-xs text-slate-500">Horizon:</span>
+    <select class="text-xs border border-slate-300 rounded px-2 py-1 bg-white tabular-nums">
+      <option>T+1 (next session)</option>
+      <option selected>T+21 (&asymp;1 month)</option>
+      <option>T+90 (&asymp;4.5 months)</option>
+      <option>T+252 (&asymp;1 year)</option>
+    </select>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===================== REGIME WARNING ===================== -->
+  <section class="m-6 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-3">
+    <i class="ti ti-alert-triangle text-amber-600 text-lg shrink-0 mt-0.5"></i>
+    <div class="text-xs text-amber-900 leading-relaxed">
+      <strong>Regime caveat:</strong> the trailing-12-month T+90 base rate is 98.9% (FTSE All-Share rose almost monotonically).
+      Every tier underperforms the index by 12&ndash;15 pp in this regime &mdash; the signals aren't differentiating, the regime is.
+      <strong>Kill-rule verdicts at T+90 are suspended pending regime-normalised view.</strong>
+      Use T+21 medians for any deprecation decision in v1.1.
+    </div>
+  </section>
+
+  <!-- ===================== Per-signal scoreboard (UNCHANGED — placeholder summary) ===================== -->
+  <section class="m-6 bg-white border border-slate-200 rounded-lg p-4 text-[11px] text-slate-500 italic">
+    &lt;Per-signal scoreboard, diagnostics chart and model-assessment panel sit here &mdash; no design change in v1.&gt;
+  </section>
+
+  <!-- ===================== COHORT CUTS (THREE TILES — THIS IS THE REDESIGN) ===================== -->
+  <h2 class="m-6 mb-2 text-[11px] uppercase tracking-wider text-slate-500 font-semibold">Cohort cuts</h2>
+  <div class="m-6 mt-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+
+    <!-- ============ TILE 1: BY TRANSACTION VALUE ============ -->
+    <section class="bg-white border border-slate-200 rounded-lg p-4" data-tile="bucket">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h3 class="text-xs uppercase tracking-wide text-slate-500">By transaction size</h3>
+          <p class="text-[10px] text-slate-400 italic mt-0.5">T1 + T2 buys only</p>
+        </div>
+        <select class="text-[11px] border border-slate-300 rounded px-1.5 py-0.5 bg-white tabular-nums text-slate-600">
+          <option selected>90 d</option>
+          <option>6 m</option>
+          <option>1 y</option>
+          <option>all</option>
+        </select>
+      </div>
+      <table class="w-full text-xs tabular-nums">
+        <thead class="text-slate-500 uppercase tracking-wide text-[10px] border-b border-slate-200">
+          <tr>
+            <th class="text-left px-2 py-1.5 font-medium">Bucket</th>
+            <th class="text-right px-2 py-1.5 font-medium">N</th>
+            <th class="text-right px-2 py-1.5 font-medium">Hit %</th>
+            <th class="text-right px-2 py-1.5 font-medium">Median CAR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">£1&ndash;25k</td>
+            <td class="px-2 py-2 text-right text-slate-700">12 <span class="text-amber-600" title="N<20 preliminary">&#9888;</span></td>
+            <td class="px-2 py-2 text-right text-rose-600">41.7%</td>
+            <td class="px-2 py-2 text-right text-rose-600">&minus;1.2%<span class="chev">&rsaquo;</span></td>
+          </tr>
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">£25&ndash;100k</td>
+            <td class="px-2 py-2 text-right text-slate-700">33</td>
+            <td class="px-2 py-2 text-right text-emerald-600">54.5%</td>
+            <td class="px-2 py-2 text-right text-emerald-600">+0.4%<span class="chev">&rsaquo;</span></td>
+          </tr>
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">£100&ndash;500k</td>
+            <td class="px-2 py-2 text-right text-slate-700">28</td>
+            <td class="px-2 py-2 text-right text-rose-600">39.3%</td>
+            <td class="px-2 py-2 text-right text-rose-600">&minus;1.9%<span class="chev">&rsaquo;</span></td>
+          </tr>
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">£500k+</td>
+            <td class="px-2 py-2 text-right text-slate-700">18 <span class="text-amber-600" title="N<20">&#9888;</span></td>
+            <td class="px-2 py-2 text-right text-rose-600">44.4%</td>
+            <td class="px-2 py-2 text-right text-rose-600">&minus;1.7%<span class="chev">&rsaquo;</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-[10px] text-slate-400 mt-2">N=91 over 90 d &middot; &searr; rows clickable</p>
+    </section>
+
+    <!-- ============ TILE 2: BY DIRECTOR ROLE (NEW) ============ -->
+    <section class="bg-white border border-slate-200 rounded-lg p-4" data-tile="role">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h3 class="text-xs uppercase tracking-wide text-slate-500">By director role</h3>
+          <p class="text-[10px] text-emerald-700 italic mt-0.5">NEW</p>
+        </div>
+        <select class="text-[11px] border border-slate-300 rounded px-1.5 py-0.5 bg-white tabular-nums text-slate-600">
+          <option selected>90 d</option>
+          <option>6 m</option>
+          <option>1 y</option>
+          <option>all</option>
+        </select>
+      </div>
+      <table class="w-full text-xs tabular-nums">
+        <thead class="text-slate-500 uppercase tracking-wide text-[10px] border-b border-slate-200">
+          <tr>
+            <th class="text-left px-2 py-1.5 font-medium">Role</th>
+            <th class="text-right px-2 py-1.5 font-medium">N</th>
+            <th class="text-right px-2 py-1.5 font-medium">Hit %</th>
+            <th class="text-right px-2 py-1.5 font-medium">Median CAR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">CEO / CFO</td>
+            <td class="px-2 py-2 text-right text-slate-700">27</td>
+            <td class="px-2 py-2 text-right text-emerald-600">52.6%</td>
+            <td class="px-2 py-2 text-right text-slate-500">+0.1%<span class="chev">&rsaquo;</span></td>
+          </tr>
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">Other exec</td>
+            <td class="px-2 py-2 text-right text-slate-700">71</td>
+            <td class="px-2 py-2 text-right text-emerald-600">56.3%</td>
+            <td class="px-2 py-2 text-right text-slate-500">+0.2%<span class="chev">&rsaquo;</span></td>
+          </tr>
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">NED</td>
+            <td class="px-2 py-2 text-right text-slate-700">212</td>
+            <td class="px-2 py-2 text-right text-emerald-600">51.9%</td>
+            <td class="px-2 py-2 text-right text-slate-500">+0.1%<span class="chev">&rsaquo;</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-[10px] text-slate-400 mt-2">N=310 over 90 d &middot; &searr; rows clickable</p>
+    </section>
+
+    <!-- ============ TILE 3: BY SECTOR (REDESIGNED — top + bottom) ============ -->
+    <section class="bg-white border border-slate-200 rounded-lg p-4" data-tile="sector">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h3 class="text-xs uppercase tracking-wide text-slate-500">By sector</h3>
+          <p class="text-[10px] text-slate-400 italic mt-0.5">Top 3 + bottom 2 (was: top 5)</p>
+        </div>
+        <select class="text-[11px] border border-slate-300 rounded px-1.5 py-0.5 bg-white tabular-nums text-slate-600">
+          <option selected>90 d</option>
+          <option>6 m</option>
+          <option>1 y</option>
+          <option>all</option>
+        </select>
+      </div>
+      <table class="w-full text-xs tabular-nums">
+        <thead class="text-slate-500 uppercase tracking-wide text-[10px] border-b border-slate-200">
+          <tr>
+            <th class="text-left px-2 py-1.5 font-medium">Sector</th>
+            <th class="text-right px-2 py-1.5 font-medium">N</th>
+            <th class="text-right px-2 py-1.5 font-medium">Hit %</th>
+            <th class="text-right px-2 py-1.5 font-medium">Median</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Top 3 -->
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">
+              <span class="text-emerald-600 mr-1">&#9650;</span>Materials
+            </td>
+            <td class="px-2 py-2 text-right text-slate-700">12 <span class="text-amber-600" title="N<20">&#9888;</span></td>
+            <td class="px-2 py-2 text-right text-emerald-600 font-medium">100%</td>
+            <td class="px-2 py-2 text-right text-emerald-600">+4.1%<span class="chev">&rsaquo;</span></td>
+          </tr>
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">Technology</td>
+            <td class="px-2 py-2 text-right text-slate-700">10 <span class="text-amber-600">&#9888;</span></td>
+            <td class="px-2 py-2 text-right text-slate-700">50.0%</td>
+            <td class="px-2 py-2 text-right text-slate-500">&minus;0.3%<span class="chev">&rsaquo;</span></td>
+          </tr>
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">Industrials</td>
+            <td class="px-2 py-2 text-right text-slate-700">18 <span class="text-amber-600">&#9888;</span></td>
+            <td class="px-2 py-2 text-right text-rose-600">44.4%</td>
+            <td class="px-2 py-2 text-right text-rose-600">&minus;0.7%<span class="chev">&rsaquo;</span></td>
+          </tr>
+          <!-- Divider -->
+          <tr>
+            <td colspan="4" class="border-t border-dashed border-slate-300 py-1 text-[10px] text-slate-400 italic px-2 text-center">
+              &mdash; lowest performers below &mdash;
+            </td>
+          </tr>
+          <!-- Bottom 2 -->
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">Utilities</td>
+            <td class="px-2 py-2 text-right text-slate-700">23</td>
+            <td class="px-2 py-2 text-right text-rose-600">21.7%</td>
+            <td class="px-2 py-2 text-right text-rose-600">&minus;2.1%<span class="chev">&rsaquo;</span></td>
+          </tr>
+          <tr class="clickable border-t border-slate-100 cursor-pointer hover:bg-indigo-50">
+            <td class="px-2 py-2 text-slate-700">
+              <span class="text-rose-600 mr-1">&#9660;</span>Health Care
+            </td>
+            <td class="px-2 py-2 text-right text-slate-700">10 <span class="text-amber-600">&#9888;</span></td>
+            <td class="px-2 py-2 text-right text-rose-600 font-medium">0.0%</td>
+            <td class="px-2 py-2 text-right text-rose-600">&minus;3.4%<span class="chev">&rsaquo;</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-[10px] text-slate-400 mt-2">5 of 73 sectors &middot; &searr; click any row for company list</p>
+    </section>
+
+  </div>
+
+  <!-- Demo nav -->
+  <div class="m-6 p-3 bg-indigo-50 border border-indigo-200 rounded text-xs text-indigo-900">
+    <strong>Try the drill-downs:</strong>
+    <a class="underline hover:no-underline" href="performance-bucket-preview.html">transaction-size page</a>
+    &middot;
+    <a class="underline hover:no-underline" href="performance-role-preview.html">director-role page</a>
+    &middot;
+    <a class="underline hover:no-underline" href="performance-sector-preview.html">sector page</a>
+    &mdash; or click any cohort row above.
+  </div>
+
+</main>
+
+<footer class="px-6 py-3 text-right text-[11px] text-slate-400">
+  MOCKUP &middot; static preview &middot; 2026-05-18
+</footer>
+
+<script>
+// Wire each cohort tile's rows to its drill-down page.
+// In production the renderer will set data-href per-row with query params
+// (e.g. ?bucket=100-500k, ?role=NED, ?sector=Materials).
+const TILE_DESTINATIONS = {
+  bucket: 'performance-bucket-preview.html',
+  role:   'performance-role-preview.html',
+  sector: 'performance-sector-preview.html'
+};
+document.querySelectorAll('section[data-tile]').forEach(section => {
+  const dest = TILE_DESTINATIONS[section.dataset.tile];
+  if (!dest) return;
+  section.querySelectorAll('tr.clickable').forEach(tr => {
+    tr.addEventListener('click', () => window.location.href = dest);
+  });
+});
+</script>
+
+</body>
+</html>

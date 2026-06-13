@@ -1,0 +1,14 @@
+{
+  "_doc": "B-003 / B-001 regression: 3 data rows -> 3 extractions (not 1). Locked in by Sprint 3's table-aware parser.",
+  "ticker_hint": "MRH",
+  "extracted_count": 3,
+  "rows": [
+    {"date": "2024-08-13", "shares": 100, "director": "Bob Sample"},
+    {"date": "2025-02-12", "shares": 200, "director": "Bob Sample"},
+    {"date": "2025-08-13", "shares": 300, "director": "Bob Sample"}
+  ],
+  "warnings_must_not_contain": [
+    "required_fields_missing",
+    "could_not_parse_tx_date"
+  ]
+}

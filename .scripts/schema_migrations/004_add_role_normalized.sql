@@ -1,0 +1,16 @@
+-- Migration 004: add role_normalized column to transactions.
+-- Idempotent: db.py checks PRAGMA table_info before applying.
+--
+-- role_normalized: One of the 14 canonical buckets used for role-conditional
+--                  signal firing (or the data-quality flag "Parser fragment").
+--                  Populated by .scripts/role_normalize.normalize_role() from
+--                  the raw `role` string. NULL until the backfill runs.
+--
+-- Canonical buckets (see docs/specs/role-normalization-pass.md):
+--   CEO, CFO, Other Chief, Chair (executive), Non-Exec Chair, NED,
+--   Executive Director, Divisional / Regional Exec, Founder, President / VP,
+--   Company Secretary / General Counsel, PCA, PDMR-only, Other.
+--   Plus: Parser fragment (data-quality flag, not a signal bucket).
+--
+-- Raw `role` column is untouched and remains the audit trail.
+ALTER TABLE transactions ADD COLUMN role_normalized TEXT;

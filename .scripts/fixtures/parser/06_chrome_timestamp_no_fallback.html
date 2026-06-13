@@ -1,0 +1,31 @@
+<!doctype html>
+<html><head><title>Test Fixture: page chrome dates must NOT win silently</title></head><body>
+<!--
+  B-003 regression: prior to the 2026-05-15 parser fix, when the label-
+  based date extractor failed, the fallback was `max(candidates)` over
+  every date-like substring in the document — which silently picked up
+  the page chrome's release timestamp instead of the actual transaction
+  date. The fixture below has NO 'Date of transaction' label anywhere
+  and several plausible-looking dates in the page header / footer.
+  Expected behaviour: parser fails closed (could_not_parse_tx_date),
+  it does NOT silently extract the chrome timestamp.
+-->
+<header>
+  <div>Released: 18 May 2026 09:00 BST</div>
+  <div>Investegate / RNS feed</div>
+</header>
+<table>
+  <tr><td>Name</td><td>Chrome Test plc</td></tr>
+  <tr><td>Nature of the transaction</td><td>Acquisition of ordinary shares</td></tr>
+</table>
+<!-- A transaction table BUT with no recognisable Date column header.
+     The parser's table-aware path will reject this; the legacy path
+     should then fail closed without grabbing the header timestamp. -->
+<table>
+  <tr><th>When</th><th>Who</th><th>What</th><th>How much</th><th>How many</th></tr>
+  <tr><td>5 May 2026</td><td>Eve Failsafe</td><td>NED</td><td>£1.00</td><td>50</td></tr>
+</table>
+<footer>
+  <div>Page generated 19 May 2026</div>
+</footer>
+</body></html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html><head><title>Test Fixture: Layout B 'Full name of the entity'</title></head><body>
+<!--
+  B-003 fixture covering Pass 1 of _find_company_in_soup: the explicit
+  3-cell layout used by some FTSE filers ('Full name of the entity'
+  / 'Issuer name' / 'Name of the issuer'). Must NOT confuse the issuer
+  with the PDMR's own 'Name' field that follows. Layout B's PDMR row
+  is ['', 'Name', '<person>']; the 2-cell ['Name', '<company>'] Pass 2
+  fallback would mis-extract there if invoked, so this fixture also
+  verifies Pass 1 wins.
+-->
+<table>
+  <!-- Issuer block (Layout B) -->
+  <tr><td>1.</td><td>Full name of the entity</td><td>Layout B Industries plc</td></tr>
+  <tr><td>2.</td><td>LEI</td><td>0000ABC123</td></tr>
+  <!-- PDMR block — Layout B's ['', 'Name', '<person>'] is the trap -->
+  <tr><td></td><td>Name</td><td>Carol Tester</td></tr>
+  <tr><td></td><td>Position</td><td>Chair</td></tr>
+  <tr><td></td><td>Nature of the transaction</td><td>Acquisition of ordinary shares</td></tr>
+</table>
+<table>
+  <tr>
+    <th>Date of transaction</th>
+    <th>Name</th>
+    <th>Position</th>
+    <th>Price</th>
+    <th>Volume</th>
+  </tr>
+  <tr>
+    <td>5 May 2026</td>
+    <td>Carol Tester</td>
+    <td>Chair</td>
+    <td>250.50p</td>
+    <td>500</td>
+  </tr>
+</table>
+</body></html>

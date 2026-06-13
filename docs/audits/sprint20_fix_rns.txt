@@ -1,0 +1,32 @@
+# Sprint 20 — scoped reparse list (rns_ids) for reparse_corpus.py --only-rns
+# Generated 2026-06-03 from a read-only DB query.
+# These are the AUDIT-BACKED wrong rows that HAVE a cached filing, so the
+# existing guards (R6 year-guard, R3 value-as-price) + the aggregate-volume
+# re-extraction can correct them in place. Scoped so the run stays far under
+# the 50% safety limit (no --force-safety-override needed).
+#
+# 14 = year-as-shares rows with a source filing (R6 rejects the bogus
+#      year-count; the aggregate path re-extracts the true volume).
+#  1 = WOSG value-as-price (price 66,643 = the total deal value; R3 rejects).
+#
+# Usage (Rupert, PowerShell — take a fresh .bak first):
+#   python .scripts\reparse_corpus.py --only-rns docs\audits\sprint20_fix_rns.txt --preview
+#   # review the preview CSV + diff, then:
+#   python .scripts\reparse_corpus.py --only-rns docs\audits\sprint20_fix_rns.txt --confirm --delete-orphans
+#   # then rebuild: eval_signals -> backtest -> export_dashboard_json -> build_dashboard
+
+9144409
+9232348
+9322339
+9327444
+9411929
+9454462
+9458950
+9542004
+9551437
+9558243
+9574271
+9576177
+9581012
+9582727
+9592451

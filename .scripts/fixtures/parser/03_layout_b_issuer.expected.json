@@ -1,0 +1,9 @@
+{
+  "_doc": "B-003 fixture: Pass 1 of _find_company_in_soup must pick 'Layout B Industries plc' from the explicit issuer row, NOT 'Carol Tester' from the PDMR Name row.",
+  "ticker_hint": "LBI",
+  "extracted_count": 1,
+  "rows": [
+    {"date": "2026-05-05", "director": "Carol Tester", "company": "Layout B Industries plc"}
+  ],
+  "warnings_must_not_contain": ["could_not_extract_company"]
+}

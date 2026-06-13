@@ -1,0 +1,43 @@
+# Directors Dealings — local artefacts (never commit)
+# Public repo: only source code + the built dashboard (outputs/) belong here.
+
+# --- SQLite DB, journals, and ALL data (131MB DB lives local-only) ---
+.data/
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+*.db.bak
+
+# --- Secrets (NEVER commit) ---
+.env
+.env.*
+!.env.example
+
+# --- All transient/cache/data artefacts under .scripts/ ---
+# Project convention: underscore-prefixed names are local data, not code.
+# This one rule excludes _scrape_cache, _price_cache, _mktcap_cache,
+# _short_cache, _reporting_cache, _lse_diary_cache, _snapshots,
+# _pending_review.json (+ .bak/.corrupt variants), _resolved_pending.json,
+# _price_unit_fixes.jsonl, *_results.csv, etc.
+.scripts/_*
+# ...but keep underscore-prefixed Python source (diagnostic/one-off scripts)
+!.scripts/_*.py
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+
+# --- Editor / OS noise ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

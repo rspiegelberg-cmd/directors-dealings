@@ -1,0 +1,14 @@
+-- Migration 013: add resulting_shares column to transactions (B-156).
+-- Total beneficial holding AFTER the transaction, as stated in the filing
+-- ("Following this transaction X is beneficially interested in N shares"
+-- narratives, or classic "Resulting beneficial interest/holding" tables).
+-- NULL when the filing does not state the figure -- ~93% of the corpus uses
+-- the MAR Article 19 template, which has no resulting-holding field, so
+-- expect only ~10-15% of BUY rows populated. INTEGER share count, never a
+-- percentage. The derived metric
+--   holding_pct_increase = shares / (resulting_shares - shares)
+-- is a pure function of two stored columns and is computed at consumption
+-- time (backtest.py / export_dashboard_json.py), not stored (B-160 pattern).
+-- Simple ALTER TABLE (nullable column, no default -- no rebuild needed).
+-- Sprint 61 -- 2026-06-10.
+ALTER TABLE transactions ADD COLUMN resulting_shares INTEGER;

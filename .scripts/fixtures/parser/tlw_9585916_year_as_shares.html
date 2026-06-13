@@ -1,0 +1,58 @@
+<!doctype html>
+<html><head><title>Test Fixture: Tullow Oil (TLW) 9585916 — year-as-shares (Sprint 11 Fix #1)</title></head><body>
+<!--
+  Sprint 11 Fix #1 regression — TLW filing 9585916 (Richard Miller, CFO,
+  BUY 115,000 @ £0.17 on 22 May 2026) was stored in the DB as
+  shares=2026 because the table-aware parser's `_parse_volume_cell`
+  returned the first integer from the volume cell with no date-bleed
+  defence. Real-world cause: BeautifulSoup flattening a nested
+  Price(s)/Volume(s) sub-table such that the column the parser indexed
+  as "volume" contained only the year fragment of an adjacent date
+  cell — the real 115,000 lived in a different cell entirely.
+
+  This fixture is a synthetic minimal table that reproduces the bug
+  shape: a standard 5-column transaction header (Date / Name / Position
+  / Price / Volume), with one data row whose Volume cell is just
+  "2026" (the year from 22/05/2026 that bled in). The actual
+  115,000 share count is intentionally NOT in the Volume cell — it
+  cannot be recovered by the parser once the cell is malformed.
+
+  POST-FIX BEHAVIOUR (what this fixture verifies):
+    - `_parse_volume_cell("2026")` returns (0, ["volume_only_contained_dates"])
+      because `_looks_like_date_bleed(2026, "2026", 0.0)` fires
+      Trigger 2 (val in 1990..2099 AND only integer in the block).
+    - Row is then dropped by `parse_announcement` because shares=0
+      on a BUY → `required_fields_missing` → row not emitted.
+    - extracted_count == 0; the bad row no longer enters the DB.
+
+  PRE-FIX BEHAVIOUR (what the bug looked like):
+    - `_parse_volume_cell("2026")` returned (2026, [])
+    - Row stored with shares=2026, value=£344.42, fingerprint matched
+      the 38 DB rows in the year-as-shares bucket
+      (see docs/audits/audit_2026-05-27_initial.md).
+
+  The "real" 115,000 outcome lives on the unit-test side (see
+  `_parse_volume_cell` direct tests in test_parser.py) where a clean
+  "115,000" cell is asserted to return (115000, []).
+-->
+<table>
+  <tr><td>Name</td><td>Tullow Oil plc</td></tr>
+  <tr><td>Nature of the transaction</td><td>Acquisition of ordinary shares</td></tr>
+</table>
+<table>
+  <tr>
+    <th>Date of the transaction</th>
+    <th>Name</th>
+    <th>Position</th>
+    <th>Price</th>
+    <th>Volume</th>
+  </tr>
+  <tr>
+    <td>22 May 2026</td>
+    <td>Richard Miller</td>
+    <td>Chief Financial Officer</td>
+    <td>&pound;0.17</td>
+    <td>2026</td>
+  </tr>
+</table>
+</body></html>

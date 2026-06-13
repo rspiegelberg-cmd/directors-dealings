@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-sha" content="local">
+<title>SSE - SSE plc</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+<style>
+  html, body { background:#f8fafc; color:#0f172a; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .pulse-highlight { animation: pulseBg 2s ease-out 1; }
+  @keyframes pulseBg {
+    0%   { background-color: #fef3c7; }
+    100% { background-color: transparent; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+<header class="border-b border-slate-200 bg-white px-6 h-12 flex items-center justify-between">
+<h1 class="text-sm font-semibold text-slate-900 tracking-tight">SSE - SSE plc</h1>
+<nav class="flex items-center"><button id="refreshBtn" type="button" class="text-xs px-2.5 py-1 rounded border border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5" title="Run the full refresh pipeline (scrape -> parse -> backfill -> eval -> rebuild). Slow (~15+ min) and uses LLM credits."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span id="refreshBtnLabel">Refresh</span></button><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Today</a> <a href="../performance.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Performance</a></nav>
+</header>
+<main class="max-w-7xl mx-auto">
+<header class="border-b border-slate-200 bg-white px-6 py-4"><div class="flex items-center justify-between mb-1"><div class="flex items-center"><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 mr-4">&larr; Dashboard</a><h1 class="text-lg font-semibold text-slate-900 tabular-nums">SSE</h1><span class="text-sm text-slate-600 ml-2">SSE plc</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Utilities</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Main</span></div></div><div class="flex items-center justify-between"><div class="text-sm tabular-nums">Latest close: 23.61p <span class="text-emerald-600 ml-2">&#9650; +2.21%</span></div><div class="text-[10px] text-slate-400">Last refresh: 2026-05-19T12:00:32Z</div></div></header><section class="m-6 bg-white border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-center mb-3"><h2 class="text-xs uppercase tracking-wide text-slate-500">Price (trailing window)</h2></div><div class="relative h-72"><canvas id="priceChart"></canvas></div><div class="relative h-16 mt-1"><canvas id="volumeChart"></canvas></div><script>window.__priceData = {"dates":["2025-04-15","2025-04-16","2025-04-17","2025-04-22","2025-04-23","2025-04-24","2025-04-25","2025-04-28","2025-04-29","2025-04-30","2025-05-01","2025-05-02","2025-05-06","2025-05-07","2025-05-08","2025-05-09","2025-05-12","2025-05-13","2025-05-14","2025-05-15","2025-05-16","2025-05-19","2025-05-20","2025-05-21","2025-05-22","2025-05-23","2025-05-27","2025-05-28","2025-05-29","2025-05-30","2025-06-02","2025-06-03","2025-06-04","2025-06-05","2025-06-06","2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-07","2025-07-08","2025-07-09","2025-07-10","2025-07-11","2025-07-14","2025-07-15","2025-07-16","2025-07-17","2025-07-18","2025-07-21","2025-07-22","2025-07-23","2025-07-24","2025-07-25","2025-07-28","2025-07-29","2025-07-30","2025-07-31","2025-08-01","2025-08-04","2025-08-05","2025-08-06","2025-08-07","2025-08-08","2025-08-11","2025-08-12","2025-08-13","2025-08-14","2025-08-15","2025-08-18","2025-08-19","2025-08-20","2025-08-21","2025-08-22","2025-08-26","2025-08-27","2025-08-28","2025-08-29","2025-09-01","2025-09-02","2025-09-03","2025-09-04","2025-09-05","2025-09-08","2025-09-09","2025-09-10","2025-09-11","2025-09-12","2025-09-15","2025-09-16","2025-09-17","2025-09-18","2025-09-19","2025-09-22","2025-09-23","2025-09-24","2025-09-25","2025-09-26","2025-09-29","2025-09-30","2025-10-01","2025-10-02","2025-10-03","2025-10-06","2025-10-07","2025-10-08","2025-10-09","2025-10-10","2025-10-13","2025-10-14","2025-10-15","2025-10-16","2025-10-17","2025-10-20","2025-10-21","2025-10-22","2025-10-23","2025-10-24","2025-10-27","2025-10-28","2025-10-29","2025-10-30","2025-10-31","2025-11-03","2025-11-04","2025-11-05","2025-11-06","2025-11-07","2025-11-10","2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-17","2025-11-18","2025-11-19","2025-11-20","2025-11-21","2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-22","2025-12-23","2025-12-24","2025-12-29","2025-12-30","2025-12-31","2026-01-02","2026-01-05","2026-01-06","2026-01-07","2026-01-08","2026-01-09","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-19","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15","2026-05-18","2026-05-19"],"closes":[16.049847412109376,16.32975830078125,16.399735107421876,16.344752197265624,15.97487060546875,16.11290771484375,16.154813232421876,16.209796142578124,16.434722900390625,16.9145703125,17.064521484375,16.909571533203124,17.114505615234375,17.08951416015625,16.894576416015624,16.964554443359376,16.924566650390624,16.809603271484374,16.90457275390625,17.159490966796874,17.4443994140625,17.524373779296877,17.979228515625,17.554364013671876,17.424405517578126,17.514376220703124,17.54436767578125,17.419407958984376,17.424405517578126,17.60434814453125,17.6393359375,17.499381103515624,17.4144091796875,17.3544287109375,17.55936279296875,17.549366455078125,17.744302978515623,17.969229736328124,18.159169921875,18.1441748046875,18.24414306640625,18.179163818359374,18.159169921875,18.234146728515626,18.06919921875,18.33411376953125,18.783968505859374,18.46906982421875,18.30412353515625,18.294127197265624,18.30412353515625,18.40908935546875,18.14917236328125,18.649012451171874,18.67900390625,18.62402099609375,18.69899658203125,18.853946533203125,18.52905029296875,18.33411376953125,18.424085693359373,18.284129638671875,18.43408203125,18.484066162109375,18.828955078125,19.28380859375,19.693677978515623,19.113863525390624,18.513221435546875,18.528218994140627,18.388233642578125,18.49822265625,18.528218994140627,18.483223876953126,18.46822509765625,18.51822021484375,18.5482177734375,18.528218994140627,18.21324951171875,18.048265380859377,17.76329345703125,17.493319091796874,17.65330322265625,17.818287353515625,17.8332861328125,17.71329833984375,17.68830078125,17.853284912109373,17.9382763671875,17.9382763671875,17.853284912109373,17.80828857421875,17.543314208984373,17.29833740234375,16.763388671875,16.143448486328126,16.118450927734376,16.218441162109375,16.5134130859375,16.49341552734375,16.328431396484376,16.39342529296875,16.4184228515625,16.69339599609375,16.7233935546875,16.598404541015626,16.6683984375,16.653399658203124,16.6683984375,16.978367919921876,17.04836181640625,17.27333984375,17.09335693359375,17.178349609375,17.178349609375,17.413326416015625,17.66330322265625,17.3233349609375,17.4833203125,17.7382958984375,17.71329833984375,17.843284912109375,18.16825439453125,18.208250732421874,18.178253173828125,18.073262939453127,18.383233642578126,18.6432080078125,18.783194580078124,18.713201904296874,18.93318115234375,19.038170166015625,19.08316650390625,19.02817138671875,18.833189697265624,18.893184814453125,18.998173828125,19.243150634765627,19.1581591796875,19.003173828125,18.87818603515625,18.868187255859375,19.018172607421874,18.683204345703125,19.428133544921874,19.74310302734375,23.067783203125,22.62782470703125,22.267861328125,22.5078369140625,22.257861328125,21.92789306640625,21.857900390625,21.75791015625,21.27795654296875,21.50793212890625,21.91789306640625,22.01788330078125,21.97788818359375,22.057880859375,22.267861328125,22.267861328125,21.89,21.63,21.47,21.4,20.92,20.88,21.08,21.36,21.26,21.56,21.51,21.68,21.47,21.59,21.55,21.71,21.95,21.79,22.31,22.54,22.77,23.06,22.67,23.13,22.83,22.5,22.95,23.17,23.43,23.63,23.22,23.34,23.28,23.22,23.56,23.97,24.13,24.22,24.22,24.11,24.35,24.95,24.8,25.1,24.99,25.5,26.36,26.15,26.41,26.07,26.5,26.04,25.5,25.93,25.8,26.13,26.86,26.93,26.89,26.93,26.17,26.53,26.39,26.23,26.31,26.54,26.21,27.04,27.3,27.17,27.43,26.85,26.53,25.73,24.96,25.29,25.53,25.04,24.82,25.74,25.95,26.76,27.28,27.0,27.06,27.575,27.525,26.995,27.205,27.085,26.445,24.695,25.165,25.835,26.235,26.615,26.35,26.1,26.185,25.645,26.41,26.19,25.525,25.345,24.7775,25.05,25.03,24.8,24.5,24.59,22.71,23.1,23.61],"volumes":[2526867,2200210,1674826,1812267,1752034,2875694,1197288,1600615,1433187,3990164,1827992,2692769,2889763,2530243,4903074,1704235,1984231,2830359,1683541,2431532,4590343,2204657,10676709,6335187,9986655,6096156,5756323,4020434,1690407,6397176,2111934,2530931,2603601,1262501,2266257,1438842,1317558,3412395,2371203,1737128,3126608,7427215,1597119,1243914,5790112,1057429,6491973,7514321,2038624,2174062,2137458,1347653,1903713,1968088,1099042,1366953,2344400,2329865,5112666,5187187,14399094,3710142,1310235,1630808,2182845,2101611,2809104,3108598,2852166,7626420,1849127,1907828,5228331,8115285,1794955,2119827,1348260,1319974,2252849,2668630,2586646,3371176,6560779,2970457,2389799,1467431,1652628,1402903,1568601,1977825,2077353,2019039,2345002,2132810,4275327,3698638,3626249,3430502,2638395,2393758,1667685,1302182,1553369,1918549,1935287,2077450,1500967,2536556,5344125,3379447,2068011,3432340,3575377,2328002,2124800,1931329,3188965,3898659,1626525,1680734,2839535,3690342,3552899,1924030,1732593,1990988,2950691,3703032,14055814,4680371,2799220,2287549,1652941,3166771,1990691,2209855,2719049,3697966,1870315,1953292,2396662,3617692,2718695,2280605,3512241,3669625,9950222,10924456,5552524,14408368,4159924,5435146,5532949,7365649,18540598,2781713,7205839,3162857,3630871,5025662,4591229,2099510,2770026,3637782,2166484,1856368,3367319,4217761,3588626,3974394,2881872,4026322,2139732,4615162,1248523,1192167,205193,1447142,1404214,809839,1617070,1902165,2147490,2264229,1887352,2069947,983397,3139706,3279259,3432961,4195154,3516118,1787221,1225240,2928356,3644360,2068405,1927135,2846723,1775740,2635569,2900908,2649715,5126633,4010557,6562613,3708382,5054744,3474655,4016566,7525483,2459323,2204240,3857007,6330702,2797916,1636398,2676388,2013523,2486337,4820993,3106304,3211396,3629178,2948466,2386494,2500434,3238016,3598801,3417801,1786746,1521578,1779946,2826615,3790335,12790041,3649046,2841421,2477300,3011198,4697293,2865314,8786796,2799282,4160937,3261205,4654930,2591068,5911912,2212550,1721341,2300082,4124858,9612385,7026678,4113278,2600072,2863183,3384238,2204171,2204215,1920344,3639099,1164239,2703838,4942585,6313146,2260606,4936181,4995179,6809614,3909438,9313692,509389,460713],"markers":[{"date":"2026-05-06","type":"SIP","mtype":"grant","color":"#d97706","director":"SSE plc\nb","role":"As noted in 1a) above","shares":6,"price":0,"value":0,"signals":[],"fingerprint":"5004d64f8c8c26b5"},{"date":"2026-04-08","type":"SIP","mtype":"grant","color":"#d97706","director":"SSE plc\nb","role":"As noted in 1a) above","shares":8,"price":0,"value":0,"signals":[],"fingerprint":"debe1f5c29362f65"},{"date":"2026-04-02","type":"SIP","mtype":"grant","color":"#d97706","director":"SSE plc\nb","role":"As noted in 1a) above","shares":2,"price":26.752894,"value":53.51,"signals":[],"fingerprint":"02d5b50287cf8c55"},{"date":"2026-03-06","type":"SIP","mtype":"grant","color":"#d97706","director":"SSE plc\nb","role":"As noted in 1a) above","shares":6,"price":26.356496,"value":158.14,"signals":[],"fingerprint":"9fe409988ac25528"},{"date":"2026-02-12","type":"SELL","mtype":"sell","color":"#dc2626","director":"SSE plc\nb","role":"As noted in 1a) above","shares":50,"price":26.1379,"value":1306.89,"signals":[],"fingerprint":"0adbc40b85510354"},{"date":"2025-12-23","type":"SIP","mtype":"grant","color":"#d97706","director":"SSE plc\nb","role":"As noted in 1a) above","shares":23,"price":0,"value":0,"signals":[],"fingerprint":"aa43724eb1f29c8e"},{"date":"2025-12-08","type":"SELL","mtype":"sell","color":"#dc2626","director":"SSE plc\nb","role":"As noted in 1a) above","shares":50,"price":21.494,"value":1074.7,"signals":[],"fingerprint":"af2ed3e6803fabee"},{"date":"2025-11-06","type":"SIP","mtype":"grant","color":"#d97706","director":"SSE plc\nb","role":"As noted in 1a) above","shares":50,"price":0,"value":0,"signals":[],"fingerprint":"becf9864fc672295"},{"date":"2025-08-06","type":"SIP","mtype":"grant","color":"#d97706","director":"SSE plc\nb","role":"As noted in 1a) above","shares":50,"price":0,"value":0,"signals":[],"fingerprint":"23b167b9bf9b6ea7"},{"date":"2025-07-08","type":"SIP","mtype":"grant","color":"#d97706","director":"SSE plc\nb","role":"As noted in 1a) above","shares":50,"price":0,"value":0,"signals":[],"fingerprint":"a03718fc9b3dd7e8"},{"date":"2025-07-04","type":"SIP","mtype":"grant","color":"#d97706","director":"SSE plc\nb","role":"As noted in 1a) above","shares":50,"price":0,"value":0,"signals":[],"fingerprint":"df439289f1c82f75"},{"date":"2025-06-06","type":"SELL","mtype":"sell","color":"#dc2626","director":"SSE plc\nb","role":"As noted in 1a) above","shares":50,"price":0,"value":0,"signals":[],"fingerprint":"976ffb5fc61cfbc3"},{"date":"2025-06-06","type":"SIP","mtype":"grant","color":"#d97706","director":"SSE plc\nb","role":"As noted in 1a) above","shares":50,"price":0,"value":0,"signals":[],"fingerprint":"7ff70f4305dcd29e"},{"date":"2025-05-01","type":"SIP","mtype":"grant","color":"#d97706","director":"SSE plc\nb","role":"As noted in 1a) above","shares":50,"price":0,"value":0,"signals":[],"fingerprint":"feba72f9a8992ca0"}]};</script></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Transactions</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Date</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-left">Role</th><th class="px-3 py-2 text-left">Type</th><th class="px-3 py-2 text-right">Shares</th><th class="px-3 py-2 text-right">Price (p)</th><th class="px-3 py-2 text-right">Value (&pound;)</th><th class="px-3 py-2 text-left">Signals</th><th class="px-3 py-2 text-center">Source</th></tr></thead><tbody><tr id="txn-5004d64f8c8c26b5" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">06 May 2026</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">6</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9557818" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9557818">&#8599;</a></td></tr><tr id="txn-debe1f5c29362f65" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">08 Apr 2026</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">8</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9513373" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9513373">&#8599;</a></td></tr><tr id="txn-02d5b50287cf8c55" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">02 Apr 2026</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">2</td><td class="px-3 py-2 text-right tabular-nums">26.75</td><td class="px-3 py-2 text-right tabular-nums">&pound;54</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9508770" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9508770">&#8599;</a></td></tr><tr id="txn-9fe409988ac25528" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">06 Mar 2026</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">6</td><td class="px-3 py-2 text-right tabular-nums">26.36</td><td class="px-3 py-2 text-right tabular-nums">&pound;158</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9465427" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9465427">&#8599;</a></td></tr><tr id="txn-0adbc40b85510354" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">12 Feb 2026</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-100 text-rose-700">SELL</span></td><td class="px-3 py-2 text-right tabular-nums">50</td><td class="px-3 py-2 text-right tabular-nums">26.14</td><td class="px-3 py-2 text-right tabular-nums">&pound;1,307</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9428755" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9428755">&#8599;</a></td></tr><tr id="txn-aa43724eb1f29c8e" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">23 Dec 2025</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">23</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9324687" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9324687">&#8599;</a></td></tr><tr id="txn-af2ed3e6803fabee" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">08 Dec 2025</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-100 text-rose-700">SELL</span></td><td class="px-3 py-2 text-right tabular-nums">50</td><td class="px-3 py-2 text-right tabular-nums">21.49</td><td class="px-3 py-2 text-right tabular-nums">&pound;1,075</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9282809" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9282809">&#8599;</a></td></tr><tr id="txn-becf9864fc672295" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">06 Nov 2025</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">50</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9220214" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9220214">&#8599;</a></td></tr><tr id="txn-23b167b9bf9b6ea7" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">06 Aug 2025</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">50</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9038525" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9038525">&#8599;</a></td></tr><tr id="txn-a03718fc9b3dd7e8" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">08 Jul 2025</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">50</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/8971877" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/8971877">&#8599;</a></td></tr><tr id="txn-df439289f1c82f75" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">04 Jul 2025</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">50</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/8969658" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/8969658">&#8599;</a></td></tr><tr id="txn-976ffb5fc61cfbc3" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">06 Jun 2025</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-100 text-rose-700">SELL</span></td><td class="px-3 py-2 text-right tabular-nums">50</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/8924970" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/8924970">&#8599;</a></td></tr><tr id="txn-7ff70f4305dcd29e" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">06 Jun 2025</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">50</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/8919993" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/8919993">&#8599;</a></td></tr><tr id="txn-feba72f9a8992ca0" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">01 May 2025</td><td class="px-3 py-2 text-slate-700">SSE plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">As noted in 1a) above</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-500">SIP</span></td><td class="px-3 py-2 text-right tabular-nums">50</td><td class="px-3 py-2 text-right tabular-nums">0.00</td><td class="px-3 py-2 text-right tabular-nums">&pound;0</td><td class="px-3 py-2"><span class="text-slate-300">-</span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/8859738" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/8859738">&#8599;</a></td></tr></tbody></table></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Signal-firing history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No signals have fired for this ticker.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Cluster history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No clusters detected for this ticker.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="px-4 py-3 text-xs uppercase tracking-wide text-slate-500 border-b border-slate-100">Pending review &mdash; 16 SSE filings excluded from signals</h2><p class="px-4 pt-3 pb-1 text-xs text-slate-600 leading-relaxed">&#8627; PDMR announcements for this ticker the parser couldn't cleanly extract &mdash; usually genuine edge cases. Summary below.</p><table class="w-full text-xs tabular-nums" id="pendingDiagTicker"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left w-[55%]">Category</th><th class="px-3 py-2 text-right w-[12%]">Count</th><th class="px-3 py-2 text-right w-[10%]">%</th><th class="px-3 py-2 text-left w-[23%]">Recoverable?</th></tr></thead><tbody><tr class="border-t border-slate-100 odd:bg-slate-50"><td class="px-3 py-2 text-slate-700" title="Filing reports two or more distinct prices or transactions for the same PDMR -- needs row fan-out">Multi-tranche / multi-transaction</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">8</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">50.0%</td><td class="px-3 py-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-800">v2 (fan-out)</span></td></tr><tr class="border-t border-slate-100 odd:bg-slate-50"><td class="px-3 py-2 text-slate-700" title="Parser could not extract ticker / company / type / required fields -- case-by-case review">Could not classify / extract</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">7</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">43.8%</td><td class="px-3 py-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 text-amber-800">Manual</span></td></tr><tr class="border-t border-slate-100 odd:bg-slate-50"><td class="px-3 py-2 text-slate-700" title="Non-GBP filing -- needs FX rate fetcher">Foreign currency</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">1</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">6.2%</td><td class="px-3 py-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-800">v2 (FX)</span></td></tr></tbody></table><div class="text-[10px] text-slate-500 px-4 py-2 border-t border-slate-100">Recoverable column flags which buckets v2 parser work could unlock vs. which are case-by-case manual review.</div></section><footer class="px-6 py-4 text-[10px] text-slate-400 border-t border-slate-200"><p>Generated by build_dashboard.py 2026-05-19T12:00:32Z.</p><p>Data: Investegate RNS feed &middot; Yahoo Finance &middot; FTSE All-Share benchmark.</p><p class="mt-2">Historic insider-trading outcomes are not predictive. Net-of-cost CAR assumes 50bps round-trip + 0.5% UK stamp on non-AIM buys.</p></footer>
+<script>
+(function(){
+  const d = window.__priceData || {};
+  const dates = d.dates || [];
+  if (!dates.length) return;
+  const closes = d.closes || [];
+  const volumes = d.volumes || [];
+  const markers = d.markers || [];
+
+  // Build close-by-date map for marker yValue.
+  const closeMap = {};
+  dates.forEach(function(dt, i){ closeMap[dt] = closes[i]; });
+
+  // U4 vivid marker palette — keyed by mtype.
+  // exec_buy/ned_buy: triangle-up, white halo.
+  // sell: triangle-down, white halo.
+  // grant: square (rect), white halo.
+  // cluster: circle ring, violet stroke, no fill, drawn BEHIND transactions.
+  var MSTYLE = {
+    exec_buy: { label:'Exec Buy',   bg:'#16a34a',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:7,  ord:1 },
+    ned_buy:  { label:'NED Buy',    bg:'#4ade80',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:6,  ord:1 },
+    sell:     { label:'Sell',       bg:'#dc2626',        bc:'#ffffff', bw:3,   ps:'triangle', rot:180, r:7,  ord:1 },
+    grant:    { label:'Grant/SIP',  bg:'#d97706',        bc:'#ffffff', bw:2.5, ps:'rect',     rot:0,   r:5,  ord:1 },
+    cluster:  { label:'S1 Cluster', bg:'rgba(0,0,0,0)',  bc:'#7c3aed', bw:2.5, ps:'circle',   rot:0,   r:11, ord:2 }
+  };
+
+  // Group markers by mtype.
+  var markerDatasets = {};
+  markers.forEach(function(m){
+    var mtype = m.mtype || 'exec_buy';
+    if (!markerDatasets[mtype]){
+      var st = MSTYLE[mtype] || MSTYLE.exec_buy;
+      markerDatasets[mtype] = {
+        label: st.label,
+        type: 'scatter',
+        data: [],
+        backgroundColor: st.bg,
+        borderColor: st.bc,
+        borderWidth: st.bw,
+        pointStyle: st.ps,
+        rotation: st.rot,
+        pointRotation: st.rot,
+        radius: st.r,
+        hoverRadius: st.r + 2,
+        showLine: false,
+        order: st.ord,
+        _markers: []
+      };
+    }
+    var y = closeMap[m.date];
+    markerDatasets[mtype].data.push({ x: m.date, y: y });
+    markerDatasets[mtype]._markers.push(m);
+  });
+
+  const pCtx = document.getElementById('priceChart');
+  if (!pCtx) return;
+
+  // Price line first (order:0), then transaction markers (order:1),
+  // then cluster rings on top (order:2 — drawn last so ring encircles marker).
+  var markerList = Object.keys(markerDatasets)
+    .sort(function(a,b){ return (markerDatasets[a].order||1)-(markerDatasets[b].order||1); })
+    .map(function(k){ return markerDatasets[k]; });
+
+  const ds = [{
+    label: 'Close',
+    type: 'line',
+    data: dates.map(function(dt, i){ return { x: dt, y: closes[i] }; }),
+    borderColor: '#475569', borderWidth: 1.5, pointRadius: 0, tension: 0, order: 0
+  }].concat(markerList);
+
+  window.__priceChart = new Chart(pCtx, {
+    type: 'line',
+    data: { datasets: ds },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      parsing: false,
+      scales: {
+        x: { type: 'category', labels: dates, ticks: { maxRotation: 0, font: { size: 10 } } },
+        y: { ticks: { font: { size: 10 } } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx){
+              if (ctx.dataset.type !== 'scatter') return ctx.dataset.label + ': ' + ctx.parsed.y;
+              var idx = ctx.dataIndex;
+              var m = ctx.dataset._markers[idx] || {};
+              if (m.mtype === 'cluster'){
+                return ['S1 Cluster signal fired', 'Date: ' + m.date];
+              }
+              var lines = [];
+              if (m.director) lines.push(m.director + (m.role ? ' (' + m.role + ')' : ''));
+              lines.push(m.type + (m.shares ? ' ' + m.shares + ' sh @ ' + (m.price||0).toFixed(2) + 'p' : ''));
+              if (m.value) lines.push('£' + (m.value||0).toLocaleString());
+              if (m.signals && m.signals.length) lines.push('Signal: ' + m.signals.join(', '));
+              return lines;
+            }
+          }
+        }
+      },
+      onClick: function(evt, els){
+        if (!els.length) return;
+        var el = els[0];
+        var dataset = ds[el.datasetIndex];
+        if (!dataset || dataset.type !== 'scatter') return;
+        var m = dataset._markers[el.index];
+        // Cluster rings have no table row — skip scroll.
+        if (!m || !m.fingerprint || m.mtype === 'cluster') return;
+        var row = document.getElementById('txn-' + m.fingerprint);
+        if (row){
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          row.classList.add('pulse-highlight');
+          setTimeout(function(){ row.classList.remove('pulse-highlight'); }, 2000);
+        }
+      }
+    }
+  });
+
+  const vCtx = document.getElementById('volumeChart');
+  if (vCtx) {
+    window.__volChart = new Chart(vCtx, {
+      type: 'bar',
+      data: { labels: dates, datasets: [{ data: volumes, backgroundColor: '#cbd5e1' }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        }
+      }
+    });
+  }
+})();
+</script>
+
+</main>
+<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-05-19 12:00 UTC &middot; build local</footer>
+
+<script>
+(function(){
+  const $ = function(id){ return document.getElementById(id); };
+  let pollTimer = null;
+  let lastStatus = 'idle';
+
+  function setBtn(label, disabled){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    const lab = $('refreshBtnLabel');
+    if (lab) lab.textContent = label;
+    btn.disabled = !!disabled;
+    btn.classList.toggle('opacity-60', !!disabled);
+    btn.classList.toggle('cursor-not-allowed', !!disabled);
+  }
+  function showToast(msg, ok){
+    const t = document.createElement('div');
+    t.className = (ok ? 'bg-emerald-600' : 'bg-rose-600')
+      + ' fixed bottom-4 right-4 text-white text-xs px-4 py-2 rounded shadow-lg z-50';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, ok ? 4000 : 8000);
+  }
+  function startPolling(){
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(pollStatus, 5000);
+    pollStatus();
+  }
+  function stopPolling(){
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+  function pollStatus(){
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        lastStatus = s.status || 'idle';
+        if (lastStatus === 'running'){
+          const step = s.step_label || s.step || 'Working...';
+          setBtn('Refreshing - ' + step, true);
+        } else if (lastStatus === 'done'){
+          stopPolling();
+          showToast('Refresh complete. Reloading...', true);
+          setTimeout(function(){ window.location.reload(); }, 800);
+        } else if (lastStatus === 'error'){
+          stopPolling();
+          setBtn('Refresh', false);
+          showToast('Refresh failed: ' + (s.error || 'unknown'), false);
+        } else {
+          setBtn('Refresh', false);
+        }
+      }).catch(function(){ /* swallow */ });
+  }
+  function closeModal(){
+    const m = $('refreshModal');
+    if (m) m.remove();
+  }
+  function openConfirmModal(){
+    const modal = document.createElement('div');
+    modal.id = 'refreshModal';
+    modal.className = 'fixed inset-0 bg-slate-900/40 flex items-center '
+      + 'justify-center z-50';
+    modal.innerHTML =
+      '<div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">'
+      + '<h3 class="text-sm font-semibold text-slate-900 mb-2">'
+      + 'Run full refresh pipeline?</h3>'
+      + '<p class="text-xs text-slate-700 mb-3 leading-relaxed">'
+      + 'This will run the 6-step pipeline end-to-end:</p>'
+      + '<ol class="text-xs text-slate-700 mb-4 list-decimal pl-5 space-y-1">'
+      + '<li>Scrape Investegate RNS (last 60 days)</li>'
+      + '<li>Backfill share prices (Yahoo)</li>'
+      + '<li>Update sector benchmarks</li>'
+      + '<li>Recompute signal firings</li>'
+      + '<li>Rebuild signals/dealings JSON</li>'
+      + '<li>Regenerate dashboard HTML</li>'
+      + '</ol>'
+      + '<div class="bg-amber-50 border border-amber-200 rounded p-3 mb-4">'
+      + '<p class="text-[11px] text-amber-800 font-medium mb-1">'
+      + 'Heads up</p>'
+      + '<p class="text-[11px] text-amber-700 leading-relaxed">'
+      + 'Takes ~15-30 min. The scrape step uses Anthropic LLM credits '
+      + '(budget cap ~$50/run, set in run_scrape.py). Yahoo Finance may '
+      + 'rate-limit if run too often.</p>'
+      + '</div>'
+      + '<label class="flex items-center gap-2 text-xs text-slate-700 mb-4">'
+      + '<input id="refreshNoLlm" type="checkbox" class="rounded">'
+      + 'Skip LLM fallback (regex-only parsing)'
+      + '</label>'
+      + '<div class="flex justify-end gap-2">'
+      + '<button id="refreshCancel" class="px-3 py-1.5 text-xs border '
+      + 'border-slate-300 rounded text-slate-600 hover:bg-slate-50">'
+      + 'Cancel</button>'
+      + '<button id="refreshConfirm" class="px-3 py-1.5 text-xs '
+      + 'bg-indigo-600 text-white rounded hover:bg-indigo-700">'
+      + 'Run pipeline</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+    $('refreshCancel').onclick = closeModal;
+    $('refreshConfirm').onclick = function(){
+      const noLlm = $('refreshNoLlm').checked;
+      closeModal();
+      setBtn('Starting...', true);
+      fetch('/api/refresh-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ no_llm: noLlm })
+      }).then(function(resp){
+        if (resp.status === 409){
+          showToast('A refresh is already running.', false);
+        } else if (!resp.ok){
+          throw new Error('HTTP ' + resp.status);
+        } else {
+          showToast('Refresh started.', true);
+        }
+        startPolling();
+      }).catch(function(err){
+        setBtn('Refresh', false);
+        var hint = err.message;
+        if (/failed to fetch/i.test(hint)){
+          hint = 'server unreachable. Run `python server.py` and visit '
+            + 'http://localhost:5000 in your browser.';
+        }
+        showToast('Could not start refresh: ' + hint, false);
+      });
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    // If the page was opened via file://, no Flask server is reachable.
+    // Disable the button and tell the user how to fix it -- silent
+    // "Failed to fetch" errors are the #1 confusion point.
+    if (window.location.protocol === 'file:'){
+      setBtn('Refresh (start server)', true);
+      btn.title = 'This page was opened from disk (file://). Run '
+        + '`python server.py` and visit http://localhost:5000 to enable '
+        + 'the Refresh button.';
+      btn.addEventListener('click', function(){
+        showToast('Open http://localhost:5000 (run python server.py first) '
+          + 'to use Refresh.', false);
+      });
+      return;
+    }
+    btn.addEventListener('click', openConfirmModal);
+    // On load, check status -- if running, attach to existing pipeline.
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        if (s.status === 'running'){
+          setBtn('Refreshing - ' + (s.step_label || 'Working...'), true);
+          startPolling();
+        }
+      }).catch(function(err){
+        // Server unreachable on a non-file:// page -- the server died
+        // or is on a different host. Tell the user something useful.
+        setBtn('Refresh (server down)', true);
+        btn.title = 'Could not reach /api/refresh-status. Is the Flask '
+          + 'server still running? Try restarting `python server.py`.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

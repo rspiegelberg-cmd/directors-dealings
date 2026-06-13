@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-sha" content="local">
+<title>MNL - Manchester and London Investment Trust plc</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+<style>
+  html, body { background:#f8fafc; color:#0f172a; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .pulse-highlight { animation: pulseBg 2s ease-out 1; }
+  @keyframes pulseBg {
+    0%   { background-color: #fef3c7; }
+    100% { background-color: transparent; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+<header class="border-b border-slate-200 bg-white px-6 h-12 flex items-center justify-between">
+<h1 class="text-sm font-semibold text-slate-900 tracking-tight">MNL - Manchester and London Investment Trust plc</h1>
+<nav class="flex items-center"><button id="refreshBtn" type="button" class="text-xs px-2.5 py-1 rounded border border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5" title="Run the full refresh pipeline (scrape -> parse -> backfill -> eval -> rebuild). Slow (~15+ min) and uses LLM credits."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span id="refreshBtnLabel">Refresh</span></button><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Today</a> <a href="../performance.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Performance</a></nav>
+</header>
+<main class="max-w-7xl mx-auto">
+<header class="border-b border-slate-200 bg-white px-6 py-4"><div class="flex items-center justify-between mb-1"><div class="flex items-center"><a href="../index.html" class="text-xs text-indigo-600 hover:text-indigo-700 mr-4">&larr; Dashboard</a><h1 class="text-lg font-semibold text-slate-900 tabular-nums">MNL</h1><span class="text-sm text-slate-600 ml-2">Manchester and London Investment Trust plc</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Financials</span><span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 ml-2">Main</span></div></div><div class="flex items-center justify-between"><div class="text-sm tabular-nums">Latest close: 10.40p <span class="text-rose-600 ml-2">&#9660; -2.12%</span></div><div class="text-[10px] text-slate-400">Last refresh: 2026-05-18T12:48:43Z</div></div></header><section class="m-6 bg-white border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-center mb-3"><h2 class="text-xs uppercase tracking-wide text-slate-500">Price (trailing window)</h2></div><div class="relative h-72"><canvas id="priceChart"></canvas></div><div class="relative h-16 mt-1"><canvas id="volumeChart"></canvas></div><script>window.__priceData = {"dates":["2025-04-15","2025-04-16","2025-04-17","2025-04-22","2025-04-23","2025-04-24","2025-04-25","2025-04-28","2025-04-29","2025-04-30","2025-05-01","2025-05-02","2025-05-06","2025-05-07","2025-05-08","2025-05-09","2025-05-12","2025-05-13","2025-05-14","2025-05-15","2025-05-16","2025-05-19","2025-05-20","2025-05-21","2025-05-22","2025-05-23","2025-05-27","2025-05-28","2025-05-29","2025-05-30","2025-06-02","2025-06-03","2025-06-04","2025-06-05","2025-06-06","2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-07","2025-07-08","2025-07-09","2025-07-10","2025-07-11","2025-07-14","2025-07-15","2025-07-16","2025-07-17","2025-07-18","2025-07-21","2025-07-22","2025-07-23","2025-07-24","2025-07-25","2025-07-28","2025-07-29","2025-07-30","2025-07-31","2025-08-01","2025-08-04","2025-08-05","2025-08-06","2025-08-07","2025-08-08","2025-08-11","2025-08-12","2025-08-13","2025-08-14","2025-08-15","2025-08-18","2025-08-19","2025-08-20","2025-08-21","2025-08-22","2025-08-26","2025-08-27","2025-08-28","2025-08-29","2025-09-01","2025-09-02","2025-09-03","2025-09-04","2025-09-05","2025-09-08","2025-09-09","2025-09-10","2025-09-11","2025-09-12","2025-09-15","2025-09-16","2025-09-17","2025-09-18","2025-09-19","2025-09-22","2025-09-23","2025-09-24","2025-09-25","2025-09-26","2025-09-29","2025-09-30","2025-10-01","2025-10-02","2025-10-03","2025-10-06","2025-10-07","2025-10-08","2025-10-09","2025-10-10","2025-10-13","2025-10-14","2025-10-15","2025-10-16","2025-10-17","2025-10-20","2025-10-21","2025-10-22","2025-10-23","2025-10-24","2025-10-27","2025-10-28","2025-10-29","2025-10-30","2025-10-31","2025-11-03","2025-11-04","2025-11-05","2025-11-06","2025-11-07","2025-11-10","2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-17","2025-11-18","2025-11-19","2025-11-20","2025-11-21","2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-22","2025-12-23","2025-12-24","2025-12-29","2025-12-30","2025-12-31","2026-01-02","2026-01-05","2026-01-06","2026-01-07","2026-01-08","2026-01-09","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-19","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15","2026-05-18"],"closes":[5.717706298828125,5.417826538085937,5.337858276367188,5.217907104492188,5.417826538085937,5.59775390625,5.5377783203125,5.697714233398438,5.887637939453125,5.9176263427734375,6.3174658203125,6.457409057617188,6.417425537109375,6.29747314453125,6.79727294921875,6.537376708984375,6.8372564697265625,6.857249145507812,7.197112426757813,7.237095947265625,7.257088623046875,7.197112426757813,6.9971923828125,7.0971527099609375,7.177120971679687,6.897232666015625,7.177120971679687,7.247092895507812,7.277080688476563,7.317064208984375,7.297072143554687,7.317064208984375,7.417024536132812,7.4969921875,7.5569677734375,7.477000122070312,7.516984252929688,7.516984252929688,7.4969921875,7.297072143554687,7.35704833984375,7.457008056640625,7.4969921875,7.35704833984375,7.35704833984375,7.457008056640625,7.596951904296875,7.796871948242187,7.736896362304687,7.69691162109375,7.996791381835937,7.876840209960937,8.116743774414063,8.176719360351562,8.046771850585937,8.156727294921875,7.996791381835937,8.22669921875,8.206707763671876,8.316663208007812,8.356647338867187,8.596551513671875,8.3366552734375,8.716502685546875,8.816463012695312,8.736495361328124,8.746491088867188,8.69651123046875,8.636535034179687,8.69651123046875,8.816463012695312,8.69651123046875,8.936414794921875,9.296270751953125,8.796470947265625,9.076358642578125,9.116342163085937,8.896431274414063,9.096350708007812,9.196310424804688,9.156326293945312,9.216302490234375,9.156326293945312,9.236294555664063,9.336254272460938,9.216302490234375,9.276278076171875,9.196310424804688,8.896431274414063,8.92641845703125,8.92641845703125,8.896431274414063,8.916422729492188,8.816463012695312,8.776478881835937,8.676519165039062,8.726498413085938,8.796470947265625,8.716502685546875,8.75648681640625,8.706506958007813,8.676519165039062,8.706506958007813,8.656526489257812,8.69651123046875,8.736495361328124,8.656526489257812,8.676519165039062,8.556566772460938,8.69651123046875,8.856446533203124,8.716502685546875,8.536575317382812,8.61654296875,8.556566772460938,8.576558837890625,8.496590576171876,8.657952880859375,8.597966918945312,8.697943115234375,8.557976684570313,8.49799072265625,8.457999877929687,8.338028564453126,7.998109130859375,7.89813232421875,8.1580712890625,8.138075561523438,7.9181280517578125,7.958118286132812,7.998109130859375,7.978113403320313,8.1980615234375,8.398014526367188,8.797919921875,9.09784912109375,9.397777709960938,9.4377685546875,9.397777709960938,9.297801513671875,9.017868041992188,8.647955322265625,8.398014526367188,7.998109130859375,8.418009643554688,8.53798095703125,8.697943115234375,8.398014526367188,8.358023681640624,8.338028564453126,7.85814208984375,7.978113403320313,8.298037719726562,7.85814208984375,7.89813232421875,7.498226928710937,7.678184814453125,7.798156127929688,7.89813232421875,7.84814453125,7.938123168945313,7.758165893554687,7.948120727539062,8.008106689453125,8.058094482421875,8.16806884765625,8.238052368164062,8.148073120117187,8.078090209960937,8.098085327148437,7.89813232421875,7.998109130859375,7.89813232421875,7.998109130859375,7.9181280517578125,7.758165893554687,7.89813232421875,7.978113403320313,7.988110961914063,7.988110961914063,7.938123168945313,8.018104248046875,8.018104248046875,8.1580712890625,8.148073120117187,8.138075561523438,8.128078002929687,8.038099365234375,8.008106689453125,8.028101806640626,7.89813232421875,7.708177490234375,7.658189086914063,7.638193969726562,7.798156127929688,7.818151245117187,7.8681396484375,7.87813720703125,7.83814697265625,7.658189086914063,7.758165893554687,7.698179931640625,7.438240966796875,7.478231811523438,7.498226928710937,7.5382177734375,7.7781610107421875,7.678184814453125,7.738170166015625,7.698179931640625,7.598203125,7.688182373046875,7.85814208984375,7.928125610351563,7.998109130859375,8.018104248046875,8.058094482421875,8.028101806640626,8.1980615234375,8.17806640625,8.078090209960937,7.698179931640625,7.618198852539063,8.058094482421875,7.938123168945313,7.83814697265625,7.738170166015625,7.83814697265625,7.738170166015625,7.89813232421875,7.678184814453125,7.618198852539063,7.678184814453125,7.798156127929688,7.748167724609375,7.518222045898438,7.718175048828125,7.658189086914063,7.728172607421875,7.678184814453125,7.5382177734375,7.54821533203125,7.5782080078125,7.998109130859375,7.798156127929688,7.698179931640625,8.457999877929687,7.99,8.34,8.11,8.6,8.76,8.8,8.76,9.0,8.96,8.9,8.95,9.09,9.16,9.04,9.12,9.34,9.32,9.46,9.48,9.6,10.35,10.55,10.35,10.8,10.8,10.625,10.4],"volumes":[15590,45779,35269,18690,23406,7375,8733,29178,21504,12016,87614,30995,23145,7611,38948,17328,81835,106456,100907,58210,47924,30352,12947,124750,19131,46405,26547,17063,46618,64407,38659,23623,26967,52452,19984,15345,22139,38183,85775,30816,13050,131984,33262,12023,10929,36563,60254,33493,48423,9885,90009,51343,34837,94025,25418,46566,62470,79959,23040,132626,36481,165623,20430,47742,34953,30932,102474,83504,28185,21453,80718,297512,215047,116917,116419,75454,42911,27678,34033,68866,27239,47226,29740,26632,29566,32494,53200,76019,54356,40631,41266,41055,57549,24321,136768,107287,48233,46715,259203,25995,24899,115990,42178,57389,70167,29350,21623,88169,91844,40472,232191,26466,73844,35842,48567,47798,22346,33765,46610,68396,45848,20945,43066,137204,235312,56196,85821,55128,89488,52513,46129,57100,66784,100713,123811,54483,83613,84828,44363,48839,106731,72316,42882,73522,59459,74320,38914,50486,31532,37363,83579,60289,68999,31847,12983,68934,36932,21874,33740,27701,61308,36718,98526,18746,19494,43637,9010,49430,27460,42249,42383,106186,26071,38605,20506,5170,2258,39487,10909,22376,58736,53923,39541,34620,38050,44710,25966,20198,48504,23390,35225,67205,27322,59887,84836,53544,33287,58562,78809,90362,19465,29870,63739,147228,23882,80245,43010,22349,18537,31553,10836,27630,26345,45212,13709,14889,17440,17786,46479,125180,24867,45530,64251,36867,18038,19233,35282,28283,7387,19450,24574,22082,15379,35508,41704,16832,36129,15177,37668,5300,17465,20330,11394,27638,28871,72302,37966,27637,36082,7575,30572,83528,110357,75971,45072,48986,14799,52838,40519,28654,78009,77995,67668,24286,68942,40761,42374,122245,135415,100692,53470,69507,62460,12409],"markers":[{"date":"2025-06-17","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"Manchester and London Investment Trust plc\nb","role":"PCA of Mark Sheppard, PDMR (Investment Manager)","shares":35000,"price":7.4796,"value":261786.0,"signals":["f1","t4"],"fingerprint":"be7ec5117d42bb89"},{"date":"2025-06-12","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"Manchester and London Investment Trust plc\nb","role":"PCA of Mark Sheppard, PDMR (Investment Manager)","shares":46322,"price":7.523873,"value":348520.85,"signals":["f1","t4"],"fingerprint":"677bb07f2a4ba546"},{"date":"2025-05-16","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"Manchester and London Investment Trust plc\nb","role":"PCA of Mark Sheppard, PDMR (Investment Manager)","shares":21540,"price":7.26,"value":156380.4,"signals":["f1","t4"],"fingerprint":"18f26cc8e4505763"},{"date":"2025-05-15","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"Manchester and London Investment Trust plc\nb","role":"PCA of Mark Sheppard, PDMR (Investment Manager)","shares":36620,"price":7.239727,"value":265118.8,"signals":["f1","t4"],"fingerprint":"71e0eac9d0c470ea"},{"date":"2025-05-14","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"Manchester and London Investment Trust plc\nb","role":"PCA of Mark Sheppard, PDMR (Investment Manager)","shares":12506,"price":7.207996,"value":90143.2,"signals":["f1","t4"],"fingerprint":"c2c4e37b46438c9b"},{"date":"2025-05-06","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"Manchester and London Investment Trust plc\nb","role":"PCA of Mark Sheppard, PDMR (Investment Manager)","shares":17245,"price":6.363758,"value":109743.01,"signals":["f1","t4"],"fingerprint":"a1860865184355aa"},{"date":"2025-05-02","type":"BUY","mtype":"exec_buy","color":"#16a34a","director":"Manchester and London Investment Trust plc\nb","role":"PCA of Mark Sheppard, PDMR (Investment Manager)","shares":8640,"price":6.3,"value":54432.0,"signals":["f1","t4"],"fingerprint":"deca9519c33f9f3b"}]};</script></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Transactions</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Date</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-left">Role</th><th class="px-3 py-2 text-left">Type</th><th class="px-3 py-2 text-right">Shares</th><th class="px-3 py-2 text-right">Price (p)</th><th class="px-3 py-2 text-right">Value (&pound;)</th><th class="px-3 py-2 text-left">Signals</th><th class="px-3 py-2 text-center">Source</th></tr></thead><tbody><tr id="txn-be7ec5117d42bb89" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">17 Jun 2025</td><td class="px-3 py-2 text-slate-700">Manchester and London Investment Trust plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">PCA of Mark Sheppard, PDMR (Investment Manager)</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">35,000</td><td class="px-3 py-2 text-right tabular-nums">7.48</td><td class="px-3 py-2 text-right tabular-nums">&pound;261,786</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T4 - Other discretionary buy &gt;= GBP1k. Catch-all." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-400 text-white">T4</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8934591" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8934591">&#8599;</a></td></tr><tr id="txn-677bb07f2a4ba546" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">12 Jun 2025</td><td class="px-3 py-2 text-slate-700">Manchester and London Investment Trust plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">PCA of Mark Sheppard, PDMR (Investment Manager)</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">46,322</td><td class="px-3 py-2 text-right tabular-nums">7.52</td><td class="px-3 py-2 text-right tabular-nums">&pound;348,521</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T4 - Other discretionary buy &gt;= GBP1k. Catch-all." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-400 text-white">T4</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8927474" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8927474">&#8599;</a></td></tr><tr id="txn-18f26cc8e4505763" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">16 May 2025</td><td class="px-3 py-2 text-slate-700">Manchester and London Investment Trust plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">PCA of Mark Sheppard, PDMR (Investment Manager)</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">21,540</td><td class="px-3 py-2 text-right tabular-nums">7.26</td><td class="px-3 py-2 text-right tabular-nums">&pound;156,380</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T4 - Other discretionary buy &gt;= GBP1k. Catch-all." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-400 text-white">T4</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8883613" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8883613">&#8599;</a></td></tr><tr id="txn-71e0eac9d0c470ea" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">15 May 2025</td><td class="px-3 py-2 text-slate-700">Manchester and London Investment Trust plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">PCA of Mark Sheppard, PDMR (Investment Manager)</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">36,620</td><td class="px-3 py-2 text-right tabular-nums">7.24</td><td class="px-3 py-2 text-right tabular-nums">&pound;265,119</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T4 - Other discretionary buy &gt;= GBP1k. Catch-all." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-400 text-white">T4</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8881241" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8881241">&#8599;</a></td></tr><tr id="txn-c2c4e37b46438c9b" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">14 May 2025</td><td class="px-3 py-2 text-slate-700">Manchester and London Investment Trust plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">PCA of Mark Sheppard, PDMR (Investment Manager)</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">12,506</td><td class="px-3 py-2 text-right tabular-nums">7.21</td><td class="px-3 py-2 text-right tabular-nums">&pound;90,143</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T4 - Other discretionary buy &gt;= GBP1k. Catch-all." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-400 text-white">T4</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8878704" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8878704">&#8599;</a></td></tr><tr id="txn-a1860865184355aa" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">06 May 2025</td><td class="px-3 py-2 text-slate-700">Manchester and London Investment Trust plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">PCA of Mark Sheppard, PDMR (Investment Manager)</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">17,245</td><td class="px-3 py-2 text-right tabular-nums">6.36</td><td class="px-3 py-2 text-right tabular-nums">&pound;109,743</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T4 - Other discretionary buy &gt;= GBP1k. Catch-all." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-400 text-white">T4</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8863814" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8863814">&#8599;</a></td></tr><tr id="txn-deca9519c33f9f3b" class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">02 May 2025</td><td class="px-3 py-2 text-slate-700">Manchester and London Investment Trust plc
+b</td><td class="px-3 py-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">PCA of Mark Sheppard, PDMR (Investment Manager)</span></td><td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700">BUY</span></td><td class="px-3 py-2 text-right tabular-nums">8,640</td><td class="px-3 py-2 text-right tabular-nums">6.30</td><td class="px-3 py-2 text-right tabular-nums">&pound;54,432</td><td class="px-3 py-2"><span class="inline-flex flex-wrap gap-1"><span title="T4 - Other discretionary buy &gt;= GBP1k. Catch-all." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-400 text-white">T4</span><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></span></td><td class="px-3 py-2 text-center"><a href="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8860201" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="https://www.investegate.co.uk/announcement/prn/manchester-london-investment-trust--mnl/director-pdmr-shareholding/8860201">&#8599;</a></td></tr></tbody></table></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Signal-firing history</h2><table class="w-full text-xs tabular-nums"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left">Fired</th><th class="px-3 py-2 text-left">Signal</th><th class="px-3 py-2 text-left">Director</th><th class="px-3 py-2 text-right">T+1</th><th class="px-3 py-2 text-right">T+21</th><th class="px-3 py-2 text-right">T+90</th><th class="px-3 py-2 text-right">T+252</th></tr></thead><tbody><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">12 Jun 2025</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Manchester and London Investment Trust plc
+b</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-0.49%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+11.72%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+2.19%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-02-20">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">12 Jun 2025</td><td class="px-3 py-2"><span title="T4 - Other discretionary buy &gt;= GBP1k. Catch-all." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-400 text-white">T4</span></td><td class="px-3 py-2 text-slate-700">Manchester and London Investment Trust plc
+b</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-0.49%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+11.72%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+2.19%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-02-20">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">17 Jun 2025</td><td class="px-3 py-2"><span title="F1 - First-time buy. Director&#x27;s first-ever buy of this ticker." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-500 text-white">F1</span></td><td class="px-3 py-2 text-slate-700">Manchester and London Investment Trust plc
+b</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.23%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+13.69%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+0.48%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-02-25">-</span></td></tr><tr class="border-t border-slate-100"><td class="px-3 py-2 text-slate-600">17 Jun 2025</td><td class="px-3 py-2"><span title="T4 - Other discretionary buy &gt;= GBP1k. Catch-all." class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-400 text-white">T4</span></td><td class="px-3 py-2 text-slate-700">Manchester and London Investment Trust plc
+b</td><td class="px-3 py-2 text-right tabular-nums"><span class="text-rose-600">-2.23%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+13.69%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-emerald-600">+0.48%</span></td><td class="px-3 py-2 text-right tabular-nums"><span class="text-slate-300" title="Matures 2026-02-25">-</span></td></tr></tbody></table><div class="bg-slate-50 border-t border-slate-100 px-4 py-3 text-xs text-slate-400 italic">Not enough firings (N=4) for a meaningful per-ticker stat.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-100">Cluster history</h2><div class="px-4 py-8 text-center text-slate-400 text-xs">No clusters detected for this ticker.</div></section><section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden"><h2 class="px-4 py-3 text-xs uppercase tracking-wide text-slate-500 border-b border-slate-100">Pending review &mdash; 3 MNL filings excluded from signals</h2><p class="px-4 pt-3 pb-1 text-xs text-slate-600 leading-relaxed">&#8627; PDMR announcements for this ticker the parser couldn't cleanly extract &mdash; usually genuine edge cases. Summary below.</p><table class="w-full text-xs tabular-nums" id="pendingDiagTicker"><thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]"><tr><th class="px-3 py-2 text-left w-[55%]">Category</th><th class="px-3 py-2 text-right w-[12%]">Count</th><th class="px-3 py-2 text-right w-[10%]">%</th><th class="px-3 py-2 text-left w-[23%]">Recoverable?</th></tr></thead><tbody><tr class="border-t border-slate-100 odd:bg-slate-50"><td class="px-3 py-2 text-slate-700" title="Filing names multiple directors in one announcement -- D-STRICT refuses to split">Bundled multi-PDMR</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">2</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">66.7%</td><td class="px-3 py-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-200 text-slate-700">No</span></td></tr><tr class="border-t border-slate-100 odd:bg-slate-50"><td class="px-3 py-2 text-slate-700" title="Parser could not extract ticker / company / type / required fields -- case-by-case review">Could not classify / extract</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">1</td><td class="px-3 py-2 text-right tabular-nums text-slate-700">33.3%</td><td class="px-3 py-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 text-amber-800">Manual</span></td></tr></tbody></table><div class="text-[10px] text-slate-500 px-4 py-2 border-t border-slate-100">Recoverable column flags which buckets v2 parser work could unlock vs. which are case-by-case manual review.</div></section><footer class="px-6 py-4 text-[10px] text-slate-400 border-t border-slate-200"><p>Generated by build_dashboard.py 2026-05-18T12:48:43Z.</p><p>Data: Investegate RNS feed &middot; Yahoo Finance &middot; FTSE All-Share benchmark.</p><p class="mt-2">Historic insider-trading outcomes are not predictive. Net-of-cost CAR assumes 50bps round-trip + 0.5% UK stamp on non-AIM buys.</p></footer>
+<script>
+(function(){
+  const d = window.__priceData || {};
+  const dates = d.dates || [];
+  if (!dates.length) return;
+  const closes = d.closes || [];
+  const volumes = d.volumes || [];
+  const markers = d.markers || [];
+
+  // Build close-by-date map for marker yValue.
+  const closeMap = {};
+  dates.forEach(function(dt, i){ closeMap[dt] = closes[i]; });
+
+  // U4 vivid marker palette — keyed by mtype.
+  // exec_buy/ned_buy: triangle-up, white halo.
+  // sell: triangle-down, white halo.
+  // grant: square (rect), white halo.
+  // cluster: circle ring, violet stroke, no fill, drawn BEHIND transactions.
+  var MSTYLE = {
+    exec_buy: { label:'Exec Buy',   bg:'#16a34a',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:7,  ord:1 },
+    ned_buy:  { label:'NED Buy',    bg:'#4ade80',        bc:'#ffffff', bw:3,   ps:'triangle', rot:0,   r:6,  ord:1 },
+    sell:     { label:'Sell',       bg:'#dc2626',        bc:'#ffffff', bw:3,   ps:'triangle', rot:180, r:7,  ord:1 },
+    grant:    { label:'Grant/SIP',  bg:'#d97706',        bc:'#ffffff', bw:2.5, ps:'rect',     rot:0,   r:5,  ord:1 },
+    cluster:  { label:'S1 Cluster', bg:'rgba(0,0,0,0)',  bc:'#7c3aed', bw:2.5, ps:'circle',   rot:0,   r:11, ord:2 }
+  };
+
+  // Group markers by mtype.
+  var markerDatasets = {};
+  markers.forEach(function(m){
+    var mtype = m.mtype || 'exec_buy';
+    if (!markerDatasets[mtype]){
+      var st = MSTYLE[mtype] || MSTYLE.exec_buy;
+      markerDatasets[mtype] = {
+        label: st.label,
+        type: 'scatter',
+        data: [],
+        backgroundColor: st.bg,
+        borderColor: st.bc,
+        borderWidth: st.bw,
+        pointStyle: st.ps,
+        rotation: st.rot,
+        pointRotation: st.rot,
+        radius: st.r,
+        hoverRadius: st.r + 2,
+        showLine: false,
+        order: st.ord,
+        _markers: []
+      };
+    }
+    var y = closeMap[m.date];
+    markerDatasets[mtype].data.push({ x: m.date, y: y });
+    markerDatasets[mtype]._markers.push(m);
+  });
+
+  const pCtx = document.getElementById('priceChart');
+  if (!pCtx) return;
+
+  // Price line first (order:0), then transaction markers (order:1),
+  // then cluster rings on top (order:2 — drawn last so ring encircles marker).
+  var markerList = Object.keys(markerDatasets)
+    .sort(function(a,b){ return (markerDatasets[a].order||1)-(markerDatasets[b].order||1); })
+    .map(function(k){ return markerDatasets[k]; });
+
+  const ds = [{
+    label: 'Close',
+    type: 'line',
+    data: dates.map(function(dt, i){ return { x: dt, y: closes[i] }; }),
+    borderColor: '#475569', borderWidth: 1.5, pointRadius: 0, tension: 0, order: 0
+  }].concat(markerList);
+
+  window.__priceChart = new Chart(pCtx, {
+    type: 'line',
+    data: { datasets: ds },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      parsing: false,
+      scales: {
+        x: { type: 'category', labels: dates, ticks: { maxRotation: 0, font: { size: 10 } } },
+        y: { ticks: { font: { size: 10 } } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx){
+              if (ctx.dataset.type !== 'scatter') return ctx.dataset.label + ': ' + ctx.parsed.y;
+              var idx = ctx.dataIndex;
+              var m = ctx.dataset._markers[idx] || {};
+              if (m.mtype === 'cluster'){
+                return ['S1 Cluster signal fired', 'Date: ' + m.date];
+              }
+              var lines = [];
+              if (m.director) lines.push(m.director + (m.role ? ' (' + m.role + ')' : ''));
+              lines.push(m.type + (m.shares ? ' ' + m.shares + ' sh @ ' + (m.price||0).toFixed(2) + 'p' : ''));
+              if (m.value) lines.push('£' + (m.value||0).toLocaleString());
+              if (m.signals && m.signals.length) lines.push('Signal: ' + m.signals.join(', '));
+              return lines;
+            }
+          }
+        }
+      },
+      onClick: function(evt, els){
+        if (!els.length) return;
+        var el = els[0];
+        var dataset = ds[el.datasetIndex];
+        if (!dataset || dataset.type !== 'scatter') return;
+        var m = dataset._markers[el.index];
+        // Cluster rings have no table row — skip scroll.
+        if (!m || !m.fingerprint || m.mtype === 'cluster') return;
+        var row = document.getElementById('txn-' + m.fingerprint);
+        if (row){
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          row.classList.add('pulse-highlight');
+          setTimeout(function(){ row.classList.remove('pulse-highlight'); }, 2000);
+        }
+      }
+    }
+  });
+
+  const vCtx = document.getElementById('volumeChart');
+  if (vCtx) {
+    window.__volChart = new Chart(vCtx, {
+      type: 'bar',
+      data: { labels: dates, datasets: [{ data: volumes, backgroundColor: '#cbd5e1' }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        }
+      }
+    });
+  }
+})();
+</script>
+
+</main>
+<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-05-18 12:48 UTC &middot; build local</footer>
+
+<script>
+(function(){
+  const $ = function(id){ return document.getElementById(id); };
+  let pollTimer = null;
+  let lastStatus = 'idle';
+
+  function setBtn(label, disabled){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    const lab = $('refreshBtnLabel');
+    if (lab) lab.textContent = label;
+    btn.disabled = !!disabled;
+    btn.classList.toggle('opacity-60', !!disabled);
+    btn.classList.toggle('cursor-not-allowed', !!disabled);
+  }
+  function showToast(msg, ok){
+    const t = document.createElement('div');
+    t.className = (ok ? 'bg-emerald-600' : 'bg-rose-600')
+      + ' fixed bottom-4 right-4 text-white text-xs px-4 py-2 rounded shadow-lg z-50';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, ok ? 4000 : 8000);
+  }
+  function startPolling(){
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(pollStatus, 5000);
+    pollStatus();
+  }
+  function stopPolling(){
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+  function pollStatus(){
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        lastStatus = s.status || 'idle';
+        if (lastStatus === 'running'){
+          const step = s.step_label || s.step || 'Working...';
+          setBtn('Refreshing - ' + step, true);
+        } else if (lastStatus === 'done'){
+          stopPolling();
+          showToast('Refresh complete. Reloading...', true);
+          setTimeout(function(){ window.location.reload(); }, 800);
+        } else if (lastStatus === 'error'){
+          stopPolling();
+          setBtn('Refresh', false);
+          showToast('Refresh failed: ' + (s.error || 'unknown'), false);
+        } else {
+          setBtn('Refresh', false);
+        }
+      }).catch(function(){ /* swallow */ });
+  }
+  function closeModal(){
+    const m = $('refreshModal');
+    if (m) m.remove();
+  }
+  function openConfirmModal(){
+    const modal = document.createElement('div');
+    modal.id = 'refreshModal';
+    modal.className = 'fixed inset-0 bg-slate-900/40 flex items-center '
+      + 'justify-center z-50';
+    modal.innerHTML =
+      '<div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">'
+      + '<h3 class="text-sm font-semibold text-slate-900 mb-2">'
+      + 'Run full refresh pipeline?</h3>'
+      + '<p class="text-xs text-slate-700 mb-3 leading-relaxed">'
+      + 'This will run the 6-step pipeline end-to-end:</p>'
+      + '<ol class="text-xs text-slate-700 mb-4 list-decimal pl-5 space-y-1">'
+      + '<li>Scrape Investegate RNS (last 60 days)</li>'
+      + '<li>Backfill share prices (Yahoo)</li>'
+      + '<li>Update sector benchmarks</li>'
+      + '<li>Recompute signal firings</li>'
+      + '<li>Rebuild signals/dealings JSON</li>'
+      + '<li>Regenerate dashboard HTML</li>'
+      + '</ol>'
+      + '<div class="bg-amber-50 border border-amber-200 rounded p-3 mb-4">'
+      + '<p class="text-[11px] text-amber-800 font-medium mb-1">'
+      + 'Heads up</p>'
+      + '<p class="text-[11px] text-amber-700 leading-relaxed">'
+      + 'Takes ~15-30 min. The scrape step uses Anthropic LLM credits '
+      + '(budget cap ~$50/run, set in run_scrape.py). Yahoo Finance may '
+      + 'rate-limit if run too often.</p>'
+      + '</div>'
+      + '<label class="flex items-center gap-2 text-xs text-slate-700 mb-4">'
+      + '<input id="refreshNoLlm" type="checkbox" class="rounded">'
+      + 'Skip LLM fallback (regex-only parsing)'
+      + '</label>'
+      + '<div class="flex justify-end gap-2">'
+      + '<button id="refreshCancel" class="px-3 py-1.5 text-xs border '
+      + 'border-slate-300 rounded text-slate-600 hover:bg-slate-50">'
+      + 'Cancel</button>'
+      + '<button id="refreshConfirm" class="px-3 py-1.5 text-xs '
+      + 'bg-indigo-600 text-white rounded hover:bg-indigo-700">'
+      + 'Run pipeline</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+    $('refreshCancel').onclick = closeModal;
+    $('refreshConfirm').onclick = function(){
+      const noLlm = $('refreshNoLlm').checked;
+      closeModal();
+      setBtn('Starting...', true);
+      fetch('/api/refresh-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ no_llm: noLlm })
+      }).then(function(resp){
+        if (resp.status === 409){
+          showToast('A refresh is already running.', false);
+        } else if (!resp.ok){
+          throw new Error('HTTP ' + resp.status);
+        } else {
+          showToast('Refresh started.', true);
+        }
+        startPolling();
+      }).catch(function(err){
+        setBtn('Refresh', false);
+        var hint = err.message;
+        if (/failed to fetch/i.test(hint)){
+          hint = 'server unreachable. Run `python server.py` and visit '
+            + 'http://localhost:5000 in your browser.';
+        }
+        showToast('Could not start refresh: ' + hint, false);
+      });
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = $('refreshBtn');
+    if (!btn) return;
+    // If the page was opened via file://, no Flask server is reachable.
+    // Disable the button and tell the user how to fix it -- silent
+    // "Failed to fetch" errors are the #1 confusion point.
+    if (window.location.protocol === 'file:'){
+      setBtn('Refresh (start server)', true);
+      btn.title = 'This page was opened from disk (file://). Run '
+        + '`python server.py` and visit http://localhost:5000 to enable '
+        + 'the Refresh button.';
+      btn.addEventListener('click', function(){
+        showToast('Open http://localhost:5000 (run python server.py first) '
+          + 'to use Refresh.', false);
+      });
+      return;
+    }
+    btn.addEventListener('click', openConfirmModal);
+    // On load, check status -- if running, attach to existing pipeline.
+    fetch('/api/refresh-status').then(function(r){ return r.json(); })
+      .then(function(s){
+        if (s.status === 'running'){
+          setBtn('Refreshing - ' + (s.step_label || 'Working...'), true);
+          startPolling();
+        }
+      }).catch(function(err){
+        // Server unreachable on a non-file:// page -- the server died
+        // or is on a different host. Tell the user something useful.
+        setBtn('Refresh (server down)', true);
+        btn.title = 'Could not reach /api/refresh-status. Is the Flask '
+          + 'server still running? Try restarting `python server.py`.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

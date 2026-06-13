@@ -1,0 +1,20 @@
+{
+  "_doc": "B-003 fixture: dot-separated date '05.05.26' must extract as 2026-05-05 (year-2-digit modern pivot). Validates the B-005 happy path and the original 2026-05-15 parser bug fix.",
+  "ticker_hint": "TST",
+  "extracted_count": 1,
+  "rows": [
+    {
+      "date": "2026-05-05",
+      "ticker": "TST",
+      "director": "Alice Example",
+      "company": "Acme Test plc",
+      "type": "BUY",
+      "shares": 1000
+    }
+  ],
+  "warnings_must_not_contain": [
+    "could_not_parse_tx_date",
+    "could_not_extract_PDMR_name",
+    "could_not_extract_company"
+  ]
+}

@@ -1,0 +1,33 @@
+<!doctype html>
+<html><head><title>Test Fixture: company name as floating header cell (B-022)</title></head><body>
+<!--
+  B-003 / B-022 regression: NET (Netcall) filing 8998766 doesn't have a
+  ['Name', 'Netcall plc'] 2-cell row OR a ['', 'Full name of the entity',
+  '<co>'] 3-cell row. The company name sits as cells[0] of an unlabelled
+  header row in the issuer table. Pass 1 + Pass 2 of _find_company_in_soup
+  both miss it; Pass 3 (this batch) must catch it via the 'plc/Ltd/Limited'
+  corporate-form suffix.
+-->
+<table>
+  <!-- Unlabelled header row containing only the company name -->
+  <tr><th colspan="2">Netcall Sample plc</th></tr>
+  <tr><td>LEI</td><td>0000NET999</td></tr>
+  <tr><td>Nature of the transaction</td><td>Acquisition of ordinary shares</td></tr>
+</table>
+<table>
+  <tr>
+    <th>Date of transaction</th>
+    <th>Name</th>
+    <th>Position</th>
+    <th>Price</th>
+    <th>Volume</th>
+  </tr>
+  <tr>
+    <td>5 May 2026</td>
+    <td>Dave Floating</td>
+    <td>Director</td>
+    <td>£5.00</td>
+    <td>2,500</td>
+  </tr>
+</table>
+</body></html>

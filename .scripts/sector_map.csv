@@ -1,0 +1,174 @@
+# Directors Dealings — static ticker -> sector/benchmark/AIM lookup.
+# Format: ticker,sector,benchmark_symbol,is_aim
+#
+# DESIGN NOTES (Stage 3, 2026-05-13; updated 2026-05-14):
+#   * `ticker` is bare-LSE (no .L), matching `transactions.ticker` and
+#     `prices.ticker` conventions (Stage 1 decisions S1+S2).
+#   * `sector` is a free-text FTSE-aligned label. The signal engine
+#     (Stage 4) only cares about `benchmark_symbol`.
+#   * `benchmark_symbol` is the Yahoo `^...` symbol used to look up that
+#     ticker's sector index in the `prices` table. All rows use `^FTAS`
+#     (FTSE All-Share) — see 2026-05-13 probe notes below.
+#   * `is_aim`: 0/1. AIM flag is needed by Stage 4 for stamp-duty
+#     exemption (AIM stocks pay 0% UK stamp duty; main market 0.5%).
+#     The signal engine charges 50bps stamp duty on Main-Market buys
+#     only — getting this wrong over-charges or under-charges spread.
+#
+# 2026-05-14 expansion (Stage 4.7 is_aim seed-data fix):
+#   Backtest revealed only 53 of 70 active tickers were classified, and
+#   only 5 of the AIM names were marked. This pass added 65 tickers and
+#   corrected CCC (Computacenter is FTSE 250 Main, NOT AIM).
+#
+#   AIM classification sources used (in priority order):
+#     1. Wikipedia individual company pages: phrases like "Alternative
+#        Investment Market", "AIM-listed", "listed on AIM" treated as
+#        positive signal; "FTSE 100/250/SmallCap" treated as Main signal.
+#     2. Yahoo Finance ticker -> longName lookup (LSE exchange only).
+#     3. Project knowledge for known AIM constituents (Jet2, Fevertree,
+#        ASOS, Boohoo, M&C Saatchi, Oxford Biomedica, MPAC, System1).
+#     4. Investment trusts default to Main Market (closed-end funds
+#        list on Main, not AIM, in UK).
+#   Bias rule: when classification is uncertain, leave is_aim=0 — the
+#   cost model over-charges 50bps which is safer than under-charging.
+#
+# AIM tickers verified 2026-05-14 (is_aim=1):
+#   ARC   (Arcontech Group)
+#   ASC   (ASOS plc — Wikipedia AIM confirmed)
+#   BOO   (Boohoo Group — Wikipedia AIM confirmed)
+#   FEVR  (Fevertree Drinks)
+#   JET2  (Jet2 plc — Wikipedia AIM confirmed)
+#   MPAC  (Mpac Group)
+#   OXB   (Oxford Biomedica)
+#   SAA   (M&C Saatchi — Wikipedia AIM confirmed)
+#   SYS1  (System1 Group)
+#   WCAT  (Wildcat Petroleum)
+#   YOU   (YouGov — Wikipedia AIM table confirmed)
+#
+# 2026-05-13 sector benchmark probe:
+#   11 candidate FTSE sub-indices (`^FTNMX*`: 5710, 0500, 2010, 3010,
+#   1750, 9010, 2030, 4010, 5510, 3510, 3030) returned HTTP 404 on the
+#   anonymous chart endpoint. Per "remove any symbol that 404s" rule,
+#   all rows use `^FTAS` (FTSE All-Share). A future stage can re-probe
+#   ICB (^FTIICB*) or MSCI UK sector ETF proxies and upgrade in place.
+#
+# Manual update path: edit and re-run `fetch_sectors.py`.
+#
+ticker,sector,benchmark_symbol,is_aim
+AAL,Materials,^FTAS,0
+ABF,Consumer Staples,^FTAS,0
+ADM,Financials,^FTAS,0
+AHT,Industrials,^FTAS,0
+ARC,Technology,^FTAS,1
+ASC,Consumer Discretionary,^FTAS,1
+AV.,Financials,^FTAS,0
+AZN,Health Care,^FTAS,0
+BA.,Industrials,^FTAS,0
+BARC,Financials,^FTAS,0
+BASC,Financials,^FTAS,0
+BATS,Consumer Staples,^FTAS,0
+BEMO,Financials,^FTAS,0
+BHP,Materials,^FTAS,0
+BNZL,Industrials,^FTAS,0
+BOO,Consumer Discretionary,^FTAS,1
+BP.,Energy,^FTAS,0
+BRAI,Financials,^FTAS,0
+BRBY,Consumer Discretionary,^FTAS,0
+BRFI,Financials,^FTAS,0
+BT.A,Communication Services,^FTAS,0
+BVT,Financials,^FTAS,0
+CAR,Industrials,^FTAS,0
+CAU,Materials,^FTAS,0
+CCC,Industrials,^FTAS,0
+CGT,Financials,^FTAS,0
+CHH,Consumer Discretionary,^FTAS,0
+CLBX,Health Care,^FTAS,0
+CLI,Real Estate,^FTAS,0
+CLIG,Financials,^FTAS,0
+CNA,Utilities,^FTAS,0
+CPG,Consumer Discretionary,^FTAS,0
+CRS,Financials,^FTAS,0
+CTUK,Financials,^FTAS,0
+DGE,Consumer Staples,^FTAS,0
+DSCV,Technology,^FTAS,0
+EDIN,Financials,^FTAS,0
+EXPN,Industrials,^FTAS,0
+FCIT,Financials,^FTAS,0
+FCSS,Financials,^FTAS,0
+FEVR,Consumer Staples,^FTAS,1
+FGP,Industrials,^FTAS,0
+FOXT,Real Estate,^FTAS,0
+FRES,Materials,^FTAS,0
+FSFL,Utilities,^FTAS,0
+FSV,Financials,^FTAS,0
+GETB,Technology,^FTAS,0
+GLEN,Materials,^FTAS,0
+GRID,Utilities,^FTAS,0
+GSK,Health Care,^FTAS,0
+HAS,Industrials,^FTAS,0
+HAYD,Materials,^FTAS,0
+HDD,Industrials,^FTAS,0
+HFEL,Financials,^FTAS,0
+HFG,Consumer Staples,^FTAS,0
+HGT,Financials,^FTAS,0
+HSBA,Financials,^FTAS,0
+IAG,Industrials,^FTAS,0
+IMB,Consumer Staples,^FTAS,0
+INCH,Consumer Discretionary,^FTAS,0
+ITV,Communication Services,^FTAS,0
+JAGI,Financials,^FTAS,0
+JD.,Consumer Discretionary,^FTAS,0
+JEGI,Financials,^FTAS,0
+JET2,Consumer Discretionary,^FTAS,1
+JGGI,Financials,^FTAS,0
+JMAT,Materials,^FTAS,0
+JMGI,Financials,^FTAS,0
+LGEN,Financials,^FTAS,0
+LLOY,Financials,^FTAS,0
+LSEG,Financials,^FTAS,0
+LTI,Financials,^FTAS,0
+MNKS,Financials,^FTAS,0
+MNL,Financials,^FTAS,0
+MPAC,Industrials,^FTAS,1
+NET,Technology,^FTAS,0
+NG.,Utilities,^FTAS,0
+NTVO,Materials,^FTAS,0
+NWG,Financials,^FTAS,0
+OXB,Health Care,^FTAS,1
+PINE,Technology,^FTAS,0
+PRU,Financials,^FTAS,0
+RBD,Energy,^FTAS,0
+RBW,Materials,^FTAS,0
+RECI,Financials,^FTAS,0
+REE,Materials,^FTAS,0
+REL,Communication Services,^FTAS,0
+RIO,Materials,^FTAS,0
+RKT,Consumer Staples,^FTAS,0
+RR.,Industrials,^FTAS,0
+SAA,Communication Services,^FTAS,1
+SBRY,Consumer Staples,^FTAS,0
+SCF,Financials,^FTAS,0
+SDR,Financials,^FTAS,0
+SGE,Technology,^FTAS,0
+SHEL,Energy,^FTAS,0
+SJG,Financials,^FTAS,0
+SMIN,Industrials,^FTAS,0
+SMWH,Consumer Discretionary,^FTAS,0
+SN.,Health Care,^FTAS,0
+SNWS,Communication Services,^FTAS,0
+SOI,Financials,^FTAS,0
+SSE,Utilities,^FTAS,0
+STAN,Financials,^FTAS,0
+SVT,Utilities,^FTAS,0
+SYS1,Communication Services,^FTAS,1
+TMPL,Financials,^FTAS,0
+TSCO,Consumer Staples,^FTAS,0
+ULVR,Consumer Staples,^FTAS,0
+UTG,Real Estate,^FTAS,0
+UTL,Utilities,^FTAS,0
+UU.,Utilities,^FTAS,0
+VOD,Communication Services,^FTAS,0
+WCAT,Energy,^FTAS,1
+WPP,Communication Services,^FTAS,0
+WWH,Health Care,^FTAS,0
+WYN,Consumer Staples,^FTAS,0
+YOU,Consumer Discretionary,^FTAS,1

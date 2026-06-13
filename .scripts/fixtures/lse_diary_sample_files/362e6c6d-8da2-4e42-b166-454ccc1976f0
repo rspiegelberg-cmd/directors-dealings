@@ -1,0 +1,43 @@
+"use strict";(function(){try{var record=function(name,detail){aps.get(accountId).queue.push(new CustomEvent(name,{detail}))};const accountId="362e6c6d-8da2-4e42-b166-454ccc1976f0";window._aps=window._aps||new Map;const aps=window._aps;aps.has(accountId)||aps.set(accountId,{queue:[],store:new Map}),record("_config/requestViewerCountry/define",{"code":"GB"});record("analytics/sampling/set",{"rates":{"error":0.001,"status":0.0001}});record("a3pes/video/activate",{"restrictions":{"block":{"accounts":["5220","e32f1423-28bc-43ed-8ab0-5ae6b4449cf8"]}}});record("a3pes/video/activate",{"bypassCountryCheck":true,"restrictions":{"allow":{"accountTypes":["ssw"]},"block":{"accounts":["e32f1423-28bc-43ed-8ab0-5ae6b4449cf8"]}}});record("a3pes/video/activate",{"bypassCountryCheck":true,"restrictions":{"allow":{"accountTypes":["mw"],"rate":0.5},"block":{"accounts":["5220"]}}});record("idVendors/enabled/set",{"bidParameterKeys":["liveintent","merkle","intimateMerger","pair","amx","33across","fTrack","captify","publink","anonymised","quantcast","idPlus","unifiedid","ddb_key_638","fabrick","uid","criteo","yahoo","liveRamp","id5","pubcommon","audigent","lightPublisherAudiences","lotame"]});record("idVendors/integration/execute",{"accountId":"362e6c6d-8da2-4e42-b166-454ccc1976f0","sourceId":"600","countryCode":"GB","vendorId":"id5","allowedRegions":undefined,"blockedRegions":["BR"],"vendorLoadedSampleRate":5,"domainPrecedence":[],"defaultScript":function anonymous(
+) {
+undefined?undefined.includes("GB")&&(function anonymous(
+) {
+var id5PropertyId = '246';
+if (id5PropertyId && id5PropertyId.charAt(0) !== '%') {
+    var id5Script = document.createElement('script');
+    id5Script.src = '//cdn.id5-sync.com/api/1.0/id5-api.js';
+    id5Script['onload'] = function(e) { 
+        ID5.init({ partnerId: Number(id5PropertyId) , provider: 'aps' })
+    };
+    document.head.appendChild(id5Script);
+}
+})():(!["BR"]||["BR"]&&!["BR"].includes("GB"))&&(function anonymous(
+) {
+var id5PropertyId = '246';
+if (id5PropertyId && id5PropertyId.charAt(0) !== '%') {
+    var id5Script = document.createElement('script');
+    id5Script.src = '//cdn.id5-sync.com/api/1.0/id5-api.js';
+    id5Script['onload'] = function(e) { 
+        ID5.init({ partnerId: Number(id5PropertyId) , provider: 'aps' })
+    };
+    document.head.appendChild(id5Script);
+}
+})()
+},"defaultPropertyId":"246"});record("idVendors/integration/execute",{"accountId":"362e6c6d-8da2-4e42-b166-454ccc1976f0","sourceId":"600","countryCode":"GB","vendorId":"pubcommon","allowedRegions":undefined,"blockedRegions":["BR"],"vendorLoadedSampleRate":5,"domainPrecedence":[],"defaultScript":function anonymous(
+) {
+undefined?undefined.includes("GB")&&(function anonymous(
+) {
+if (!window.PublisherCommonId) {
+    var pubcommonScript = document.createElement('script');
+    pubcommonScript.src = '//secure.cdn.fastclick.net/js/pubcid/latest/pubcid.min.js';
+    document.head.appendChild(pubcommonScript);
+}
+})():(!["BR"]||["BR"]&&!["BR"].includes("GB"))&&(function anonymous(
+) {
+if (!window.PublisherCommonId) {
+    var pubcommonScript = document.createElement('script');
+    pubcommonScript.src = '//secure.cdn.fastclick.net/js/pubcid/latest/pubcid.min.js';
+    document.head.appendChild(pubcommonScript);
+}
+})()
+},"defaultPropertyId":undefined});record("_config/config/didLoad",undefined)}catch(e){console.error(e)}})();

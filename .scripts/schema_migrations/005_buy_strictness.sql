@@ -1,0 +1,26 @@
+-- Migration 005: add buy_strictness column to transactions.
+-- Idempotent: db.py checks PRAGMA table_info before applying.
+--
+-- buy_strictness: Classifies whether a BUY transaction is a genuine
+--                 discretionary on-market purchase or a non-buy event
+--                 (vesting, LTIP grant, Sharesave, SIP, DRIP, etc.)
+--                 that happened to be recorded as type=BUY.
+--
+-- Values:
+--   STRICT_BUY    — on-market purchase, no non-buy markers
+--   MIXED         — buy and non-buy language both present (needs review)
+--   NON_BUY_ONLY  — vesting/LTIP/DRIP/SIP/RSP/PSP/etc., not discretionary
+--   UNKNOWN       — no matching patterns in context text
+--   NULL          — not yet classified (pre-backfill rows)
+--
+-- Populated by parse_pdmr._classify_buy_strictness() at parse time for
+-- new rows. Existing rows are backfilled by reparse_corpus.py reading
+-- cached HTML in .scripts/_scrape_cache/.
+--
+-- Signal evaluators require buy_strictness = 'STRICT_BUY' to fire any
+-- T/S/F/B signal (enforced in eval_signals._universe_rows). NULL rows
+-- are treated as STRICT_BUY via COALESCE so they are not silently
+-- dropped before the corpus reparse completes.
+--
+-- Sprint 13 — 2026-05-28.
+ALTER TABLE transactions ADD COLUMN buy_strictness VARCHAR(16);

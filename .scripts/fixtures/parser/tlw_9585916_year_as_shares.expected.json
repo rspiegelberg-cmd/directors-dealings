@@ -1,0 +1,11 @@
+{
+  "_doc": "Sprint 11 Fix #1 — Tullow Oil (TLW) 9585916 year-as-shares regression. Pre-fix the table-aware parser stored shares=2026; post-fix `_looks_like_date_bleed` rejects the year and the row is dropped (shares=0 + BUY → required_fields_missing). The fixture asserts the bad row no longer enters the corpus; the 115,000 correct-value path is exercised in the unit tests against `_parse_volume_cell` directly.",
+  "ticker_hint": "TLW",
+  "extracted_count": 0,
+  "warnings_must_contain_substring": [
+    "volume_only_contained_dates"
+  ],
+  "warnings_must_not_contain": [
+    "year_as_shares_stored"
+  ]
+}
