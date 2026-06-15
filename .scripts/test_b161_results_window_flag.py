@@ -296,8 +296,8 @@ class TestBacktestIntegration(unittest.TestCase):
     def test_header_length_64(self):
         import backtest as bt
         # 62 (post-B-159) + post_results_flag + days_since_results
-        # (B-161) = 64.
-        self.assertEqual(len(bt.HEADER), 64)
+        # (B-161) = 64; + 7 B-168 salary-multiple cols = 71.
+        self.assertEqual(len(bt.HEADER), 71)
 
     def test_run_backtest_gates_on_buy_without_director(self):
         """classify_post_results must be gated on tx_type == "BUY" but

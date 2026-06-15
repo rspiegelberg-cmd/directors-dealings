@@ -302,7 +302,17 @@ def _apply_schema_migrations(conn: sqlite3.Connection) -> None:
             conn, "13", "14", "014_short_positions.sql",
             "short_positions",
         )
-        current = "14"  # noqa: F841
+        current = "14"
+
+    if current == "14":
+        # B-168: salary-multiple conviction feature -- director_pay table.
+        # Table-existence check on director_pay; the migration file creates
+        # the table + indexes idempotently.
+        _run_create_table_migration_step(
+            conn, "14", "15", "015_director_pay.sql",
+            "director_pay",
+        )
+        current = "15"  # noqa: F841
 
 
 def set_meta(conn: sqlite3.Connection, key: str, value: str) -> None:

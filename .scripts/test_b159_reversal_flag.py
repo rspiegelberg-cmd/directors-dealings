@@ -328,8 +328,8 @@ class TestBacktestIntegration(unittest.TestCase):
         import backtest as bt
         # 60 (post-B-155) + seller_reversal_flag + net_shares_prior_12m
         # (B-159) = 62; + post_results_flag + days_since_results
-        # (B-161) = 64.
-        self.assertEqual(len(bt.HEADER), 64)
+        # (B-161) = 64; + 7 B-168 salary-multiple cols = 71.
+        self.assertEqual(len(bt.HEADER), 71)
 
     def test_run_backtest_gates_on_buy(self):
         """The classify_reversal call must be gated on tx_type == "BUY"

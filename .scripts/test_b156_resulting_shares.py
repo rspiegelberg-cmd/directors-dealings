@@ -388,12 +388,13 @@ class TestUpsertRoundTrip(unittest.TestCase):
                 conn = db_mod.connect()
                 try:
                     # Migration 013 applied: column exists. Chain head moved
-                    # to "14" when B-164 added 014_short_positions.
+                    # to "14" (B-164 014_short_positions), then "15"
+                    # (B-168 015_director_pay).
                     cols = [r[1] for r in conn.execute(
                         "PRAGMA table_info(transactions)").fetchall()]
                     self.assertIn("resulting_shares", cols)
                     self.assertEqual(
-                        db_mod.get_meta(conn, "schema_version"), "14")
+                        db_mod.get_meta(conn, "schema_version"), "15")
 
                     # INSERT with a value.
                     inserted = db_mod.upsert_transaction(
@@ -467,8 +468,9 @@ class TestBacktestHeader(unittest.TestCase):
         # + short_pct_at_announcement (B-164) = 58;
         # + routine_flag + routine_prior_buy_years (B-155) = 60;
         # + seller_reversal_flag + net_shares_prior_12m (B-159) = 62;
-        # + post_results_flag + days_since_results (B-161) = 64.
-        self.assertEqual(len(bt.HEADER), 64)
+        # + post_results_flag + days_since_results (B-161) = 64;
+        # + 7 B-168 salary-multiple cols (appended after windows_available) = 71.
+        self.assertEqual(len(bt.HEADER), 71)
 
     def test_select_firings_sql_references_columns(self):
         import inspect

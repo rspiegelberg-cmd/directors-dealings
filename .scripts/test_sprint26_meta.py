@@ -92,11 +92,11 @@ class TestMigrations(unittest.TestCase):
 
     def test_schema_version_at_chain_head(self):
         # Pins the migration chain head. Bump this whenever a new
-        # migration is added (014 short_positions -> head is now "14").
+        # migration is added (015 director_pay -> head is now "15").
         conn = _in_memory_db()
         version = db.get_meta(conn, "schema_version")
-        self.assertEqual(version, "14",
-                         f"schema_version should be '14' after all migrations; got {version!r}")
+        self.assertEqual(version, "15",
+                         f"schema_version should be '15' after all migrations; got {version!r}")
 
     def test_migrations_idempotent(self):
         """Calling db.migrate() twice on the same connection must not raise."""

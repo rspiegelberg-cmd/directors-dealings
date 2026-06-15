@@ -257,7 +257,7 @@ class TestHeader(unittest.TestCase):
         self.assertEqual(bt.HEADER[idx_wa - 15], "low_52wk")
 
     def test_header_length_matches_writerow(self):
-        """HEADER must have exactly 64 columns (see group count below).
+        """HEADER must have exactly 71 columns (see group count below).
 
         If this fails, HEADER and writer.writerow() have drifted apart.
         Count: run_id(1) + signal fields(4) + ticker fields(7) + market(2) +
@@ -280,8 +280,9 @@ class TestHeader(unittest.TestCase):
         # Total: 5+6+2+3+11+15+6+6+2+1+1 = 58
         # 58 (post-B-164) + routine_flag + routine_prior_buy_years (B-155)
         # = 60; + seller_reversal_flag + net_shares_prior_12m (B-159) = 62;
-        # + post_results_flag + days_since_results (B-161) = 64.
-        self.assertEqual(len(bt.HEADER), 64)
+        # + post_results_flag + days_since_results (B-161) = 64;
+        # + 7 B-168 salary-multiple cols (appended after windows_available) = 71.
+        self.assertEqual(len(bt.HEADER), 71)
 
 
 if __name__ == "__main__":

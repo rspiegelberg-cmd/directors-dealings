@@ -86,6 +86,13 @@ except ImportError:  # pragma: no cover -- defensive
     build_results_date_index = None
     classify_post_results = None
 
+# B-168: salary-multiple conviction feature. Import defensively; missing
+# module -> the salary-multiple columns stay empty.
+try:
+    import director_pay as _dp  # noqa: E402
+except ImportError:  # pragma: no cover -- defensive
+    _dp = None
+
 
 DEFAULT_OUT = db.DB_DIR / "_backtest_results.csv"
 SKIPS_PATH  = db.DB_DIR / "_backtest_skips.json"
@@ -162,6 +169,17 @@ HEADER = [
     # coverage (missing data, not zero) or non-BUY row.
     "post_results_flag", "days_since_results",
     "windows_available",
+    # B-168: salary-multiple conviction feature. buy value / director pay,
+    # GBP, with an AR-publication-date lookahead guard (the figure must have
+    # been public at announcement). _total = vs single-figure total comp,
+    # _base = vs base salary. Empty when no lookahead-safe figure exists or
+    # the multiple is meaningless (zero/nominal pay) or the row is non-BUY.
+    # pay_status surfaces the no-figure reason (new_appointee_no_disclosure /
+    # out_of_scope / extraction_fail) for diagnostics. Appended AFTER
+    # windows_available so the idx_wa-anchored HEADER pin tests (B-155..B-164)
+    # stay valid -- consumers read columns by name, not position.
+    "salary_multiple_total", "salary_multiple_base",
+    "pay_total_gbp", "pay_base_gbp", "pay_fy_end", "pay_confidence", "pay_status",
 ]
 
 
@@ -523,6 +541,17 @@ def run_backtest(conn, *, signal_id=None, signal_version=None,
     ).fetchone() is not None:
         results_index = build_results_date_index(conn)
 
+    # B-168: salary-multiple feature available only when the director_pay
+    # table exists (migration 015) and the module imported. Same one-time
+    # sqlite_master guard as B-164/B-161 -> old fixtures emit empty cells.
+    has_director_pay = (
+        _dp is not None
+        and conn.execute(
+            "SELECT 1 FROM sqlite_master "
+            "WHERE type='table' AND name='director_pay'"
+        ).fetchone() is not None
+    )
+
     with tmp_path.open("w", encoding="utf-8", newline="") as fh:
         writer = csv.writer(fh)
         writer.writerow(HEADER)
@@ -736,6 +765,47 @@ def run_backtest(conn, *, signal_id=None, signal_version=None,
                 )
             else:
                 post_results_val, days_since_results = None, None
+
+            # B-168: salary-multiple feature, lookahead-guarded on AR
+            # publication date (latest_pay_before requires ar_published_at <=
+            # the announcement). BUY rows only. Two denominators (total + base).
+            sm_total = sm_base = None
+            pay_total_gbp = pay_base_gbp = None
+            pay_fy_end = pay_confidence = pay_status_out = None
+            if has_director_pay and tx_type == "BUY" and tx_director:
+                dkey = _dp.director_key(tx_director)
+                val = r["value_gbp"]
+                total_row = _dp.latest_pay_before(
+                    conn, ticker, dkey, announced, "single_figure_total")
+                base_row = _dp.latest_pay_before(
+                    conn, ticker, dkey, announced, "base_salary")
+                if total_row is not None:
+                    pay_total_gbp = total_row["pay_gbp"]
+                    sm_total = _dp.salary_multiple(
+                        val, pay_gbp=pay_total_gbp,
+                        pay_status=total_row["pay_status"],
+                        pay_type=total_row["pay_type"])
+                    pay_fy_end = total_row["fy_end"]
+                    pay_confidence = total_row["confidence"]
+                if base_row is not None:
+                    pay_base_gbp = base_row["pay_gbp"]
+                    sm_base = _dp.salary_multiple(
+                        val, pay_gbp=pay_base_gbp,
+                        pay_status=base_row["pay_status"],
+                        pay_type=base_row["pay_type"])
+                    if pay_fy_end is None:
+                        pay_fy_end = base_row["fy_end"]
+                    if pay_confidence is None:
+                        pay_confidence = base_row["confidence"]
+                if total_row is not None or base_row is not None:
+                    pay_status_out = "ok"
+                else:
+                    nr = conn.execute(
+                        "SELECT pay_status FROM director_pay "
+                        "WHERE ticker = ? AND director_key = ? "
+                        "  AND pay_type = 'none' LIMIT 1",
+                        (ticker, dkey)).fetchone()
+                    pay_status_out = nr["pay_status"] if nr else None
             writer.writerow([
                 run_id, r["signal_id"], r["signal_version"],
                 r["fingerprint"], r["fired_at"],
@@ -763,6 +833,9 @@ def run_backtest(conn, *, signal_id=None, signal_version=None,
                 reversal_flag_val, net_shares_prior,
                 post_results_val, days_since_results,
                 windows_available,
+                sm_total, sm_base,
+                pay_total_gbp, pay_base_gbp, pay_fy_end, pay_confidence,
+                pay_status_out,
             ])
             n_written += 1
 

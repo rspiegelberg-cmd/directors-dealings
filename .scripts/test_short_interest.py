@@ -138,9 +138,10 @@ class TempDBTestCase(unittest.TestCase):
 
 class TestMigration014(TempDBTestCase):
 
-    def test_schema_head_is_14(self):
+    def test_schema_head_is_15(self):
+        # head: 14 (B-164 short_positions) -> 15 (B-168 director_pay)
         self.assertEqual(
-            self.db_mod.get_meta(self.conn, "schema_version"), "14")
+            self.db_mod.get_meta(self.conn, "schema_version"), "15")
 
     def test_tables_exist(self):
         names = {r[0] for r in self.conn.execute(
@@ -554,8 +555,9 @@ class TestBacktestHeader(unittest.TestCase):
         # 57 (post-B-156) + short_pct_at_announcement = 58;
         # + routine_flag + routine_prior_buy_years (B-155) = 60;
         # + seller_reversal_flag + net_shares_prior_12m (B-159) = 62;
-        # + post_results_flag + days_since_results (B-161) = 64.
-        self.assertEqual(len(bt.HEADER), 64)
+        # + post_results_flag + days_since_results (B-161) = 64;
+        # + 7 B-168 salary-multiple cols (appended after windows_available) = 71.
+        self.assertEqual(len(bt.HEADER), 71)
 
     def test_short_pct_before_sprint63_pairs_and_windows_available(self):
         import backtest as bt

@@ -317,8 +317,9 @@ class TestBacktestIntegration(unittest.TestCase):
         import backtest as bt
         # 58 (post-B-164) + routine_flag + routine_prior_buy_years = 60;
         # + seller_reversal_flag + net_shares_prior_12m (B-159) = 62;
-        # + post_results_flag + days_since_results (B-161) = 64.
-        self.assertEqual(len(bt.HEADER), 64)
+        # + post_results_flag + days_since_results (B-161) = 64;
+        # + 7 B-168 salary-multiple cols (appended after windows_available) = 71.
+        self.assertEqual(len(bt.HEADER), 71)
 
     def test_select_firings_selects_director(self):
         """_select_firings must expose t.director for the classifier."""

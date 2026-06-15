@@ -72,7 +72,7 @@ Full scope: `docs/specs/predictive-edge-2026-06-07-plan.md`. Linear DIR-64 → D
 | B-142 | DIR-69 | Automate daily LSE diary scrape (`daily_diary_scrape.bat` shipped; one-time `schtasks`). Todo. | 53 | P2 | 1 |
 | ✅ B-143 | DIR-70 | Duplicate transaction detection + removal — exact fingerprint dedup + near-dedup (same director/value, date ±7 days). `.scripts/dedup_transactions.py`, 455 lines. DB: 6,454→6,338 (116 removed). **DONE 2026-06-07.** | 53 | P2 | 3 |
 | ✅ B-144 | DIR-71 | Strategy tracker: T+1/T+21/T+90/T+252 horizon toggle pills + per-signal chip toggles (11 buy signals). Multi-horizon compute in `export_dashboard_json.py`; interactive Chart.js panel in `render_performance.py`. **DONE + DEPLOYED 2026-06-07.** | 53 | P2 | 3 |
-| B-145 | DIR-72 | **Upcoming Events box on This Week page** — rolling 2-week forward look at reporting calendar events. Reads from `reporting_dates` table. Displays: ticker, company name, event type (interim/full/AGM), date. Sorted date-ascending (nearest first). Zone A: `export_dashboard_json.py` + `render_index.py`. | 53 | P2 | 2 |
+| ✅ B-145 | DIR-72 | **Upcoming Events box on This Week page** — rolling 2-week forward look at reporting calendar events. Reads from `reporting_dates` table. Displays: ticker, company name, event type (interim/full/AGM), date. Sorted date-ascending (nearest first). Zone A: `export_dashboard_json.py` (`_build_upcoming_events`) + `dashboard/render_index.py` (panel ~L594-631). **DONE — verified already-built + live 2026-06-13** (B-001 pattern): exporter + renderer both present; live `outputs/index.html` renders the panel with real forward events (TIG/PEEL 2026-06-15 etc). No rebuild needed. | 53 | P2 | 2 |
 
 ---
 
@@ -96,7 +96,7 @@ n=1) → **B-168** (scoped build, awaiting Rupert). Memo: docs/research/b163-spi
 |------|--------|--------------------|-----|
 | B-166 | DIR-97 | Widen B-156 resulting-holding patterns (anchor "purchase/acquisition/trades" + predicate forms + Families 3/4) → projected ~17% BUY coverage. Precision guards unchanged. | P1 |
 | B-167 | DIR-98 | 859 BUY rows (46%) have empty url — unreachable by cache-based backfills; investigate ingest path + url restoration vs metric exclusion. | P1 |
-| B-168 | DIR-99 | Salary-multiple scoped build (top ~100 signal tickers, annual refresh) per B-163 CONDITIONAL-GO memo. Gated on Rupert's read of the memo. | P2 |
+| B-168 | DIR-99 | Salary-multiple scoped build (top ~100 signal tickers, annual refresh) per B-163 CONDITIONAL-GO memo. **IN PROGRESS — Sprint 64. Phases 1+2+3 DONE 2026-06-13** (Phase 3: backtest.py HEADER +7 cols salary_multiple_total/base + pay_total/base_gbp + pay_fy_end/confidence/status, appended AFTER windows_available so the 6 idx_wa-anchored pin tests only needed a 64→71 length bump; per-row compute with AR-publication-date lookahead via director_pay.latest_pay_before; new test_b168_backtest.py HEADER+getsource gate. ⚠ verified via Read ground-truth — FUSE truncated backtest.py in the sandbox so Windows `unittest discover` is the gate. REMAINING: collection RUN + Phase 4.)** Phase 2 DONE 2026-06-13** (Phase 2: `backfill_director_pay.py` — worklist / from-sources / from-manual lanes, 14 tests green; 387 in-scope targets; collection run + Phase 3 backtest wiring remain).** Phase 1 DONE 2026-06-13** (migration 015 director_pay + db.py chain 14→15 + director_pay.py helpers + 21 tests green vs real schema; ⚠ verified via /tmp mirror — FUSE served a corrupted db.py to the sandbox, so Windows `unittest discover` is the final gate). Decisions locked: dual denominator (total + base). **SCOPE REFINED 2026-06-13 (Rupert): EXECUTIVE directors only (CEO/CFO/exec-Chair/exec-dir/C-suite) — NO NEDs (NED fees not relevant). Collectible exec scope = 389 pairs / 229 companies (vs 950/387 all-board); divisional/regional & "Other Chief" non-board execs mostly have no published pay → out_of_scope. Follow-up: tighten backfill select_targets to drop t3_ned_buy + non-exec roles.** Collection method: per-company / press search, exec only, highest-conviction first; figures land in .data/_pay_manual.csv for --confirm. **GREENLIT + SCOPED. Full build spec: `docs/specs/b168-salary-multiple-plan.md`.** 4 phases (~5-8 pts): (1) migration 015 `director_pay` table + FX; (2) `backfill_director_pay.py` collection (CH appointment dates + curl/pdftotext rung-b + press fallback, cache, upsert) run on top ~100 firing tickers; (3) backtest HEADER cols + **lookahead guard on AR publication date** + tests + deploy; (4) re-run memo §3.5 overlap vs B-156. Feature column only (no firing signal). 5 decisions to confirm in spec §11 (denominator, scope, acceptance bar, press-review, FX source). | P2 |
 | B-169 | DIR-100 | mktcap scraper dot-suffix slug retry + CSV seed for 13 BUY tickers missing market cap (AI., TW. etc 404s; JUST/SXS/SOLG page misses; BRSC/SEQI are ITs — exclude). | P1 |
 
 ---
@@ -147,7 +147,7 @@ data points + honest cost model + longer history. Linear DIR-86 → DIR-95.
 | ✅ B-160 | DIR-91 | **Distance from 52-wk low/high + 1m/3m/6m momentum features.** `backtest.py`: `_rolling_hl()` + `_prior_close()` + 6 new HEADER cols (55 total). 17/17 tests green. **DONE 2026-06-10.** | P2 | Deploy: backtest → eval → export → build |
 | B-161 | DIR-92 | "First window after results" flag (UK MAR timing — buys cluster post-results). | P2 | Uses reporting_dates |
 | ✅ B-162 | DIR-93 | **Extend price + benchmark history backward 5 yrs (Yahoo `--extend` flag).** `backfill_prices.py`: `_default_from()` 1827 days; `--extend` bypasses smart-range. **DONE 2026-06-10.** | P2 | Zone B: run `backfill_prices --extend` then full rebuild |
-| B-163 | DIR-94 | Director salary multiple (annual-report remuneration scrape). Feasibility spike first; may be redundant after B-156. | P3 | **→ Sprint 61 (spike only)** |
+| ✅ B-163 | DIR-94 | Director salary multiple (annual-report remuneration scrape). Feasibility spike first; may be redundant after B-156. | P3 | **SPIKE DONE 2026-06-13 — verdict CONDITIONAL-GO** (`docs/research/b163-spike-memo.md`): 94% in-scope extraction; redundancy-vs-B-156 test inconclusive (n=1) → the two are complements not substitutes. Full pipeline → **B-168** (scoped build, top ~100 firing tickers, annual refresh, 5-8pts) — awaiting Rupert's build go/no-go. |
 | B-164 | DIR-95 | Short interest ingestion (FCA daily disclosures CSV, ≥0.5% only). | P3 | **→ Sprint 61** Exploratory feature column |
 
 ---
@@ -160,6 +160,7 @@ the old "Recently shipped" table at the bottom is folded into this list.
 
 | Date | What shipped |
 |------|--------------|
+| 2026-06-13 | **B-145 + B-163 closed out; sector-coverage regression found.** B-145 (DIR-72) verified already-built + live (B-001 pattern) — `_build_upcoming_events` exporter + render_index panel both present, live dashboard shows real forward events; marked Done, no rebuild. B-163 (DIR-94) spike marked Done — verdict CONDITIONAL-GO; scoped build carried as B-168, awaiting Rupert's go/no-go. **⚠ Sector regression (new P1, logged below):** live DB has only 85/693 non-excluded tickers sectored vs the ~493 banked by B-158 (2026-06-10). Root cause not a wipe — `_fmp_cache/` still holds 533 fetched profiles; the DB writes were lost (suspected backup-restore or lost commit). Fix = one `backfill_sectors.py` run (529 of 548 missing tickers are already cached = zero quota; ~19 fresh fetches, well under the 250/day free-tier cap). Command block handed to Rupert. |
 | 2026-06-11 | **Sprint 62 — Data Quality built & QA-passed (B-166/167/169, DIR-97/98/100 Done; deploy pending Rupert).** B-166: widened resulting-holding extraction (anchor: purchase/acquisition/trades/transfers/SIPP/dealing; predicates F1–F5; anchorless Families 3+4; window-clip fix; corporate-subject guard) — verified on 20+ real filings; recall measurement 197/904 NULL filings now yield (was 10) → projected 13.1% BUY population pre-B-167. **B-167 root cause: `reparse_corpus.py` derived url only from existing DB rows** — the June recovery reparses mass-inserted 4,501 rows with blank url/announced_at/buy_strictness. Fixed at source (og:url+dateCreated fallback, _apply_insert now writes buy_strictness/role_normalized, _apply_update NULLIF heals) + new `backfill_urls.py` (fingerprint replay → og:url; 3,647/4,501 restorable = 721/859 BUYs; 854 parser-drift rows formally unreachable). ⚠️ ORDERING: backfill_urls BEFORE any reparse_corpus run; backfill_resulting_shares AFTER backfill_urls. B-169: mktcap slug-variant retry (404 fast-fail; dot-suffix) + 7 CSV seeds (AGR/JUST/LIFS/PHLL/SOLG/SXS/ULTP — 6 are delistings, not slug bugs). QA: PASS-WITH-FIXES — caught+fixed corporate head-noun precision bug (BOG Group Employee Trust attach risk); 67+16+50+159+41+17 tests green. Deploy block in shipped-log / Claude chat. |
 | 2026-06-10 | **Sprint 61 — B-156 + B-164 built & QA-passed (DIR-87/95 Done); B-163 spike data collected (DIR-94 in progress).** B-156: migration 013 `transactions.resulting_shares`; `parse_pdmr.py` narrative+table capture (all 4 emission paths, fingerprint untouched, 6 real filings verified); `backfill_resulting_shares.py` (preview/`--confirm`, fingerprint-matched UPDATE in place, JSONL audit); backtest HEADER +`resulting_shares`,`holding_pct_increase`. Corpus reality: only ~13% of purchase filings state the figure (MAR template lacks the field) — acceptance bar ≥10% of BUYs. B-164: migration 014 `short_positions`+`isin_ticker_map`; `backfill_short_interest.py` (FCA daily XLSX, historic sheet 106,725 rows ingestable, idempotent upsert, name-match→OpenFIGI→override mapping, coverage log); backtest HEADER +`short_pct_at_announcement` with **strictly-prior (`inclusive=False`) semantics** after QA caught a 1-day lookahead. ⚠️ FCA regime change 13-Jul-2026 kills holder-level feed — run historic ingest before then. Prospective BUY-ticker coverage 32.5% (144/443). B-163 spike: 15/20 raw (94% for established directors); failure mode = recently-appointed directors; memo awaits B-156 overlap test post-deploy. QA: 155 tests 0F/0E sandbox + 3 fixes incl. pre-existing `test_p3_lookahead` t0 fixture (legacy signal id) — now 3/3. Backtest reads `signals` table (not vice versa); deploy order backfill→backtest→eval→export→build confirmed. **Rupert: Windows `unittest discover` = final gate, then deploy blocks in `docs/specs/sprint-61-plan.md` §4 (incl. one-time `pip install openpyxl`).** |
 | 2026-06-10 | **B-157 + B-158 + B-165 — Dynamic costs, sector backfill, sector normalisation (DIR-88/89/96).** B-157: `backtest.py` Corwin-Schultz spread model (`_ticker_ohlc` OHLCV cache + `_cs_spread_bps()`); 762 tickers backfilled (203k H/L rows); 99% of signals now use dynamic costs (5–450 bps vs flat 50+50). B-158: `backfill_sectors.py` FMP API backfill; 493/675 tickers (73%) now have a sector (was 24%); AIM guard preserves `^FTSC` benchmark for AIM tickers. B-165: `SECTOR_NORMALISE` dict + `normalise_existing()` + `--normalise` CLI mode added to `backfill_sectors.py`; collapses 5 duplicate By-Sector buckets ("Financial Services"→"Financials", "Consumer Cyclical"→"Consumer Discretionary", "Consumer Defensive"→"Consumer Staples", "Basic Materials"→"Materials", "Healthcare"→"Health Care"); 22 tests green. Deploy: `backfill_sectors --normalise` → `snapshot_db` → `export_dashboard_json` → `build_dashboard`. |
@@ -218,6 +219,50 @@ the old "Recently shipped" table at the bottom is folded into this list.
 ---
 
 ## P1 — data correctness
+
+### B-170 — Sector coverage regressed to 85/693 (DB writes lost; cache intact) — RESOLVED 2026-06-13
+**RESOLVED 2026-06-13:** Rupert re-ran `backfill_sectors.py` → snapshot → export → build.
+Coverage **85 → 557** of 629 non-excluded tickers. Of the 72 still blank, only **12 are
+active** (have transactions) and all 12 are absent from FMP (delistings / obscure small-caps:
+QUBE, AIRA, CINH, COIL, CPIC, CTHT, DGQ, GHV1, MCJ, NYCE, V3TC, CFCP) — the irreducible
+tail; a re-run won't fill them. Optional path to 100%: hand-add those 12 to the curated
+`sector_map.csv` (which always wins over FMP). Follow-up still open: make `refresh_all` (or a
+weekly job) re-assert sectors from `_fmp_cache` so a future DB restore can't silently drop
+them again.
+**Discovered:** 2026-06-13 (this session, from the 2026-06-13 06:00 snapshot).
+**Severity:** Real data correctness / display. Only **85** of 693 non-excluded
+tickers carry a sector in the live DB, vs the **~493** banked by B-158 on
+2026-06-10. Sectors drive the sector-matched benchmark and the By-Sector dashboard
+cuts, so the wrong benchmark may be in use for ~550 active tickers.
+**Root cause (not a wipe):** `.scripts/_fmp_cache/` still holds **533** fetched FMP
+profiles, so the data was fetched but the DB writes were lost — suspected
+backup-restore from a `.bak` predating the sector backfill, or a commit lost to
+FUSE. `classify_issuers` uses `INSERT OR IGNORE` and `backfill_sectors` only fills
+NULLs, so neither wipes an existing sector; nothing in the codebase clears it.
+**Fix (cheap — one Zone-B run):** `backfill_sectors.py` writes cached profiles for
+free (no quota). Of the 548 active missing-sector tickers, **529 are already
+cached**; only **~19** need a fresh fetch — far under the 250/day free-tier cap.
+So a single run takes coverage 85 → ~614 (minus the handful of delisted/unmatched
+tickers FMP can't resolve). Then snapshot + export + build. Command block in the
+2026-06-13 chat / shipped-log entry.
+**Follow-up to consider:** have `refresh_all` (or a weekly job) re-assert sectors
+from `_fmp_cache` so a future restore can't silently drop them again.
+
+### B-171 — Director→role mislabels (some non-CEOs tagged CEO/CFO)
+**Discovered:** 2026-06-13 during B-168 pay collection.
+**Severity:** Data correctness affecting role-tiered signals (t1a/t1b/t7 etc.)
+and the B-168 salary-multiple scope. Some `role_normalized` labels are wrong:
+- **MSLH "Simon Bourne" tagged CEO** — not Marshalls' CEO (real CEO over the
+  period was Matt/Matthew Pullen). Pay was misattributed during collection.
+- **MAB1 "Ben Thompson" tagged CEO** — he is Deputy CEO; the CEO is Peter
+  Brodnicki.
+Likely more exist (these two surfaced from a 16-name sample). Because the
+role buckets drive which signal tier fires, a mislabel both fires the wrong
+tier and pollutes any role-scoped analysis.
+**Fix:** audit `role_normalize.py` against companies' actual boards for the
+high-signal CEO/CFO/Chair names; correct via reparse or a small role-override
+CSV (ticker, director → correct role). Spot-check the top ~50 firing
+directors first (highest signal weight). **P2.**
 
 ### B-094 — backfill_filings.py missing the IT/CEF ingest filter — RESOLVED 2026-06-03
 **RESOLVED:** re-validation showed `excluded_at_ingest=68` (filter working); the 68 already-inserted IT rows were purged via `classify_issuers` → `exclude_investment_trusts --confirm` (0 signals affected, all 39 tickers confirmed genuine ITs/VCTs/CEFs).
