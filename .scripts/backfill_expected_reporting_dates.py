@@ -26,7 +26,9 @@ Design (locked 2026-06-05/06)
     twice a year -> ~182 days; annual-only -> ~365). Clamp the gap to a sane
     [80, 400] day band, then roll forward from the most recent date until the
     projected date is in the future. Only store it if it falls within the
-    horizon (default 180 days) — near-term, actionable, low drift risk.
+    horizon (default 400 days = the cadence ceiling, so no valid one-cadence
+    projection is ever dropped; downstream panels/badges still read only the
+    near term). Estimates are always badged "(est)".
   * report_type = 'EARNINGS' (generic — we're estimating "next results", not a
     specific interim/final).
   * Replace-on-rerun: each run deletes all prior source='est' rows and
@@ -61,7 +63,14 @@ REPORT_TYPE = "EARNINGS"
 DEFAULT_CADENCE_DAYS = 365     # fallback when a ticker has only one prior date
 MIN_GAP_DAYS = 80             # clamp band: quarterly-ish floor
 MAX_GAP_DAYS = 400            # clamp band: annual-ish ceiling
-DEFAULT_HORIZON_DAYS = 180    # only store estimates landing within this window
+DEFAULT_HORIZON_DAYS = 400    # store estimates landing within this window.
+# Set to match MAX_GAP_DAYS (the cadence ceiling): the roll-forward always lands
+# within one cadence of today, and cadence is clamped to <= 400, so a 400-day
+# horizon never discards a valid projection. The old 180 silently dropped every
+# annual reporter whose next results were >6 months out (2026-06-18: this raised
+# active-holding coverage from ~51% toward the ~77% that have usable history).
+# Downstream surfaces (30-day panel, 60-day pre-results badge) read only the
+# near term, so longer-dated estimates raise coverage without cluttering the UI.
 
 # If any confirmed date (any type, any source) for a ticker lands within this
 # many days of the projected estimate, the estimate is suppressed.  Covers the

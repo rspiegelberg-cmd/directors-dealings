@@ -104,8 +104,9 @@ class TestMigration(unittest.TestCase):
                     # B-156: 12->13 (013 resulting_shares).
                     # B-164: 13->14 (014 short_positions).
                     # B-168: 14->15 (015 director_pay).
+                    # B-171: 15->16 (016 conviction_scores).
                     self.assertEqual(
-                        db_mod.get_meta(conn, "schema_version"), "15",
+                        db_mod.get_meta(conn, "schema_version"), "16",
                     )
                 finally:
                     conn.close()

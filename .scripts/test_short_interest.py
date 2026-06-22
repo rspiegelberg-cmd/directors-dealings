@@ -138,10 +138,11 @@ class TempDBTestCase(unittest.TestCase):
 
 class TestMigration014(TempDBTestCase):
 
-    def test_schema_head_is_15(self):
+    def test_schema_head_is_16(self):
         # head: 14 (B-164 short_positions) -> 15 (B-168 director_pay)
+        #       -> 16 (B-171 conviction_scores)
         self.assertEqual(
-            self.db_mod.get_meta(self.conn, "schema_version"), "15")
+            self.db_mod.get_meta(self.conn, "schema_version"), "16")
 
     def test_tables_exist(self):
         names = {r[0] for r in self.conn.execute(

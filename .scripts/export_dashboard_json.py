@@ -49,6 +49,7 @@ if str(HERE) not in sys.path:
 
 import db  # noqa: E402
 import sizing  # noqa: E402  (B-115 spec 07 conviction position sizing)
+import conviction_pipeline  # noqa: E402  (B-171 weekly conviction score adapter)
 from classify_role import classify_role  # noqa: E402 — Sprint 4
 from role_normalize import is_corporate_actor, is_related_party  # noqa: E402 — B-136
 
@@ -1952,17 +1953,20 @@ _EVENT_LABELS = {
 
 
 def _build_upcoming_events(conn, today: date) -> list[dict]:
-    """B-145: Upcoming events (reporting_dates) for the next 14 days.
+    """B-145: Upcoming events (reporting_dates) for the next 30 days.
 
     Queries reporting_dates joined to transactions (for company name) for events
-    from today through today+14. Degrades gracefully when the table is absent
+    from today through today+30. Degrades gracefully when the table is absent
     (pre-migration DB) -- returns [].
+
+    Window widened 14->30 days (2026-06-18) so the panel stays populated through
+    quieter stretches of the UK results calendar.
 
     Column names in reporting_dates: ticker, report_date, report_type, source,
     confidence (migration 009). Company name is sourced from the most-recent
     transaction per ticker (same pattern as _load_tickers_meta).
     """
-    cutoff = (today + timedelta(days=14)).isoformat()
+    cutoff = (today + timedelta(days=30)).isoformat()
     today_iso = today.isoformat()
     try:
         rows = conn.execute(
@@ -2210,7 +2214,7 @@ def build_dealings(conn, today: date, tickers_meta: dict | None = None) -> dict:
 
     week_out = [_row(t) for t in week_txs]
 
-    # B-145: upcoming events panel (next 14 days from reporting_dates).
+    # B-145: upcoming events panel (next 30 days from reporting_dates).
     upcoming_events = _build_upcoming_events(conn, today)
 
     return {
@@ -3382,6 +3386,156 @@ def _close_le(dates: list, closes: list, target) -> float | None:
     return closes[k - 1] if k > 0 else None
 
 
+# B-171 sub-score display metadata — single source of truth for labels/order
+# used to build the per-factor display fields the panel renders.
+_CONVICTION_FACTOR_LABELS = [
+    ("who", "f1_who", "Who"),
+    ("buy_size", "f2_buy_size", "Buy size"),
+    ("company_size", "f3_company_size", "Company size"),
+    ("earnings_timing", "f4_earnings_timing", "Earnings timing"),
+    ("past_performance", "f5_past_performance", "Past performance"),
+]
+
+
+# B-171 revised surfacing: rolling trailing-window length (days) and the
+# fixed number of strongest buys to surface in the permanent table.
+CONVICTION_WINDOW_DAYS = 28
+CONVICTION_TOP_N = 10
+
+
+def build_conviction_picks(conn, today: date) -> dict:
+    """B-171 (revised surfacing): rolling-window Conviction Score top-10 + shadow log.
+
+    Returns a dict shaped for the dashboard panel:
+        {
+          "window_days":  28,
+          "window_start": "<ISO>",   # today - 28 days (inclusive)
+          "window_end":   "<ISO>",   # today (inclusive)
+          "top10":        [ <pick>, ... ],   # up to 10, no min-score gate
+        }
+
+    Selection (revised 2026-06-18): score EVERY BUY whose effective
+    announcement day falls in the trailing 28-day window [today-28, today], rank
+    them all, and surface the strongest 10 — a permanent table refreshed every
+    pipeline run. A buy ages out once it is more than 28 days old. There is no
+    minimum-score bar: the 10 strongest are always shown regardless of strength.
+
+    Each <pick> is the engine ConvictionResult.as_dict() PLUS the buy identity
+    (date / ticker / company / director / role / value_gbp), the per-factor
+    display fields, the inputs_missing list, and rank / band.
+
+    SIDE EFFECT (Phase-3 shadow log, spec §7): upserts ONE conviction_scores
+    row per buy in the window — the WHOLE distribution, not just the surfaced 10
+    — with rank_in_window (= rank within the window) across all buys and
+    surfaced=1 for the surfaced top 10 only. The `window_end` column stores
+    the window-END (= run) date. This is what the measure-forward loop later
+    regresses forward CAR against. We commit here because the caller does not.
+
+    Honest-surfacing rule (spec §6): the top 10 are shown regardless of bar —
+    the SCORE/band does the honest work. Factors with no underlying data are
+    flagged in inputs_missing so the renderer shows "unknown", never a
+    misleading 0.
+
+    Returns {..., "top10": []} when no buys fall in the window.
+    """
+    window_end = today.isoformat()
+    window_start = (today - timedelta(days=CONVICTION_WINDOW_DAYS)).isoformat()
+    empty = {
+        "window_days":  CONVICTION_WINDOW_DAYS,
+        "window_start": window_start,
+        "window_end":   window_end,
+        "top10":        [],
+    }
+
+    try:
+        ranked = conviction_pipeline.score_window(
+            conn, today, days=CONVICTION_WINDOW_DAYS)
+    except Exception:
+        # Never let a scoring hiccup break the whole dashboard export.
+        return empty
+
+    scored_at = _now_utc_iso()
+
+    # ---- Phase-3 shadow log: upsert EVERY buy in the window. ----
+    # The `window_end` column stores the window-END (run) date; the schema 016
+    # PK (fingerprint, window_end) keeps a row per buy per run.
+    for entry in ranked:
+        sub = entry["result"].get("subscores", {})
+        surfaced = 1 if entry["rank_in_window"] <= CONVICTION_TOP_N else 0
+        try:
+            conn.execute(
+                "INSERT OR REPLACE INTO conviction_scores ("
+                "fingerprint, window_end, scored_at, score, band, "
+                "f1_who, f2_buy_size, f3_company_size, f4_earnings_timing, "
+                "f5_past_performance, f6_sector_mult, weights_used, "
+                "earnings_dropped, rank_in_window, surfaced, inputs_missing"
+                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    entry["fingerprint"], window_end, scored_at,
+                    entry["score"], entry["band"],
+                    sub.get("who"), sub.get("buy_size"),
+                    sub.get("company_size"), sub.get("earnings_timing"),
+                    sub.get("past_performance"),
+                    entry["result"].get("sector_multiplier"),
+                    json.dumps(entry["result"].get("weights_used", {})),
+                    1 if entry["result"].get("earnings_dropped") else 0,
+                    entry["rank_in_window"], surfaced,
+                    json.dumps(entry.get("inputs_missing", [])),
+                ),
+            )
+        except Exception:
+            # A single bad row (e.g. missing FK parent) must not abort the
+            # whole shadow log; skip it and continue.
+            continue
+    try:
+        conn.commit()
+    except Exception:
+        pass
+
+    # ---- Panel payload: the top 10 with full factor breakdown. ----
+    top10 = []
+    for entry in ranked[:CONVICTION_TOP_N]:
+        rd = dict(entry["result"])
+        sub = rd.get("subscores", {})
+        missing = set(entry.get("inputs_missing", []))
+        factors = []
+        for key, fid, label in _CONVICTION_FACTOR_LABELS:
+            # company_size / earnings_timing / past_performance can be "unknown".
+            is_unknown = (
+                (key == "company_size" and "company_size" in missing)
+                or (key == "earnings_timing" and "earnings_timing" in missing)
+                or (key == "past_performance" and "past_performance" in missing)
+            )
+            factors.append({
+                "id": fid,
+                "label": label,
+                "value": (None if is_unknown else sub.get(key)),
+                "unknown": is_unknown,
+            })
+        pick = {
+            **rd,
+            "fingerprint": entry["fingerprint"],
+            "rank": entry["rank_in_window"],
+            "date": entry["date"],
+            "ticker": entry["ticker"],
+            "company": entry["company"],
+            "director": entry["director"],
+            "role": entry["role"],
+            "value_gbp": entry["value_gbp"],
+            "factors": factors,
+            "inputs_missing": entry.get("inputs_missing", []),
+            "sector_caution": (entry["result"].get("sector_multiplier", 1.0) < 1.0),
+        }
+        top10.append(pick)
+
+    return {
+        "window_days":  CONVICTION_WINDOW_DAYS,
+        "window_start": window_start,
+        "window_end":   window_end,
+        "top10":        top10,
+    }
+
+
 def build_strategy_tracker(conn, today: date, *, small_cap: int | None = None) -> dict:
     """B-123: flat £10,000-per-buy-signal strategy vs an identical £10k/signal
     FTSE All-Share (^FTAS) shadow, as a daily mark-to-market time series.
@@ -3912,6 +4066,11 @@ def build_payload(conn, csv_path: Path, today: date | None = None,
     # B-123: £10k-per-signal strategy tracker vs ^FTAS shadow.
     strategy_tracker = build_strategy_tracker(conn, today)
 
+    # B-171 (revised): rolling-28-day Conviction Score top-10 panel + shadow log.
+    # NOTE: this also upserts one conviction_scores row per buy in the trailing
+    # 28-day window (the whole distribution) and commits.
+    conviction_picks = build_conviction_picks(conn, today)
+
     signals_payload: dict = {
         "schema_version":     SCHEMA_VERSION,
         "horizon_aggregates": agg,
@@ -3937,6 +4096,14 @@ def build_payload(conn, csv_path: Path, today: date | None = None,
         "pending_classification":  pending_classification,
         # B-152: 13-week capital deployed trend.
         "capital_deployed":        capital_deployed,
+        # B-171 (revised): rolling-28-day Conviction Score (top-10, scored
+        # regardless of bar). Derived view next to active_clusters —
+        # deliberately NOT a signal_id, so it is kept OUT of SIGNAL_ORDER /
+        # SIGNAL_SHORT / the JS SIDS array.
+        "conviction_top10":         conviction_picks["top10"],
+        "conviction_window_days":   conviction_picks["window_days"],
+        "conviction_window_start":  conviction_picks["window_start"],
+        "conviction_window_end":    conviction_picks["window_end"],
     }
 
     dealings_payload = build_dealings(conn, today, tickers_meta=tickers_meta)

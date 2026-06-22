@@ -388,13 +388,14 @@ class TestUpsertRoundTrip(unittest.TestCase):
                 conn = db_mod.connect()
                 try:
                     # Migration 013 applied: column exists. Chain head moved
-                    # to "14" (B-164 014_short_positions), then "15"
-                    # (B-168 015_director_pay).
+                    # to "14" (B-164 014_short_positions), "15"
+                    # (B-168 015_director_pay), then "16"
+                    # (B-171 016_conviction_scores).
                     cols = [r[1] for r in conn.execute(
                         "PRAGMA table_info(transactions)").fetchall()]
                     self.assertIn("resulting_shares", cols)
                     self.assertEqual(
-                        db_mod.get_meta(conn, "schema_version"), "15")
+                        db_mod.get_meta(conn, "schema_version"), "16")
 
                     # INSERT with a value.
                     inserted = db_mod.upsert_transaction(

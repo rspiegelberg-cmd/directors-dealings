@@ -10,8 +10,11 @@ Steps (in order)::
     2. backfill_prices      -- incremental Yahoo OHLCV
     3. backfill_benchmarks  -- sector benchmark refresh
     4. eval_signals         -- recompute signal firings
-    5. export_dashboard_json -- rebuild signals.json + dealings.json
-    6. build_dashboard      -- regen all HTML pages
+    5. backfill_lse_diary   -- forward earnings calendar (SOFT: non-blocking)
+    6. backfill_expected_reporting_dates -- "(est)" dates for uncovered
+                               holdings (SOFT: non-blocking)
+    7. export_dashboard_json -- rebuild signals.json + dealings.json
+    8. build_dashboard      -- regen all HTML pages
 
 Each step is a ``python -u .scripts/<step>.py`` subprocess with a
 per-step timeout. Status JSON is updated atomically after each step.
@@ -156,6 +159,16 @@ STEPS = [
      "eval_signals.py",          [],                 60 * 15),
     ("backtest",   "Computing signal backtests + CAR",
      "backtest.py",              [],                 60 * 20),
+    # Forward earnings calendar — refresh BEFORE export so the upcoming-events
+    # panel and the 60-day pre-results badges reflect today's dates. Both steps
+    # carry a trailing True = SOFT: a transient LSE outage logs and the pipeline
+    # continues; the calendar must never block the price/signal core. The diary
+    # writes confirmed results dates; the est gap-filler then projects a marked
+    # "(est)" next-results date for every held ticker the diary doesn't cover.
+    ("diary",      "Refreshing forward earnings calendar (LSE Diary)",
+     "backfill_lse_diary.py",    [],                 60 * 10, True),
+    ("est_dates",  "Estimating earnings dates for uncovered holdings",
+     "backfill_expected_reporting_dates.py", [],     60 * 5,  True),
     ("export",     "Rebuilding signals + dealings JSON",
      "export_dashboard_json.py", [],                 60 * 5),
     ("audit",      "Auditing date integrity",
@@ -244,7 +257,11 @@ def run_pipeline(*, scrape_days: int | None = None, no_llm: bool = False,
         src = "explicit" if scrape_days is not None else "auto-detected"
         print(f"[refresh_all] scrape_days={effective_scrape_days} ({src})")
 
-    for key, label, script, default_args, timeout in STEPS:
+    for step in STEPS:
+        key, label, script, default_args, timeout = step[:5]
+        # Optional 6th element marks a SOFT step: failure/timeout logs and the
+        # pipeline continues instead of aborting (used for the calendar steps).
+        soft = step[5] if len(step) > 5 else False
         if skip_scrape and key == "scrape":
             base_state["completed"].append({
                 "step": key, "skipped": True,
@@ -270,6 +287,16 @@ def run_pipeline(*, scrape_days: int | None = None, no_llm: bool = False,
                 timeout=timeout, check=False,
             )
         except subprocess.TimeoutExpired:
+            if soft:
+                base_state["completed"].append({
+                    "step": key, "label": label, "soft_failed": True,
+                    "error": f"timed out after {timeout}s",
+                    "finished_at": _now_iso(),
+                })
+                base_state["log"].append(
+                    f"[{_now_iso()}] {key}: SOFT timeout after {timeout}s — skipped")
+                write_status(base_state)
+                continue
             base_state["status"] = "error"
             base_state["error"] = (
                 f"Step '{key}' timed out after {timeout}s"
@@ -278,6 +305,15 @@ def run_pipeline(*, scrape_days: int | None = None, no_llm: bool = False,
             write_status(base_state)
             return base_state
         except Exception as e:  # noqa: BLE001
+            if soft:
+                base_state["completed"].append({
+                    "step": key, "label": label, "soft_failed": True,
+                    "error": repr(e), "finished_at": _now_iso(),
+                })
+                base_state["log"].append(
+                    f"[{_now_iso()}] {key}: SOFT error {e!r} — skipped")
+                write_status(base_state)
+                continue
             base_state["status"] = "error"
             base_state["error"] = f"Step '{key}' raised: {e!r}"
             base_state["finished_at"] = _now_iso()
@@ -303,6 +339,12 @@ def run_pipeline(*, scrape_days: int | None = None, no_llm: bool = False,
         )
 
         if proc.returncode != 0:
+            if soft:
+                base_state["log"].append(
+                    f"[{_now_iso()}] {key}: SOFT failure rc={proc.returncode} "
+                    f"— continuing. stderr: {stderr_tail[-300:]}")
+                write_status(base_state)
+                continue
             base_state["status"] = "error"
             base_state["error"] = (
                 f"Step '{key}' failed (rc={proc.returncode}). "

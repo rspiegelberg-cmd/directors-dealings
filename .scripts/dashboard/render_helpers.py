@@ -496,6 +496,75 @@ def status_pill(status: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# B-171 — Conviction Score band badge (single source of truth).
+#
+# Spec §4 strength bands: 0-40 Low / 40-60 Moderate / 60-80 High /
+# 80-100 Exceptional. The score itself does the honest work (spec §6): a Low
+# band is shown plainly, never dressed up — so the palette deliberately greys
+# Low and only warms toward emerald for High/Exceptional.
+# ---------------------------------------------------------------------------
+_CONVICTION_BAND_CLASS = {
+    "Low":         "bg-slate-100 text-slate-500",
+    "Moderate":    "bg-amber-100 text-amber-700",
+    "High":        "bg-emerald-100 text-emerald-700",
+    "Exceptional": "bg-emerald-600 text-white",
+}
+
+
+def conviction_band_badge(band: str, score=None) -> str:
+    """Render the Conviction Score strength-band badge (spec §4 / §6).
+
+    `band` is one of Low / Moderate / High / Exceptional. When `score` is
+    given (0-100) it is shown alongside the band label so the reader always
+    sees the raw number — a Low-band buy is visibly weak, never dressed up.
+    Unknown bands fall back to a neutral slate pill.
+    """
+    label = (band or "").strip() or "Low"
+    cls = _CONVICTION_BAND_CLASS.get(label, "bg-slate-100 text-slate-500")
+    if score is None:
+        inner = esc(label)
+    else:
+        try:
+            inner = f"{esc(label)} &middot; {float(score):.0f}"
+        except (TypeError, ValueError):
+            inner = esc(label)
+    return (f'<span class="inline-flex items-center px-2 py-0.5 rounded-full '
+            f'text-[10px] font-semibold {cls}">{inner}</span>')
+
+
+def conviction_factor_bar(label: str, value, unknown: bool = False) -> str:
+    """Render one labelled 0.0-1.0 sub-score as a thin bar (spec §6 breakdown).
+
+    `value` is a 0.0-1.0 strength (f6 multiplier callers should pre-scale).
+    When `unknown` is True (the factor had no underlying data — e.g. missing
+    market cap / earnings date), the bar is rendered empty with an "unknown"
+    label rather than a misleading 0%.
+    """
+    if unknown or value is None:
+        return (
+            '<div class="flex items-center gap-2 text-[10px]">'
+            f'<span class="w-24 shrink-0 text-slate-500">{esc(label)}</span>'
+            '<span class="flex-1 h-1.5 rounded bg-slate-100"></span>'
+            '<span class="w-12 text-right text-slate-400 italic">unknown</span>'
+            '</div>'
+        )
+    try:
+        v = max(0.0, min(1.0, float(value)))
+    except (TypeError, ValueError):
+        v = 0.0
+    pct_w = f"{v * 100:.0f}%"
+    return (
+        '<div class="flex items-center gap-2 text-[10px]">'
+        f'<span class="w-24 shrink-0 text-slate-500">{esc(label)}</span>'
+        '<span class="flex-1 h-1.5 rounded bg-slate-100 overflow-hidden">'
+        f'<span class="block h-full bg-indigo-400" style="width:{pct_w}"></span>'
+        '</span>'
+        f'<span class="w-12 text-right tabular-nums text-slate-600">{pct_w}</span>'
+        '</div>'
+    )
+
+
+# ---------------------------------------------------------------------------
 # Sprint 14 Phase 3 (B-067): Level-1 cohort-trajectory sparkline + 3m trend.
 #
 # These power the two new columns on the performance scoreboard. They read

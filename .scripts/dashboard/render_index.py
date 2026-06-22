@@ -279,6 +279,140 @@ def _cluster_card(cluster: dict, kind: str) -> str:
     )
 
 
+def _conviction_value_str(value_gbp) -> str:
+    """Abbreviated £ for a conviction card (£312k / £1.5m / —)."""
+    if value_gbp is None:
+        return "&mdash;"
+    try:
+        v = float(value_gbp)
+    except (TypeError, ValueError):
+        return "&mdash;"
+    if abs(v) >= 1_000_000:
+        return f"&pound;{v / 1_000_000:.1f}m"
+    if abs(v) >= 1_000:
+        return f"&pound;{int(round(v / 1_000))}k"
+    return f"&pound;{int(round(v))}"
+
+
+# Compact factor labels for the conviction table sub-score cells. Order
+# matches _CONVICTION_FACTOR_LABELS in the exporter (f1..f5); f6 is the
+# sector-guardrail multiplier, rendered as a caution flag (not a sub-score).
+_CONVICTION_FACTOR_SHORT = {
+    "f1_who":               "Who",
+    "f2_buy_size":          "Size",
+    "f3_company_size":      "Cap",
+    "f4_earnings_timing":   "Earn",
+    "f5_past_performance":  "Past",
+}
+
+
+def _conviction_factor_cell(f: dict) -> str:
+    """One compact factor sub-score chip for a conviction table row.
+
+    `f` is a factor dict ({id, label, value, unknown}). Renders a small pill:
+    the short label + the 0-1 value as a percentage, or "unknown" when the
+    factor had no underlying data (never a misleading 0).
+    """
+    fid = f.get("id") or ""
+    short = _CONVICTION_FACTOR_SHORT.get(fid, (f.get("label") or "")[:4])
+    if f.get("unknown") or f.get("value") is None:
+        return (
+            '<span class="inline-flex flex-col items-center px-1 py-0.5 rounded '
+            'bg-slate-50 text-[9px] leading-tight" '
+            f'title="{h.esc(f.get("label") or short)}: no underlying data">'
+            f'<span class="text-slate-400">{h.esc(short)}</span>'
+            '<span class="text-slate-400 italic">unknown</span></span>'
+        )
+    try:
+        v = max(0.0, min(1.0, float(f.get("value"))))
+    except (TypeError, ValueError):
+        v = 0.0
+    pct = f"{v * 100:.0f}%"
+    return (
+        '<span class="inline-flex flex-col items-center px-1 py-0.5 rounded '
+        'bg-indigo-50 text-[9px] leading-tight" '
+        f'title="{h.esc(f.get("label") or short)}">'
+        f'<span class="text-slate-500">{h.esc(short)}</span>'
+        f'<span class="text-indigo-700 font-semibold tabular-nums">{pct}</span></span>'
+    )
+
+
+def _conviction_row(pick: dict) -> str:
+    """Render one B-171 Conviction Score TABLE ROW (revised surfacing).
+
+    `pick` is one entry from signals_data["conviction_top10"]: the engine
+    ConvictionResult fields plus buy identity, per-factor display fields, and
+    inputs_missing. The row shows rank, score+band badge, ticker/company,
+    director/role, the six factor sub-scores (compact), and a sector-beta
+    caution flag when the F6 multiplier (f6<1.0) discounted the score.
+    """
+    rank = pick.get("rank") or "-"
+    score = pick.get("score")
+    band = pick.get("band") or "Low"
+    ticker = h.esc(pick.get("ticker") or "-")
+    company = pick.get("company") or ""
+    company_short = company if len(company) <= 28 else company[:26] + "..."
+    director = pick.get("director") or ""
+    role = pick.get("role") or ""
+    value_str = _conviction_value_str(pick.get("value_gbp"))
+    date_str = h.esc(pick.get("date") or "")
+
+    band_badge = h.conviction_band_badge(band, score)
+    role_chip = h.role_chip(role) if role else ""
+
+    factor_cells = "".join(
+        _conviction_factor_cell(f) for f in (pick.get("factors") or [])
+    )
+
+    # Sector-beta caution flag: shown when the F6 guardrail discounted the
+    # score (sector_caution / sector_multiplier < 1.0).
+    sect_mult = pick.get("sector_multiplier")
+    is_hot = bool(pick.get("sector_caution")) or (
+        sect_mult is not None and _safe_lt(sect_mult, 1.0)
+    )
+    caution_flag = (
+        ' <span class="inline-flex items-center text-[9px] px-1 py-0.5 rounded '
+        'bg-amber-100 text-amber-800 font-semibold align-middle" '
+        'title="Sector running hot &mdash; score discounted so sector beta is '
+        'not mistaken for director skill.">&#9888; hot sector</span>'
+        if is_hot else ""
+    )
+
+    ticker_link = (
+        f'<a href="companies/{ticker}.html" '
+        f'class="text-blue-600 hover:underline font-mono">{ticker}</a>'
+    )
+    rank_badge = (
+        f'<span class="inline-flex items-center justify-center w-5 h-5 rounded-full '
+        f'bg-indigo-600 text-white text-[10px] font-bold">{h.esc(rank)}</span>'
+    )
+
+    return (
+        '<tr class="border-t border-slate-100 hover:bg-indigo-50 cursor-pointer" '
+        f'onclick="window.open(\'companies/{ticker}.html\',\'_blank\')">'
+        f'<td class="px-3 py-2 text-center">{rank_badge}</td>'
+        f'<td class="px-3 py-2">{band_badge}{caution_flag}</td>'
+        f'<td class="px-3 py-2 font-medium text-slate-900">{ticker_link}'
+        f'<div class="text-[10px] text-slate-500 truncate max-w-[12rem]" '
+        f'title="{h.esc(company)}">{h.esc(company_short)}</div></td>'
+        f'<td class="px-3 py-2 text-slate-700">{h.esc(director)}'
+        f'<div class="text-[10px] text-slate-400">{role_chip}</div></td>'
+        f'<td class="px-3 py-2 text-right tabular-nums text-slate-600">'
+        f'{value_str}<div class="text-[10px] text-slate-400">{date_str}</div></td>'
+        f'<td class="px-3 py-2"><div class="flex flex-wrap gap-1">'
+        f'{factor_cells}</div></td>'
+        '</tr>'
+    )
+
+
+def _safe_lt(value, threshold) -> bool:
+    """Return True if float(value) < threshold, else False (None-safe)."""
+    try:
+        return float(value) < threshold
+    except (TypeError, ValueError):
+        return False
+
+
 def render(signals_data: dict, dealings_data: dict,
            build_sha: str = "local",
            health_panel_html: str = "") -> str:
@@ -591,7 +725,65 @@ def render(signals_data: dict, dealings_data: dict,
         '</aside>'
     )
 
-    # B-145: Upcoming Events panel — rolling 2-week forward-look from
+    # B-171 (revised): rolling 4-week Conviction Score panel — a permanent
+    # table of the top-10 strongest director buys over the trailing 28 days,
+    # each with its 0-100 score, strength band, and the six-factor breakdown.
+    # Shown regardless of bar (spec §6): the score itself does the honest work.
+    conviction_top10 = signals_data.get("conviction_top10") or []
+    conviction_window_start = signals_data.get("conviction_window_start") or ""
+    conviction_window_end = signals_data.get("conviction_window_end") or ""
+    conviction_window_days = signals_data.get("conviction_window_days") or 28
+    if conviction_top10:
+        conv_rows = "".join(_conviction_row(p) for p in conviction_top10)
+        conviction_body = (
+            '<table class="w-full text-xs tabular-nums">'
+            '<thead class="bg-slate-50 text-slate-600 uppercase tracking-wide text-[10px]">'
+            '<tr>'
+            '<th class="px-3 py-2 text-center w-[6%]">#</th>'
+            '<th class="px-3 py-2 text-left w-[16%]">Score</th>'
+            '<th class="px-3 py-2 text-left w-[22%]">Ticker / Company</th>'
+            '<th class="px-3 py-2 text-left w-[20%]">Director</th>'
+            '<th class="px-3 py-2 text-right w-[12%]">Value / Date</th>'
+            '<th class="px-3 py-2 text-left w-[24%]" '
+            'title="The six factors behind the score: Who, Buy size, Company cap, '
+            'Earnings timing, Past performance, plus a hot-sector guardrail.">'
+            'Factors</th>'
+            '</tr></thead>'
+            f'<tbody>{conv_rows}</tbody></table>'
+        )
+    else:
+        conviction_body = h.empty_state(
+            "No director buys recorded in the last 4 weeks yet.", py=6)
+    _window_label = (
+        f'{h.esc(conviction_window_start)} &ndash; {h.esc(conviction_window_end)}'
+        if conviction_window_start and conviction_window_end
+        else f'last {int(conviction_window_days)} days'
+    )
+    conviction_section = (
+        '<div class="px-6 pb-3">'
+        '<div class="bg-white border border-slate-200 rounded-lg overflow-x-auto">'
+        '<div class="px-4 py-3 border-b border-slate-100 flex items-center '
+        'justify-between">'
+        '<h2 class="text-xs uppercase tracking-wide text-slate-500">'
+        'Strongest director buys &mdash; last 4 weeks '
+        f'<span class="text-slate-400 normal-case font-normal">&#183; '
+        f'{_window_label}</span></h2>'
+        '<span class="text-[10px] text-slate-400 normal-case">'
+        'Graded 0&ndash;100 signal strength, not expected return</span>'
+        '</div>'
+        f'<div>{conviction_body}</div>'
+        '<div class="text-[10px] text-slate-400 px-4 py-2 border-t border-slate-100">'
+        'Top 10 over the trailing 4 weeks, refreshed every run, shown '
+        'regardless of bar &mdash; a Low/Moderate band means a weak buy, not a '
+        'strong pick. Factor chips are the six inputs behind the score; '
+        '"unknown" = no underlying data; &#9888; hot sector = score discounted '
+        'so sector beta is not mistaken for director skill. Buys age out after '
+        f'{int(conviction_window_days)} days.</div>'
+        '</div>'
+        '</div>'
+    )
+
+    # B-145: Upcoming Events panel — rolling 30-day forward-look from
     # reporting_dates. Displayed below the main 12-col grid as a full-width box.
     upcoming_events = dealings_data.get("upcoming_events") or []
     if upcoming_events:
@@ -621,7 +813,7 @@ def render(signals_data: dict, dealings_data: dict,
             f'<tbody>{ue_rows_html}</tbody></table>'
         )
     else:
-        ue_body = h.empty_state("No upcoming events in the next 14 days.", py=6)
+        ue_body = h.empty_state("No upcoming events in the next 30 days.", py=6)
 
     upcoming_events_section = (
         '<div class="px-6 pb-3">'
@@ -629,7 +821,7 @@ def render(signals_data: dict, dealings_data: dict,
         '<div class="px-4 py-3 border-b border-slate-100">'
         '<h2 class="text-xs uppercase tracking-wide text-slate-500">'
         'Upcoming Events <span class="text-slate-400 normal-case font-normal">'
-        '&#183; next 14 days</span></h2>'
+        '&#183; next 30 days</span></h2>'
         '</div>'
         f'{ue_body}'
         '</div>'
@@ -928,6 +1120,7 @@ def render(signals_data: dict, dealings_data: dict,
         f'{today_section}'
         f'{clusters_section}'
         '</div>'
+        + conviction_section                   # B-171 rolling-4wk conviction top-10 table
         + upcoming_events_section              # B-145 upcoming events panel
         + data_scripts                         # B-152/B-153 position + cap data for JS
         + tab_js

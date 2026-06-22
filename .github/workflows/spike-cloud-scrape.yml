@@ -1,0 +1,27 @@
+name: M0 Spike — Cloud-IP scraper test (B-173)
+
+# THE GATE for the cloud migration: does the Investegate RNS scraper and the
+# Yahoo price feed work from a GitHub Actions datacenter IP? Read-only probe,
+# no DB writes. Trigger manually from the Actions tab (Run workflow).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scraper-spike:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # The spike uses only the Python standard library (urllib) — no pip needed.
+      - name: Run cloud-IP scraper spike
+        run: python .scripts/spike_cloud_scrape.py

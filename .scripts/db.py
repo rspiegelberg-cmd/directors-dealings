@@ -312,7 +312,17 @@ def _apply_schema_migrations(conn: sqlite3.Connection) -> None:
             conn, "14", "15", "015_director_pay.sql",
             "director_pay",
         )
-        current = "15"  # noqa: F841
+        current = "15"
+
+    if current == "15":
+        # B-171: Weekly Conviction Score shadow log -- conviction_scores table.
+        # Table-existence check on conviction_scores; the migration file
+        # creates the table + indexes idempotently.
+        _run_create_table_migration_step(
+            conn, "15", "16", "016_conviction_scores.sql",
+            "conviction_scores",
+        )
+        current = "16"  # noqa: F841
 
 
 def set_meta(conn: sqlite3.Connection, key: str, value: str) -> None:

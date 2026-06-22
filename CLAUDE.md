@@ -161,3 +161,17 @@ The designer's deliverable is a **design spec**, not the production implementati
 - `docs/specs/03-phase-1-backfill-storage.md` — DB schema (source of truth for data shapes the dashboard reads)
 - `docs/specs/stage-01-plan.md` — Stage 1 plan template; later stages follow the same pattern
 - **Working folder on disk: `C:\Dev\DirectorsDealings`** (single source of truth — do not use any other path)
+## Knowledge Base — Claude Brain
+Rupert keeps a persistent second-brain wiki at: C:\Dev\Claude Brain\Claude Brain
+
+When you need background you don't already have in THIS project — about Rupert, his other
+projects, past decisions, investments, people, or recurring build-environment gotchas —
+read the brain in this order and stop as soon as you have enough:
+1. wiki/hot.md                  — recent context (~500 words)
+2. wiki/index.md                — full catalogue of pages
+3. wiki/<folder>/_index.md then the specific page(s) you need (3-5 max)
+
+Cite brain pages by name when you use them. Keep it lean: do NOT read the brain for routine
+work already covered by this project's own files, or for tasks unrelated to its knowledge.
+If the brain folder isn't accessible in this session, carry on without it.
+After a meaningful decision or finding here, consider noting it for the brain (tell Rupert).

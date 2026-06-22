@@ -33,8 +33,9 @@ class TestSchema(unittest.TestCase):
     def tearDown(self):
         self.conn.close()
 
-    def test_migration_reaches_15(self):
-        self.assertEqual(db.get_meta(self.conn, "schema_version"), "15")
+    def test_migration_reaches_16(self):
+        # Chain head: 015 director_pay -> 016 conviction_scores (B-171).
+        self.assertEqual(db.get_meta(self.conn, "schema_version"), "16")
 
     def test_table_and_columns_exist(self):
         cols = {r["name"] for r in self.conn.execute(
