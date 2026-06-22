@@ -49,9 +49,11 @@ class TestRunBacktestWiring(unittest.TestCase):
         self.src = inspect.getsource(bt.run_backtest)
 
     def test_has_director_pay_guard(self):
-        # one-time sqlite_master guard (B-164 pattern) so old fixtures emit empty
+        # one-time table-existence guard (B-164 pattern) so old fixtures emit
+        # empty cells. B-179 replaced the SQLite-only sqlite_master check with
+        # the backend-aware db.table_exists(...) so the guard works on Postgres.
         self.assertIn("has_director_pay", self.src)
-        self.assertIn("name='director_pay'", self.src)
+        self.assertIn('db.table_exists(conn, "director_pay")', self.src)
 
     def test_uses_lookahead_helper(self):
         # the AR-publication-date lookahead guard lives in latest_pay_before

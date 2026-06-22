@@ -90,7 +90,8 @@ def main(argv=None) -> int:
     )
     args = ap.parse_args(argv)
 
-    if not args.dry_run:
+    # B-179: SQLite/FUSE corruption defence only — skip on Postgres.
+    if not args.dry_run and db.backend() == "sqlite":
         if not db_health.check(db.DB_PATH):
             print("[classify_small_cap] FATAL: pre-run integrity_check failed.")
             return 2
@@ -115,7 +116,8 @@ def main(argv=None) -> int:
         f"(market_cap_gbp IS NULL)\n"
         f"  {summary['total']:>4} total tickers in tickers_meta"
     )
-    if not args.dry_run:
+    # B-179: local-SQLite-only; skip on Postgres.
+    if not args.dry_run and db.backend() == "sqlite":
         if not db_health.check(db.DB_PATH):
             print("[classify_small_cap] WARNING: post-run integrity check failed.")
             return 4

@@ -216,8 +216,12 @@ def run_pipeline(*, scrape_days: int | None = None, no_llm: bool = False,
     try:
         if str(HERE) not in sys.path:
             sys.path.insert(0, str(HERE))
+        import db  # noqa: PLC0415
         import db_health  # noqa: PLC0415
-        db_health.guard()
+        # B-179: the .bak restore/guard is a SQLite/FUSE corruption defence.
+        # On Postgres there is no local .db file, so skip the guard entirely.
+        if db.backend() == "sqlite":
+            db_health.guard()
     except SystemExit as e:
         # guard() exits with code 2 when DB is unrecoverable.
         state = {
@@ -391,9 +395,12 @@ def run_pipeline(*, scrape_days: int | None = None, no_llm: bool = False,
     write_status(base_state)
 
     # ── Seal: take a fresh backup now the pipeline succeeded ─────────────────
+    # B-179: local-SQLite-only backup; no-op on Postgres.
     try:
+        import db  # noqa: PLC0415
         import db_health  # noqa: PLC0415
-        db_health.seal()
+        if db.backend() == "sqlite":
+            db_health.seal()
     except Exception:  # noqa: BLE001
         pass  # backup failure is non-fatal
 

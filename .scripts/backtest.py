@@ -457,10 +457,10 @@ def _select_firings(conn, signal_id, signal_version, date_from, date_to):
         "LEFT JOIN tickers_meta tm ON tm.ticker = t.ticker "
         f"WHERE t.ticker NOT IN ({excl_placeholders}) "
         "  AND COALESCE(tm.is_excluded_issuer, 0) != 1 "
-        "  AND (? IS NULL OR s.signal_id = ?) "
-        "  AND (? IS NULL OR s.signal_version = ?) "
-        "  AND (? IS NULL OR COALESCE(NULLIF(t.announced_at, ''), t.date) >= ?) "
-        "  AND (? IS NULL OR COALESCE(NULLIF(t.announced_at, ''), t.date) <= ?) "
+        "  AND (CAST(? AS TEXT) IS NULL OR s.signal_id = ?) "
+        "  AND (CAST(? AS TEXT) IS NULL OR s.signal_version = ?) "
+        "  AND (CAST(? AS TEXT) IS NULL OR COALESCE(NULLIF(t.announced_at, ''), t.date) >= ?) "
+        "  AND (CAST(? AS TEXT) IS NULL OR COALESCE(NULLIF(t.announced_at, ''), t.date) <= ?) "
         "ORDER BY COALESCE(NULLIF(t.announced_at, ''), t.date), s.signal_id, s.fingerprint",
         (*EXCLUDED_TICKERS,
          signal_id, signal_id, signal_version, signal_version,
@@ -476,10 +476,29 @@ def run_backtest(conn, *, signal_id=None, signal_version=None,
     """Execute the backtest. Returns summary dict."""
     run_id = run_id or _make_run_id()
     started_at = db.iso_now()
+    # B-179: INSERT OR REPLACE (SQLite) <-> ON CONFLICT DO UPDATE (Postgres) on
+    # PK run_id. run_id is timestamp-derived so a conflict is effectively never
+    # hit; the DO UPDATE keeps idempotency parity for the re-run/explicit-run_id
+    # case by refreshing every named column.
+    if db.backend() == "postgres":
+        _bt_sql = (
+            "INSERT INTO backtest_runs "
+            "(run_id, started_at, signal_id, signal_version, metadata, universe, "
+            " period_start, period_end) VALUES (?, ?, ?, ?, ?, ?, ?, ?) "
+            "ON CONFLICT (run_id) DO UPDATE SET "
+            "started_at = excluded.started_at, signal_id = excluded.signal_id, "
+            "signal_version = excluded.signal_version, metadata = excluded.metadata, "
+            "universe = excluded.universe, period_start = excluded.period_start, "
+            "period_end = excluded.period_end"
+        )
+    else:
+        _bt_sql = (
+            "INSERT OR REPLACE INTO backtest_runs "
+            "(run_id, started_at, signal_id, signal_version, metadata, universe, "
+            " period_start, period_end) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        )
     conn.execute(
-        "INSERT OR REPLACE INTO backtest_runs "
-        "(run_id, started_at, signal_id, signal_version, metadata, universe, "
-        " period_start, period_end) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        _bt_sql,
         (run_id, started_at, signal_id, signal_version,
          json.dumps({"offsets": list(OFFSETS),
                      "spread_model": "corwin_schultz_2012",
@@ -510,10 +529,7 @@ def run_backtest(conn, *, signal_id=None, signal_version=None,
     # short_pct_at_announcement column is emitted empty for every row.
     has_short_data = (
         aggregate_short_pct is not None
-        and conn.execute(
-            "SELECT 1 FROM sqlite_master "
-            "WHERE type='table' AND name='short_positions'"
-        ).fetchone() is not None
+        and db.table_exists(conn, "short_positions")  # B-179: backend-aware guard
     )
 
     # B-155: routine vs opportunistic classifier index, built once per
@@ -535,10 +551,8 @@ def run_backtest(conn, *, signal_id=None, signal_version=None,
     # so old test fixtures without the reporting_dates table still run;
     # None -> both columns emit empty.
     results_index = None
-    if build_results_date_index is not None and conn.execute(
-        "SELECT 1 FROM sqlite_master "
-        "WHERE type='table' AND name='reporting_dates'"
-    ).fetchone() is not None:
+    if (build_results_date_index is not None
+            and db.table_exists(conn, "reporting_dates")):  # B-179
         results_index = build_results_date_index(conn)
 
     # B-168: salary-multiple feature available only when the director_pay
@@ -546,10 +560,7 @@ def run_backtest(conn, *, signal_id=None, signal_version=None,
     # sqlite_master guard as B-164/B-161 -> old fixtures emit empty cells.
     has_director_pay = (
         _dp is not None
-        and conn.execute(
-            "SELECT 1 FROM sqlite_master "
-            "WHERE type='table' AND name='director_pay'"
-        ).fetchone() is not None
+        and db.table_exists(conn, "director_pay")  # B-179: backend-aware guard
     )
 
     with tmp_path.open("w", encoding="utf-8", newline="") as fh:
@@ -899,14 +910,16 @@ def main(argv=None) -> int:
     # B-024: db_health pattern — pre-run integrity check + backup before
     # backtest_runs INSERTs and CSV overwrite. Canonical reference:
     # classify_issuers.py:run().
-    if not db_health.check(db.DB_PATH):
-        print("[backtest] FATAL: pre-run integrity_check failed. "
-              "Run start.bat to restore from .bak before retrying.")
-        return 2
-    if not db_health.backup():
-        print("[backtest] FATAL: failed to take pre-backtest .bak. "
-              "Refusing to proceed.")
-        return 3
+    # B-179: SQLite/FUSE corruption defence only — no local .db on Postgres.
+    if db.backend() == "sqlite":
+        if not db_health.check(db.DB_PATH):
+            print("[backtest] FATAL: pre-run integrity_check failed. "
+                  "Run start.bat to restore from .bak before retrying.")
+            return 2
+        if not db_health.backup():
+            print("[backtest] FATAL: failed to take pre-backtest .bak. "
+                  "Refusing to proceed.")
+            return 3
 
     # B-033: open the connection INSIDE the try so a connect() failure
     # (corrupt schema, disk full) doesn't leak a half-initialised handle.
@@ -933,15 +946,17 @@ def main(argv=None) -> int:
 
     # B-024: db_health post-run pattern. Skip seal if post-run integrity
     # fails so the pre-run .bak stays the rollback target.
-    try:
-        if not db_health.check(db.DB_PATH):
-            print("[backtest] WARNING: post-run integrity_check failed. "
-                  "The pre-run .bak is valid — restore via start.bat. "
-                  "Skipping seal to preserve good backup.")
-            return 4
-        db_health.seal()
-    except Exception as e:
-        print(f"[db_health] post-backtest seal failed (non-fatal): {e}")
+    # B-179: local-SQLite-only seal/backup; skip entirely on Postgres.
+    if db.backend() == "sqlite":
+        try:
+            if not db_health.check(db.DB_PATH):
+                print("[backtest] WARNING: post-run integrity_check failed. "
+                      "The pre-run .bak is valid — restore via start.bat. "
+                      "Skipping seal to preserve good backup.")
+                return 4
+            db_health.seal()
+        except Exception as e:
+            print(f"[db_health] post-backtest seal failed (non-fatal): {e}")
     return 0
 
 

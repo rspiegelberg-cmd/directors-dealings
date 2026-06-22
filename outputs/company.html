@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Company — Directors Dealings</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --line:#262b36; --txt:#e7eaf0; --mut:#9aa3b2;
+    --buy:#1f9d57; --buybg:#102a1c; --sell:#d2493b; --sellbg:#2a1513;
+    --neutral:#3a4150; --accent:#5b8cff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+       font:15px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1000px;margin:0 auto;padding:24px 16px 64px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .back{font-size:13px;color:var(--mut)}
+  header.co{margin:18px 0 8px}
+  header.co h1{margin:0;font-size:26px;letter-spacing:.3px}
+  header.co .tkr{color:var(--mut);font-weight:600}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+  .chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;
+        padding:3px 11px;font-size:12.5px;color:var(--mut)}
+  .chip b{color:var(--txt);font-weight:600}
+  .chip.aim{border-color:#5b4a1f;color:#e6c050}
+  table{width:100%;border-collapse:collapse;margin-top:18px;font-size:14px}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+  th{color:var(--mut);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr:hover td{background:#12151c}
+  .type{display:inline-block;padding:2px 8px;border-radius:5px;font-size:12px;font-weight:700}
+  .type.BUY{color:var(--buy);background:var(--buybg)}
+  .type.SELL,.type.SELL_TAX{color:var(--sell);background:var(--sellbg)}
+  .type.SIP,.type.GRANT,.type.EXERCISE{color:var(--mut);background:#1b1f28}
+  .sig{display:inline-block;margin:1px 3px 1px 0;padding:1px 6px;border-radius:4px;
+       font-size:11px;font-weight:700;background:#15233f;color:#9fc0ff;border:1px solid #25406e}
+  .state{padding:40px 0;color:var(--mut);text-align:center}
+  .err{color:var(--sell)}
+  footer{margin-top:30px;color:var(--mut);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
+  .live{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--buy);margin-right:5px;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="back"><a href="./index.html">&larr; All directors dealings</a></div>
+  <div id="app"><div class="state">Loading company…</div></div>
+  <footer>
+    <span class="live"></span>Live from the Directors Dealings database. Director-dealing data sourced from UK RNS PDMR announcements.
+  </footer>
+</div>
+
+<script>
+// Public, read-only credentials (RLS restricts the anon key to the serving view).
+const SUPABASE_URL = "https://mmiaiauybzsdcbrrcxfc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_vADFSIyRre-9sGyhDnXBcA_H167SU8B";
+
+const app = document.getElementById("app");
+const params = new URLSearchParams(location.search);
+const ticker = (params.get("ticker") || "").trim().toUpperCase();
+
+const fmtInt = n => (n==null ? "" : Number(n).toLocaleString("en-GB"));
+const fmtGbp = n => (n==null || n==="" ? "" : "£" + Number(n).toLocaleString("en-GB",{maximumFractionDigits:0}));
+const esc = s => (s==null ? "" : String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c])));
+const day = s => (s ? String(s).slice(0,10) : "");
+
+function render(rows){
+  if(!rows || !rows.length){
+    app.innerHTML = `<div class="state err">No dealings found for <b>${esc(ticker)}</b>.</div>`;
+    return;
+  }
+  // Company-level fields come from any row (latest non-empty company name wins).
+  const company = rows.map(r=>r.company).filter(Boolean).sort((a,b)=>b.length-a.length)[0] || ticker;
+  const r0 = rows[0];
+  const cap = r0.market_cap_gbp ? "£" + Math.round(r0.market_cap_gbp/1e6).toLocaleString("en-GB") + "m" : null;
+
+  const chips = [];
+  if(r0.sector) chips.push(`<span class="chip">Sector <b>${esc(r0.sector)}</b></span>`);
+  if(cap) chips.push(`<span class="chip">Mkt cap <b>${cap}</b></span>`);
+  if(r0.is_aim==1) chips.push(`<span class="chip aim">AIM</span>`);
+  chips.push(`<span class="chip">Dealings <b>${rows.length}</b></span>`);
+  if(r0.website_url) chips.push(`<span class="chip"><a href="${esc(r0.website_url)}" target="_blank" rel="noopener">Website ↗</a></span>`);
+
+  const body = rows.map(r=>{
+    const sigs = (r.signals||[]).map(s=>`<span class="sig">${esc(s)}</span>`).join("");
+    return `<tr>
+      <td>${esc(day(r.date))}</td>
+      <td>${esc(r.director)}</td>
+      <td>${esc(r.role_normalized||r.role||"")}</td>
+      <td><span class="type ${esc(r.type)}">${esc(r.type)}</span></td>
+      <td class="num">${fmtInt(r.shares)}</td>
+      <td class="num">${fmtGbp(r.value)}</td>
+      <td>${esc(day(r.announced_at))}</td>
+      <td>${sigs}</td>
+    </tr>`;
+  }).join("");
+
+  app.innerHTML = `
+    <header class="co">
+      <h1>${esc(company)} <span class="tkr">${esc(ticker)}</span></h1>
+      <div class="meta">${chips.join("")}</div>
+    </header>
+    <table>
+      <thead><tr>
+        <th>Date</th><th>Director</th><th>Role</th><th>Type</th>
+        <th class="num">Shares</th><th class="num">Value</th><th>Announced</th><th>Signals</th>
+      </tr></thead>
+      <tbody>${body}</tbody>
+    </table>`;
+}
+
+async function load(){
+  if(!ticker){
+    app.innerHTML = `<div class="state err">No ticker specified. Use <code>?ticker=BARC</code>.</div>`;
+    return;
+  }
+  document.title = ticker + " — Directors Dealings";
+  try{
+    const url = `${SUPABASE_URL}/rest/v1/public_company_v`
+      + `?ticker=eq.${encodeURIComponent(ticker)}`
+      + `&order=date.desc,announced_at.desc`
+      + `&limit=500`;
+    const res = await fetch(url, {
+      headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+    });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    render(await res.json());
+  }catch(e){
+    app.innerHTML = `<div class="state err">Couldn't load data (${esc(e.message)}).</div>`;
+  }
+}
+load();
+</script>
+</body>
+</html>

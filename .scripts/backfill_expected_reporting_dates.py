@@ -142,7 +142,8 @@ def estimate_next_results_date(iso_dates: list[str], today: date,
 
 def load_held_tickers(conn) -> set[str]:
     rows = conn.execute("SELECT DISTINCT ticker FROM transactions").fetchall()
-    return {r[0].strip().upper() for r in rows if r and r[0]}
+    # B-179: index by column name so this works on sqlite3.Row AND dict_row.
+    return {r["ticker"].strip().upper() for r in rows if r and r["ticker"]}
 
 
 def tickers_with_confirmed_future(conn, today: date) -> set[str]:
@@ -154,7 +155,8 @@ def tickers_with_confirmed_future(conn, today: date) -> set[str]:
         f"AND report_type IN ({placeholders})",
         (today.isoformat(), *_RESULTS_TYPES),
     ).fetchall()
-    return {r[0].strip().upper() for r in rows if r and r[0]}
+    # B-179: index by column name so this works on sqlite3.Row AND dict_row.
+    return {r["ticker"].strip().upper() for r in rows if r and r["ticker"]}
 
 
 def _has_nearby_confirmed(conn, ticker: str, est_date: date,
@@ -184,7 +186,11 @@ def confirmed_history_by_ticker(conn) -> dict[str, list[str]]:
         _RESULTS_TYPES,
     ).fetchall()
     hist: dict[str, list[str]] = {}
-    for tk, rd in rows:
+    for r in rows:
+        # Index by name, not position: psycopg dict_row rows iterate over
+        # their column-name KEYS, so positional unpacking would yield the
+        # strings "ticker"/"report_date" on Postgres. (B-179 fix.)
+        tk, rd = r["ticker"], r["report_date"]
         if tk and rd:
             hist.setdefault(tk.strip().upper(), []).append(rd)
     return hist
@@ -226,12 +232,25 @@ def write_estimates(conn, estimates: list[dict], *, dry_run: bool = False) -> di
              fetched_at, CONFIDENCE) for e in estimates]
     if not dry_run:
         conn.execute("DELETE FROM reporting_dates WHERE source = ?", (SOURCE,))
-        conn.executemany(
-            "INSERT OR REPLACE INTO reporting_dates "
-            "(ticker, report_date, report_type, source, fetched_at, confidence) "
-            "VALUES (?, ?, ?, ?, ?, ?)",
-            rows,
-        )
+        # B-179: INSERT OR REPLACE (SQLite) <-> ON CONFLICT DO UPDATE (Postgres)
+        # on PK (ticker, report_date, report_type). DELETE-first means in-batch
+        # conflicts are true duplicates; DO UPDATE refreshes the non-PK columns.
+        if db.backend() == "postgres":
+            _rd_sql = (
+                "INSERT INTO reporting_dates "
+                "(ticker, report_date, report_type, source, fetched_at, confidence) "
+                "VALUES (?, ?, ?, ?, ?, ?) "
+                "ON CONFLICT (ticker, report_date, report_type) DO UPDATE SET "
+                "source = excluded.source, fetched_at = excluded.fetched_at, "
+                "confidence = excluded.confidence"
+            )
+        else:
+            _rd_sql = (
+                "INSERT OR REPLACE INTO reporting_dates "
+                "(ticker, report_date, report_type, source, fetched_at, confidence) "
+                "VALUES (?, ?, ?, ?, ?, ?)"
+            )
+        conn.executemany(_rd_sql, rows)
         conn.commit()
     return {"estimated": len(rows), "written": 0 if dry_run else len(rows)}
 

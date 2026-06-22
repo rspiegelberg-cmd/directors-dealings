@@ -38,6 +38,7 @@ import csv
 import json
 import os
 import re
+import sqlite3  # B-179: sqlite3.IntegrityError used in the conviction write path
 import statistics
 import sys
 from datetime import date, datetime, timedelta, timezone
@@ -3249,13 +3250,16 @@ def build_monthly_buysell(conn, today: date, *, small_cap: int | None = None) ->
         "  CASE WHEN COALESCE(t.price_audit,'ok') IN ('unresolved','no_market') "
         "       THEN NULL ELSE t.value END AS value, "
         "  t.ticker, t.company, t.director, t.role, t.role_normalized, "
-        "  COALESCE(strftime('%Y-%m', t.announced_at), strftime('%Y-%m', t.date)) AS mo "
+        # B-179: substr(...,1,7) extracts 'YYYY-MM' from an ISO date/timestamp
+        # string identically on SQLite and Postgres (both 1-indexed), replacing
+        # the SQLite-only strftime('%Y-%m', ...).
+        "  COALESCE(substr(t.announced_at, 1, 7), substr(t.date, 1, 7)) AS mo "
         "FROM transactions t "
         "LEFT JOIN tickers_meta tm ON tm.ticker = t.ticker "
         "WHERE COALESCE(tm.is_excluded_issuer, 0) != 1 "
         "  AND t.type IN ('BUY', 'SELL') "
         "  AND t.value IS NOT NULL "
-        "  AND COALESCE(strftime('%Y-%m', t.announced_at), strftime('%Y-%m', t.date)) "
+        "  AND COALESCE(substr(t.announced_at, 1, 7), substr(t.date, 1, 7)) "
         f"      >= ?"
         f"{sc_clause}",
         tuple(params),
@@ -3450,8 +3454,18 @@ def build_conviction_picks(conn, today: date) -> dict:
     try:
         ranked = conviction_pipeline.score_window(
             conn, today, days=CONVICTION_WINDOW_DAYS)
-    except Exception:
-        # Never let a scoring hiccup break the whole dashboard export.
+    except Exception as exc:
+        # R-1 (cloud migration): on Postgres a failure here is almost always a
+        # dialect/porting bug in the conviction READ queries — fail LOUD so it
+        # can never ship an empty conviction panel with a green exit (the exact
+        # failure mode this migration set out to kill). On SQLite keep the
+        # historical lenient behaviour so a genuine scoring hiccup doesn't break
+        # the whole dashboard export.
+        import sys as _sys
+        print(f"[conviction] score_window failed: {type(exc).__name__}: {exc}",
+              file=_sys.stderr)
+        if db.backend() == "postgres":
+            raise
         return empty
 
     scored_at = _now_utc_iso()
@@ -3459,17 +3473,66 @@ def build_conviction_picks(conn, today: date) -> dict:
     # ---- Phase-3 shadow log: upsert EVERY buy in the window. ----
     # The `window_end` column stores the window-END (run) date; the schema 016
     # PK (fingerprint, window_end) keeps a row per buy per run.
+    #
+    # B-179: INSERT OR REPLACE (SQLite) <-> ON CONFLICT DO UPDATE (Postgres) on
+    # the PK (fingerprint, window_end). Full-row insert -> the DO UPDATE refreshes
+    # every non-PK column so a re-run within the same window overwrites in place,
+    # matching the SQLite delete+reinsert exactly.
+    if db.backend() == "postgres":
+        _cs_sql = (
+            "INSERT INTO conviction_scores ("
+            "fingerprint, window_end, scored_at, score, band, "
+            "f1_who, f2_buy_size, f3_company_size, f4_earnings_timing, "
+            "f5_past_performance, f6_sector_mult, weights_used, "
+            "earnings_dropped, rank_in_window, surfaced, inputs_missing"
+            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+            "ON CONFLICT (fingerprint, window_end) DO UPDATE SET "
+            "scored_at = excluded.scored_at, score = excluded.score, "
+            "band = excluded.band, f1_who = excluded.f1_who, "
+            "f2_buy_size = excluded.f2_buy_size, "
+            "f3_company_size = excluded.f3_company_size, "
+            "f4_earnings_timing = excluded.f4_earnings_timing, "
+            "f5_past_performance = excluded.f5_past_performance, "
+            "f6_sector_mult = excluded.f6_sector_mult, "
+            "weights_used = excluded.weights_used, "
+            "earnings_dropped = excluded.earnings_dropped, "
+            "rank_in_window = excluded.rank_in_window, "
+            "surfaced = excluded.surfaced, inputs_missing = excluded.inputs_missing"
+        )
+    else:
+        _cs_sql = (
+            "INSERT OR REPLACE INTO conviction_scores ("
+            "fingerprint, window_end, scored_at, score, band, "
+            "f1_who, f2_buy_size, f3_company_size, f4_earnings_timing, "
+            "f5_past_performance, f6_sector_mult, weights_used, "
+            "earnings_dropped, rank_in_window, surfaced, inputs_missing"
+            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        )
+
+    # R-1 (B-179): do NOT swallow write failures silently — that is exactly how
+    # the conviction panel shipped EMPTY in production (a column mismatch raised
+    # on every row, was caught by a blanket except, and the run exited 0 with an
+    # empty table). We still tolerate the ONE legitimately-skippable per-row
+    # condition (a missing FK parent transaction => IntegrityError) but count it,
+    # and re-raise anything else. After the loop we assert that, when there were
+    # rows to write, at least one actually landed — so a systematic porting bug
+    # fails loudly instead of producing an empty panel with exit 0.
+    _integrity_errors = (sqlite3.IntegrityError,)
+    try:  # widen the catch to include psycopg's IntegrityError on the PG path.
+        import psycopg
+        _integrity_errors = (sqlite3.IntegrityError, psycopg.errors.IntegrityError)
+    except Exception:  # noqa: BLE001 - psycopg absent on the SQLite path
+        pass
+
+    n_attempted = len(ranked)
+    n_written = 0
+    n_skipped_fk = 0
     for entry in ranked:
         sub = entry["result"].get("subscores", {})
         surfaced = 1 if entry["rank_in_window"] <= CONVICTION_TOP_N else 0
         try:
             conn.execute(
-                "INSERT OR REPLACE INTO conviction_scores ("
-                "fingerprint, window_end, scored_at, score, band, "
-                "f1_who, f2_buy_size, f3_company_size, f4_earnings_timing, "
-                "f5_past_performance, f6_sector_mult, weights_used, "
-                "earnings_dropped, rank_in_window, surfaced, inputs_missing"
-                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                _cs_sql,
                 (
                     entry["fingerprint"], window_end, scored_at,
                     entry["score"], entry["band"],
@@ -3483,14 +3546,29 @@ def build_conviction_picks(conn, today: date) -> dict:
                     json.dumps(entry.get("inputs_missing", [])),
                 ),
             )
-        except Exception:
-            # A single bad row (e.g. missing FK parent) must not abort the
-            # whole shadow log; skip it and continue.
+            n_written += 1
+        except _integrity_errors:
+            # A single bad row (missing FK parent) must not abort the whole
+            # shadow log; skip it and continue. Postgres aborts the txn on a
+            # failed statement, so roll back to keep the connection usable.
+            n_skipped_fk += 1
+            if db.backend() == "postgres":
+                conn.rollback()
             continue
-    try:
-        conn.commit()
-    except Exception:
-        pass
+        # Any OTHER exception (e.g. a column-name / dialect porting bug) is NOT
+        # swallowed — it propagates so the pipeline step fails with rc!=0.
+
+    conn.commit()
+
+    # R-1 assertion: if we had buys to log and EVERY one failed (n_written == 0
+    # while n_attempted > 0 and the failures were not all genuine FK skips),
+    # that is the silent-empty-panel failure mode — surface it loudly.
+    if n_attempted > 0 and n_written == 0 and n_skipped_fk < n_attempted:
+        raise RuntimeError(
+            f"conviction_scores shadow log wrote 0 of {n_attempted} rows "
+            f"(fk_skips={n_skipped_fk}). Refusing to silently ship an empty "
+            "conviction panel — investigate the conviction_scores write path."
+        )
 
     # ---- Panel payload: the top 10 with full factor breakdown. ----
     top10 = []

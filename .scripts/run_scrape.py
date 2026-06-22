@@ -267,7 +267,8 @@ def run(args) -> int:
     # B-024: db_health pattern — pre-run integrity check + backup before
     # any destructive write. Skipped in --dry-run (no DB writes happen).
     # Canonical reference: classify_issuers.py:run().
-    if not args.dry_run:
+    # B-179: SQLite/FUSE corruption defence only — skip on Postgres.
+    if not args.dry_run and db.backend() == "sqlite":
         if not db_health.check(db.DB_PATH):
             print("[run_scrape] FATAL: pre-run integrity_check failed. "
                   "Run start.bat to restore from .bak before retrying.")
@@ -497,7 +498,8 @@ def run(args) -> int:
     # B-024: db_health post-run pattern. If post-run integrity check
     # fails, skip seal() so the pre-run .bak is preserved as the rollback
     # target. Skipped in --dry-run.
-    if not args.dry_run:
+    # B-179: local-SQLite-only; skip on Postgres.
+    if not args.dry_run and db.backend() == "sqlite":
         try:
             if not db_health.check(db.DB_PATH):
                 print("[run_scrape] WARNING: post-run integrity_check "

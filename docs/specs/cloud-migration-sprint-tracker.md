@@ -3,8 +3,9 @@
 **Living status board.** Detail for every B-NNN is in `cloud-migration-execution-plan.md`. Update the **Status** column as work moves; mark gates ✅ when passed. Issues continue the project's B-NNN sequence (next free = **B-172**) and carry the usual agent labels for Linear.
 
 **Status legend:** ⬜ Todo · 🟦 In Progress · ✅ Done · ⛔ Blocked · ⏸ Deferred
-**Overall:** 🟦 Started — Linear issues created (DIR-101→118); M0 spike code written — 0 / 18 done · 0 / 45 pts · awaiting **Prerequisites** + **M0 gate run on GitHub**
+**Overall:** 🟦 In progress — **M0, M1, M2 COMPLETE** — 9 / 18 done · 24 / 45 pts · next: **M3 Hosting + Template (the new URL)**. Pipeline now runs end-to-end on Supabase; data + compute proven in the cloud.
 **Linear:** synced 2026-06-22 — 6 milestones + 18 issues. B-NNN→DIR map at the bottom.
+**Environment:** Supabase project `directors-dealings` — ref `mmiaiauybzsdcbrrcxfc`, host `db.mmiaiauybzsdcbrrcxfc.supabase.co`, region eu-west-1, Postgres 17.6. Driveable directly via the connected Supabase connector.
 
 > **Critical path:** everything is gated on **B-173** (does cloud-IP scraping work from GitHub Actions?). The existing local SQLite + GitHub Pages system stays fully working until **M5**, so this can pause or roll back at any gate.
 
@@ -26,34 +27,38 @@
 
 | Status | B-ID | Item | Agent label | Pri | Pts |
 |--------|------|------|-------------|-----|-----|
-| 🟦 | B-172 | Supabase connectivity + analysis-path spike | `agent:data-integrity-auditor` | P1 | 2 |
-| 🟦 | B-173 | **Cloud-IP scraper spike (GATE)** | `agent:general-purpose` | P1 | 3 |
-| ⬜ | B-174 | Record Phase 0 gate decision / adjust target | `agent:general-purpose` | P1 | 1 |
+| ✅ | B-172 | Supabase connectivity + analysis-path spike — verified | `agent:data-integrity-auditor` | P1 | 2 |
+| ✅ | B-173 | **Cloud-IP scraper spike (GATE)** — PASS | `agent:general-purpose` | P1 | 3 |
+| ✅ | B-174 | Record Phase 0 gate decision — full cloud confirmed | `agent:general-purpose` | P1 | 1 |
 
-**M0 kicked off 2026-06-22:** spike code written — `.scripts/spike_cloud_scrape.py` (B-173) + `.github/workflows/spike-cloud-scrape.yml` + `.scripts/spike_supabase_conn.py` (B-172). Local smoke run PASSED (30 Investegate rows, 5/5 Yahoo) — but that's the *sandbox* IP, **not** GitHub's. Gate is undecided until the workflow runs on GitHub Actions.
+**✅ GATE PASSED 2026-06-22** — B-173 ran on a real GitHub Actions runner (run #1): Investegate **30 index rows**, Yahoo **5/5 tickers**, `GATE RESULT: PASS`. Decision: **proceed with the full cloud pipeline (M1+)** — no local-scrape fallback needed. Minor note: Yahoo returned only ~2 price rows/ticker over 30 days — reachability proven, verify history depth in B-177/B-186.
 
-**Gate M0:** ⬜ B-173 green **on a GitHub Actions runner** (or fallback target chosen).
+**Still open in M0:** B-172 Supabase connectivity — needs the prerequisites first (create free Supabase project, `pip install "psycopg[binary]"`, set `DD_DATABASE_URL`, run `.scripts\spike_supabase_conn.py`).
+
+**Gate M0:** ✅ B-173 green on GitHub Actions. Scraper gate cleared.
 
 ## Sprint M1 — DB foundation on Supabase — *"Cloud Migration — M1 DB Foundation"*
 
 | Status | B-ID | Item | Agent label | Pri | Pts |
 |--------|------|------|-------------|-----|-----|
-| ⬜ | B-175 | Port schema → Postgres (+ unique constraints, indexes) | `agent:data-integrity-auditor` | P1 | 3 |
-| ⬜ | B-176 | Rewrite `db.py` (psycopg, dict_row, dual-backend) | `agent:data-integrity-auditor` | P1 | 3 |
-| ⬜ | B-177 | SQLite → Postgres data migrator (row parity) | `agent:data-integrity-auditor` | P1 | 3 |
-| ⬜ | B-178 | `public_company_v` serving view + read-only RLS | `agent:data-integrity-auditor` | P1 | 2 |
+| ✅ | B-175 | Port schema → Postgres — 12 tables applied to Supabase | `agent:data-integrity-auditor` | P1 | 3 |
+| ✅ | B-176 | Rewrite `db.py` (dual-backend) — built + QA PASS | `agent:data-integrity-auditor` | P1 | 3 |
+| ✅ | B-177 | Data migrator — **904,207 rows loaded, PARITY PASS, connector-verified** | `agent:data-integrity-auditor` | P1 | 3 |
+| ⏭ | B-178 | Serving view + RLS — **resequenced to M3** (built with the template it serves) | `agent:dashboard-designer` | P1 | 2 |
 
-**Gate M1:** ⬜ data in Supabase with row-count parity; `db.py` works against the cloud DB.
+**Gate M1:** ✅ **MET + infra-signed-off.** All 904,207 rows in Supabase, full row-count parity, `db.py` Postgres path proven live at scale. Full schema reconciled to the **code** (caught + fixed a latent prod bug: conviction_scores wrote to dead `week_start` columns → empty panel; cloud now uses `window_end` and will populate). Infra verdict: **GO-with-conditions** — conditions R-1 (fail-loud try/except) + R-3 (partial-upsert care) folded into B-179 acceptance. B-178 moved to M3 (built with the template). Open follow-up: R-2 value-level parity spot-check (bundle with next Rupert touchpoint).
 
 ## Sprint M2 — Pipeline port + verify — *"Cloud Migration — M2 Pipeline Port"*
 
 | Status | B-ID | Item | Agent label | Pri | Pts |
 |--------|------|------|-------------|-----|-----|
-| ⬜ | B-179 | Port pipeline-critical scripts to PG dialect | `agent:general-purpose` | P1 | 5 |
-| ⬜ | B-180 | Idempotency + parity verification | `agent:general-purpose` | P1 | 2 |
-| ⬜ | B-181 | Test-suite strategy (sqlite fast-path + pg smoke) | `agent:general-purpose` | P2 | 2 |
+| ✅ | B-179 | Port pipeline scripts to PG dialect — QA PASS, infra GO | `agent:general-purpose` | P1 | 5 |
+| ✅ | B-180 | Idempotency + parity — **pipeline ran clean end-to-end on Supabase** (`status:done`) | `agent:general-purpose` | P1 | 2 |
+| ✅ | B-181 | Test-safety guard (force sqlite under unittest) — leaked-fixtures incident closed | `agent:general-purpose` | P2 | 2 |
 
-**Gate M2 (big one):** ⬜ pipeline end-to-end on Supabase, parity + idempotency; FUSE rules obsolete in principle.
+**M2 done (2026-06-22).** Live validation took 6 dialect-fix iterations (each failed LOUD — fail-loud working): literal-`%` escape, HAVING-alias→aggregate, `CAST(? AS TEXT)` optional-filter params (×6), positional→named row access, + `_attach_sql_note` tooling. Two operational gotchas hit & recorded in memory: **stale `.pyc` cache** (clear `__pycache__` + `PYTHONDONTWRITEBYTECODE`) and a **test run leaking 33 fixtures into prod** (cleaned via migrator re-run; guarded in db.py). Final clean run connector-verified: tx 6,571 / test_rows 0 / signals 2,746 / conviction 183 (10 surfaced) / i3_bad 0.
+
+**Gate M2 (big one):** ✅ **MET.** Pipeline runs end-to-end on Supabase, parity holds, audit passes, conviction panel populates (latent prod bug fixed). **The FUSE corruption regime is now obsolete in practice** (data lives in Postgres). Next: **M3 — Vercel hosting + dynamic template + serving view (B-178) → the new URL.**
 
 ## Sprint M3 — Hosting + dynamic template — *"Cloud Migration — M3 Hosting + Template"*
 

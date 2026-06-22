@@ -114,12 +114,25 @@ def insert_rows(conn, ticker: str, rows: list[dict]) -> int:
     fetched_at = db.iso_now()
     cursor = conn.cursor()
     inserted = 0
+    # B-179: INSERT OR IGNORE (SQLite) <-> ON CONFLICT DO NOTHING (Postgres) on
+    # PK (ticker, date). rowcount semantics match (1 on insert, 0 on conflict).
+    if db.backend() == "postgres":
+        _px_sql = (
+            "INSERT INTO prices "
+            "(ticker, date, close, high, low, volume, source, fetched_at) "
+            "VALUES (?, ?, ?, ?, ?, ?, 'yahoo', ?) "
+            "ON CONFLICT (ticker, date) DO NOTHING"
+        )
+    else:
+        _px_sql = (
+            "INSERT OR IGNORE INTO prices "
+            "(ticker, date, close, high, low, volume, source, fetched_at) "
+            "VALUES (?, ?, ?, ?, ?, ?, 'yahoo', ?)"
+        )
     for r in rows:
         try:
             cursor.execute(
-                "INSERT OR IGNORE INTO prices "
-                "(ticker, date, close, high, low, volume, source, fetched_at) "
-                "VALUES (?, ?, ?, ?, ?, ?, 'yahoo', ?)",
+                _px_sql,
                 (ticker, r["date"], r["close"],
                  r.get("high"), r.get("low"), r.get("volume"), fetched_at),
             )
@@ -452,7 +465,8 @@ def main(argv: list[str] | None = None) -> int:
     # B-024: db_health pattern — pre-run integrity check + backup before
     # any INSERT OR IGNORE writes. Skipped in --dry-run (no DB writes).
     # Canonical reference: classify_issuers.py:run().
-    if not args.dry_run:
+    # B-179: SQLite/FUSE corruption defence only — skip on Postgres.
+    if not args.dry_run and db.backend() == "sqlite":
         if not db_health.check(db.DB_PATH):
             print("[backfill_prices] FATAL: pre-run integrity_check failed. "
                   "Run start.bat to restore from .bak before retrying.")
@@ -483,7 +497,8 @@ def main(argv: list[str] | None = None) -> int:
 
     # B-024: db_health post-run pattern. Skip seal if post-run integrity
     # fails so the pre-run .bak is preserved as the rollback target.
-    if not args.dry_run:
+    # B-179: local-SQLite-only; skip on Postgres.
+    if not args.dry_run and db.backend() == "sqlite":
         try:
             if not db_health.check(db.DB_PATH):
                 print("[backfill_prices] WARNING: post-run integrity_check "

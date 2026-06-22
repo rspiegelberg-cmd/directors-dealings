@@ -297,7 +297,9 @@ def _delete_nearby_estimates(conn, rows: list[tuple],
 def load_held_tickers(conn) -> set[str]:
     """Distinct tickers we hold (from transactions)."""
     rows = conn.execute("SELECT DISTINCT ticker FROM transactions").fetchall()
-    return {normalise_tidm(r[0]) for r in rows if r and r[0]}
+    # B-179: index by column name (r["ticker"]) not position (r[0]) so this
+    # works on both sqlite3.Row and Postgres dict_row.
+    return {normalise_tidm(r["ticker"]) for r in rows if r and r["ticker"]}
 
 
 def write_reporting_dates(conn, events: list[dict], held: set[str],
@@ -347,16 +349,31 @@ def write_reporting_dates(conn, events: list[dict], held: set[str],
             "SELECT DISTINCT ticker FROM reporting_dates WHERE source = ?",
             (SOURCE,),
         ).fetchall()
-        prior_tickers = {r[0] for r in prior_rows}
+        # B-179: index by name not position (Postgres dict_row has no r[0]).
+        prior_tickers = {r["ticker"] for r in prior_rows}
 
         # Replace-on-rerun: drop our own prior rows only, then insert fresh.
         conn.execute("DELETE FROM reporting_dates WHERE source = ?", (SOURCE,))
-        conn.executemany(
-            "INSERT OR REPLACE INTO reporting_dates "
-            "(ticker, report_date, report_type, source, fetched_at, confidence) "
-            "VALUES (?, ?, ?, ?, ?, ?)",
-            all_rows,
-        )
+        # B-179: INSERT OR REPLACE (SQLite) <-> ON CONFLICT DO UPDATE (Postgres)
+        # on PK (ticker, report_date, report_type). The prior DELETE clears our
+        # own source rows first, so any in-batch conflict is a true duplicate and
+        # the DO UPDATE refreshes source/fetched_at/confidence — behaviour parity.
+        if db.backend() == "postgres":
+            _rd_sql = (
+                "INSERT INTO reporting_dates "
+                "(ticker, report_date, report_type, source, fetched_at, confidence) "
+                "VALUES (?, ?, ?, ?, ?, ?) "
+                "ON CONFLICT (ticker, report_date, report_type) DO UPDATE SET "
+                "source = excluded.source, fetched_at = excluded.fetched_at, "
+                "confidence = excluded.confidence"
+            )
+        else:
+            _rd_sql = (
+                "INSERT OR REPLACE INTO reporting_dates "
+                "(ticker, report_date, report_type, source, fetched_at, confidence) "
+                "VALUES (?, ?, ?, ?, ?, ?)"
+            )
+        conn.executemany(_rd_sql, all_rows)
         # Immediately remove any stale source='est' rows that are now shadowed
         # by a confirmed LSE date within NEARBY_EST_DAYS days for the same
         # ticker. This closes the staleness window between diary and estimate

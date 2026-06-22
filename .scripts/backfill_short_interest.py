@@ -346,13 +346,16 @@ def aggregate_short_pct(conn, ticker: str, on_date: str,
               AND position_date {cmp_op} ?
               AND position_holder IS NOT NULL
         )
-        SELECT SUM(net_short_pct), COUNT(*) FROM latest WHERE rn = 1
+        SELECT SUM(net_short_pct) AS total_pct, COUNT(*) AS n
+        FROM latest WHERE rn = 1
         """,
         (ticker, str(on_date)[:10]),
     ).fetchone()
-    if row is None or not row[1]:
+    # Access by NAME, not position: psycopg dict_row has no integer keys, and
+    # unnamed aggregates get PG-assigned names — so alias them. (B-180)
+    if row is None or not row["n"]:
         return None
-    return round(float(row[0]), 4)
+    return round(float(row["total_pct"]), 4)
 
 
 # --- Network -----------------------------------------------------------------

@@ -80,6 +80,14 @@ ROOT = HERE.parent
 DB_PATH = ROOT / ".data" / "directors.db"
 REPORT_PATH = ROOT / ".data" / "_date_audit_report.json"
 
+# B-179: dual-backend. On SQLite we keep the read-only URI connection (FUSE-safe,
+# mid-pipeline read-only). On Postgres there is no local .db file, so we go
+# through db.connect(); the audit only issues SELECTs so it stays read-only in
+# practice. db is imported lazily inside the helpers to keep this module's
+# import side-effect-free on the SQLite path.
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+
 # How many bad rows to keep per invariant in the report's "anomalies"
 # section. The full count is preserved in summary[*].bad regardless.
 MAX_ANOMALIES_PER_INVARIANT = 200
@@ -104,8 +112,18 @@ def _parse_iso_date(s: str | None) -> date | None:
         return None
 
 
-def _connect_read_only(db_path: Path) -> sqlite3.Connection:
-    """Open the DB in read-only mode via URI; safe to run mid-pipeline."""
+def _connect_read_only(db_path: Path):
+    """Open a read-only connection; safe to run mid-pipeline.
+
+    B-179: backend-aware. SQLite -> open the .db file with the mode=ro URI
+    (cannot corrupt or modify even in error paths). Postgres -> db.connect()
+    (the audit issues only SELECTs, so it is read-only in practice; rows come
+    back as dict_row and the invariant runners index by column name, which
+    works on both sqlite3.Row and dict_row).
+    """
+    import db  # noqa: PLC0415
+    if db.backend() == "postgres":
+        return db.connect()
     uri = f"file:{db_path.as_posix()}?mode=ro"
     conn = sqlite3.connect(uri, uri=True)
     conn.row_factory = sqlite3.Row
@@ -270,7 +288,11 @@ INVARIANT_NAMES = {
 
 
 def run(verbose: bool = False) -> dict:
-    if not DB_PATH.exists():
+    # B-179: the "no .db file -> blank report" shortcut is SQLite-only. On
+    # Postgres there is no local file to stat, so skip the guard and go
+    # straight to db.connect() (the schema is created idempotently on connect).
+    import db  # noqa: PLC0415
+    if db.backend() == "sqlite" and not DB_PATH.exists():
         # No DB yet -- emit a blank "pass" report so build_dashboard
         # doesn't choke. The dashboard's first refresh will populate it.
         report = {

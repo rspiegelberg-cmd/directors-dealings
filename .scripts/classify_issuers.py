@@ -481,12 +481,19 @@ def _populate_tickers_meta(conn) -> int:
     ).fetchall()
     now = _iso_now()
     inserted = 0
-    for r in rows:
-        cur = conn.execute(
-            "INSERT OR IGNORE INTO tickers_meta (ticker, updated_at) "
-            "VALUES (?, ?)",
-            (r["ticker"], now),
+    # B-179: INSERT OR IGNORE (SQLite) <-> ON CONFLICT DO NOTHING (Postgres) on
+    # PK ticker. rowcount parity holds (1 on insert, 0 on conflict).
+    if db.backend() == "postgres":
+        _tm_sql = (
+            "INSERT INTO tickers_meta (ticker, updated_at) VALUES (?, ?) "
+            "ON CONFLICT (ticker) DO NOTHING"
         )
+    else:
+        _tm_sql = (
+            "INSERT OR IGNORE INTO tickers_meta (ticker, updated_at) VALUES (?, ?)"
+        )
+    for r in rows:
+        cur = conn.execute(_tm_sql, (r["ticker"], now))
         inserted += cur.rowcount or 0
     conn.commit()
     return inserted
@@ -615,11 +622,12 @@ def run(args) -> int:
     # trust / CEF — and the existing seal() at the end of run() would
     # be too late. Pre-snapshot defends against this.
     # Memory ref: project_classify_issuers_resets_flag.md
-    if not db_health.check(db.DB_PATH):
+    # B-179: SQLite/FUSE corruption defence only — skip on Postgres.
+    if db.backend() == "sqlite" and not db_health.check(db.DB_PATH):
         print("[classify_issuers] FATAL: pre-run integrity_check failed. "
               "Run start.bat to restore from .bak before retrying.")
         return 2
-    if not db_health.backup():
+    if db.backend() == "sqlite" and not db_health.backup():
         print("[classify_issuers] FATAL: failed to take pre-classify .bak. "
               "Refusing to proceed (destructive UPDATE).")
         return 3
@@ -767,15 +775,17 @@ def run(args) -> int:
         # B-024 + Code-review fix C-3 (2026-05-20): post-run integrity
         # check before sealing. If the post-run state is corrupt, the
         # pre-run .bak taken at the top of run() is the rollback target.
-        try:
-            if not db_health.check(db.DB_PATH):
-                print("[classify_issuers] WARNING: post-run integrity_check "
-                      "failed. The pre-run .bak is valid — restore via "
-                      "start.bat. Skipping seal to preserve good backup.")
-                return 4
-            db_health.seal()
-        except Exception as e:
-            print(f"[db_health] post-script seal failed (non-fatal): {e}")
+        # B-179: local-SQLite-only; skip on Postgres.
+        if db.backend() == "sqlite":
+            try:
+                if not db_health.check(db.DB_PATH):
+                    print("[classify_issuers] WARNING: post-run integrity_check "
+                          "failed. The pre-run .bak is valid — restore via "
+                          "start.bat. Skipping seal to preserve good backup.")
+                    return 4
+                db_health.seal()
+            except Exception as e:
+                print(f"[db_health] post-script seal failed (non-fatal): {e}")
         return 0
     finally:
         conn.close()

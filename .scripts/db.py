@@ -1,20 +1,40 @@
-"""Stage 1/2 SQLite connector for the Directors Dealings rebuild.
+"""Stage 1/2 DB connector for the Directors Dealings rebuild.
 
-Stdlib-only. No SQLAlchemy, no third-party packages.
+Dual-backend (B-176): SQLite (default, unchanged) OR Postgres/Supabase,
+selected at runtime by the ``DD_DATABASE_URL`` env var.
+
+  * No ``DD_DATABASE_URL`` set  -> SQLite, exactly as before. Stdlib only;
+    zero new dependencies. This is the local dev / FUSE-safe path.
+  * ``DD_DATABASE_URL`` set      -> Postgres via psycopg v3 (lazily imported,
+    so the SQLite path never needs psycopg installed).
+
+The public surface is identical to the SQLite-only version so the ~67 caller
+scripts keep working unchanged. (Porting caller SQL placeholders ?->%s /
+INSERT OR REPLACE is a SEPARATE ticket, B-179 — out of scope here.)
 
 Public surface:
-    DB_DIR       -- Path to the .data\\ directory at the project root.
-    DB_PATH      -- Path to the SQLite file (.data\\directors.db).
-    SCHEMA_PATH  -- Path to the canonical SQL sidecar (.scripts\\db_schema.sql).
-    iso_now()    -- UTC timestamp string, "%Y-%m-%dT%H:%M:%SZ".
-    connect()    -- Open a sqlite3.Connection with FKs on and the schema applied.
-    migrate(c)   -- Apply db_schema.sql + chained migrations to an open
-                    connection (idempotent).
+    DB_DIR        -- Path to the .data\\ directory at the project root.
+    DB_PATH       -- Path to the SQLite file (.data\\directors.db).
+    SCHEMA_PATH   -- Path to the canonical SQLite SQL sidecar
+                     (.scripts\\db_schema.sql).
+    PG_SCHEMA_PATH-- Path to the consolidated Postgres schema
+                     (.scripts\\pg_schema.sql).
+    backend()     -- "postgres" if DD_DATABASE_URL is set, else "sqlite".
+    iso_now()     -- UTC timestamp string, "%Y-%m-%dT%H:%M:%SZ".
+    connect()     -- Open a live connection with the schema applied. Returns a
+                     sqlite3.Connection (SQLite) or a psycopg.Connection with
+                     row_factory=dict_row (Postgres). Both expose
+                     ``.execute(sql, params).fetchall()`` and ``.commit()``.
+    migrate(c)    -- Apply the schema to an open connection (idempotent).
+                     SQLite: db_schema.sql + chained migrations. Postgres:
+                     pg_schema.sql (the consolidated idempotent head).
     set_meta(c,k,v) / get_meta(c,k) -- Upsert / fetch key-value rows in `meta`.
+    upsert_transaction(c,row,parser_source) -- idempotency core (fingerprint PK).
 """
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
@@ -27,7 +47,45 @@ ROOT: Path = Path(__file__).resolve().parent.parent
 DB_DIR: Path = ROOT / ".data"
 DB_PATH: Path = DB_DIR / "directors.db"
 SCHEMA_PATH: Path = ROOT / ".scripts" / "db_schema.sql"
+PG_SCHEMA_PATH: Path = ROOT / ".scripts" / "pg_schema.sql"
 MIGRATIONS_DIR: Path = ROOT / ".scripts" / "schema_migrations"
+
+# The env var that flips the backend. Set it to a Postgres DSN
+# (postgresql://user:pwd@host:5432/dbname) to use Postgres/Supabase.
+DSN_ENV: str = "DD_DATABASE_URL"
+
+
+def backend() -> str:
+    """Return the active backend: 'postgres' if DD_DATABASE_URL is set, else 'sqlite'.
+
+    Read live from the environment each call so tests can flip it with
+    ``os.environ`` / ``unittest.mock.patch.dict`` without re-importing db.
+
+    B-181 SAFETY GUARD: never let the test suite write to the cloud DB. Even if
+    ``DD_DATABASE_URL`` is set, force SQLite when running under unittest
+    (``sys.argv[0]`` is the unittest module) or when ``DD_FORCE_SQLITE`` is set.
+    The real pipeline runs scripts directly (``argv[0]=.../<script>.py``), so
+    production is unaffected. Added after a test run leaked fixtures into
+    Supabase (2026-06-22).
+    """
+    if not os.environ.get(DSN_ENV):
+        return "sqlite"
+    import sys as _sys
+    _argv0 = _sys.argv[0] if _sys.argv else ""
+    if os.environ.get("DD_FORCE_SQLITE") or "unittest" in _argv0:
+        return "sqlite"
+    return "postgres"
+
+
+def _ph() -> str:
+    """Return the parameter placeholder for db.py's OWN internal SQL.
+
+    SQLite uses ``?``; psycopg (Postgres) uses ``%s``. This applies ONLY to
+    the queries written inside this module (set_meta/get_meta/upsert_transaction
+    /excluded_ticker_set/_run_migration_step). Caller scripts port their own
+    placeholders under B-179.
+    """
+    return "%s" if backend() == "postgres" else "?"
 
 
 def iso_now() -> str:
@@ -85,7 +143,26 @@ def atomic_write_json(
     tmp.replace(path)
 
 
-def connect() -> sqlite3.Connection:
+def connect():
+    """Open a live DB connection with the schema applied (idempotent).
+
+    Backend selected by ``DD_DATABASE_URL`` (see ``backend()``):
+
+      * SQLite (default): identical to the historical behaviour — FKs on,
+        row_factory = sqlite3.Row, schema + migrations applied.
+      * Postgres: ``psycopg.connect(dsn, row_factory=dict_row)`` then
+        ``migrate()`` (applies the consolidated pg_schema.sql idempotently).
+
+    Both return a connection whose ``.execute(sql, params).fetchall()`` and
+    ``.commit()`` work, and whose rows behave like dicts
+    (``row["col"]``, ``row.keys()``, ``dict(row)``).
+    """
+    if backend() == "postgres":
+        return _connect_postgres()
+    return _connect_sqlite()
+
+
+def _connect_sqlite() -> sqlite3.Connection:
     """Open the Directors Dealings SQLite DB with the schema applied."""
     DB_DIR.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(DB_PATH))
@@ -95,15 +172,341 @@ def connect() -> sqlite3.Connection:
     return conn
 
 
-def migrate(conn: sqlite3.Connection) -> None:
-    """Apply the canonical schema and any chained migrations to `conn`.
+def _escape_literal_percent(sql: str) -> str:
+    """Double every literal ``%`` to ``%%`` so psycopg's parameter parser does
+    not mis-read it as a placeholder (B-180 fix).
 
-    Step 1: apply the base Stage 1 schema (idempotent CREATE/INSERT IGNORE).
-    Step 2: walk the migration chain in `.scripts/schema_migrations/`.
+    psycopg scans ``%`` across the ENTIRE query (including inside SQL string
+    literals) whenever parameters are bound, so ``LIKE 'FOO%'`` must become
+    ``LIKE 'FOO%%'`` or it raises "only '%s','%b','%t' are allowed as
+    placeholders". We leave an existing ``%s``/``%b``/``%t`` placeholder or an
+    already-escaped ``%%`` untouched (db.py's own queries use ``%s`` and pass
+    through this same path).
     """
+    out = []
+    i, n = 0, len(sql)
+    while i < n:
+        if sql[i] == "%":
+            nxt = sql[i + 1] if i + 1 < n else ""
+            if nxt in ("s", "b", "t", "%"):
+                out.append(sql[i])
+                out.append(nxt)
+                i += 2
+                continue
+            out.append("%%")
+            i += 1
+            continue
+        out.append(sql[i])
+        i += 1
+    return "".join(out)
+
+
+def translate_placeholders(sql: str) -> str:
+    """Rewrite SQLite ``?`` placeholders to psycopg ``%s`` for the Postgres path.
+
+    B-179: the caller scripts are written with SQLite ``?`` placeholders. Rather
+    than hand-edit ~137 placeholders across ~40 files, the Postgres connection
+    wraps every ``execute`` and rewrites the SQL on the way through. The SQLite
+    path never calls this (it keeps native ``?``).
+
+    SAFE rewrite — a ``?`` is only a placeholder when it is OUTSIDE a string
+    literal. This tokenizer walks the SQL character by character and skips any
+    ``?`` that sits inside:
+
+      * a single-quoted string literal  '...'  (with '' escape)
+      * a double-quoted identifier      "..."  (with "" escape)
+      * a dollar-quoted block           $tag$...$tag$  (Postgres)
+      * a line comment                  -- ... \\n
+      * a block comment                 /* ... */
+
+    This preserves literal ``?`` characters such as GLOB patterns
+    (``'????-??-??*'``) and any JSON ``?`` operator inside a quoted string.
+    Literal ``%`` ESCAPING (B-180): psycopg DOES interpret ``%`` across the whole
+    query (even inside SQL string literals) when parameters are bound, so a
+    literal ``%`` — e.g. ``LIKE 'FOO%'`` — is doubled to ``%%`` first via
+    ``_escape_literal_percent`` (existing ``%s`` placeholders are left alone).
+    Caveat: a LIKE pattern that literally needs ``%s`` (``LIKE '%s%'``) would be
+    mis-read — none exist in this codebase. This function is only invoked when
+    parameters are bound (see ``_PgCursor.execute``); with no params psycopg
+    does not parse ``%`` and the SQL is passed through untouched.
+    """
+    sql = _escape_literal_percent(sql)
+    out = []
+    i = 0
+    n = len(sql)
+    while i < n:
+        ch = sql[i]
+        # ---- single-quoted string literal '...' (SQL standard '' escape) ----
+        if ch == "'":
+            out.append(ch)
+            i += 1
+            while i < n:
+                if sql[i] == "'":
+                    # '' is an escaped quote inside the literal.
+                    if i + 1 < n and sql[i + 1] == "'":
+                        out.append("''")
+                        i += 2
+                        continue
+                    out.append("'")
+                    i += 1
+                    break
+                out.append(sql[i])
+                i += 1
+            continue
+        # ---- double-quoted identifier "..." ("" escape) ----
+        if ch == '"':
+            out.append(ch)
+            i += 1
+            while i < n:
+                if sql[i] == '"':
+                    if i + 1 < n and sql[i + 1] == '"':
+                        out.append('""')
+                        i += 2
+                        continue
+                    out.append('"')
+                    i += 1
+                    break
+                out.append(sql[i])
+                i += 1
+            continue
+        # ---- dollar-quoted block $tag$...$tag$ (Postgres) ----
+        if ch == "$":
+            j = i + 1
+            while j < n and (sql[j].isalnum() or sql[j] == "_"):
+                j += 1
+            if j < n and sql[j] == "$":
+                tag = sql[i:j + 1]            # e.g. "$$" or "$body$"
+                end = sql.find(tag, j + 1)
+                if end == -1:
+                    out.append(sql[i:])
+                    i = n
+                    continue
+                out.append(sql[i:end + len(tag)])
+                i = end + len(tag)
+                continue
+            out.append(ch)
+            i += 1
+            continue
+        # ---- line comment -- ... ----
+        if ch == "-" and i + 1 < n and sql[i + 1] == "-":
+            nl = sql.find("\n", i)
+            if nl == -1:
+                out.append(sql[i:])
+                i = n
+                continue
+            out.append(sql[i:nl + 1])
+            i = nl + 1
+            continue
+        # ---- block comment /* ... */ ----
+        if ch == "/" and i + 1 < n and sql[i + 1] == "*":
+            end = sql.find("*/", i + 2)
+            if end == -1:
+                out.append(sql[i:])
+                i = n
+                continue
+            out.append(sql[i:end + 2])
+            i = end + 2
+            continue
+        # ---- a real placeholder ----
+        if ch == "?":
+            out.append("%s")
+            i += 1
+            continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def _attach_sql_note(exc, sql, params) -> None:
+    """Attach the failing SQL (+ params) to an exception so Postgres-port
+    dialect errors are instantly locatable (B-180). Uses ``exc.add_note``
+    (Python 3.11+); a no-op on older interpreters."""
+    try:
+        note = "[db.py] failing SQL: " + " ".join(str(sql).split())[:600]
+        if params is not None:
+            note += "\n[db.py] params: " + repr(params)[:300]
+        add = getattr(exc, "add_note", None)
+        if callable(add):
+            add(note)
+    except Exception:
+        pass
+
+
+class _PgCursor:
+    """Thin wrapper over a psycopg cursor that rewrites ``?`` -> ``%s``.
+
+    Delegates everything else (fetchone/fetchall/rowcount/description/iteration/
+    context-manager) to the wrapped psycopg cursor so caller code that uses
+    ``conn.cursor()`` keeps working unchanged on Postgres.
+    """
+
+    __slots__ = ("_cur",)
+
+    def __init__(self, cur):
+        self._cur = cur
+
+    def execute(self, sql, params=None):
+        # psycopg only interprets % / placeholders when params are bound. With
+        # no params, pass the SQL through untouched (nothing to bind, and a
+        # literal % must NOT be doubled). With params, translate ?->%s and
+        # escape literal % so psycopg's parser doesn't choke (B-180).
+        run_sql = sql if params is None else translate_placeholders(sql)
+        try:
+            if params is None:
+                self._cur.execute(run_sql)
+            else:
+                self._cur.execute(run_sql, params)
+        except Exception as exc:
+            # B-180: attach the failing SQL (+ params) so dialect errors during
+            # the Postgres port are instantly locatable instead of opaque.
+            _attach_sql_note(exc, run_sql, params)
+            raise
+        return self
+
+    def executemany(self, sql, seq_of_params):
+        run_sql = translate_placeholders(sql)
+        try:
+            self._cur.executemany(run_sql, seq_of_params)
+        except Exception as exc:
+            _attach_sql_note(exc, run_sql, "<executemany>")
+            raise
+        return self
+
+    def fetchone(self):
+        return self._cur.fetchone()
+
+    def fetchall(self):
+        return self._cur.fetchall()
+
+    def fetchmany(self, size=None):
+        return self._cur.fetchmany(size) if size is not None else self._cur.fetchmany()
+
+    def __iter__(self):
+        return iter(self._cur)
+
+    def __enter__(self):
+        self._cur.__enter__()
+        return self
+
+    def __exit__(self, *exc):
+        return self._cur.__exit__(*exc)
+
+    def __getattr__(self, name):
+        # rowcount, description, close, etc.
+        return getattr(self._cur, name)
+
+
+class _PgConnection:
+    """Thin wrapper over a psycopg connection that gives caller scripts the
+    same surface they use on SQLite, while transparently rewriting ``?`` -> ``%s``.
+
+    Exposes ``.execute(sql, params)`` returning a cursor (sqlite3-style),
+    ``.executemany(...)``, ``.cursor()`` returning a wrapped cursor, and
+    delegates ``.commit()`` / ``.rollback()`` / ``.close()`` / everything else
+    to the underlying psycopg connection.
+    """
+
+    __slots__ = ("_conn",)
+
+    def __init__(self, conn):
+        self._conn = conn
+
+    def execute(self, sql, params=None):
+        cur = _PgCursor(self._conn.cursor())
+        return cur.execute(sql, params)
+
+    def executemany(self, sql, seq_of_params):
+        cur = _PgCursor(self._conn.cursor())
+        return cur.executemany(sql, seq_of_params)
+
+    def cursor(self, *args, **kwargs):
+        return _PgCursor(self._conn.cursor(*args, **kwargs))
+
+    def commit(self):
+        return self._conn.commit()
+
+    def rollback(self):
+        return self._conn.rollback()
+
+    def close(self):
+        return self._conn.close()
+
+    def __enter__(self):
+        self._conn.__enter__()
+        return self
+
+    def __exit__(self, *exc):
+        return self._conn.__exit__(*exc)
+
+    def __getattr__(self, name):
+        return getattr(self._conn, name)
+
+
+def _connect_postgres():
+    """Open a psycopg v3 connection to Postgres/Supabase with the schema applied.
+
+    psycopg is imported lazily here so the SQLite path never requires it.
+    ``row_factory=dict_row`` makes rows behave like dicts — index by column
+    name (``row["col"]``), ``.keys()``, ``dict(row)``, and — unlike
+    sqlite3.Row — ``.get()`` all work.
+
+    B-179: the raw psycopg connection is wrapped in ``_PgConnection`` so caller
+    SQL written with SQLite ``?`` placeholders runs unchanged (the wrapper
+    rewrites ``?`` -> ``%s`` per-statement). ``migrate()`` is called on the
+    wrapped connection — pg_schema.sql is parameter-free DDL so the rewrite is
+    a no-op for it.
+    """
+    try:
+        import psycopg  # psycopg v3
+        from psycopg.rows import dict_row
+    except ImportError as exc:  # pragma: no cover - environment-dependent
+        raise RuntimeError(
+            'Postgres backend selected (DD_DATABASE_URL set) but psycopg is '
+            'not installed. Run:  pip install "psycopg[binary]"'
+        ) from exc
+
+    dsn = os.environ[DSN_ENV]
+    raw = psycopg.connect(dsn, row_factory=dict_row)
+    conn = _PgConnection(raw)
+    migrate(conn)
+    return conn
+
+
+def migrate(conn) -> None:
+    """Apply the schema to `conn` (idempotent on both backends).
+
+    SQLite path (Step 1 + Step 2):
+      Step 1: apply the base Stage 1 schema (idempotent CREATE/INSERT IGNORE).
+      Step 2: walk the migration chain in `.scripts/schema_migrations/`.
+
+    Postgres path:
+      Execute the consolidated `pg_schema.sql` head in one shot. Every
+      statement is `CREATE TABLE IF NOT EXISTS` / `CREATE INDEX IF NOT
+      EXISTS` / `INSERT ... ON CONFLICT DO NOTHING`, so re-running on every
+      connect() is safe. The migration-chain replay is a SQLite artefact;
+      on Postgres we start from the consolidated head and add new
+      migrations going forward (none yet).
+    """
+    if backend() == "postgres":
+        _migrate_postgres(conn)
+        return
     sql = SCHEMA_PATH.read_text(encoding="utf-8")
     conn.executescript(sql)
     _apply_schema_migrations(conn)
+    conn.commit()
+
+
+def _migrate_postgres(conn) -> None:
+    """Apply pg_schema.sql to a psycopg connection in one execute().
+
+    psycopg v3 has no ``executescript``; instead, a single ``execute`` with
+    NO parameters can contain multiple ``;``-separated statements (libpq
+    simple-query protocol). pg_schema.sql is parameter-free DDL, so this
+    works and stays idempotent.
+    """
+    sql = PG_SCHEMA_PATH.read_text(encoding="utf-8")
+    with conn.cursor() as cur:
+        cur.execute(sql)
     conn.commit()
 
 
@@ -139,6 +542,10 @@ def _run_migration_step(
     (each is one ALTER TABLE), the per-statement atomicity SQLite gives
     us is sufficient. The recovery path documented in
     ``MigrationError.__doc__`` covers the rare multi-statement failure.
+
+    SQLite-only: the migration chain is the SQLite schema-evolution
+    mechanism. Postgres starts from the consolidated pg_schema.sql head and
+    never calls this.
     """
     cols = [r[1] for r in conn.execute(f"PRAGMA table_info({table})").fetchall()]
     if new_column in cols:
@@ -171,7 +578,7 @@ def _run_create_table_migration_step(
     Same semantics as _run_migration_step but checks sqlite_master for
     table existence rather than PRAGMA table_info for a column. Used for
     CREATE TABLE migrations (e.g. migration 008 reporting_dates).
-    Sprint 26 -- 2026-06-04.
+    Sprint 26 -- 2026-06-04. SQLite-only (see _run_migration_step note).
     """
     row = conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)
@@ -194,7 +601,7 @@ def _run_create_table_migration_step(
 
 
 def _apply_schema_migrations(conn: sqlite3.Connection) -> None:
-    """Chain forward-only schema migrations. Idempotent per step.
+    """Chain forward-only schema migrations. Idempotent per step. SQLite-only.
 
     Each step is transactional (B-032). On failure, the run aborts with
     `MigrationError` and the DB is left at the prior schema_version with
@@ -325,25 +732,54 @@ def _apply_schema_migrations(conn: sqlite3.Connection) -> None:
         current = "16"  # noqa: F841
 
 
-def set_meta(conn: sqlite3.Connection, key: str, value: str) -> None:
-    """Insert or update a row in `meta`."""
+def set_meta(conn, key: str, value: str) -> None:
+    """Insert or update a row in `meta`.
+
+    The ON CONFLICT ... DO UPDATE form is valid on both SQLite and Postgres;
+    only the parameter placeholder differs (``?`` vs ``%s``).
+    """
+    ph = _ph()
     conn.execute(
-        "INSERT INTO meta (key, value) VALUES (?, ?) "
+        f"INSERT INTO meta (key, value) VALUES ({ph}, {ph}) "
         "ON CONFLICT(key) DO UPDATE SET value = excluded.value",
         (key, str(value)),
     )
     conn.commit()
 
 
-def get_meta(conn: sqlite3.Connection, key: str) -> str | None:
+def get_meta(conn, key: str) -> str | None:
     """Return the value stored in `meta` for `key`, or None if absent."""
+    ph = _ph()
     row = conn.execute(
-        "SELECT value FROM meta WHERE key = ?", (key,)
+        f"SELECT value FROM meta WHERE key = {ph}", (key,)
     ).fetchone()
     return row["value"] if row else None
 
 
-def excluded_ticker_set(conn: sqlite3.Connection) -> set[str]:
+def table_exists(conn, name: str) -> bool:
+    """Return True if a table named `name` exists. Backend-aware.
+
+    B-179: replaces the ``SELECT 1 FROM sqlite_master WHERE type='table' AND
+    name=?`` guards used by backtest.py (and similar). On Postgres ``sqlite_master``
+    does not exist, so we query ``information_schema.tables`` instead. Both
+    paths return a plain bool so callers can use ``if db.table_exists(...)``.
+    """
+    ph = _ph()
+    if backend() == "postgres":
+        row = conn.execute(
+            "SELECT 1 FROM information_schema.tables "
+            f"WHERE table_schema = 'public' AND table_name = {ph}",
+            (name,),
+        ).fetchone()
+    else:
+        row = conn.execute(
+            f"SELECT 1 FROM sqlite_master WHERE type='table' AND name = {ph}",
+            (name,),
+        ).fetchone()
+    return row is not None
+
+
+def excluded_ticker_set(conn) -> set[str]:
     """Return the set of tickers flagged is_excluded_issuer = 1.
 
     B-011 / Sprint 10 Phase 1 defensive filter helper.
@@ -381,7 +817,7 @@ def excluded_ticker_set(conn: sqlite3.Connection) -> set[str]:
         return set()
 
 
-def upsert_transaction(conn: sqlite3.Connection, row: dict,
+def upsert_transaction(conn, row: dict,
                        parser_source: str, *, verbose: bool = False) -> bool:
     """Insert or update a transaction row.
 
@@ -391,6 +827,13 @@ def upsert_transaction(conn: sqlite3.Connection, row: dict,
     This is the single canonical upsert used by run_scrape.py,
     backfill_filings.py, and any future ingest script. Keep logic here
     so bug fixes apply everywhere at once.
+
+    Backend-aware: the SQL is identical apart from the parameter
+    placeholder (``?`` for SQLite, ``%s`` for Postgres). The
+    select-then-insert-or-update pattern (rather than a single
+    INSERT ... ON CONFLICT) is kept verbatim so the seen_count/last_seen
+    and COALESCE(resulting_shares) semantics are byte-for-byte identical
+    on both backends.
 
     B-028 (2026-05-21): this function no longer commits. Callers must
     commit themselves — typically once per filing (after upserting all
@@ -409,9 +852,10 @@ def upsert_transaction(conn: sqlite3.Connection, row: dict,
       * commit() after each filing (or whatever batch boundary the
         caller chooses).
     """
+    ph = _ph()
     now = iso_now()
     cur = conn.execute(
-        "SELECT seen_count FROM transactions WHERE fingerprint = ?",
+        f"SELECT seen_count FROM transactions WHERE fingerprint = {ph}",
         (row["fingerprint"],),
     ).fetchone()
     if cur is None:
@@ -426,13 +870,16 @@ def upsert_transaction(conn: sqlite3.Connection, row: dict,
         resulting_shares = row.get("resulting_shares")
         if resulting_shares is not None:
             resulting_shares = int(resulting_shares)
+        # 22 columns total; seen_count is the literal 1, so 21 bound params:
+        # 3 before the literal (fingerprint, first_seen, last_seen) + 18 after.
+        tail = ", ".join([ph] * 18)
         conn.execute(
             "INSERT INTO transactions ("
             "fingerprint, first_seen, last_seen, seen_count, date, ticker, "
             "company, director, role, role_normalized, type, shares, price, "
             "value, context, url, announced_at, cluster_id, first_time_buy, "
             "parser_source, buy_strictness, resulting_shares"
-            ") VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            f") VALUES ({ph}, {ph}, {ph}, 1, {tail})",
             (
                 row["fingerprint"], now, now, row["date"], row["ticker"],
                 row["company"], row["director"], raw_role, role_normalized,
@@ -453,9 +900,9 @@ def upsert_transaction(conn: sqlite3.Connection, row: dict,
     if resulting_shares is not None:
         resulting_shares = int(resulting_shares)
     conn.execute(
-        "UPDATE transactions SET last_seen = ?, seen_count = seen_count + 1, "
-        "resulting_shares = COALESCE(resulting_shares, ?) "
-        "WHERE fingerprint = ?",
+        f"UPDATE transactions SET last_seen = {ph}, seen_count = seen_count + 1, "
+        f"resulting_shares = COALESCE(resulting_shares, {ph}) "
+        f"WHERE fingerprint = {ph}",
         (now, resulting_shares, row["fingerprint"]),
     )
     # B-028: no per-row commit. Caller commits at filing boundary.

@@ -133,13 +133,24 @@ def _open_paper_trade(conn, result: dict, tx, max_notional: float = _PAPER_MAX_N
         status = "planned"
 
     now_iso = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    # B-179: INSERT OR IGNORE (SQLite) <-> ON CONFLICT DO NOTHING (Postgres),
+    # both keyed on the PK trade_id. DO NOTHING == IGNORE (no update on conflict).
+    pt_insert = (
+        "INSERT INTO paper_trades "
+        if db.backend() == "postgres" else
+        "INSERT OR IGNORE INTO paper_trades "
+    )
+    pt_tail = (
+        " ON CONFLICT (trade_id) DO NOTHING"
+        if db.backend() == "postgres" else ""
+    )
     try:
         conn.execute(
-            "INSERT OR IGNORE INTO paper_trades "
+            pt_insert +
             "(trade_id, signal_id, signal_version, fingerprint, sizing_scheme, "
             " notional_gbp, entry_date, entry_close, shares, status, "
             " opened_at, updated_at) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)" + pt_tail,
             (trade_id, sid, result.get("signal_version", "1.0.0"), fingerprint,
              sizing, round(notional, 2),
              entry_date, entry_close, shares, status, now_iso, now_iso),
@@ -214,7 +225,9 @@ def _identify_thin_tickers(conn) -> list[str]:
         "  AND t.ticker NOT LIKE '^%' "
         "  AND COALESCE(tm.is_excluded_issuer, 0) != 1 "
         "GROUP BY t.ticker "
-        "HAVING n < ?",
+        # Postgres (unlike SQLite) does not allow a SELECT alias in HAVING —
+        # repeat the aggregate. COUNT(p.date) works on both backends. (B-180)
+        "HAVING COUNT(p.date) < ?",
         (MIN_HISTORY_DAYS,),
     ).fetchall()
     return [r["ticker"] for r in rows]
@@ -276,8 +289,8 @@ def _universe_rows(conn, date_from, date_to):
         "  AND (t.type != 'BUY' "
         "       OR COALESCE(t.buy_strictness, 'STRICT_BUY') = 'STRICT_BUY') "
         "  AND COALESCE(t.price_audit, 'ok') NOT IN ('unresolved', 'no_market') "
-        "  AND (? IS NULL OR t.announced_at >= ?) "
-        "  AND (? IS NULL OR t.announced_at <= ?) "
+        "  AND (CAST(? AS TEXT) IS NULL OR t.announced_at >= ?) "
+        "  AND (CAST(? AS TEXT) IS NULL OR t.announced_at <= ?) "
         "ORDER BY t.announced_at ASC, t.fingerprint ASC",
         (date_from, date_from, date_to, date_to),
     ).fetchall()
@@ -296,10 +309,27 @@ def _universe_rows(conn, date_from, date_to):
 
 
 def _upsert(conn, result: dict) -> None:
+    # B-179: INSERT OR REPLACE (SQLite) <-> ON CONFLICT DO UPDATE (Postgres).
+    # Full-row insert on PK (signal_id, signal_version, fingerprint); the
+    # DO UPDATE refreshes the only non-PK columns (fired_at/confidence/metadata)
+    # so behaviour matches the SQLite delete+reinsert exactly.
+    if db.backend() == "postgres":
+        sql = (
+            "INSERT INTO signals "
+            "(signal_id, signal_version, fingerprint, fired_at, confidence, metadata) "
+            "VALUES (?, ?, ?, ?, ?, ?) "
+            "ON CONFLICT (signal_id, signal_version, fingerprint) DO UPDATE SET "
+            "fired_at = excluded.fired_at, confidence = excluded.confidence, "
+            "metadata = excluded.metadata"
+        )
+    else:
+        sql = (
+            "INSERT OR REPLACE INTO signals "
+            "(signal_id, signal_version, fingerprint, fired_at, confidence, metadata) "
+            "VALUES (?, ?, ?, ?, ?, ?)"
+        )
     conn.execute(
-        "INSERT OR REPLACE INTO signals "
-        "(signal_id, signal_version, fingerprint, fired_at, confidence, metadata) "
-        "VALUES (?, ?, ?, ?, ?, ?)",
+        sql,
         (result["signal_id"], result["signal_version"], result["fingerprint"],
          result["fired_at"], result.get("confidence"), result.get("metadata")),
     )
@@ -472,15 +502,19 @@ def main(argv=None) -> int:
     # destructive; a FUSE blip or crash mid-rebuild would leave the table
     # half-empty. Pre-snapshot defends against this. Also verifies the DB
     # is healthy before we open it for writing.
-    if not db_health.check(db.DB_PATH):
-        print("[eval_signals] FATAL: pre-run PRAGMA integrity_check failed. "
-              "Run start.bat to restore from .bak before retrying.")
-        return 2
-    if args.rebuild:
-        if not db_health.backup():
-            print("[eval_signals] FATAL: failed to take pre-rebuild .bak. "
-                  "Refusing to proceed (destructive write).")
-            return 3
+    # B-179: the integrity_check + .bak dance is a SQLite/FUSE corruption
+    # defence. On Postgres there is no local .db file (db_health would always
+    # report False) and the managed server is the source of truth, so skip it.
+    if db.backend() == "sqlite":
+        if not db_health.check(db.DB_PATH):
+            print("[eval_signals] FATAL: pre-run PRAGMA integrity_check failed. "
+                  "Run start.bat to restore from .bak before retrying.")
+            return 2
+        if args.rebuild:
+            if not db_health.backup():
+                print("[eval_signals] FATAL: failed to take pre-rebuild .bak. "
+                      "Refusing to proceed (destructive write).")
+                return 3
 
     # B-033: open the connection INSIDE the try so a connect() failure
     # (corrupt schema, disk full) doesn't leak a half-initialised handle.
