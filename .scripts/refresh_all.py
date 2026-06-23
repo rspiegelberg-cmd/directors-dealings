@@ -155,10 +155,14 @@ STEPS = [
     # can segment the newly classified companies in the same pipeline run.
     ("smallcap",   "Applying small/large cap classification (GBP 500m)",
      "classify_small_cap.py",    ["--threshold", "500000000"], 60 * 2),
+    # Timeouts widened for the cloud (Postgres-over-network): the signal
+    # engine + backtest fire many small queries, each with network latency,
+    # so they run far slower than against local SQLite. 15min was too tight
+    # and tripped run #2. Generous caps; actual runtime is ~10-20min.
     ("signals",    "Recomputing signal firings",
-     "eval_signals.py",          [],                 60 * 15),
+     "eval_signals.py",          [],                 60 * 45),
     ("backtest",   "Computing signal backtests + CAR",
-     "backtest.py",              [],                 60 * 20),
+     "backtest.py",              [],                 60 * 45),
     # Forward earnings calendar — refresh BEFORE export so the upcoming-events
     # panel and the 60-day pre-results badges reflect today's dates. Both steps
     # carry a trailing True = SOFT: a transient LSE outage logs and the pipeline
@@ -170,11 +174,11 @@ STEPS = [
     ("est_dates",  "Estimating earnings dates for uncovered holdings",
      "backfill_expected_reporting_dates.py", [],     60 * 5,  True),
     ("export",     "Rebuilding signals + dealings JSON",
-     "export_dashboard_json.py", [],                 60 * 5),
+     "export_dashboard_json.py", [],                 60 * 20),
     ("audit",      "Auditing date integrity",
-     "audit_dates.py",           ["--verbose"],      60 * 2),
+     "audit_dates.py",           ["--verbose"],      60 * 5),
     ("build",      "Regenerating HTML pages",
-     "build_dashboard.py",       [],                 60 * 5),
+     "build_dashboard.py",       [],                 60 * 10),
 ]
 
 
