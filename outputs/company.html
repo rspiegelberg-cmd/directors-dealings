@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   html, body { background:#f8fafc; color:#0f172a; }
-  .mk-btn[aria-pressed="false"] { opacity:.45; }
+  .mk-btn[aria-pressed="false"] { opacity:.4; }
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans">
@@ -17,11 +17,12 @@
   <a href="./index.html" class="text-xs text-slate-500 hover:text-slate-900">&larr; All directors dealings</a>
 </header>
 
-<main class="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+<main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
   <div id="app"><div class="py-20 text-center text-slate-400 text-sm">Loading company…</div></div>
   <footer class="mt-10 pt-4 border-t border-slate-200 text-[11px] text-slate-400">
     <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 align-middle mr-1"></span>
     Live from the Directors Dealings database. Director-dealing data sourced from UK RNS PDMR announcements.
+    Signal badges are colour-coded by conviction tier — hover any badge for its definition.
   </footer>
 </main>
 
@@ -36,9 +37,75 @@ const ticker = (params.get("ticker") || "").trim().toUpperCase();
 const todayISO = new Date().toISOString().slice(0, 10);
 
 const fmtInt = n => (n == null ? "" : Number(n).toLocaleString("en-GB"));
-const fmtGbp = n => (n == null || n === "" ? "" : "£" + Number(n).toLocaleString("en-GB", { maximumFractionDigits: 0 }));
+const fmtGbp = n => (n == null || n === "" ? "-" : "£" + Number(n).toLocaleString("en-GB", { maximumFractionDigits: 0 }));
 const esc = s => (s == null ? "" : String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c])));
 const day = s => (s ? String(s).slice(0, 10) : "");
+
+// ---- Signal tier palette (mirror of render_helpers.TIER_PALETTE) -----------
+const TIER = {
+  t0:"bg-red-600 text-white", t1a:"bg-red-500 text-white", t1b:"bg-rose-500 text-white",
+  t7:"bg-violet-500 text-white", t2:"bg-amber-500 text-white", t3:"bg-emerald-500 text-white",
+  t5:"bg-orange-400 text-white", t6:"bg-slate-300 text-white", t4:"bg-slate-400 text-white",
+  s1:"bg-blue-500 text-white", f1:"bg-purple-500 text-white", b1:"bg-cyan-500 text-white", b2:"bg-red-600 text-white"
+};
+const SIG_L2S = {
+  t0_cluster_combo:"t0", t1a_ceo_founder_buy:"t1a", t1b_cfo_buy:"t1b", t7_chair_buy:"t7",
+  t2_exec_buy:"t2", t3_ned_buy:"t3", t5_pca_buy:"t5", t6_company_sec_buy:"t6", t4_other_buy:"t4",
+  s1_cluster_buy:"s1", f1_first_time_buy:"f1", b1_lone_conviction_buy:"b1", b2_crowded_cluster_kill:"b2"
+};
+const SIG_SEV = { t0:0,t1a:1,t1b:2,t7:3,t2:4,t3:5,t5:6,t6:7,t4:8,s1:9,f1:10,b1:11,b2:12 };
+const SIG_TIP = {
+  t0:"T0 — Cluster + opportunistic combo. High-conviction buy inside a multi-director cluster within 30 days. Highest conviction.",
+  t1a:"T1a — CEO / Founder buy ≥ £100k. Top-of-pyramid decision-maker conviction.",
+  t1b:"T1b — CFO buy ≥ £100k. Financial-insider signal; often precedes earnings beats.",
+  t7:"T7 — Chair buy ≥ £25k. Board-level conviction.",
+  t2:"T2 — Other senior exec buy ≥ £25k. Mid-conviction.",
+  t3:"T3 — NED buy ≥ £10k. Lower-conviction.",
+  t5:"T5 — PCA (closely associated person) buy ≥ £10k. Indirect insider signal.",
+  t6:"T6 — Company Secretary / General Counsel buy ≥ £10k. Weak signal.",
+  t4:"T4 — Other discretionary buy ≥ £1k. Catch-all.",
+  s1:"S1 — Cluster. ≥2 distinct directors buying same ticker within 30 days.",
+  f1:"F1 — First-time buy. Director's first-ever buy of this ticker.",
+  b1:"B1 — Lone Conviction Buy. Single director ≥ £200k, no other buyers within 30 days.",
+  b2:"B2 — Crowded Cluster Kill. ≥4 directors buy within 30 days; signals suppressed 60 days."
+};
+function sigBadges(sigs) {
+  if (!sigs || !sigs.length) return '<span class="text-slate-300">-</span>';
+  const short = sigs.map(s => SIG_L2S[s] || s).filter(Boolean)
+    .sort((a, b) => (SIG_SEV[a] ?? 99) - (SIG_SEV[b] ?? 99));
+  return '<span class="inline-flex flex-wrap gap-1">' + short.map(s => {
+    const cls = TIER[s] || "bg-slate-300 text-white";
+    return `<span title="${esc(SIG_TIP[s] || s)}" class="cursor-help inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold ${cls}">${esc(s.toUpperCase())}</span>`;
+  }).join("") + '</span>';
+}
+
+// ---- Role chips (mirror of render_helpers.role_chip) -----------------------
+const ROLE_CLS = {
+  "CEO":"bg-indigo-100 text-indigo-700", "CFO":"bg-indigo-100 text-indigo-700",
+  "Other Chief":"bg-indigo-50 text-indigo-600", "Founder":"bg-emerald-100 text-emerald-700",
+  "Chair (executive)":"bg-violet-100 text-violet-700", "Non-Exec Chair":"bg-violet-50 text-violet-600",
+  "NED":"bg-slate-100 text-slate-600", "Executive Director":"bg-sky-100 text-sky-700",
+  "Divisional / Regional Exec":"bg-sky-50 text-sky-600", "President / VP":"bg-sky-50 text-sky-600",
+  "Company Secretary / General Counsel":"bg-slate-50 text-slate-500", "PCA":"bg-amber-50 text-amber-700",
+  "PDMR-only":"bg-slate-50 text-slate-500", "Other / unclassified":"bg-slate-50 text-slate-400",
+  "Parser fragment":"bg-rose-50 text-rose-500"
+};
+const ROLE_LABEL = {
+  "CEO":"CEO", "CFO":"CFO", "Other Chief":"C-suite", "Founder":"Founder", "Chair (executive)":"Chair",
+  "Non-Exec Chair":"NE Chair", "NED":"NED", "Executive Director":"Exec Dir",
+  "Divisional / Regional Exec":"Div Exec", "President / VP":"VP",
+  "Company Secretary / General Counsel":"Co Sec", "PCA":"PCA", "PDMR-only":"PDMR",
+  "Other / unclassified":"Other", "Parser fragment":"?"
+};
+function roleChip(role, rn) {
+  if (!role && !rn) return '<span class="text-slate-300">-</span>';
+  if (!rn) return `<span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">${esc(role)}</span>`;
+  const cls = ROLE_CLS[rn] || "bg-slate-100 text-slate-600";
+  const short = ROLE_LABEL[rn] || rn;
+  return `<span class="text-[10px] px-1.5 py-0.5 rounded ${cls}" title="${esc(role || rn)}">${esc(short)}</span>`;
+}
+
+function carCls(v) { return v > 0 ? "text-emerald-600" : (v < 0 ? "text-rose-600" : "text-slate-500"); }
 
 async function fetchView(view, qs) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${view}?${qs}`, {
@@ -48,7 +115,6 @@ async function fetchView(view, qs) {
   return res.json();
 }
 
-// Largest index whose label (ascending ISO dates) is <= d. -1 if d precedes the window.
 function idxForDate(labels, d) {
   for (let i = labels.length - 1; i >= 0; i--) if (labels[i] <= d) return i;
   return -1;
@@ -92,12 +158,12 @@ function chartSection(hasPrices) {
     </section>`;
   return `
     <section class="mt-4 bg-white border border-slate-200 rounded-lg p-4">
-      <div class="flex items-center justify-between mb-3">
+      <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
         <h2 class="text-xs uppercase tracking-wide text-slate-500">Price &amp; volume (trailing window)</h2>
         <div class="flex gap-1.5 text-xs">
           <button data-mk="buy"      aria-pressed="true" class="mk-btn px-2 py-0.5 rounded border border-emerald-200 bg-emerald-50 text-emerald-700">● Buys</button>
           <button data-mk="sell"     aria-pressed="true" class="mk-btn px-2 py-0.5 rounded border border-rose-200 bg-rose-50 text-rose-700">● Sells</button>
-          <button data-mk="earnings" aria-pressed="true" class="mk-btn px-2 py-0.5 rounded border border-amber-200 bg-amber-50 text-amber-700">▲ Earnings</button>
+          <button data-mk="earnings" aria-pressed="true" class="mk-btn px-2 py-0.5 rounded border border-amber-200 bg-amber-50 text-amber-700">| Earnings</button>
         </div>
       </div>
       <div class="relative" style="height:280px"><canvas id="priceChart"></canvas></div>
@@ -105,33 +171,55 @@ function chartSection(hasPrices) {
     </section>`;
 }
 
-function dealingsTable(rows) {
+function dealingsTable(rows, latestClose) {
   const body = rows.map(r => {
-    const sigs = (r.signals || []).map(s => `<span class="inline-block mb-0.5 mr-1 px-1.5 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">${esc(s)}</span>`).join("");
-    const tcls = r.type === "BUY" ? "text-emerald-700 bg-emerald-50"
-      : (r.type === "SELL" || r.type === "SELL_TAX") ? "text-rose-700 bg-rose-50"
-      : "text-slate-600 bg-slate-100";
+    const type = (r.type || "").toUpperCase();
+    const tcls = type === "BUY" ? "bg-emerald-100 text-emerald-700"
+      : (type === "SELL" || type === "SELL_TAX") ? "bg-rose-100 text-rose-700"
+      : "bg-slate-100 text-slate-500";
+    const price = Number(r.price) || 0;
+    // Rtn: gross return vs latest close (BUY rows only), mirrors old page.
+    let rtnCell = '<span class="text-slate-300">-</span>';
+    if (type === "BUY" && latestClose && price > 0) {
+      const ret = Math.round((latestClose / price - 1) * 1000) / 10;
+      const g = ret > 0 ? "▲" : (ret < 0 ? "▼" : "");
+      rtnCell = `<span class="${carCls(ret)}">${g} ${ret > 0 ? "+" : ""}${ret.toFixed(1)}%</span>`;
+    }
+    const url = r.url || "";
+    const src = url
+      ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="Open RNS announcement">↗</a>`
+      : `<span class="text-slate-200" title="no RNS link on file">↗</span>`;
+    const fp = esc(r.fingerprint || "");
+    const review = fp
+      ? `<a href="/review?tab=b&fp=${fp}" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">✎</a>`
+      : "";
     return `<tr class="border-b border-slate-100 hover:bg-slate-50">
-      <td class="px-3 py-2">${esc(day(r.date))}</td>
-      <td class="px-3 py-2">${esc(r.director)}</td>
-      <td class="px-3 py-2 text-slate-500">${esc(r.role_normalized || r.role || "")}</td>
-      <td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[11px] font-bold ${tcls}">${esc(r.type)}</span></td>
+      <td class="px-3 py-2 text-slate-600">${esc(day(r.date))}</td>
+      <td class="px-3 py-2 text-slate-700">${esc(r.director || "-")}</td>
+      <td class="px-3 py-2">${roleChip(r.role, r.role_normalized)}</td>
+      <td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${tcls}">${esc(type || "-")}</span></td>
       <td class="px-3 py-2 text-right tabular-nums">${fmtInt(r.shares)}</td>
+      <td class="px-3 py-2 text-right tabular-nums">${price ? price.toFixed(2) : "-"}</td>
       <td class="px-3 py-2 text-right tabular-nums">${fmtGbp(r.value)}</td>
-      <td class="px-3 py-2 text-slate-500">${esc(day(r.announced_at))}</td>
-      <td class="px-3 py-2">${sigs}</td>
+      <td class="px-3 py-2 text-right tabular-nums">${rtnCell}</td>
+      <td class="px-3 py-2">${sigBadges(r.signals)}</td>
+      <td class="px-3 py-2 text-center">${src}</td>
+      <td class="px-3 py-2 text-center">${review}</td>
     </tr>`;
   }).join("");
   return `
     <section class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
       <h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-200">Director dealings</h2>
       <div class="overflow-x-auto">
-        <table class="w-full text-sm min-w-[760px]">
+        <table class="w-full text-sm min-w-[860px]">
           <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-200">
             <th class="px-3 py-2 font-medium">Date</th><th class="px-3 py-2 font-medium">Director</th>
             <th class="px-3 py-2 font-medium">Role</th><th class="px-3 py-2 font-medium">Type</th>
-            <th class="px-3 py-2 font-medium text-right">Shares</th><th class="px-3 py-2 font-medium text-right">Value</th>
-            <th class="px-3 py-2 font-medium">Announced</th><th class="px-3 py-2 font-medium">Signals</th>
+            <th class="px-3 py-2 font-medium text-right">Shares</th><th class="px-3 py-2 font-medium text-right">Price</th>
+            <th class="px-3 py-2 font-medium text-right">Value</th><th class="px-3 py-2 font-medium text-right" title="Gross return from deal price to latest close (buys only)">Rtn</th>
+            <th class="px-3 py-2 font-medium">Signals</th>
+            <th class="px-3 py-2 font-medium text-center" title="RNS announcement">RNS</th>
+            <th class="px-3 py-2 font-medium text-center" title="PDMR review">Rev</th>
           </tr></thead>
           <tbody>${body}</tbody>
         </table>
@@ -146,27 +234,45 @@ function buildCharts(prices, dealings, reporting) {
   const labels = asc.map(p => day(p.date));
   const closes = asc.map(p => p.close);
   const vols = asc.map(p => p.volume);
-  const minClose = Math.min.apply(null, closes.filter(v => v != null));
 
   const buy = new Array(labels.length).fill(null);
   const sell = new Array(labels.length).fill(null);
   for (const d of dealings) {
     const i = idxForDate(labels, day(d.date));
     if (i < 0) continue;
-    if (d.type === "BUY") buy[i] = closes[i];
-    else if (d.type === "SELL" || d.type === "SELL_TAX") sell[i] = closes[i];
+    const ty = (d.type || "").toUpperCase();
+    if (ty === "BUY") buy[i] = closes[i];
+    else if (ty === "SELL" || ty === "SELL_TAX") sell[i] = closes[i];
   }
-  const earn = new Array(labels.length).fill(null);
+  // Earnings → vertical-line indices within the visible window.
+  const earnIdx = [];
   for (const r of (reporting || [])) {
     const rd = day(r.report_date);
-    if (rd < labels[0] || rd > labels[labels.length - 1]) continue;
+    if (!rd || rd < labels[0] || rd > labels[labels.length - 1]) continue;
     const i = idxForDate(labels, rd);
-    if (i >= 0) earn[i] = minClose;
+    if (i >= 0) earnIdx.push(i);
   }
+  let earnVisible = true;
 
-  const mkSet = (label, data, color, style, radius) => ({
-    label, data, showLine: false, pointStyle: style, pointRadius: radius,
-    pointBackgroundColor: color, pointBorderColor: color, borderColor: color, spanGaps: false
+  const earnLines = {
+    id: "earnLines",
+    afterDatasetsDraw(chart) {
+      if (!earnVisible) return;
+      const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
+      ctx.save();
+      ctx.strokeStyle = "rgba(217,119,6,.55)";
+      ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+      earnIdx.forEach(i => {
+        const xp = x.getPixelForValue(i);
+        ctx.beginPath(); ctx.moveTo(xp, top); ctx.lineTo(xp, bottom); ctx.stroke();
+      });
+      ctx.restore();
+    }
+  };
+
+  const mkSet = (label, data, color) => ({
+    label, data, showLine: false, pointStyle: "circle", pointRadius: 5,
+    pointBackgroundColor: color, pointBorderColor: "#fff", pointBorderWidth: 1, spanGaps: false
   });
 
   priceChart = new Chart(document.getElementById("priceChart"), {
@@ -174,11 +280,10 @@ function buildCharts(prices, dealings, reporting) {
     data: {
       labels,
       datasets: [
-        { label: "Close", data: closes, borderColor: "#2563eb", backgroundColor: "rgba(37,99,235,.08)",
+        { label: "Close", data: closes, borderColor: "#2563eb", backgroundColor: "rgba(37,99,235,.07)",
           borderWidth: 1.5, pointRadius: 0, tension: .15, fill: true },
-        mkSet("Buys", buy, "#059669", "circle", 5),
-        mkSet("Sells", sell, "#e11d48", "circle", 5),
-        mkSet("Earnings", earn, "#d97706", "triangle", 6)
+        mkSet("Buys", buy, "#059669"),
+        mkSet("Sells", sell, "#e11d48")
       ]
     },
     options: {
@@ -192,7 +297,8 @@ function buildCharts(prices, dealings, reporting) {
         x: { ticks: { maxTicksLimit: 8, font: { size: 10 }, color: "#94a3b8" }, grid: { display: false } },
         y: { ticks: { font: { size: 10 }, color: "#94a3b8" }, grid: { color: "#f1f5f9" } }
       }
-    }
+    },
+    plugins: [earnLines]
   });
 
   volumeChart = new Chart(document.getElementById("volumeChart"), {
@@ -205,14 +311,17 @@ function buildCharts(prices, dealings, reporting) {
     }
   });
 
-  // Marker toggles (datasets 1=Buys, 2=Sells, 3=Earnings).
-  const map = { buy: 1, sell: 2, earnings: 3 };
   document.querySelectorAll(".mk-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-      const di = map[btn.dataset.mk];
-      const vis = priceChart.isDatasetVisible(di);
-      priceChart.setDatasetVisibility(di, !vis);
-      btn.setAttribute("aria-pressed", String(!vis));
+      const kind = btn.dataset.mk;
+      let on;
+      if (kind === "earnings") { earnVisible = !earnVisible; on = earnVisible; }
+      else {
+        const di = kind === "buy" ? 1 : 2;
+        on = !priceChart.isDatasetVisible(di);
+        priceChart.setDatasetVisibility(di, on);
+      }
+      btn.setAttribute("aria-pressed", String(on));
       priceChart.update();
     });
   });
@@ -225,9 +334,14 @@ function render(dealings, prices, reporting) {
   }
   const company = dealings.map(r => r.company).filter(Boolean).sort((a, b) => b.length - a.length)[0] || ticker;
   const r0 = dealings[0];
+  let latestClose = null;
+  if (prices && prices.length) {
+    const asc = prices.slice().sort((a, b) => day(a.date) < day(b.date) ? -1 : 1);
+    latestClose = asc[asc.length - 1].close;
+  }
   app.innerHTML = renderHeader(company, r0, dealings.length, reporting)
     + chartSection(prices && prices.length)
-    + dealingsTable(dealings);
+    + dealingsTable(dealings, latestClose);
   if (prices && prices.length) buildCharts(prices, dealings, reporting);
 }
 
