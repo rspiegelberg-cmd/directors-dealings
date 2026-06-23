@@ -627,6 +627,63 @@ def _build_drill_pages(out_dir: Path, build_sha: str,
     return total_written
 
 
+def _live_shell_html(build_sha: str) -> str:
+    """Tiny shell served as outputs/index.html on the cloud.
+
+    It fetches the full pre-rendered front page from Supabase (rendered_pages)
+    and document.write()s it, so the page is always the latest the pipeline
+    produced — no rebuild, no git push, nothing to clobber. The full page is
+    self-contained (its own Tailwind/Chart.js + inline data), so writing it
+    executes all its scripts exactly like a normal page load.
+    """
+    return (
+        "<!DOCTYPE html>\n"
+        "<html lang=\"en\"><head><meta charset=\"utf-8\">"
+        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+        "<title>Directors Dealings</title></head>"
+        "<body style=\"margin:0;background:#f8fafc;"
+        "font:14px system-ui,-apple-system,Segoe UI,Roboto,sans-serif\">"
+        "<div id=\"boot\" style=\"padding:48px;text-align:center;color:#64748b\">"
+        "Loading latest dashboard…</div>"
+        "<script>\n"
+        "const U='https://mmiaiauybzsdcbrrcxfc.supabase.co';\n"
+        "const K='sb_publishable_vADFSIyRre-9sGyhDnXBcA_H167SU8B';\n"
+        "fetch(U+'/rest/v1/public_rendered_pages_v?name=eq.index&select=html&limit=1',"
+        "{headers:{apikey:K,Authorization:'Bearer '+K}})"
+        ".then(function(r){return r.json();}).then(function(d){"
+        "if(!d||!d.length||!d[0].html){"
+        "document.getElementById('boot').textContent='Front page not published yet.';return;}"
+        "document.open();document.write(d[0].html);document.close();"
+        "}).catch(function(e){"
+        "document.getElementById('boot').textContent='Could not load dashboard ('+e.message+').';"
+        "});\n"
+        "</script></body></html>"
+    )
+
+
+def _publish_live_index(index_path: Path, build_sha: str) -> None:
+    """Push the full rendered front page into Supabase, then replace the
+    on-disk index.html with the thin live shell. Postgres backend only.
+    """
+    from datetime import datetime, timezone  # noqa: PLC0415
+    full_html = index_path.read_text(encoding="utf-8")
+    built_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    conn = db.connect()
+    try:
+        conn.execute(
+            "INSERT INTO rendered_pages (name, html, built_at) "
+            "VALUES (?, ?, ?) "
+            "ON CONFLICT (name) DO UPDATE SET "
+            "html = EXCLUDED.html, built_at = EXCLUDED.built_at",
+            ("index", full_html, built_at),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+    # Replace the heavy static page with the lightweight live shell.
+    index_path.write_text(_live_shell_html(build_sha), encoding="utf-8")
+
+
 def build(out_dir: Path, signals_path: Path, dealings_path: Path,
           status_path: Path | None,
           csv_path: Path, clusters_path: Path,
@@ -654,6 +711,20 @@ def build(out_dir: Path, signals_path: Path, dealings_path: Path,
     summary["bytes"] += n
     if verbose:
         print(f"[index] {n} bytes")
+
+    # ---- Live front page (cloud only) ----
+    # On Postgres, publish the full rendered front page into Supabase and
+    # leave a thin live shell on disk. The front page is then always current
+    # the moment the pipeline runs, and a stale local push can't overwrite it.
+    # On SQLite (local-only), keep the full static page exactly as before.
+    try:
+        if db.backend() == "postgres":
+            _publish_live_index(out_dir / "index.html", build_sha)
+            summary["live_index_published"] = True
+            if verbose:
+                print("[index] published to rendered_pages + wrote live shell")
+    except Exception as e:  # noqa: BLE001
+        print(f"[index] WARNING: live-publish failed ({e!r}); keeping static page")
 
     # ---- performance.html (combined / "All") ----
     n = render_performance.render_to_file(

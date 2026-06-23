@@ -40,6 +40,10 @@ git commit -m "Update dashboard %DATE% %TIME%"
 if errorlevel 1 echo (Nothing new to commit - continuing.)
 
 echo.
+echo Syncing with any cloud updates (daily refresh) before pushing...
+git pull --no-edit
+
+echo.
 echo Pushing to GitHub...
 git push
 
