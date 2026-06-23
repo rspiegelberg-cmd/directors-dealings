@@ -1,0 +1,66 @@
+name: Daily refresh — Directors Dealings
+
+# M4 (B-185/B-186): every morning, run the pipeline against Supabase, rebuild the
+# dashboard, and commit the result back so Vercel auto-deploys. The live company
+# pages read Supabase directly, so they're current the moment the pipeline writes;
+# this job refreshes the static index / performance pages too.
+#
+# Run it by hand any time from the Actions tab → this workflow → "Run workflow".
+
+on:
+  schedule:
+    - cron: "0 6 * * *"          # 06:00 UTC daily (after the London RNS day)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write                 # needed to push the rebuilt outputs/ back
+
+concurrency:
+  group: daily-refresh
+  cancel-in-progress: false       # never interrupt a run that's writing to the DB
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 pandas "psycopg[binary]"
+
+      - name: Run pipeline against Supabase
+        id: pipeline
+        continue-on-error: true   # a soft data-quality audit shouldn't block the
+                                  # deploy; the commit step only pushes if the
+                                  # dashboard actually changed (real crashes leave
+                                  # it unchanged → no-op).
+        env:
+          DD_DATABASE_URL: ${{ secrets.DD_DATABASE_URL }}
+          DD_FMP_API_KEY: ${{ secrets.DD_FMP_API_KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python .scripts/refresh_all.py
+
+      - name: Commit & push rebuilt dashboard
+        run: |
+          git config user.name  "directors-dealings-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add outputs dashboard/data 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No dashboard changes to commit."
+          else
+            git commit -m "Daily refresh $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+            echo "Pushed refreshed dashboard — Vercel will redeploy."
+          fi
+
+      - name: Surface pipeline failure (after deploy attempt)
+        if: steps.pipeline.outcome == 'failure'
+        run: |
+          echo "::warning::refresh_all exited non-zero (likely the data-quality audit). The DB and dashboard were still updated where possible; review the pipeline step log."
