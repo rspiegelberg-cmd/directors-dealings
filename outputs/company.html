@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   html, body { background:#f8fafc; color:#0f172a; }
-  .mk-btn[aria-pressed="false"] { opacity:.4; }
+  .mk-btn[aria-pressed="false"], .tf-btn[aria-pressed="false"] { opacity:.35; }
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans">
@@ -174,6 +174,7 @@ function chartSection(hasPrices) {
 function dealingsTable(rows, latestClose) {
   const body = rows.map(r => {
     const type = (r.type || "").toUpperCase();
+    const tkey = type || "OTHER";
     const tcls = type === "BUY" ? "bg-emerald-100 text-emerald-700"
       : (type === "SELL" || type === "SELL_TAX") ? "bg-rose-100 text-rose-700"
       : "bg-slate-100 text-slate-500";
@@ -193,7 +194,7 @@ function dealingsTable(rows, latestClose) {
     const review = fp
       ? `<a href="/review?tab=b&fp=${fp}" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">✎</a>`
       : "";
-    return `<tr class="border-b border-slate-100 hover:bg-slate-50">
+    return `<tr data-type="${esc(tkey)}" class="border-b border-slate-100 hover:bg-slate-50">
       <td class="px-3 py-2 text-slate-600">${esc(day(r.date))}</td>
       <td class="px-3 py-2 text-slate-700">${esc(r.director || "-")}</td>
       <td class="px-3 py-2">${roleChip(r.role, r.role_normalized)}</td>
@@ -207,9 +208,19 @@ function dealingsTable(rows, latestClose) {
       <td class="px-3 py-2 text-center">${review}</td>
     </tr>`;
   }).join("");
+  const types = [...new Set(rows.map(r => ((r.type || "").toUpperCase()) || "OTHER"))];
+  const TYPE_CLS = { BUY: "bg-emerald-600 border-emerald-600", SELL: "bg-rose-600 border-rose-600", SELL_TAX: "bg-rose-600 border-rose-600" };
+  const orderT = ["BUY", "SELL", "SELL_TAX"];
+  const sortedTypes = [...orderT.filter(t => types.includes(t)), ...types.filter(t => !orderT.includes(t)).sort()];
+  const chips = sortedTypes.map(t =>
+    `<button type="button" data-tf="${esc(t)}" aria-pressed="true" class="tf-btn px-2 py-0.5 rounded text-[11px] font-semibold text-white border ${TYPE_CLS[t] || "bg-slate-600 border-slate-600"}">${esc(t)}</button>`
+  ).join("");
   return `
     <section class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
-      <h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-200">Director dealings</h2>
+      <div class="flex items-center justify-between gap-2 flex-wrap px-4 py-3 border-b border-slate-200">
+        <h2 class="text-xs uppercase tracking-wide text-slate-500">Director dealings</h2>
+        <div class="flex flex-wrap gap-1.5" title="Click a type to show/hide those rows">${chips}</div>
+      </div>
       <div class="overflow-x-auto">
         <table class="w-full text-sm min-w-[860px]">
           <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-200">
@@ -227,6 +238,19 @@ function dealingsTable(rows, latestClose) {
     </section>`;
 }
 
+function wireTypeFilters() {
+  document.querySelectorAll(".tf-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const t = btn.dataset.tf;
+      const next = btn.getAttribute("aria-pressed") !== "true";
+      btn.setAttribute("aria-pressed", String(next));
+      const sel = (window.CSS && CSS.escape) ? CSS.escape(t) : t;
+      document.querySelectorAll('tr[data-type="' + sel + '"]')
+        .forEach(r => { r.style.display = next ? "" : "none"; });
+    });
+  });
+}
+
 let priceChart, volumeChart;
 
 function buildCharts(prices, dealings, reporting) {
@@ -237,12 +261,14 @@ function buildCharts(prices, dealings, reporting) {
 
   const buy = new Array(labels.length).fill(null);
   const sell = new Array(labels.length).fill(null);
+  const buyNames = {}, sellNames = {};
   for (const d of dealings) {
     const i = idxForDate(labels, day(d.date));
     if (i < 0) continue;
     const ty = (d.type || "").toUpperCase();
-    if (ty === "BUY") buy[i] = closes[i];
-    else if (ty === "SELL" || ty === "SELL_TAX") sell[i] = closes[i];
+    const nm = d.director || "Unknown";
+    if (ty === "BUY") { buy[i] = closes[i]; (buyNames[i] = buyNames[i] || []).push(nm); }
+    else if (ty === "SELL" || ty === "SELL_TAX") { sell[i] = closes[i]; (sellNames[i] = sellNames[i] || []).push(nm); }
   }
   // Earnings → vertical-line indices within the visible window.
   const earnIdx = [];
@@ -291,7 +317,19 @@ function buildCharts(prices, dealings, reporting) {
       interaction: { mode: "nearest", intersect: false },
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { title: items => items.length ? labels[items[0].dataIndex] : "" } }
+        tooltip: {
+          mode: "index", intersect: false,
+          filter: item => item.parsed.y !== null,
+          callbacks: {
+            title: items => items.length ? labels[items[0].dataIndex] : "",
+            label: ctx => {
+              const i = ctx.dataIndex;
+              if (ctx.datasetIndex === 1) return "Buy — " + (buyNames[i] || []).join(", ");
+              if (ctx.datasetIndex === 2) return "Sell — " + (sellNames[i] || []).join(", ");
+              return "Close: " + ctx.formattedValue;
+            }
+          }
+        }
       },
       scales: {
         x: { ticks: { maxTicksLimit: 8, font: { size: 10 }, color: "#94a3b8" }, grid: { display: false } },
@@ -342,6 +380,7 @@ function render(dealings, prices, reporting) {
   app.innerHTML = renderHeader(company, r0, dealings.length, reporting)
     + chartSection(prices && prices.length)
     + dealingsTable(dealings, latestClose);
+  wireTypeFilters();
   if (prices && prices.length) buildCharts(prices, dealings, reporting);
 }
 
