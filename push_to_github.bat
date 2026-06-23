@@ -10,6 +10,16 @@ REM  is NOT mid-run.
 REM ============================================================
 cd /d C:\Dev\DirectorsDealings
 
+REM ------------------------------------------------------------
+REM  Stop Git's automatic garbage-collection. On Windows it pops
+REM  up "Deletion of directory '.git/objects/..' failed. Should I
+REM  try again?" and stalls this script. Turning it off (repo-only)
+REM  makes the push run start-to-finish with no prompts. These are
+REM  idempotent - safe to run every time.
+REM ------------------------------------------------------------
+git config gc.auto 0
+git config gc.autoDetach false
+
 echo ============================================================
 echo  STEP 1 of 2 - Backing up the database to the cloud
 echo ============================================================
