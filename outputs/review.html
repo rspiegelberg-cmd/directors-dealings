@@ -480,7 +480,7 @@ function switchTab(tab) {
 // ── Data loading ──────────────────────────────────────────────────────────────
 async function loadPendingReview() {
   try {
-    const r = await fetch("data/pending_review.json?_=" + Date.now());
+    const r = await fetch("/review-data/pending_review.json?_=" + Date.now());
     const d = await r.json();
     S.pendingItems   = d.items   || [];
     S.pendingBuckets = d.buckets || [];
@@ -497,7 +497,7 @@ async function loadTxIndex() {
   document.getElementById("list-loading").classList.remove("hidden");
   document.getElementById("list-loading").textContent = "Loading transactions…";
   try {
-    const r = await fetch("data/tx_index.json?_=" + Date.now());
+    const r = await fetch("/review-data/tx_index.json?_=" + Date.now());
     const d = await r.json();
     S.txItems  = d.transactions || [];
     S.txLoaded = true;

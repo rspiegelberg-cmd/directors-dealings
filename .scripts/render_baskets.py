@@ -146,14 +146,15 @@ def _firings_table(firings: list[dict]) -> str:
 
     rows_html = ""
     for f in firings:
-        ticker  = h.esc(f.get("ticker") or "-")
+        ticker_raw = f.get("ticker") or "-"
+        ticker  = h.esc(ticker_raw)
         fired   = h.esc((f.get("fired_at") or "-")[:10])
         value   = _format_value(f.get("value_gbp"))
         car21   = h.car_cell(f.get("net_car_21"), with_glyph=True)
         car90   = h.car_cell(f.get("net_car_90"), with_glyph=True)
         mktcap  = _format_mktcap(f.get("market_cap_gbp"))
         ticker_link = (
-            f'<a href="companies/{ticker}.html" '
+            f'<a href="{h.company_url(ticker_raw)}" '
             f'class="text-blue-600 hover:underline font-mono text-xs">'
             f'{ticker}</a>'
         )

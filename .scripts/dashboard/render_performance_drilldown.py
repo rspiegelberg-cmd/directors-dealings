@@ -585,7 +585,7 @@ def _rollup_row_html(row: dict, existing_pages: set | None,
     italic_cls = " italic text-slate-500" if faded else ""
 
     if page_exists and ticker:
-        href = f"companies/{ticker}.html"
+        href = h.company_url(ticker)
         return (
             '<tr class="clickable group border-t border-slate-100 '
             f'cursor-pointer hover:bg-indigo-50{italic_cls}" '
@@ -872,7 +872,7 @@ def _client_render_script(*, cohort_type: str, cohort_key: str,
     var benchReturn = (f.bench_return !== undefined && f.bench_return !== null) ? f.bench_return : null;
     var benchHtml = carCell(benchReturn);
     if (pageExists && ticker) {
-      var href = 'companies/' + ticker + '.html';
+      var href = 'company.html?ticker=' + encodeURIComponent(ticker);
       return '<tr class="clickable group border-t border-slate-100 ' +
              'cursor-pointer ' + hoverBg + ' relative" data-href="' + esc(href) +
              '" tabindex="0" role="link" aria-label="View ' + esc(ticker) +
@@ -964,7 +964,7 @@ def _client_render_script(*, cohort_type: str, cohort_key: str,
     var pageExists = hasCompanyPage(ticker);
     var italicCls = faded ? ' italic text-slate-500' : '';
     if (pageExists && ticker) {
-      var href = 'companies/' + ticker + '.html';
+      var href = 'company.html?ticker=' + encodeURIComponent(ticker);
       return '<tr class="clickable group border-t border-slate-100 ' +
              'cursor-pointer hover:bg-indigo-50' + italicCls +
              '" data-href="' + esc(href) + '" tabindex="0" role="link" ' +

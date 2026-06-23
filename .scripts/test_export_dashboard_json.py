@@ -409,7 +409,10 @@ class TestCompaniesIndex(DualEmitTestBase):
             for field in ("ticker", "company", "url"):
                 self.assertIn(field, entry,
                               f"companies_index entry missing '{field}': {entry}")
-            self.assertRegex(entry["url"], r"^companies/[A-Z0-9]+\.html$",
+            # B-184: url now points at the dynamic company template
+            # (company.html?ticker=…) instead of a static companies/*.html page.
+            self.assertRegex(entry["url"],
+                             r"^company\.html\?ticker=[A-Za-z0-9._%-]+$",
                              f"url format unexpected: {entry['url']}")
 
     def test_15_companies_index_sorted_by_ticker(self):

@@ -13,11 +13,17 @@ Reads ``dashboard/data/signals.json`` + ``dashboard/data/dealings.json`` +
 
   * ``outputs/index.html``                -- daily action surface
   * ``outputs/performance.html``          -- diagnostics deep-dive
-  * ``outputs/companies/{TICKER}.html``   -- one per ticker that has any
-                                             transaction in the DB
   * ``outputs/data/{signals,dealings}.json`` -- copies, so the dashboard
                                              can ``fetch()`` data via the
                                              same-origin Flask server.
+
+B-184 cutover: per-ticker company pages are NO LONGER built here. They are
+served by the single dynamic template ``outputs/company.html`` (reads
+``?ticker=`` from the URL, fetches ``public_company_v`` from Supabase). All
+company links emitted by the renderers now point at
+``company.html?ticker={TICKER}``. The private review queue
+(``pending_review.json`` / ``tx_index.json``) is also no longer copied into
+the public ``outputs/data/`` bundle — see ``_copy_data_dir``.
 
 Stdlib-only. Uses the DB for per-company data (transactions / prices /
 clusters / firings + matured CAR from .data/_backtest_results.csv).
@@ -499,21 +505,20 @@ def _copy_data_dir(signals_path: Path, dealings_path: Path, out_dir: Path,
     """Copy the JSON inputs into outputs/data/ so the page can fetch() them
     via the same-origin Flask static handler.
 
-    Sprint 25 Phase 0 addition: also copies pending_review.json and
-    tx_index.json (written by export_dashboard_json.py alongside signals.json)
-    so the /review page can fetch() them at data/pending_review.json and
-    data/tx_index.json.
+    B-184: pending_review.json (~5MB) and tx_index.json are NO LONGER copied
+    into the public outputs/data/ bundle — they are the private review queue
+    and have no place on the public Vercel site. The local-only /review app
+    reads them via dedicated Flask routes in server.py that serve them
+    straight from dashboard/data/ (their source location, outside outputs/).
+    Only the public dashboard JSONs (signals/dealings/signal_status) are
+    copied here.
     """
-    data_src_dir = signals_path.parent   # dashboard/data/
     target = out_dir / "data"
     target.mkdir(parents=True, exist_ok=True)
     info = {}
-    # Core dashboard JSONs
+    # Core dashboard JSONs (public-safe)
     for src, name in [(signals_path, "signals.json"),
-                      (dealings_path, "dealings.json"),
-                      # Sprint 25 Phase 0: PDMR review surface
-                      (data_src_dir / "pending_review.json", "pending_review.json"),
-                      (data_src_dir / "tx_index.json",       "tx_index.json")]:
+                      (dealings_path, "dealings.json")]:
         if src.exists():
             dst = target / name
             tmp = Path(str(dst) + ".tmp")
@@ -575,16 +580,15 @@ def _build_drill_pages(out_dir: Path, build_sha: str,
     Default view is t30 × 90d (lookback / horizon dropdowns are present
     but inert in v1 — v1.1 will add proper handling).
 
-    Builds an `existing_pages` set of tickers whose `companies/{TICKER}.html`
-    exists so drill-row rendering can mark dead-link rows italic-faded
-    rather than emitting 404 links (spec §8 smoke test).
+    B-184: company pages are now served by the dynamic `company.html?ticker=`
+    template, so EVERY ticker has a valid page. We therefore pass
+    `existing_company_pages=None` to the drilldown renderer, which makes its
+    `hasCompanyPage()` return True for all rows (no more italic-faded
+    dead-link rows). The old behaviour globbed `outputs/companies/*.html` to
+    decide which rows were live — that set is now always empty, so globbing it
+    would wrongly fade every row.
     """
-    # Collect existing company-page tickers (smoke-test prerequisite).
-    companies_dir = out_dir / "companies"
-    existing_pages: set[str] = set()
-    if companies_dir.exists():
-        for f in companies_dir.glob("*.html"):
-            existing_pages.add(f.stem)
+    existing_pages = None  # dynamic template → every ticker is linkable
 
     data_dir = out_dir.parent / "dashboard" / "data"
     total_written = 0
@@ -714,49 +718,16 @@ def build(out_dir: Path, signals_path: Path, dealings_path: Path,
     drill_n = _build_drill_pages(out_dir, build_sha=build_sha, verbose=verbose)
     summary["drill_pages"] = drill_n
 
-    # ---- companies/{TICKER}.html ----
-    signals_data = json.loads(signals_path.read_text(encoding="utf-8"))
-    active_clusters_short = _build_active_clusters_lookup(signals_data)
-    backtest_rows = _load_backtest_rows(csv_path)
-    clusters_json = []
-    if clusters_path and clusters_path.exists():
-        try:
-            clusters_json = json.loads(clusters_path.read_text(encoding="utf-8")) or []
-        except Exception:
-            clusters_json = []
-    # Per-ticker pending review summary (silently empty on missing file).
-    pending_per_ticker = _load_pending_per_ticker(pending_path) if pending_path else {}
-
-    conn = db.connect()
-    try:
-        today = datetime.now(timezone.utc).date()
-        generated_at = signals_data.get("generated_at") or rh.now_utc_str()
-        tickers = _tickers_with_transactions(conn)
-        if verbose:
-            print(f"[company] building {len(tickers)} ticker pages")
-            print(f"[company] pending review tickers: {len(pending_per_ticker)}")
-        n_company = 0
-        for ticker in tickers:
-            record = _build_company_record(
-                conn, ticker, today, backtest_rows, clusters_json,
-                active_clusters_short, generated_at,
-                pending_per_ticker=pending_per_ticker,
-            )
-            fname = _sanitize_ticker(ticker) + ".html"
-            written = render_company.render_to_file(
-                record,
-                out_path=out_dir / "companies" / fname,
-                build_sha=build_sha,
-            )
-            summary["bytes"] += written
-            n_company += 1
-            if verbose and n_company <= 5:
-                print(f"  [company {n_company}] {ticker} -> {fname} ({written} bytes)")
-            elif verbose and n_company % 25 == 0:
-                print(f"  [company {n_company}] {ticker} (running...)")
-        summary["company_pages"] = n_company
-    finally:
-        conn.close()
+    # ---- companies/{TICKER}.html — REMOVED (B-184 cutover) ----
+    # The ~880 static per-ticker pages are no longer generated. They are
+    # replaced by the single dynamic template `outputs/company.html`, which
+    # reads `?ticker=` from the URL and fetches live data from Supabase
+    # (`public_company_v`). All company links now point at
+    # `company.html?ticker={TICKER}` (see render_helpers.company_url()).
+    # `render_company.py` is left in place but is no longer wired into the
+    # build. The stale `outputs/companies/` folder can be deleted once —
+    # nothing regenerates it.
+    summary["company_pages"] = 0
     return summary
 
 
@@ -771,15 +742,26 @@ def main(argv=None) -> int:
     parser.add_argument("--pending-json", type=Path, default=DEFAULT_PENDING_PATH,
                         help="Path to _pending_review.json for per-ticker panels.")
     parser.add_argument("--rebuild", action="store_true",
-                        help="Wipe outputs/companies/ before rebuilding.")
+                        help="B-184: delete the now-stale outputs/companies/ "
+                             "folder (per-ticker pages are no longer built; the "
+                             "dynamic company.html template replaces them).")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--build-sha", default=None)
     args = parser.parse_args(argv)
 
+    # B-184: outputs/companies/ is no longer regenerated. --rebuild removes the
+    # stale folder (old static pages incl. test-ticker junk) once and for all.
     if args.rebuild:
         comp_dir = args.out_dir / "companies"
         if comp_dir.exists():
-            shutil.rmtree(comp_dir)
+            # B-184: best-effort delete. If a file/folder is locked (e.g. a
+            # browser tab or Explorer window has a company page open), do NOT
+            # crash the whole build — skip the locked items and continue. The
+            # stale folder is harmless; nothing links to it anymore.
+            shutil.rmtree(comp_dir, ignore_errors=True)
+            if comp_dir.exists():
+                print(f"[warn] could not fully remove {comp_dir} (locked?); "
+                      f"safe to delete it manually later. Continuing build.")
 
     build_sha = args.build_sha or _detect_build_sha()
     summary = build(
@@ -794,8 +776,9 @@ def main(argv=None) -> int:
         verbose=args.verbose,
     )
     print(f"Built dashboard with build_sha={build_sha}.")
-    print(f"  index.html, performance.html, "
-          f"{summary.get('company_pages', 0)} company pages.")
+    print("  index.html, performance.html, baskets.html + drill pages.")
+    print("  Company pages: served live by company.html?ticker= "
+          "(no static pages built — B-184).")
     return 0
 
 

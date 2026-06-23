@@ -99,7 +99,7 @@ def _row_html(row, today_str: str) -> str:
     # B113: sector benchmark return over same period.
     bench_html = h.car_cell(row.get("bench_return_pct"))
     ticker_link = (
-        f'<a href="companies/{ticker}.html" '
+        f'<a href="{h.company_url(ticker)}" '
         f'class="text-blue-600 hover:underline font-mono">{ticker}</a>'
     )
     time_utc = row.get("time_utc") or ""
@@ -144,7 +144,7 @@ def _row_html(row, today_str: str) -> str:
     return (
         f'<tr data-pe="{pe_flag}" '
         f'class="border-t border-slate-100 hover:bg-indigo-50 cursor-pointer" '
-        f'onclick="window.open(\'companies/{ticker}.html\',\'_blank\')">'
+        f'onclick="window.open(\'{h.company_url(ticker)}\',\'_blank\')">'
         # B-103: data-sv = sort value for client-side JS sort.
         f'<td class="px-3 py-2 text-slate-600" data-sv="{h.esc(time_utc)}">'
         f'{h.esc(_format_time(time_utc, today_str))}{live_chip_html}</td>'
@@ -261,12 +261,12 @@ def _cluster_card(cluster: dict, kind: str) -> str:
         cv_chip = ""
     agg_str = f"{(agg or 0) / 1000:.1f}k"
     ticker_link = (
-        f'<a href="companies/{ticker}.html" '
+        f'<a href="{h.company_url(ticker)}" '
         f'class="text-blue-600 hover:underline font-mono">{ticker}</a>'
     )
     return (
         f'<div class="border-b border-slate-100 px-4 py-3 hover:bg-indigo-50 '
-        f'cursor-pointer" onclick="window.open(\'companies/{ticker}.html\',\'_blank\')">'
+        f'cursor-pointer" onclick="window.open(\'{h.company_url(ticker)}\',\'_blank\')">'
         f'<div class="flex items-center justify-between">'
         f'<div class="font-medium text-sm text-slate-900">{ticker_link}</div>'
         f'<div class="flex items-center gap-1.5">{badge}{cv_chip}</div>'
@@ -379,7 +379,7 @@ def _conviction_row(pick: dict) -> str:
     )
 
     ticker_link = (
-        f'<a href="companies/{ticker}.html" '
+        f'<a href="{h.company_url(ticker)}" '
         f'class="text-blue-600 hover:underline font-mono">{ticker}</a>'
     )
     rank_badge = (
@@ -389,7 +389,7 @@ def _conviction_row(pick: dict) -> str:
 
     return (
         '<tr class="border-t border-slate-100 hover:bg-indigo-50 cursor-pointer" '
-        f'onclick="window.open(\'companies/{ticker}.html\',\'_blank\')">'
+        f'onclick="window.open(\'{h.company_url(ticker)}\',\'_blank\')">'
         f'<td class="px-3 py-2 text-center">{rank_badge}</td>'
         f'<td class="px-3 py-2">{band_badge}{caution_flag}</td>'
         f'<td class="px-3 py-2 font-medium text-slate-900">{ticker_link}'
@@ -791,7 +791,7 @@ def render(signals_data: dict, dealings_data: dict,
             f'<tr class="border-t border-slate-100 hover:bg-indigo-50">'
             f'<td class="px-3 py-2 tabular-nums text-slate-600">{h.esc(evt["date"])}</td>'
             f'<td class="px-3 py-2 font-mono text-xs">'
-            f'<a href="companies/{h.esc(evt["ticker"])}.html" '
+            f'<a href="{h.company_url(evt["ticker"])}" '
             f'class="text-blue-600 hover:underline">{h.esc(evt["ticker"])}</a></td>'
             f'<td class="px-3 py-2 text-slate-700">{h.esc(evt["company"])}</td>'
             f'<td class="px-3 py-2 text-slate-500 tabular-nums text-right">'

@@ -136,8 +136,9 @@ class TestPanelRender(unittest.TestCase):
         picks = [_pick(rank=i + 1, ticker=f"T{i}") for i in range(10)]
         html_out = render_index.render(self._signals(picks), self._dealings())
         # Each conviction row links to its company page; 10 distinct tickers.
+        # B-184: links go to the dynamic template company.html?ticker=…
         for i in range(10):
-            self.assertIn(f"companies/T{i}.html", html_out)
+            self.assertIn(f"company.html?ticker=T{i}", html_out)
 
     def test_empty_state_when_no_buys(self):
         html_out = render_index.render(self._signals([]), self._dealings())

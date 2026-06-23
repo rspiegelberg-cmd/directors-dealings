@@ -286,7 +286,9 @@ class TestDeadLinkHandling(unittest.TestCase):
         )
         # Dead-link row should NOT have data-href / tabindex / role=link.
         # It SHOULD have the italic + tooltip markers.
-        self.assertNotIn('data-href="companies/DEAD.html"', html)
+        # B-184: live rows now link to company.html?ticker=… — assert that the
+        # faded row carries no such link.
+        self.assertNotIn('data-href="company.html?ticker=DEAD"', html)
         self.assertIn("Company page not generated", html)
 
 

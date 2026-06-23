@@ -428,7 +428,11 @@ class TestBuildOrchestrator(unittest.TestCase):
         return signals_path, dealings_path, db_path
 
     def test_18_full_build_writes_all_pages(self):
-        """End-to-end: orchestrator writes index, performance, and company pages."""
+        """End-to-end: orchestrator writes index + performance + data copies.
+
+        B-184: per-ticker company pages are no longer built (the dynamic
+        company.html?ticker= template replaces them), so the build writes NO
+        outputs/companies/*.html files and reports company_pages == 0."""
         with tempfile.TemporaryDirectory() as td:
             tmp = Path(td)
             signals_path, dealings_path, db_path = self._make_temp_inputs(tmp)
@@ -452,12 +456,13 @@ class TestBuildOrchestrator(unittest.TestCase):
                 db_mod.DB_PATH = orig_path
             self.assertTrue((out_dir / "index.html").exists())
             self.assertTrue((out_dir / "performance.html").exists())
-            self.assertTrue((out_dir / "companies" / "DNLM.html").exists())
-            self.assertTrue((out_dir / "companies" / "ACSO.html").exists())
+            # B-184: static company pages are no longer generated.
+            self.assertFalse((out_dir / "companies" / "DNLM.html").exists())
+            self.assertFalse((out_dir / "companies" / "ACSO.html").exists())
             # data/ copied for fetch().
             self.assertTrue((out_dir / "data" / "signals.json").exists())
             self.assertTrue((out_dir / "data" / "dealings.json").exists())
-            self.assertEqual(summary["company_pages"], 2)
+            self.assertEqual(summary["company_pages"], 0)
 
 
 class TestIdempotency(unittest.TestCase):
@@ -578,6 +583,12 @@ class TestStaticAssets(unittest.TestCase):
             self.assertIn("signals.json", info)
             self.assertIn("dealings.json", info)
             self.assertTrue((out_dir / "data" / "signals.json").exists())
+            # B-184: private review-queue JSONs must NOT land in the public
+            # outputs/data/ bundle.
+            self.assertNotIn("pending_review.json", info)
+            self.assertNotIn("tx_index.json", info)
+            self.assertFalse((out_dir / "data" / "pending_review.json").exists())
+            self.assertFalse((out_dir / "data" / "tx_index.json").exists())
 
 
 class TestHTMLValidity(unittest.TestCase):

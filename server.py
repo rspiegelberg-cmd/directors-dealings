@@ -37,7 +37,7 @@ import webbrowser
 from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Flask, jsonify, request, Response
+from flask import Flask, jsonify, request, Response, send_from_directory, abort
 
 # ── App setup ─────────────────────────────────────────────────────────────────
 
@@ -64,6 +64,24 @@ def index():
 def review():
     """Serve the PDMR review surface (Sprint 25 Phase 0)."""
     return app.send_static_file("review.html")
+
+
+# ── B-184: private review-queue JSON (NOT in the public outputs/ bundle) ──────
+# pending_review.json (~5MB) and tx_index.json are the private review queue.
+# build_dashboard.py no longer copies them into outputs/data/, so they are not
+# deployed to the public Vercel site. The local /review app fetches them from
+# these routes, which serve straight from dashboard/data/ (their source dir).
+
+_REVIEW_DATA_DIR = ROOT / "dashboard" / "data"
+_REVIEW_JSON_WHITELIST = {"pending_review.json", "tx_index.json"}
+
+
+@app.route("/review-data/<path:name>")
+def review_data(name):
+    """Serve a whitelisted private review JSON from dashboard/data/."""
+    if name not in _REVIEW_JSON_WHITELIST:
+        abort(404)
+    return send_from_directory(_REVIEW_DATA_DIR, name)
 
 
 # ── Sprint 25: /api/rns-html/<rns_id> ────────────────────────────────────────

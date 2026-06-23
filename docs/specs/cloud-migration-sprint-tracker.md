@@ -3,7 +3,7 @@
 **Living status board.** Detail for every B-NNN is in `cloud-migration-execution-plan.md`. Update the **Status** column as work moves; mark gates ✅ when passed. Issues continue the project's B-NNN sequence (next free = **B-172**) and carry the usual agent labels for Linear.
 
 **Status legend:** ⬜ Todo · 🟦 In Progress · ✅ Done · ⛔ Blocked · ⏸ Deferred
-**Overall:** 🟦 In progress — **M0, M1, M2 COMPLETE** — 9 / 18 done · 24 / 45 pts · next: **M3 Hosting + Template (the new URL)**. Pipeline now runs end-to-end on Supabase; data + compute proven in the cloud.
+**Overall:** 🟢 **LIVE URL ACHIEVED** — https://directors-dealings.vercel.app/ — M0–M3 essentially done — 12 / 18 done · 33 / 45 pts. Data in Supabase, pipeline runs on Postgres, site cloud-hosted on Vercel with a live company template. Remaining: B-184 cutover (link template + drop static pages/public JSON), M4 daily auto-refresh (GitHub Actions), M5 cleanup. **Do NOT delete local files until M4 auto-refresh is proven.**
 **Linear:** synced 2026-06-22 — 6 milestones + 18 issues. B-NNN→DIR map at the bottom.
 **Environment:** Supabase project `directors-dealings` — ref `mmiaiauybzsdcbrrcxfc`, host `db.mmiaiauybzsdcbrrcxfc.supabase.co`, region eu-west-1, Postgres 17.6. Driveable directly via the connected Supabase connector.
 

@@ -4106,7 +4106,9 @@ def build_payload(conn, csv_path: Path, today: date | None = None,
         pending_path=pending_path or DEFAULT_PENDING_PATH
     )
     # B-059 — companies index for the index-page search box.
-    # Ordered by ticker; url matches the company page path built by render_index.py.
+    # B-184: url now points at the dynamic company template
+    # (company.html?ticker=…, ticker URL-encoded) — static companies/{T}.html
+    # pages are no longer generated. company_url() handles dotted tickers.
     _company_rows = conn.execute(
         "SELECT DISTINCT ticker, company FROM transactions "
         "WHERE ticker IS NOT NULL ORDER BY ticker"
@@ -4115,7 +4117,7 @@ def build_payload(conn, csv_path: Path, today: date | None = None,
         {
             "ticker": r["ticker"],
             "company": r["company"] or "",
-            "url": f"companies/{r['ticker']}.html",
+            "url": _h_const.company_url(r["ticker"]),
         }
         for r in _company_rows
     ]

@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import html
 import sys
+import urllib.parse as _url
 from datetime import datetime, timezone
 
 # B-010: %-d strips the leading zero on Linux/macOS; %#d is the Windows
@@ -185,6 +186,26 @@ def esc(s) -> str:
     if s is None:
         return ""
     return html.escape(str(s), quote=True)
+
+
+def company_url(ticker) -> str:
+    """Canonical link to a company's page.
+
+    B-184 cutover: company pages are no longer pre-built static files at
+    ``companies/{TICKER}.html``. They are served by the single dynamic
+    template ``company.html`` which reads ``?ticker=`` from the URL and
+    fetches live data from Supabase. This helper builds that URL.
+
+    The ticker is URL-encoded so dotted symbols work (e.g. ``BT.A`` ->
+    ``company.html?ticker=BT.A`` -- dots are URL-safe and survive the
+    template's URLSearchParams parsing; ``RR.`` -> ``company.html?ticker=RR.``).
+    The returned string is URL-encoded but NOT HTML-escaped -- url-encoding
+    already removes the characters that are unsafe in an href attribute, and
+    several call sites wrap the result in esc() themselves. The template
+    uppercases the ticker, so case is passed through as-is.
+    """
+    t = (str(ticker).strip() if ticker is not None else "")
+    return "company.html?ticker=" + _url.quote(t, safe="._-")
 
 
 def render_badge(sid: str, extra_class: str = "") -> str:
@@ -366,7 +387,7 @@ def firing_row_html(firing: dict, panel_color: str,
     hover_bg = "hover:bg-emerald-50" if panel_color == "emerald" else "hover:bg-rose-50"
 
     if company_page_exists and ticker:
-        href = f"companies/{ticker}.html"
+        href = company_url(ticker)
         return (
             '<tr class="clickable group border-t border-slate-100 '
             f'cursor-pointer {hover_bg} relative" '

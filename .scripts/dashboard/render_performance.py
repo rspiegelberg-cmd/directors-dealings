@@ -2991,8 +2991,10 @@ def _cohort_drilldown_script() -> str:
             // the Today/This-Week tables. Raw ticker mirrors those tables'
             // links; dotted tickers (rare) share the same known limitation.
             var tk = esc(v);
+            // B-184: link to the dynamic company template (company.html?ticker=)
+            // instead of the removed static companies/{TICKER}.html pages.
             return '<td class="px-3 py-2 text-left font-medium">'
-              + (v ? '<a href="companies/' + tk + '.html" '
+              + (v ? '<a href="company.html?ticker=' + encodeURIComponent(v) + '" '
                    + 'class="text-blue-600 hover:underline font-mono">'
                    + tk + '</a>' : '')
               + '</td>';
@@ -3924,7 +3926,7 @@ def _monthly_buysell_chart(signals_data: dict) -> str:
           :'<td class="text-center py-1 pr-2 text-rose-500 font-semibold">SELL</td>';
         return '<tr class="border-b border-slate-50 hover:bg-slate-50">'
           +'<td class="py-1 pr-2 font-mono text-blue-600">'
-          +'<a href="companies/'+r.ticker+'.html" target="_blank" class="hover:underline">'+r.ticker+'</a></td>'
+          +'<a href="company.html?ticker='+encodeURIComponent(r.ticker)+'" target="_blank" class="hover:underline">'+r.ticker+'</a></td>'
           +'<td class="py-1 pr-2 text-slate-700 truncate max-w-[120px]">'+r.company+'</td>'
           +'<td class="py-1 pr-2 text-slate-500 truncate max-w-[100px]">'+r.director+'</td>'
           +typeCol
