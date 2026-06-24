@@ -21,7 +21,7 @@ concurrency:
 jobs:
   rebuild:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,6 +40,7 @@ jobs:
           DD_FMP_API_KEY: ${{ secrets.DD_FMP_API_KEY }}
           PYTHONDONTWRITEBYTECODE: "1"
         run: |
+          python .scripts/backtest.py
           python .scripts/export_dashboard_json.py
           python .scripts/build_dashboard.py
 
