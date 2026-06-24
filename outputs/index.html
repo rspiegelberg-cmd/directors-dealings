@@ -135,39 +135,79 @@ function buildCapitalChart(monthly) {
   });
 }
 
-async function fetchTopSignals() {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/public_top_signals_v?order=date.desc`,
-      { headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY } });
-    return res.ok ? res.json() : [];
-  } catch (e) { return []; }
+// ---- Conviction score — faithful port of .scripts/conviction.py ------------
+// Composite: 100 × ( Σ wi·Fi ) × sectorMult. Live we have F1 (role), F2 (buy
+// size, absolute), F3 (company size). No earnings date → drop F4 + renormalise
+// (per spec decision 2026-06-18). No trailing return → F5 neutral 0.5. No
+// sector beta → F6 = 1.0 (no discount). This is exactly what conviction.py
+// returns for that missing-data state. Earn/Past light up once B-194 runs.
+const CONV_W = { who: 0.25, buy_size: 0.25, company_size: 0.20, past_performance: 0.15 };
+const ROLE_STRENGTH = {
+  "CEO": 1.0, "Founder": 1.0, "Chair (executive)": 1.0, "Non-Exec Chair": 1.0, "CFO": 0.9,
+  "Other Chief": 0.7, "Executive Director": 0.7, "Divisional / Regional Exec": 0.7, "President / VP": 0.7,
+  "Company Secretary / General Counsel": 0.5, "NED": 0.3, "PCA": 0.3,
+  "PDMR-only": 0.2, "Other / unclassified": 0.2, "Parser fragment": 0.2
+};
+const clamp01 = x => (x < 0 ? 0 : (x > 1 ? 1 : x));
+function logRamp(v, floor, ceil) {
+  if (v <= floor) return 0; if (v >= ceil) return 1;
+  const lo = Math.log10(floor), hi = Math.log10(ceil);
+  return clamp01((Math.log10(v) - lo) / (hi - lo));
 }
-
-function topSignalsPanel(rows, since) {
-  const byFp = {};
-  for (const r of rows) {
-    if (day(r.date) < since) continue;
-    const fp = r.fingerprint; if (!fp) continue;
-    if (!byFp[fp]) byFp[fp] = { date: r.date, ticker: r.ticker, company: r.company, director: r.director, role: r.role, value: r.value, sigs: [] };
-    byFp[fp].sigs.push(r.signal_id);
+function f1Who(role) { return ROLE_STRENGTH[role] ?? 0.2; }
+function f2BuySize(v) { return logRamp(Number(v) || 0, 5000, 5000000); }
+function f3CompanySize(cap) {
+  if (!cap || cap <= 0) return 0.5;
+  if (cap <= 50e6) return 1.0; if (cap >= 10e9) return 0.1;
+  const lo = Math.log10(50e6), hi = Math.log10(10e9);
+  return clamp01(1.0 - ((Math.log10(cap) - lo) / (hi - lo)) * 0.9);
+}
+function bandFor(s) { return s < 40 ? "Low" : s < 60 ? "Moderate" : s < 80 ? "High" : "Exceptional"; }
+function convictionScore(r) {
+  const sub = { who: f1Who(r.role_normalized), buy_size: f2BuySize(r.value), company_size: f3CompanySize(r.market_cap_gbp), past_performance: 0.5 };
+  const total = CONV_W.who + CONV_W.buy_size + CONV_W.company_size + CONV_W.past_performance; // F4 dropped
+  let s = 0; for (const k in CONV_W) s += (CONV_W[k] / total) * clamp01(sub[k]);
+  const score = clamp01(s) * 100; // F6 = 1.0
+  return { score, band: bandFor(score), sub };
+}
+const CONV_BAND_CLS = { Low: "bg-slate-100 text-slate-500", Moderate: "bg-amber-100 text-amber-700", High: "bg-emerald-100 text-emerald-700", Exceptional: "bg-emerald-600 text-white" };
+function bandBadge(band, score) {
+  return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${CONV_BAND_CLS[band] || "bg-slate-100 text-slate-500"}">${band} · ${Math.round(score)}</span>`;
+}
+function factorChip(short, value, unknown) {
+  if (unknown || value == null) {
+    return `<span class="inline-flex flex-col items-center px-1 py-0.5 rounded bg-slate-50 text-[9px] leading-tight" title="${short}: needs pipeline (B-194)"><span class="text-slate-400">${short}</span><span class="text-slate-400 italic">n/a</span></span>`;
   }
-  const items = Object.values(byFp).map(d => {
-    d.best = Math.min.apply(null, d.sigs.map(s => SIG_SEV[SIG_L2S[s] || s] ?? 99));
-    return d;
-  }).sort((a, b) => a.best - b.best || (Number(b.value) || 0) - (Number(a.value) || 0)).slice(0, 12);
-  if (!items.length) return "";
-  const body = items.map(d => `
-    <a href="${companyUrl(d.ticker)}" class="flex items-center gap-3 px-4 py-2 border-b border-slate-100 hover:bg-slate-50">
-      <div class="shrink-0">${sigBadges(d.sigs)}</div>
-      <div class="min-w-0 flex-1">
-        <div class="text-sm font-medium text-slate-900 truncate">${esc(d.company || d.ticker)} <span class="text-slate-400 text-xs">${esc(d.ticker)}</span></div>
-        <div class="text-xs text-slate-500 truncate">${esc(d.director || "")}${d.role ? " · " + esc(ROLE_LABEL[d.role] || d.role) : ""} · ${esc(day(d.date))}</div>
-      </div>
-      <div class="shrink-0 text-sm font-semibold tabular-nums text-slate-900">${fmtGbp(d.value)}</div>
-    </a>`).join("");
+  return `<span class="inline-flex flex-col items-center px-1 py-0.5 rounded bg-indigo-50 text-[9px] leading-tight"><span class="text-slate-500">${short}</span><span class="text-indigo-700 font-semibold tabular-nums">${Math.round(value * 100)}%</span></span>`;
+}
+function convictionPanel(rows, since) {
+  const scored = rows
+    .filter(r => (r.type || "").toUpperCase() === "BUY" && day(r.date) >= since)
+    .map(r => Object.assign({ r }, convictionScore(r)))
+    .sort((a, b) => b.score - a.score).slice(0, 10);
+  if (!scored.length) return "";
+  const body = scored.map((d, i) => {
+    const r = d.r;
+    const factors = `<div class="flex flex-wrap gap-1">${factorChip("Who", d.sub.who)}${factorChip("Size", d.sub.buy_size)}${factorChip("Cap", d.sub.company_size)}${factorChip("Earn", null, true)}${factorChip("Past", null, true)}</div>`;
+    return `<tr class="border-t border-slate-100 hover:bg-indigo-50">
+      <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold">${i + 1}</span></td>
+      <td class="px-3 py-2">${bandBadge(d.band, d.score)}</td>
+      <td class="px-3 py-2"><a href="${companyUrl(r.ticker)}" class="text-blue-600 hover:underline font-medium">${esc(r.ticker)}</a><div class="text-[10px] text-slate-500 truncate max-w-[12rem]">${esc(r.company || "")}</div></td>
+      <td class="px-3 py-2 text-slate-700">${esc(r.director || "")}<div class="text-[10px] text-slate-400 mt-0.5">${roleChip(r.role, r.role_normalized)}</div></td>
+      <td class="px-3 py-2 text-right tabular-nums text-slate-600">${fmtGbp(r.value)}<div class="text-[10px] text-slate-400">${esc(day(r.date))}</div></td>
+      <td class="px-3 py-2">${factors}</td>
+    </tr>`;
+  }).join("");
   return `<section class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
-    <h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-200">Top signals — last 4 weeks</h2>
-    ${body}</section>`;
+    <div class="px-4 py-3 border-b border-slate-200 flex items-baseline justify-between gap-2 flex-wrap">
+      <h2 class="text-xs uppercase tracking-wide text-slate-500">Conviction — top picks (last 4 weeks)</h2>
+      <span class="text-[10px] text-slate-400">score 0–100 · Who / Size / Cap live · Earn &amp; Past need pipeline (B-194)</span>
+    </div>
+    <div class="overflow-x-auto"><table class="w-full text-sm min-w-[680px]">
+      <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-200">
+        <th class="px-3 py-2 font-medium text-center">#</th><th class="px-3 py-2 font-medium">Score</th><th class="px-3 py-2 font-medium">Company</th>
+        <th class="px-3 py-2 font-medium">Director</th><th class="px-3 py-2 font-medium text-right">Value</th><th class="px-3 py-2 font-medium">Factors</th>
+      </tr></thead><tbody>${body}</tbody></table></div></section>`;
 }
 
 function tile(label, value, sub) {
@@ -258,7 +298,7 @@ function wireTypeFilters() {
   });
 }
 
-function render(rows, monthly, topRows) {
+function render(rows, monthly) {
   if (!rows || !rows.length) { app.innerHTML = `<div class="py-20 text-center text-slate-400 text-sm">No dealings found.</div>`; return; }
   const maxDate = rows.map(r => day(r.date)).filter(Boolean).sort().slice(-1)[0];
   const win7 = addDays(maxDate, -7);
@@ -281,7 +321,7 @@ function render(rows, monthly, topRows) {
   const capHtml = `<section class="mt-4 bg-white border border-slate-200 rounded-lg p-4">
     <h2 class="text-xs uppercase tracking-wide text-slate-500 mb-2">Capital deployed — director buys (£k / month)</h2>
     <div class="relative" style="height:220px"><canvas id="capChart"></canvas></div></section>`;
-  const topHtml = topSignalsPanel(topRows || [], win28);
+  const topHtml = convictionPanel(rows, win28);
   app.innerHTML = tiles + topHtml + clusterHtml + capHtml + dealingsTable(week);
   wireTypeFilters();
   buildCapitalChart(monthly);
@@ -289,8 +329,8 @@ function render(rows, monthly, topRows) {
 
 (async function () {
   try {
-    const [rows, monthly, topRows] = await Promise.all([fetchAll(), fetchCapital(), fetchTopSignals()]);
-    render(rows, monthly, topRows);
+    const [rows, monthly] = await Promise.all([fetchAll(), fetchCapital()]);
+    render(rows, monthly);
   } catch (e) { app.innerHTML = `<div class="py-20 text-center text-rose-600 text-sm">Couldn't load data (${esc(e.message)}).</div>`; }
 })();
 </script>
