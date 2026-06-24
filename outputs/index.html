@@ -135,6 +135,41 @@ function buildCapitalChart(monthly) {
   });
 }
 
+async function fetchTopSignals() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/public_top_signals_v?order=date.desc`,
+      { headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY } });
+    return res.ok ? res.json() : [];
+  } catch (e) { return []; }
+}
+
+function topSignalsPanel(rows, since) {
+  const byFp = {};
+  for (const r of rows) {
+    if (day(r.date) < since) continue;
+    const fp = r.fingerprint; if (!fp) continue;
+    if (!byFp[fp]) byFp[fp] = { date: r.date, ticker: r.ticker, company: r.company, director: r.director, role: r.role, value: r.value, sigs: [] };
+    byFp[fp].sigs.push(r.signal_id);
+  }
+  const items = Object.values(byFp).map(d => {
+    d.best = Math.min.apply(null, d.sigs.map(s => SIG_SEV[SIG_L2S[s] || s] ?? 99));
+    return d;
+  }).sort((a, b) => a.best - b.best || (Number(b.value) || 0) - (Number(a.value) || 0)).slice(0, 12);
+  if (!items.length) return "";
+  const body = items.map(d => `
+    <a href="${companyUrl(d.ticker)}" class="flex items-center gap-3 px-4 py-2 border-b border-slate-100 hover:bg-slate-50">
+      <div class="shrink-0">${sigBadges(d.sigs)}</div>
+      <div class="min-w-0 flex-1">
+        <div class="text-sm font-medium text-slate-900 truncate">${esc(d.company || d.ticker)} <span class="text-slate-400 text-xs">${esc(d.ticker)}</span></div>
+        <div class="text-xs text-slate-500 truncate">${esc(d.director || "")}${d.role ? " · " + esc(ROLE_LABEL[d.role] || d.role) : ""} · ${esc(day(d.date))}</div>
+      </div>
+      <div class="shrink-0 text-sm font-semibold tabular-nums text-slate-900">${fmtGbp(d.value)}</div>
+    </a>`).join("");
+  return `<section class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
+    <h2 class="text-xs uppercase tracking-wide text-slate-500 px-4 py-3 border-b border-slate-200">Top signals — last 4 weeks</h2>
+    ${body}</section>`;
+}
+
 function tile(label, value, sub) {
   return `<div class="bg-white border border-slate-200 rounded-lg px-4 py-3">
     <div class="text-[11px] uppercase tracking-wide text-slate-500">${label}</div>
@@ -223,10 +258,11 @@ function wireTypeFilters() {
   });
 }
 
-function render(rows, monthly) {
+function render(rows, monthly, topRows) {
   if (!rows || !rows.length) { app.innerHTML = `<div class="py-20 text-center text-slate-400 text-sm">No dealings found.</div>`; return; }
   const maxDate = rows.map(r => day(r.date)).filter(Boolean).sort().slice(-1)[0];
   const win7 = addDays(maxDate, -7);
+  const win28 = addDays(maxDate, -28);
   const win30 = addDays(maxDate, -30);
   const week = rows.filter(r => day(r.date) >= win7);
   const clusters = clustersFrom(rows, win30);
@@ -245,15 +281,16 @@ function render(rows, monthly) {
   const capHtml = `<section class="mt-4 bg-white border border-slate-200 rounded-lg p-4">
     <h2 class="text-xs uppercase tracking-wide text-slate-500 mb-2">Capital deployed — director buys (£k / month)</h2>
     <div class="relative" style="height:220px"><canvas id="capChart"></canvas></div></section>`;
-  app.innerHTML = tiles + clusterHtml + capHtml + dealingsTable(week);
+  const topHtml = topSignalsPanel(topRows || [], win28);
+  app.innerHTML = tiles + topHtml + clusterHtml + capHtml + dealingsTable(week);
   wireTypeFilters();
   buildCapitalChart(monthly);
 }
 
 (async function () {
   try {
-    const [rows, monthly] = await Promise.all([fetchAll(), fetchCapital()]);
-    render(rows, monthly);
+    const [rows, monthly, topRows] = await Promise.all([fetchAll(), fetchCapital(), fetchTopSignals()]);
+    render(rows, monthly, topRows);
   } catch (e) { app.innerHTML = `<div class="py-20 text-center text-rose-600 text-sm">Couldn't load data (${esc(e.message)}).</div>`; }
 })();
 </script>
