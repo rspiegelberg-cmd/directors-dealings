@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Directors Dealings — This Week</title>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   html, body { background:#f8fafc; color:#0f172a; }
   .tf-btn[aria-pressed="false"] { opacity:.35; }
@@ -100,6 +101,40 @@ async function fetchAll() {
   return res.json();
 }
 
+async function fetchCapital() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/public_capital_monthly_v?order=month.asc`,
+      { headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY } });
+    return res.ok ? res.json() : [];
+  } catch (e) { return []; }
+}
+
+let capChart;
+function buildCapitalChart(monthly) {
+  const el = document.getElementById("capChart");
+  if (!el || !monthly || !monthly.length) return;
+  const labels = monthly.map(m => m.month);
+  const mk = (label, key, color) => ({
+    label, data: monthly.map(m => Math.round((m[key] || 0) / 1000)),
+    borderColor: color, backgroundColor: color, borderWidth: 1.5, pointRadius: 0, tension: .2
+  });
+  capChart = new Chart(el, {
+    type: "line",
+    data: { labels, datasets: [mk("All", "total", "#2563eb"), mk("Small cap", "small", "#059669"), mk("Large cap", "large", "#94a3b8")] },
+    options: {
+      maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { position: "top", align: "end", labels: { boxWidth: 10, font: { size: 11 } } },
+        tooltip: { callbacks: { label: c => c.dataset.label + ": £" + (c.parsed.y).toLocaleString("en-GB") + "k" } }
+      },
+      scales: {
+        x: { ticks: { maxTicksLimit: 10, font: { size: 10 }, color: "#94a3b8" }, grid: { display: false } },
+        y: { ticks: { font: { size: 10 }, color: "#94a3b8", callback: v => "£" + v + "k" }, grid: { color: "#f1f5f9" } }
+      }
+    }
+  });
+}
+
 function tile(label, value, sub) {
   return `<div class="bg-white border border-slate-200 rounded-lg px-4 py-3">
     <div class="text-[11px] uppercase tracking-wide text-slate-500">${label}</div>
@@ -188,7 +223,7 @@ function wireTypeFilters() {
   });
 }
 
-function render(rows) {
+function render(rows, monthly) {
   if (!rows || !rows.length) { app.innerHTML = `<div class="py-20 text-center text-slate-400 text-sm">No dealings found.</div>`; return; }
   const maxDate = rows.map(r => day(r.date)).filter(Boolean).sort().slice(-1)[0];
   const win7 = addDays(maxDate, -7);
@@ -207,13 +242,19 @@ function render(rows) {
        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">${clusters.slice(0, 12).map(clusterCard).join("")}</div></section>`
     : "";
 
-  app.innerHTML = tiles + clusterHtml + dealingsTable(week);
+  const capHtml = `<section class="mt-4 bg-white border border-slate-200 rounded-lg p-4">
+    <h2 class="text-xs uppercase tracking-wide text-slate-500 mb-2">Capital deployed — director buys (£k / month)</h2>
+    <div class="relative" style="height:220px"><canvas id="capChart"></canvas></div></section>`;
+  app.innerHTML = tiles + clusterHtml + capHtml + dealingsTable(week);
   wireTypeFilters();
+  buildCapitalChart(monthly);
 }
 
 (async function () {
-  try { render(await fetchAll()); }
-  catch (e) { app.innerHTML = `<div class="py-20 text-center text-rose-600 text-sm">Couldn't load data (${esc(e.message)}).</div>`; }
+  try {
+    const [rows, monthly] = await Promise.all([fetchAll(), fetchCapital()]);
+    render(rows, monthly);
+  } catch (e) { app.innerHTML = `<div class="py-20 text-center text-rose-600 text-sm">Couldn't load data (${esc(e.message)}).</div>`; }
 })();
 </script>
 </body>
