@@ -3,7 +3,8 @@
 **Living status board.** Detail for every B-NNN is in `cloud-migration-execution-plan.md`. Update the **Status** column as work moves; mark gates ✅ when passed. Issues continue the project's B-NNN sequence (next free = **B-172**) and carry the usual agent labels for Linear.
 
 **Status legend:** ⬜ Todo · 🟦 In Progress · ✅ Done · ⛔ Blocked · ⏸ Deferred
-**Overall:** 🟢 **LIVE URL ACHIEVED** — https://directors-dealings.vercel.app/ — M0–M3 essentially done — 12 / 18 done · 33 / 45 pts. Data in Supabase, pipeline runs on Postgres, site cloud-hosted on Vercel with a live company template. Remaining: B-184 cutover (link template + drop static pages/public JSON), M4 daily auto-refresh (GitHub Actions), M5 cleanup. **Do NOT delete local files until M4 auto-refresh is proven.**
+**Overall:** 🟢 LIVE URL — https://directors-dealings.vercel.app/. Data in Supabase; **company pages are live + working** (direct browser read). M0–M3 done.
+⚠️ **M4 BLOCKED — architecture pivot (2026-06-23).** The cloud pipeline CANNOT reliably rebuild/publish the front page: heavy compute (`eval_signals` >45min, `backtest` >60min) is too slow on US GitHub runners against eu-west-1 Supabase (thousands of small queries × transatlantic latency). The `rendered_pages` publish approach is **abandoned**. **Decision: rebuild the front page as a live, client-side direct-read page** (like the company pages) → **new Sprint M6** (spec: `live-front-page-spec.md`). Daily-refresh reliability gets its own re-architecture task (compute on runner-local SQLite, bulk-sync to Supabase). **Do NOT delete local files** until the live front page ships AND the daily refresh is reliable.
 **Linear:** synced 2026-06-22 — 6 milestones + 18 issues. B-NNN→DIR map at the bottom.
 **Environment:** Supabase project `directors-dealings` — ref `mmiaiauybzsdcbrrcxfc`, host `db.mmiaiauybzsdcbrrcxfc.supabase.co`, region eu-west-1, Postgres 17.6. Driveable directly via the connected Supabase connector.
 
@@ -90,6 +91,33 @@
 **Gate M5:** ⬜ docs updated; running fully in the cloud.
 
 ---
+
+## Sprint M6 — Live front page (direct-read) — *NEW 2026-06-23* — *"Cloud Migration — M6 Live Front Page"*
+
+Replaces the abandoned pipeline-render/`rendered_pages` approach. Full detail in
+`docs/specs/live-front-page-spec.md`.
+
+| Status | B-ID | Item | Agent label | Pri | Pts |
+|--------|------|------|-------------|-----|-----|
+| ⬜ | B-190 | Phase 1 — `public_recent_dealings_v` + This Week table + active clusters + top tiles (client-side, reuse company-page code) | `agent:dashboard-designer` | P1 | 5 |
+| ⬜ | B-191 | Phase 2 — Conviction panel (`public_conviction_v`) + Capital-Deployed charts (client-side) | `agent:dashboard-designer` | P1 | 3 |
+| ⬜ | B-192 | Phase 3 — polish/parity (brewing clusters, sparklines, mobile, paper P&L tile) | `agent:dashboard-designer` | P2 | 2 |
+| ⬜ | B-193 | Remove dead publish path: `_publish_live_index` from `build_dashboard`, drop `rebuild-pages.yml` + `rendered_pages` table/view, stop overwriting `outputs/index.html` | `agent:general-purpose` | P1 | 2 |
+
+**Gate M6:** ⬜ front page live + current with all panels, no pipeline dependency for display.
+
+## Sprint DR — Daily-refresh reliability (compute re-architecture) — *NEW 2026-06-23*
+
+The data pipeline still must run to refresh **signals/conviction**, and it has the same
+latency problem. The front page (M6) fixes *display*; this fixes *data freshness*.
+
+| Status | B-ID | Item | Agent label | Pri | Pts |
+|--------|------|------|-------------|-----|-----|
+| ⬜ | B-194 | Run heavy compute on the runner's LOCAL SQLite: bulk-download Supabase→sqlite, run pipeline `DD_FORCE_SQLITE` in-process (fast), bulk-upload changed tables→Supabase. Target: daily run completes in minutes. | `agent:general-purpose` | P1 | 8 |
+| ⬜ | B-195 | Interim safety net — alert (email) if a scheduled daily run fails or publishes stale | `agent:general-purpose` | P2 | 1 |
+| ⬜ | B-196 | Scraper coverage gap — CT Automotive (CTA) + Kelso (KLSO) Director/PDMR filings 2026-06-23 not ingested even after re-scrape; investigate parser/coverage (likely a layout the parser misses → pending queue) | `agent:data-integrity-auditor` | P2 | 2 |
+
+**Gate DR:** ⬜ scheduled 6am run completes reliably in the cloud, PC off, signals fresh.
 
 ## Progress summary
 
