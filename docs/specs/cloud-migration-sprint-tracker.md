@@ -115,7 +115,7 @@ latency problem. The front page (M6) fixes *display*; this fixes *data freshness
 |--------|------|------|-------------|-----|-----|
 | ⬜ | B-194 | Run heavy compute on the runner's LOCAL SQLite: bulk-download Supabase→sqlite, run pipeline `DD_FORCE_SQLITE` in-process (fast), bulk-upload changed tables→Supabase. Target: daily run completes in minutes. | `agent:general-purpose` | P1 | 8 |
 | ⬜ | B-195 | Interim safety net — alert (email) if a scheduled daily run fails or publishes stale | `agent:general-purpose` | P2 | 1 |
-| ⬜ | B-196 | Scraper coverage gap — CT Automotive (CTA) + Kelso (KLSO) Director/PDMR filings 2026-06-23 not ingested even after re-scrape; investigate parser/coverage (likely a layout the parser misses → pending queue) | `agent:data-integrity-auditor` | P2 | 2 |
+| 🟦 | B-196 | Scraper coverage gap (CTA/KLSO/GANA real director buys missed). **DIAGNOSED**: not the parser (all 3 parse to clean BUYs) — it's DISCOVERY: daily run read only 5 index pages, so filings off those pages were never fetched. **FIX CODED** in `run_scrape.py`: read 20 index pages + add `iter_archive` advanced-search backstop, deduped by rns_id. Awaiting push + scrape test. | `agent:data-integrity-auditor` | P1 | 2 |
 
 **Gate DR:** ⬜ scheduled 6am run completes reliably in the cloud, PC off, signals fresh.
 

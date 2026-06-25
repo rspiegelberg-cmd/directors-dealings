@@ -314,7 +314,36 @@ def run(args) -> int:
         if not args.no_llm and llm_cost is not None and not args.dry_run:
             run_id = llm_cost.start_run()
 
-        for row in scraper.iter_index(window_start, window_end):
+        # B-196: widen discovery so the category-index feed can't silently drop
+        # real filings. CTA / KLSO / GANA (2026-06-23/24) were missed because
+        # they fell outside the default 5-page index window. Read more index
+        # pages AND add the advanced-search archive walk as a backstop, deduped
+        # by rns_id so no filing is fetched twice. Each source is wrapped so the
+        # archive (a soft backstop that can raise ArchiveCalibrationError) can
+        # never break the primary index run.
+        def _discover_rows():
+            seen_ids = set()
+            sources = (
+                ("index", lambda: scraper.iter_index(
+                    window_start, window_end, max_pages=20)),
+                ("archive", lambda: scraper.iter_archive(
+                    window_start, window_end)),
+            )
+            for _name, _make in sources:
+                try:
+                    for _r in _make():
+                        _rid = _r.get("rns_id")
+                        if _rid in seen_ids:
+                            continue
+                        seen_ids.add(_rid)
+                        yield _r
+                except Exception as _e:  # noqa: BLE001 - soft backstop
+                    if verbose:
+                        print(f"  ! discovery source '{_name}' error "
+                              f"(continuing): {_e!r}")
+                    continue
+
+        for row in _discover_rows():
             filings_seen += 1
             rns_id = row["rns_id"]
             url = row["url"]
