@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-25T13:22:48Z",
+  "generated_at": "2026-06-25T18:08:06Z",
   "schema_version": "1.1",
   "horizon_aggregates": {
     "t1": {
@@ -4131,8 +4131,8 @@
       49
     ]
   },
-  "paper_pnl_open": 232702.27,
-  "paper_trades_open": 610,
+  "paper_pnl_open": 232685.88,
+  "paper_trades_open": 613,
   "paper_trades_closed": 2518,
   "cohorts": {
     "by_value_bucket": {
@@ -6919,30 +6919,30 @@
     }
   },
   "pending_diagnostics": {
-    "total": 64,
-    "generated_at": "2026-06-25T13:22:45Z",
+    "total": 71,
+    "generated_at": "2026-06-25T18:08:04Z",
     "categories": [
-      {
-        "id": "bundled_multi_pdmr",
-        "name": "Bundled multi-PDMR",
-        "count": 25,
-        "pct": 39.1,
-        "recoverable": "no",
-        "description": "Filing names multiple directors in one announcement -- D-STRICT refuses to split"
-      },
       {
         "id": "could_not_classify",
         "name": "Could not classify / extract",
-        "count": 17,
-        "pct": 26.6,
+        "count": 26,
+        "pct": 36.6,
         "recoverable": "manual",
         "description": "Parser could not extract ticker / company / type / required fields -- case-by-case review"
       },
       {
+        "id": "bundled_multi_pdmr",
+        "name": "Bundled multi-PDMR",
+        "count": 24,
+        "pct": 33.8,
+        "recoverable": "no",
+        "description": "Filing names multiple directors in one announcement -- D-STRICT refuses to split"
+      },
+      {
         "id": "multi_tranche",
         "name": "Multi-tranche / multi-transaction",
-        "count": 15,
-        "pct": 23.4,
+        "count": 13,
+        "pct": 18.3,
         "recoverable": "v2-fanout",
         "description": "Filing reports two or more distinct prices or transactions for the same PDMR -- needs row fan-out"
       },
@@ -6950,7 +6950,7 @@
         "id": "foreign_currency",
         "name": "Foreign currency",
         "count": 4,
-        "pct": 6.2,
+        "pct": 5.6,
         "recoverable": "v2-fx",
         "description": "Non-GBP filing -- needs FX rate fetcher"
       },
@@ -6973,8 +6973,8 @@
       {
         "id": "other",
         "name": "Other",
-        "count": 3,
-        "pct": 4.7,
+        "count": 4,
+        "pct": 5.6,
         "recoverable": "unknown",
         "description": "Uncategorised -- review warnings text"
       }
@@ -7165,6 +7165,11 @@
       "ticker": "AIBG",
       "company": "",
       "url": "company.html?ticker=AIBG"
+    },
+    {
+      "ticker": "AIC",
+      "company": "Achilles Investment Company Limited",
+      "url": "company.html?ticker=AIC"
     },
     {
       "ticker": "AIEA",
@@ -8112,6 +8117,11 @@
       "url": "company.html?ticker=CSN"
     },
     {
+      "ticker": "CTA",
+      "company": "CT AUTOMOTIVE GROUP PLC",
+      "url": "company.html?ticker=CTA"
+    },
+    {
       "ticker": "CTEC",
       "company": "",
       "url": "company.html?ticker=CTEC"
@@ -8595,6 +8605,11 @@
       "ticker": "GAMA",
       "company": "Gamma Communications plc",
       "url": "company.html?ticker=GAMA"
+    },
+    {
+      "ticker": "GANA",
+      "company": "Gana Media Group plc",
+      "url": "company.html?ticker=GANA"
     },
     {
       "ticker": "GATC",
@@ -9297,6 +9312,11 @@
       "url": "company.html?ticker=KLR"
     },
     {
+      "ticker": "KLSO",
+      "company": "Kelso Group Holdings plc",
+      "url": "company.html?ticker=KLSO"
+    },
+    {
       "ticker": "KMK",
       "company": "",
       "url": "company.html?ticker=KMK"
@@ -9829,6 +9849,11 @@
     {
       "ticker": "ONDO",
       "company": "",
+      "url": "company.html?ticker=ONDO"
+    },
+    {
+      "ticker": "ONDO",
+      "company": "Ondo InsurTech Plc",
       "url": "company.html?ticker=ONDO"
     },
     {
@@ -17258,14 +17283,14 @@
         "fired_at": "2026-03-25",
         "entry_date": "2026-03-25",
         "entry_close": 0.0185,
-        "current_date": "2026-06-24",
-        "current_close": 0.0165,
+        "current_date": "2026-06-25",
+        "current_close": 0.018,
         "close_t1": 0.0185,
         "close_t21": 0.023,
         "close_t90": null,
         "notional_gbp": 500.0,
         "hold_days": 92,
-        "mtm_pct": -10.54,
+        "mtm_pct": -2.7,
         "status": "CLOSED",
         "market_cap_gbp": 8640000.0
       },
@@ -20898,14 +20923,14 @@
         "fired_at": "2026-02-06",
         "entry_date": "2026-02-06",
         "entry_close": 0.0675,
-        "current_date": "2026-06-24",
-        "current_close": 0.03,
+        "current_date": "2026-06-25",
+        "current_close": 0.0325,
         "close_t1": 0.0675,
         "close_t21": 0.0625,
         "close_t90": 0.0325,
         "notional_gbp": 500.0,
         "hold_days": 139,
-        "mtm_pct": -55.56,
+        "mtm_pct": -51.85,
         "status": "CLOSED",
         "market_cap_gbp": 1040000.0
       },
@@ -34538,14 +34563,14 @@
         "fired_at": "2025-06-19",
         "entry_date": "2025-06-19",
         "entry_close": 1.475,
-        "current_date": "2026-06-24",
-        "current_close": 1.784,
+        "current_date": "2026-06-25",
+        "current_close": 1.75,
         "close_t1": 1.475,
         "close_t21": 1.95,
         "close_t90": 2.525,
         "notional_gbp": 500.0,
         "hold_days": 371,
-        "mtm_pct": 20.95,
+        "mtm_pct": 18.64,
         "status": "CLOSED",
         "market_cap_gbp": 3600000.0
       },
@@ -38291,6 +38316,26 @@
       },
       {
         "signal_id": "t3",
+        "fingerprint": "3ec5634e1f2e4d6c",
+        "ticker": "GANA",
+        "company": "Gana Media Group plc",
+        "director": "Farzad Peyman",
+        "fired_at": "2026-06-24",
+        "entry_date": "2026-06-24",
+        "entry_close": 0.0019,
+        "current_date": "2026-06-25",
+        "current_close": 0.0019,
+        "close_t1": 0.0019,
+        "close_t21": null,
+        "close_t90": null,
+        "notional_gbp": 500.0,
+        "hold_days": 1,
+        "mtm_pct": 0.0,
+        "status": "OPEN",
+        "market_cap_gbp": 35470000.0
+      },
+      {
+        "signal_id": "t3",
         "fingerprint": "93fd4b77676dfd44",
         "ticker": "TND",
         "company": "Tandem Group plc",
@@ -38328,6 +38373,26 @@
         "mtm_pct": -4.05,
         "status": "OPEN",
         "market_cap_gbp": 11490000.0
+      },
+      {
+        "signal_id": "f1",
+        "fingerprint": "0d33bd799e5a745d",
+        "ticker": "KLSO",
+        "company": "Kelso Group Holdings plc",
+        "director": "Ian Selby",
+        "fired_at": "2026-06-23",
+        "entry_date": "2026-06-23",
+        "entry_close": 0.0305,
+        "current_date": "2026-06-24",
+        "current_close": 0.0295,
+        "close_t1": 0.0295,
+        "close_t21": null,
+        "close_t90": null,
+        "notional_gbp": 500.0,
+        "hold_days": 2,
+        "mtm_pct": -3.28,
+        "status": "OPEN",
+        "market_cap_gbp": 13640000.0
       },
       {
         "signal_id": "t3",
@@ -39098,14 +39163,14 @@
         "fired_at": "2026-06-12",
         "entry_date": "2026-06-12",
         "entry_close": 0.355,
-        "current_date": "2026-06-24",
-        "current_close": 0.46,
+        "current_date": "2026-06-25",
+        "current_close": 0.475,
         "close_t1": 0.36,
         "close_t21": null,
         "close_t90": null,
         "notional_gbp": 500.0,
         "hold_days": 13,
-        "mtm_pct": 29.58,
+        "mtm_pct": 33.8,
         "status": "OPEN",
         "market_cap_gbp": 21060000.0
       },
@@ -41011,12 +41076,12 @@
       }
     ],
     "summary": {
-      "open_count": 138,
+      "open_count": 140,
       "closed_count": 1334,
-      "open_notional_gbp": 73894.0,
+      "open_notional_gbp": 74894.0,
       "open_mtm_pct_mean": 0.76,
       "open_winners": 76,
-      "open_losers": 59
+      "open_losers": 61
     }
   },
   "monthly_buysell": {
@@ -41046,7 +41111,7 @@
       17118205.0,
       7180384.0,
       5824179.0,
-      21084610.0
+      21169335.0
     ],
     "sell_values": [
       -12039419.0,
@@ -41060,7 +41125,7 @@
       -81657177.0,
       -24315603.0,
       -31951268.0,
-      -19039242.0
+      -19077143.0
     ],
     "buy_counts": [
       127,
@@ -41074,7 +41139,7 @@
       148,
       110,
       142,
-      133
+      140
     ],
     "sell_counts": [
       70,
@@ -41088,14 +41153,14 @@
       177,
       88,
       100,
-      47
+      48
     ],
-    "trailing12_buy_total": 90946633.0,
-    "trailing12_sell_total": 322166569.0,
-    "trailing12_buy_count": 1367,
-    "trailing12_sell_count": 905,
-    "trend_buy_pct": 57.5,
-    "trend_sell_pct": -28.8,
+    "trailing12_buy_total": 91031358.0,
+    "trailing12_sell_total": 322204470.0,
+    "trailing12_buy_count": 1374,
+    "trailing12_sell_count": 906,
+    "trend_buy_pct": 57.9,
+    "trend_sell_pct": -28.7,
     "monthly_txns": {
       "2026-02": [
         {
@@ -41962,1519 +42027,1519 @@
         }
       ]
     },
-    "excluded_corporate_count": 175,
-    "excluded_corporate_value": 306618282.0
+    "excluded_corporate_count": 176,
+    "excluded_corporate_value": 307474778.0
   },
   "strategy_tracker": {
     "series": [
       {
         "date": "2025-04-15",
-        "strategy_value_gbp": 14500000.0,
-        "ftse_value_gbp": 14500000.0
+        "strategy_value_gbp": 14520000.0,
+        "ftse_value_gbp": 14520000.0
       },
       {
         "date": "2025-04-16",
-        "strategy_value_gbp": 14500000.0,
-        "ftse_value_gbp": 14500000.0
+        "strategy_value_gbp": 14520000.0,
+        "ftse_value_gbp": 14520000.0
       },
       {
         "date": "2025-04-17",
-        "strategy_value_gbp": 14500000.0,
-        "ftse_value_gbp": 14500000.0
+        "strategy_value_gbp": 14520000.0,
+        "ftse_value_gbp": 14520000.0
       },
       {
         "date": "2025-04-22",
-        "strategy_value_gbp": 14500000.0,
-        "ftse_value_gbp": 14500000.0
+        "strategy_value_gbp": 14520000.0,
+        "ftse_value_gbp": 14520000.0
       },
       {
         "date": "2025-04-23",
-        "strategy_value_gbp": 14500000.0,
-        "ftse_value_gbp": 14500000.0
+        "strategy_value_gbp": 14520000.0,
+        "ftse_value_gbp": 14520000.0
       },
       {
         "date": "2025-04-24",
-        "strategy_value_gbp": 14500000.0,
-        "ftse_value_gbp": 14500000.0
+        "strategy_value_gbp": 14520000.0,
+        "ftse_value_gbp": 14520000.0
       },
       {
         "date": "2025-04-25",
-        "strategy_value_gbp": 14500000.0,
-        "ftse_value_gbp": 14500000.0
+        "strategy_value_gbp": 14520000.0,
+        "ftse_value_gbp": 14520000.0
       },
       {
         "date": "2025-04-28",
-        "strategy_value_gbp": 14500000.0,
-        "ftse_value_gbp": 14500000.0
+        "strategy_value_gbp": 14520000.0,
+        "ftse_value_gbp": 14520000.0
       },
       {
         "date": "2025-04-29",
-        "strategy_value_gbp": 14500000.0,
-        "ftse_value_gbp": 14500000.0
+        "strategy_value_gbp": 14520000.0,
+        "ftse_value_gbp": 14520000.0
       },
       {
         "date": "2025-04-30",
-        "strategy_value_gbp": 14500000.0,
-        "ftse_value_gbp": 14500000.0
+        "strategy_value_gbp": 14520000.0,
+        "ftse_value_gbp": 14520000.0
       },
       {
         "date": "2025-05-01",
-        "strategy_value_gbp": 14500000.0,
-        "ftse_value_gbp": 14500000.0
+        "strategy_value_gbp": 14520000.0,
+        "ftse_value_gbp": 14520000.0
       },
       {
         "date": "2025-05-02",
-        "strategy_value_gbp": 14498300.0,
-        "ftse_value_gbp": 14499150.0
+        "strategy_value_gbp": 14518300.0,
+        "ftse_value_gbp": 14519150.0
       },
       {
         "date": "2025-05-06",
-        "strategy_value_gbp": 14502430.0,
-        "ftse_value_gbp": 14499151.0
+        "strategy_value_gbp": 14522430.0,
+        "ftse_value_gbp": 14519151.0
       },
       {
         "date": "2025-05-07",
-        "strategy_value_gbp": 14501583.0,
-        "ftse_value_gbp": 14498054.0
+        "strategy_value_gbp": 14521583.0,
+        "ftse_value_gbp": 14518054.0
       },
       {
         "date": "2025-05-08",
-        "strategy_value_gbp": 14504613.0,
-        "ftse_value_gbp": 14497296.0
+        "strategy_value_gbp": 14524613.0,
+        "ftse_value_gbp": 14517296.0
       },
       {
         "date": "2025-05-09",
-        "strategy_value_gbp": 14503957.0,
-        "ftse_value_gbp": 14498065.0
+        "strategy_value_gbp": 14523957.0,
+        "ftse_value_gbp": 14518065.0
       },
       {
         "date": "2025-05-12",
-        "strategy_value_gbp": 14508608.0,
-        "ftse_value_gbp": 14498909.0
+        "strategy_value_gbp": 14528608.0,
+        "ftse_value_gbp": 14518909.0
       },
       {
         "date": "2025-05-13",
-        "strategy_value_gbp": 14512129.0,
-        "ftse_value_gbp": 14499004.0
+        "strategy_value_gbp": 14532129.0,
+        "ftse_value_gbp": 14519004.0
       },
       {
         "date": "2025-05-14",
-        "strategy_value_gbp": 14510547.0,
-        "ftse_value_gbp": 14497585.0
+        "strategy_value_gbp": 14530547.0,
+        "ftse_value_gbp": 14517585.0
       },
       {
         "date": "2025-05-15",
-        "strategy_value_gbp": 14514912.0,
-        "ftse_value_gbp": 14500504.0
+        "strategy_value_gbp": 14534912.0,
+        "ftse_value_gbp": 14520504.0
       },
       {
         "date": "2025-05-16",
-        "strategy_value_gbp": 14518587.0,
-        "ftse_value_gbp": 14505044.0
+        "strategy_value_gbp": 14538587.0,
+        "ftse_value_gbp": 14525044.0
       },
       {
         "date": "2025-05-19",
-        "strategy_value_gbp": 14520501.0,
-        "ftse_value_gbp": 14506074.0
+        "strategy_value_gbp": 14540501.0,
+        "ftse_value_gbp": 14526074.0
       },
       {
         "date": "2025-05-20",
-        "strategy_value_gbp": 14526802.0,
-        "ftse_value_gbp": 14513701.0
+        "strategy_value_gbp": 14546802.0,
+        "ftse_value_gbp": 14533701.0
       },
       {
         "date": "2025-05-21",
-        "strategy_value_gbp": 14525958.0,
-        "ftse_value_gbp": 14513376.0
+        "strategy_value_gbp": 14545958.0,
+        "ftse_value_gbp": 14533376.0
       },
       {
         "date": "2025-05-22",
-        "strategy_value_gbp": 14521316.0,
-        "ftse_value_gbp": 14507960.0
+        "strategy_value_gbp": 14541316.0,
+        "ftse_value_gbp": 14527960.0
       },
       {
         "date": "2025-05-23",
-        "strategy_value_gbp": 14512851.0,
-        "ftse_value_gbp": 14505114.0
+        "strategy_value_gbp": 14532851.0,
+        "ftse_value_gbp": 14525114.0
       },
       {
         "date": "2025-05-27",
-        "strategy_value_gbp": 14521568.0,
-        "ftse_value_gbp": 14512508.0
+        "strategy_value_gbp": 14541568.0,
+        "ftse_value_gbp": 14532508.0
       },
       {
         "date": "2025-05-28",
-        "strategy_value_gbp": 14520065.0,
-        "ftse_value_gbp": 14507042.0
+        "strategy_value_gbp": 14540065.0,
+        "ftse_value_gbp": 14527042.0
       },
       {
         "date": "2025-05-29",
-        "strategy_value_gbp": 14521497.0,
-        "ftse_value_gbp": 14506087.0
+        "strategy_value_gbp": 14541497.0,
+        "ftse_value_gbp": 14526087.0
       },
       {
         "date": "2025-05-30",
-        "strategy_value_gbp": 14525112.0,
-        "ftse_value_gbp": 14512545.0
+        "strategy_value_gbp": 14545112.0,
+        "ftse_value_gbp": 14532545.0
       },
       {
         "date": "2025-06-02",
-        "strategy_value_gbp": 14526623.0,
-        "ftse_value_gbp": 14512558.0
+        "strategy_value_gbp": 14546623.0,
+        "ftse_value_gbp": 14532558.0
       },
       {
         "date": "2025-06-03",
-        "strategy_value_gbp": 14529867.0,
-        "ftse_value_gbp": 14513789.0
+        "strategy_value_gbp": 14549867.0,
+        "ftse_value_gbp": 14533789.0
       },
       {
         "date": "2025-06-04",
-        "strategy_value_gbp": 14544288.0,
-        "ftse_value_gbp": 14516215.0
+        "strategy_value_gbp": 14564288.0,
+        "ftse_value_gbp": 14536215.0
       },
       {
         "date": "2025-06-05",
-        "strategy_value_gbp": 14543301.0,
-        "ftse_value_gbp": 14516845.0
+        "strategy_value_gbp": 14563301.0,
+        "ftse_value_gbp": 14536845.0
       },
       {
         "date": "2025-06-06",
-        "strategy_value_gbp": 14555895.0,
-        "ftse_value_gbp": 14520190.0
+        "strategy_value_gbp": 14575895.0,
+        "ftse_value_gbp": 14540190.0
       },
       {
         "date": "2025-06-09",
-        "strategy_value_gbp": 14567885.0,
-        "ftse_value_gbp": 14520391.0
+        "strategy_value_gbp": 14587885.0,
+        "ftse_value_gbp": 14540391.0
       },
       {
         "date": "2025-06-10",
-        "strategy_value_gbp": 14572088.0,
-        "ftse_value_gbp": 14522747.0
+        "strategy_value_gbp": 14592088.0,
+        "ftse_value_gbp": 14542747.0
       },
       {
         "date": "2025-06-11",
-        "strategy_value_gbp": 14580263.0,
-        "ftse_value_gbp": 14523925.0
+        "strategy_value_gbp": 14600263.0,
+        "ftse_value_gbp": 14543925.0
       },
       {
         "date": "2025-06-12",
-        "strategy_value_gbp": 14575643.0,
-        "ftse_value_gbp": 14525461.0
+        "strategy_value_gbp": 14595643.0,
+        "ftse_value_gbp": 14545461.0
       },
       {
         "date": "2025-06-13",
-        "strategy_value_gbp": 14567572.0,
-        "ftse_value_gbp": 14520828.0
+        "strategy_value_gbp": 14587572.0,
+        "ftse_value_gbp": 14540828.0
       },
       {
         "date": "2025-06-16",
-        "strategy_value_gbp": 14575262.0,
-        "ftse_value_gbp": 14523304.0
+        "strategy_value_gbp": 14595262.0,
+        "ftse_value_gbp": 14543304.0
       },
       {
         "date": "2025-06-17",
-        "strategy_value_gbp": 14575038.0,
-        "ftse_value_gbp": 14519558.0
+        "strategy_value_gbp": 14595038.0,
+        "ftse_value_gbp": 14539558.0
       },
       {
         "date": "2025-06-18",
-        "strategy_value_gbp": 14572152.0,
-        "ftse_value_gbp": 14520314.0
+        "strategy_value_gbp": 14592152.0,
+        "ftse_value_gbp": 14540314.0
       },
       {
         "date": "2025-06-19",
-        "strategy_value_gbp": 14563662.0,
-        "ftse_value_gbp": 14514351.0
+        "strategy_value_gbp": 14583662.0,
+        "ftse_value_gbp": 14534351.0
       },
       {
         "date": "2025-06-20",
-        "strategy_value_gbp": 14567900.0,
-        "ftse_value_gbp": 14512846.0
+        "strategy_value_gbp": 14587900.0,
+        "ftse_value_gbp": 14532846.0
       },
       {
         "date": "2025-06-23",
-        "strategy_value_gbp": 14568664.0,
-        "ftse_value_gbp": 14510732.0
+        "strategy_value_gbp": 14588664.0,
+        "ftse_value_gbp": 14530732.0
       },
       {
         "date": "2025-06-24",
-        "strategy_value_gbp": 14578964.0,
-        "ftse_value_gbp": 14511923.0
+        "strategy_value_gbp": 14598964.0,
+        "ftse_value_gbp": 14531923.0
       },
       {
         "date": "2025-06-25",
-        "strategy_value_gbp": 14577060.0,
-        "ftse_value_gbp": 14507783.0
+        "strategy_value_gbp": 14597060.0,
+        "ftse_value_gbp": 14527783.0
       },
       {
         "date": "2025-06-26",
-        "strategy_value_gbp": 14587220.0,
-        "ftse_value_gbp": 14510244.0
+        "strategy_value_gbp": 14607220.0,
+        "ftse_value_gbp": 14530244.0
       },
       {
         "date": "2025-06-27",
-        "strategy_value_gbp": 14596527.0,
-        "ftse_value_gbp": 14517324.0
+        "strategy_value_gbp": 14616527.0,
+        "ftse_value_gbp": 14537324.0
       },
       {
         "date": "2025-06-30",
-        "strategy_value_gbp": 14592977.0,
-        "ftse_value_gbp": 14512984.0
+        "strategy_value_gbp": 14612977.0,
+        "ftse_value_gbp": 14532984.0
       },
       {
         "date": "2025-07-01",
-        "strategy_value_gbp": 14592781.0,
-        "ftse_value_gbp": 14515689.0
+        "strategy_value_gbp": 14612781.0,
+        "ftse_value_gbp": 14535689.0
       },
       {
         "date": "2025-07-02",
-        "strategy_value_gbp": 14586372.0,
-        "ftse_value_gbp": 14512564.0
+        "strategy_value_gbp": 14606372.0,
+        "ftse_value_gbp": 14532564.0
       },
       {
         "date": "2025-07-03",
-        "strategy_value_gbp": 14588495.0,
-        "ftse_value_gbp": 14518982.0
+        "strategy_value_gbp": 14608495.0,
+        "ftse_value_gbp": 14538982.0
       },
       {
         "date": "2025-07-04",
-        "strategy_value_gbp": 14585867.0,
-        "ftse_value_gbp": 14517893.0
+        "strategy_value_gbp": 14605867.0,
+        "ftse_value_gbp": 14537893.0
       },
       {
         "date": "2025-07-07",
-        "strategy_value_gbp": 14581720.0,
-        "ftse_value_gbp": 14515375.0
+        "strategy_value_gbp": 14601720.0,
+        "ftse_value_gbp": 14535375.0
       },
       {
         "date": "2025-07-08",
-        "strategy_value_gbp": 14586544.0,
-        "ftse_value_gbp": 14520881.0
+        "strategy_value_gbp": 14606544.0,
+        "ftse_value_gbp": 14540881.0
       },
       {
         "date": "2025-07-09",
-        "strategy_value_gbp": 14586743.0,
-        "ftse_value_gbp": 14522203.0
+        "strategy_value_gbp": 14606743.0,
+        "ftse_value_gbp": 14542203.0
       },
       {
         "date": "2025-07-10",
-        "strategy_value_gbp": 14594389.0,
-        "ftse_value_gbp": 14535177.0
-      },
-      {
-        "date": "2025-07-11",
-        "strategy_value_gbp": 14594710.0,
-        "ftse_value_gbp": 14530582.0
-      },
-      {
-        "date": "2025-07-14",
-        "strategy_value_gbp": 14600226.0,
-        "ftse_value_gbp": 14537915.0
-      },
-      {
-        "date": "2025-07-15",
-        "strategy_value_gbp": 14598509.0,
-        "ftse_value_gbp": 14531281.0
-      },
-      {
-        "date": "2025-07-16",
-        "strategy_value_gbp": 14599323.0,
-        "ftse_value_gbp": 14528991.0
-      },
-      {
-        "date": "2025-07-17",
-        "strategy_value_gbp": 14608115.0,
-        "ftse_value_gbp": 14535003.0
-      },
-      {
-        "date": "2025-07-18",
-        "strategy_value_gbp": 14611642.0,
-        "ftse_value_gbp": 14537529.0
-      },
-      {
-        "date": "2025-07-21",
-        "strategy_value_gbp": 14614523.0,
-        "ftse_value_gbp": 14540091.0
-      },
-      {
-        "date": "2025-07-22",
-        "strategy_value_gbp": 14615113.0,
-        "ftse_value_gbp": 14540595.0
-      },
-      {
-        "date": "2025-07-23",
-        "strategy_value_gbp": 14614979.0,
-        "ftse_value_gbp": 14544150.0
-      },
-      {
-        "date": "2025-07-24",
-        "strategy_value_gbp": 14616769.0,
-        "ftse_value_gbp": 14551174.0
-      },
-      {
-        "date": "2025-07-25",
-        "strategy_value_gbp": 14610706.0,
-        "ftse_value_gbp": 14549389.0
-      },
-      {
-        "date": "2025-07-28",
-        "strategy_value_gbp": 14607017.0,
-        "ftse_value_gbp": 14545207.0
-      },
-      {
-        "date": "2025-07-29",
-        "strategy_value_gbp": 14603352.0,
-        "ftse_value_gbp": 14548705.0
-      },
-      {
-        "date": "2025-07-30",
-        "strategy_value_gbp": 14596162.0,
-        "ftse_value_gbp": 14548380.0
-      },
-      {
-        "date": "2025-07-31",
-        "strategy_value_gbp": 14602356.0,
-        "ftse_value_gbp": 14548334.0
-      },
-      {
-        "date": "2025-08-01",
-        "strategy_value_gbp": 14592294.0,
-        "ftse_value_gbp": 14541039.0
-      },
-      {
-        "date": "2025-08-04",
-        "strategy_value_gbp": 14600426.0,
-        "ftse_value_gbp": 14547204.0
-      },
-      {
-        "date": "2025-08-05",
-        "strategy_value_gbp": 14597904.0,
-        "ftse_value_gbp": 14548624.0
-      },
-      {
-        "date": "2025-08-06",
-        "strategy_value_gbp": 14597423.0,
-        "ftse_value_gbp": 14549747.0
-      },
-      {
-        "date": "2025-08-07",
-        "strategy_value_gbp": 14594655.0,
-        "ftse_value_gbp": 14543394.0
-      },
-      {
-        "date": "2025-08-08",
-        "strategy_value_gbp": 14591503.0,
-        "ftse_value_gbp": 14542762.0
-      },
-      {
-        "date": "2025-08-11",
-        "strategy_value_gbp": 14591715.0,
-        "ftse_value_gbp": 14545428.0
-      },
-      {
-        "date": "2025-08-12",
-        "strategy_value_gbp": 14590339.0,
-        "ftse_value_gbp": 14546664.0
-      },
-      {
-        "date": "2025-08-13",
-        "strategy_value_gbp": 14587633.0,
-        "ftse_value_gbp": 14548505.0
-      },
-      {
-        "date": "2025-08-14",
-        "strategy_value_gbp": 14586412.0,
-        "ftse_value_gbp": 14549079.0
-      },
-      {
-        "date": "2025-08-15",
-        "strategy_value_gbp": 14580959.0,
-        "ftse_value_gbp": 14544402.0
-      },
-      {
-        "date": "2025-08-18",
-        "strategy_value_gbp": 14580539.0,
-        "ftse_value_gbp": 14546354.0
-      },
-      {
-        "date": "2025-08-19",
-        "strategy_value_gbp": 14588994.0,
-        "ftse_value_gbp": 14550421.0
-      },
-      {
-        "date": "2025-08-20",
-        "strategy_value_gbp": 14595986.0,
-        "ftse_value_gbp": 14561391.0
-      },
-      {
-        "date": "2025-08-21",
-        "strategy_value_gbp": 14594565.0,
-        "ftse_value_gbp": 14563251.0
-      },
-      {
-        "date": "2025-08-22",
-        "strategy_value_gbp": 14597677.0,
-        "ftse_value_gbp": 14566128.0
-      },
-      {
-        "date": "2025-08-26",
-        "strategy_value_gbp": 14585677.0,
-        "ftse_value_gbp": 14558092.0
-      },
-      {
-        "date": "2025-08-27",
-        "strategy_value_gbp": 14579292.0,
-        "ftse_value_gbp": 14556356.0
-      },
-      {
-        "date": "2025-08-28",
-        "strategy_value_gbp": 14572209.0,
-        "ftse_value_gbp": 14551396.0
-      },
-      {
-        "date": "2025-08-29",
-        "strategy_value_gbp": 14565756.0,
-        "ftse_value_gbp": 14546934.0
-      },
-      {
-        "date": "2025-09-01",
-        "strategy_value_gbp": 14567920.0,
-        "ftse_value_gbp": 14547819.0
-      },
-      {
-        "date": "2025-09-02",
-        "strategy_value_gbp": 14550748.0,
-        "ftse_value_gbp": 14536217.0
-      },
-      {
-        "date": "2025-09-03",
-        "strategy_value_gbp": 14553334.0,
-        "ftse_value_gbp": 14542519.0
-      },
-      {
-        "date": "2025-09-04",
-        "strategy_value_gbp": 14559086.0,
-        "ftse_value_gbp": 14546676.0
-      },
-      {
-        "date": "2025-09-05",
-        "strategy_value_gbp": 14559493.0,
-        "ftse_value_gbp": 14546463.0
-      },
-      {
-        "date": "2025-09-08",
-        "strategy_value_gbp": 14560956.0,
-        "ftse_value_gbp": 14547669.0
-      },
-      {
-        "date": "2025-09-09",
-        "strategy_value_gbp": 14557273.0,
-        "ftse_value_gbp": 14548644.0
-      },
-      {
-        "date": "2025-09-10",
-        "strategy_value_gbp": 14545449.0,
-        "ftse_value_gbp": 14547173.0
-      },
-      {
-        "date": "2025-09-11",
-        "strategy_value_gbp": 14544530.0,
-        "ftse_value_gbp": 14551733.0
-      },
-      {
-        "date": "2025-09-12",
-        "strategy_value_gbp": 14542728.0,
-        "ftse_value_gbp": 14550453.0
-      },
-      {
-        "date": "2025-09-15",
-        "strategy_value_gbp": 14545397.0,
-        "ftse_value_gbp": 14549812.0
-      },
-      {
-        "date": "2025-09-16",
-        "strategy_value_gbp": 14536963.0,
-        "ftse_value_gbp": 14543928.0
-      },
-      {
-        "date": "2025-09-17",
-        "strategy_value_gbp": 14540595.0,
-        "ftse_value_gbp": 14545091.0
-      },
-      {
-        "date": "2025-09-18",
-        "strategy_value_gbp": 14543881.0,
-        "ftse_value_gbp": 14546360.0
-      },
-      {
-        "date": "2025-09-19",
-        "strategy_value_gbp": 14552651.0,
-        "ftse_value_gbp": 14545015.0
-      },
-      {
-        "date": "2025-09-22",
-        "strategy_value_gbp": 14553358.0,
-        "ftse_value_gbp": 14545535.0
-      },
-      {
-        "date": "2025-09-23",
-        "strategy_value_gbp": 14560253.0,
-        "ftse_value_gbp": 14545018.0
-      },
-      {
-        "date": "2025-09-24",
-        "strategy_value_gbp": 14559092.0,
-        "ftse_value_gbp": 14546794.0
-      },
-      {
-        "date": "2025-09-25",
-        "strategy_value_gbp": 14554959.0,
-        "ftse_value_gbp": 14543611.0
-      },
-      {
-        "date": "2025-09-26",
-        "strategy_value_gbp": 14557306.0,
-        "ftse_value_gbp": 14548789.0
-      },
-      {
-        "date": "2025-09-29",
-        "strategy_value_gbp": 14555846.0,
-        "ftse_value_gbp": 14550472.0
-      },
-      {
-        "date": "2025-09-30",
-        "strategy_value_gbp": 14562260.0,
-        "ftse_value_gbp": 14554810.0
-      },
-      {
-        "date": "2025-10-01",
-        "strategy_value_gbp": 14569961.0,
-        "ftse_value_gbp": 14561971.0
-      },
-      {
-        "date": "2025-10-02",
-        "strategy_value_gbp": 14562302.0,
-        "ftse_value_gbp": 14559803.0
-      },
-      {
-        "date": "2025-10-03",
-        "strategy_value_gbp": 14566142.0,
-        "ftse_value_gbp": 14565976.0
-      },
-      {
-        "date": "2025-10-06",
-        "strategy_value_gbp": 14563168.0,
-        "ftse_value_gbp": 14564102.0
-      },
-      {
-        "date": "2025-10-07",
-        "strategy_value_gbp": 14555069.0,
-        "ftse_value_gbp": 14563758.0
-      },
-      {
-        "date": "2025-10-08",
-        "strategy_value_gbp": 14558083.0,
-        "ftse_value_gbp": 14570351.0
-      },
-      {
-        "date": "2025-10-09",
-        "strategy_value_gbp": 14561142.0,
-        "ftse_value_gbp": 14565960.0
-      },
-      {
-        "date": "2025-10-10",
-        "strategy_value_gbp": 14550696.0,
+        "strategy_value_gbp": 14614389.0,
         "ftse_value_gbp": 14555177.0
       },
       {
+        "date": "2025-07-11",
+        "strategy_value_gbp": 14614710.0,
+        "ftse_value_gbp": 14550582.0
+      },
+      {
+        "date": "2025-07-14",
+        "strategy_value_gbp": 14620226.0,
+        "ftse_value_gbp": 14557915.0
+      },
+      {
+        "date": "2025-07-15",
+        "strategy_value_gbp": 14618509.0,
+        "ftse_value_gbp": 14551281.0
+      },
+      {
+        "date": "2025-07-16",
+        "strategy_value_gbp": 14619323.0,
+        "ftse_value_gbp": 14548991.0
+      },
+      {
+        "date": "2025-07-17",
+        "strategy_value_gbp": 14628115.0,
+        "ftse_value_gbp": 14555003.0
+      },
+      {
+        "date": "2025-07-18",
+        "strategy_value_gbp": 14631642.0,
+        "ftse_value_gbp": 14557529.0
+      },
+      {
+        "date": "2025-07-21",
+        "strategy_value_gbp": 14634523.0,
+        "ftse_value_gbp": 14560091.0
+      },
+      {
+        "date": "2025-07-22",
+        "strategy_value_gbp": 14635113.0,
+        "ftse_value_gbp": 14560595.0
+      },
+      {
+        "date": "2025-07-23",
+        "strategy_value_gbp": 14634979.0,
+        "ftse_value_gbp": 14564150.0
+      },
+      {
+        "date": "2025-07-24",
+        "strategy_value_gbp": 14636769.0,
+        "ftse_value_gbp": 14571174.0
+      },
+      {
+        "date": "2025-07-25",
+        "strategy_value_gbp": 14630706.0,
+        "ftse_value_gbp": 14569389.0
+      },
+      {
+        "date": "2025-07-28",
+        "strategy_value_gbp": 14627017.0,
+        "ftse_value_gbp": 14565207.0
+      },
+      {
+        "date": "2025-07-29",
+        "strategy_value_gbp": 14623352.0,
+        "ftse_value_gbp": 14568705.0
+      },
+      {
+        "date": "2025-07-30",
+        "strategy_value_gbp": 14616162.0,
+        "ftse_value_gbp": 14568380.0
+      },
+      {
+        "date": "2025-07-31",
+        "strategy_value_gbp": 14622356.0,
+        "ftse_value_gbp": 14568334.0
+      },
+      {
+        "date": "2025-08-01",
+        "strategy_value_gbp": 14612294.0,
+        "ftse_value_gbp": 14561039.0
+      },
+      {
+        "date": "2025-08-04",
+        "strategy_value_gbp": 14620426.0,
+        "ftse_value_gbp": 14567204.0
+      },
+      {
+        "date": "2025-08-05",
+        "strategy_value_gbp": 14617904.0,
+        "ftse_value_gbp": 14568624.0
+      },
+      {
+        "date": "2025-08-06",
+        "strategy_value_gbp": 14617423.0,
+        "ftse_value_gbp": 14569747.0
+      },
+      {
+        "date": "2025-08-07",
+        "strategy_value_gbp": 14614655.0,
+        "ftse_value_gbp": 14563394.0
+      },
+      {
+        "date": "2025-08-08",
+        "strategy_value_gbp": 14611503.0,
+        "ftse_value_gbp": 14562762.0
+      },
+      {
+        "date": "2025-08-11",
+        "strategy_value_gbp": 14611715.0,
+        "ftse_value_gbp": 14565428.0
+      },
+      {
+        "date": "2025-08-12",
+        "strategy_value_gbp": 14610339.0,
+        "ftse_value_gbp": 14566664.0
+      },
+      {
+        "date": "2025-08-13",
+        "strategy_value_gbp": 14607633.0,
+        "ftse_value_gbp": 14568505.0
+      },
+      {
+        "date": "2025-08-14",
+        "strategy_value_gbp": 14606412.0,
+        "ftse_value_gbp": 14569079.0
+      },
+      {
+        "date": "2025-08-15",
+        "strategy_value_gbp": 14600959.0,
+        "ftse_value_gbp": 14564402.0
+      },
+      {
+        "date": "2025-08-18",
+        "strategy_value_gbp": 14600539.0,
+        "ftse_value_gbp": 14566354.0
+      },
+      {
+        "date": "2025-08-19",
+        "strategy_value_gbp": 14608994.0,
+        "ftse_value_gbp": 14570421.0
+      },
+      {
+        "date": "2025-08-20",
+        "strategy_value_gbp": 14615986.0,
+        "ftse_value_gbp": 14581391.0
+      },
+      {
+        "date": "2025-08-21",
+        "strategy_value_gbp": 14614565.0,
+        "ftse_value_gbp": 14583251.0
+      },
+      {
+        "date": "2025-08-22",
+        "strategy_value_gbp": 14617677.0,
+        "ftse_value_gbp": 14586128.0
+      },
+      {
+        "date": "2025-08-26",
+        "strategy_value_gbp": 14605677.0,
+        "ftse_value_gbp": 14578092.0
+      },
+      {
+        "date": "2025-08-27",
+        "strategy_value_gbp": 14599292.0,
+        "ftse_value_gbp": 14576356.0
+      },
+      {
+        "date": "2025-08-28",
+        "strategy_value_gbp": 14592209.0,
+        "ftse_value_gbp": 14571396.0
+      },
+      {
+        "date": "2025-08-29",
+        "strategy_value_gbp": 14585756.0,
+        "ftse_value_gbp": 14566934.0
+      },
+      {
+        "date": "2025-09-01",
+        "strategy_value_gbp": 14587920.0,
+        "ftse_value_gbp": 14567819.0
+      },
+      {
+        "date": "2025-09-02",
+        "strategy_value_gbp": 14570748.0,
+        "ftse_value_gbp": 14556217.0
+      },
+      {
+        "date": "2025-09-03",
+        "strategy_value_gbp": 14573334.0,
+        "ftse_value_gbp": 14562519.0
+      },
+      {
+        "date": "2025-09-04",
+        "strategy_value_gbp": 14579086.0,
+        "ftse_value_gbp": 14566676.0
+      },
+      {
+        "date": "2025-09-05",
+        "strategy_value_gbp": 14579493.0,
+        "ftse_value_gbp": 14566463.0
+      },
+      {
+        "date": "2025-09-08",
+        "strategy_value_gbp": 14580956.0,
+        "ftse_value_gbp": 14567669.0
+      },
+      {
+        "date": "2025-09-09",
+        "strategy_value_gbp": 14577273.0,
+        "ftse_value_gbp": 14568644.0
+      },
+      {
+        "date": "2025-09-10",
+        "strategy_value_gbp": 14565449.0,
+        "ftse_value_gbp": 14567173.0
+      },
+      {
+        "date": "2025-09-11",
+        "strategy_value_gbp": 14564530.0,
+        "ftse_value_gbp": 14571733.0
+      },
+      {
+        "date": "2025-09-12",
+        "strategy_value_gbp": 14562728.0,
+        "ftse_value_gbp": 14570453.0
+      },
+      {
+        "date": "2025-09-15",
+        "strategy_value_gbp": 14565397.0,
+        "ftse_value_gbp": 14569812.0
+      },
+      {
+        "date": "2025-09-16",
+        "strategy_value_gbp": 14556963.0,
+        "ftse_value_gbp": 14563928.0
+      },
+      {
+        "date": "2025-09-17",
+        "strategy_value_gbp": 14560595.0,
+        "ftse_value_gbp": 14565091.0
+      },
+      {
+        "date": "2025-09-18",
+        "strategy_value_gbp": 14563881.0,
+        "ftse_value_gbp": 14566360.0
+      },
+      {
+        "date": "2025-09-19",
+        "strategy_value_gbp": 14572651.0,
+        "ftse_value_gbp": 14565015.0
+      },
+      {
+        "date": "2025-09-22",
+        "strategy_value_gbp": 14573358.0,
+        "ftse_value_gbp": 14565535.0
+      },
+      {
+        "date": "2025-09-23",
+        "strategy_value_gbp": 14580253.0,
+        "ftse_value_gbp": 14565018.0
+      },
+      {
+        "date": "2025-09-24",
+        "strategy_value_gbp": 14579092.0,
+        "ftse_value_gbp": 14566794.0
+      },
+      {
+        "date": "2025-09-25",
+        "strategy_value_gbp": 14574959.0,
+        "ftse_value_gbp": 14563611.0
+      },
+      {
+        "date": "2025-09-26",
+        "strategy_value_gbp": 14577306.0,
+        "ftse_value_gbp": 14568789.0
+      },
+      {
+        "date": "2025-09-29",
+        "strategy_value_gbp": 14575846.0,
+        "ftse_value_gbp": 14570472.0
+      },
+      {
+        "date": "2025-09-30",
+        "strategy_value_gbp": 14582260.0,
+        "ftse_value_gbp": 14574810.0
+      },
+      {
+        "date": "2025-10-01",
+        "strategy_value_gbp": 14589961.0,
+        "ftse_value_gbp": 14581971.0
+      },
+      {
+        "date": "2025-10-02",
+        "strategy_value_gbp": 14582302.0,
+        "ftse_value_gbp": 14579803.0
+      },
+      {
+        "date": "2025-10-03",
+        "strategy_value_gbp": 14586142.0,
+        "ftse_value_gbp": 14585976.0
+      },
+      {
+        "date": "2025-10-06",
+        "strategy_value_gbp": 14583168.0,
+        "ftse_value_gbp": 14584102.0
+      },
+      {
+        "date": "2025-10-07",
+        "strategy_value_gbp": 14575069.0,
+        "ftse_value_gbp": 14583758.0
+      },
+      {
+        "date": "2025-10-08",
+        "strategy_value_gbp": 14578083.0,
+        "ftse_value_gbp": 14590351.0
+      },
+      {
+        "date": "2025-10-09",
+        "strategy_value_gbp": 14581142.0,
+        "ftse_value_gbp": 14585960.0
+      },
+      {
+        "date": "2025-10-10",
+        "strategy_value_gbp": 14570696.0,
+        "ftse_value_gbp": 14575177.0
+      },
+      {
         "date": "2025-10-13",
-        "strategy_value_gbp": 14557562.0,
-        "ftse_value_gbp": 14557939.0
+        "strategy_value_gbp": 14577562.0,
+        "ftse_value_gbp": 14577939.0
       },
       {
         "date": "2025-10-14",
-        "strategy_value_gbp": 14549818.0,
-        "ftse_value_gbp": 14558630.0
+        "strategy_value_gbp": 14569818.0,
+        "ftse_value_gbp": 14578630.0
       },
       {
         "date": "2025-10-15",
-        "strategy_value_gbp": 14551315.0,
-        "ftse_value_gbp": 14555642.0
+        "strategy_value_gbp": 14571315.0,
+        "ftse_value_gbp": 14575642.0
       },
       {
         "date": "2025-10-16",
-        "strategy_value_gbp": 14551894.0,
-        "ftse_value_gbp": 14556563.0
+        "strategy_value_gbp": 14571894.0,
+        "ftse_value_gbp": 14576563.0
       },
       {
         "date": "2025-10-17",
-        "strategy_value_gbp": 14534914.0,
-        "ftse_value_gbp": 14546377.0
+        "strategy_value_gbp": 14554914.0,
+        "ftse_value_gbp": 14566377.0
       },
       {
         "date": "2025-10-20",
-        "strategy_value_gbp": 14537065.0,
-        "ftse_value_gbp": 14551877.0
+        "strategy_value_gbp": 14557065.0,
+        "ftse_value_gbp": 14571877.0
       },
       {
         "date": "2025-10-21",
-        "strategy_value_gbp": 14535178.0,
-        "ftse_value_gbp": 14554398.0
+        "strategy_value_gbp": 14555178.0,
+        "ftse_value_gbp": 14574398.0
       },
       {
         "date": "2025-10-22",
-        "strategy_value_gbp": 14536735.0,
-        "ftse_value_gbp": 14565619.0
+        "strategy_value_gbp": 14556735.0,
+        "ftse_value_gbp": 14585619.0
       },
       {
         "date": "2025-10-23",
-        "strategy_value_gbp": 14546879.0,
-        "ftse_value_gbp": 14572623.0
+        "strategy_value_gbp": 14566879.0,
+        "ftse_value_gbp": 14592623.0
       },
       {
         "date": "2025-10-24",
-        "strategy_value_gbp": 14555170.0,
-        "ftse_value_gbp": 14580095.0
+        "strategy_value_gbp": 14575170.0,
+        "ftse_value_gbp": 14600095.0
       },
       {
         "date": "2025-10-27",
-        "strategy_value_gbp": 14557834.0,
-        "ftse_value_gbp": 14580760.0
+        "strategy_value_gbp": 14577834.0,
+        "ftse_value_gbp": 14600760.0
       },
       {
         "date": "2025-10-28",
-        "strategy_value_gbp": 14567753.0,
-        "ftse_value_gbp": 14584397.0
+        "strategy_value_gbp": 14587753.0,
+        "ftse_value_gbp": 14604397.0
       },
       {
         "date": "2025-10-29",
-        "strategy_value_gbp": 14566891.0,
-        "ftse_value_gbp": 14589570.0
+        "strategy_value_gbp": 14586891.0,
+        "ftse_value_gbp": 14609570.0
       },
       {
         "date": "2025-10-30",
-        "strategy_value_gbp": 14556938.0,
-        "ftse_value_gbp": 14589045.0
+        "strategy_value_gbp": 14576938.0,
+        "ftse_value_gbp": 14609045.0
       },
       {
         "date": "2025-10-31",
-        "strategy_value_gbp": 14555966.0,
-        "ftse_value_gbp": 14584852.0
+        "strategy_value_gbp": 14575966.0,
+        "ftse_value_gbp": 14604852.0
       },
       {
         "date": "2025-11-03",
-        "strategy_value_gbp": 14554634.0,
-        "ftse_value_gbp": 14583376.0
+        "strategy_value_gbp": 14574634.0,
+        "ftse_value_gbp": 14603376.0
       },
       {
         "date": "2025-11-04",
-        "strategy_value_gbp": 14548217.0,
-        "ftse_value_gbp": 14583574.0
+        "strategy_value_gbp": 14568217.0,
+        "ftse_value_gbp": 14603574.0
       },
       {
         "date": "2025-11-05",
-        "strategy_value_gbp": 14552428.0,
-        "ftse_value_gbp": 14587982.0
+        "strategy_value_gbp": 14572428.0,
+        "ftse_value_gbp": 14607982.0
       },
       {
         "date": "2025-11-06",
-        "strategy_value_gbp": 14545452.0,
-        "ftse_value_gbp": 14584373.0
+        "strategy_value_gbp": 14565452.0,
+        "ftse_value_gbp": 14604373.0
       },
       {
         "date": "2025-11-07",
-        "strategy_value_gbp": 14540217.0,
-        "ftse_value_gbp": 14580562.0
+        "strategy_value_gbp": 14560217.0,
+        "ftse_value_gbp": 14600562.0
       },
       {
         "date": "2025-11-10",
-        "strategy_value_gbp": 14525973.0,
-        "ftse_value_gbp": 14587315.0
+        "strategy_value_gbp": 14545973.0,
+        "ftse_value_gbp": 14607315.0
       },
       {
         "date": "2025-11-11",
-        "strategy_value_gbp": 14528877.0,
-        "ftse_value_gbp": 14593823.0
+        "strategy_value_gbp": 14548877.0,
+        "ftse_value_gbp": 14613823.0
       },
       {
         "date": "2025-11-12",
-        "strategy_value_gbp": 14528571.0,
-        "ftse_value_gbp": 14594036.0
+        "strategy_value_gbp": 14548571.0,
+        "ftse_value_gbp": 14614036.0
       },
       {
         "date": "2025-11-13",
-        "strategy_value_gbp": 14522986.0,
-        "ftse_value_gbp": 14587310.0
+        "strategy_value_gbp": 14542986.0,
+        "ftse_value_gbp": 14607310.0
       },
       {
         "date": "2025-11-14",
-        "strategy_value_gbp": 14518409.0,
-        "ftse_value_gbp": 14579753.0
+        "strategy_value_gbp": 14538409.0,
+        "ftse_value_gbp": 14599753.0
       },
       {
         "date": "2025-11-17",
-        "strategy_value_gbp": 14534818.0,
-        "ftse_value_gbp": 14577517.0
+        "strategy_value_gbp": 14554818.0,
+        "ftse_value_gbp": 14597517.0
       },
       {
         "date": "2025-11-18",
-        "strategy_value_gbp": 14528146.0,
-        "ftse_value_gbp": 14568274.0
+        "strategy_value_gbp": 14548146.0,
+        "ftse_value_gbp": 14588274.0
       },
       {
         "date": "2025-11-19",
-        "strategy_value_gbp": 14529241.0,
-        "ftse_value_gbp": 14564956.0
+        "strategy_value_gbp": 14549241.0,
+        "ftse_value_gbp": 14584956.0
       },
       {
         "date": "2025-11-20",
-        "strategy_value_gbp": 14529284.0,
-        "ftse_value_gbp": 14565820.0
+        "strategy_value_gbp": 14549284.0,
+        "ftse_value_gbp": 14585820.0
       },
       {
         "date": "2025-11-21",
-        "strategy_value_gbp": 14531882.0,
-        "ftse_value_gbp": 14566030.0
+        "strategy_value_gbp": 14551882.0,
+        "ftse_value_gbp": 14586030.0
       },
       {
         "date": "2025-11-24",
-        "strategy_value_gbp": 14533070.0,
-        "ftse_value_gbp": 14565774.0
+        "strategy_value_gbp": 14553070.0,
+        "ftse_value_gbp": 14585774.0
       },
       {
         "date": "2025-11-25",
-        "strategy_value_gbp": 14543524.0,
-        "ftse_value_gbp": 14572547.0
+        "strategy_value_gbp": 14563524.0,
+        "ftse_value_gbp": 14592547.0
       },
       {
         "date": "2025-11-26",
-        "strategy_value_gbp": 14548133.0,
-        "ftse_value_gbp": 14580064.0
+        "strategy_value_gbp": 14568133.0,
+        "ftse_value_gbp": 14600064.0
       },
       {
         "date": "2025-11-27",
-        "strategy_value_gbp": 14552684.0,
-        "ftse_value_gbp": 14580849.0
+        "strategy_value_gbp": 14572684.0,
+        "ftse_value_gbp": 14600849.0
       },
       {
         "date": "2025-11-28",
-        "strategy_value_gbp": 14555881.0,
-        "ftse_value_gbp": 14583315.0
+        "strategy_value_gbp": 14575881.0,
+        "ftse_value_gbp": 14603315.0
       },
       {
         "date": "2025-12-01",
-        "strategy_value_gbp": 14549573.0,
-        "ftse_value_gbp": 14581025.0
+        "strategy_value_gbp": 14569573.0,
+        "ftse_value_gbp": 14601025.0
       },
       {
         "date": "2025-12-02",
-        "strategy_value_gbp": 14546378.0,
-        "ftse_value_gbp": 14580386.0
+        "strategy_value_gbp": 14566378.0,
+        "ftse_value_gbp": 14600386.0
       },
       {
         "date": "2025-12-03",
-        "strategy_value_gbp": 14547506.0,
-        "ftse_value_gbp": 14579365.0
+        "strategy_value_gbp": 14567506.0,
+        "ftse_value_gbp": 14599365.0
       },
       {
         "date": "2025-12-04",
-        "strategy_value_gbp": 14550885.0,
-        "ftse_value_gbp": 14581125.0
+        "strategy_value_gbp": 14570885.0,
+        "ftse_value_gbp": 14601125.0
       },
       {
         "date": "2025-12-05",
-        "strategy_value_gbp": 14549325.0,
-        "ftse_value_gbp": 14576609.0
+        "strategy_value_gbp": 14569325.0,
+        "ftse_value_gbp": 14596609.0
       },
       {
         "date": "2025-12-08",
-        "strategy_value_gbp": 14546772.0,
-        "ftse_value_gbp": 14573489.0
+        "strategy_value_gbp": 14566772.0,
+        "ftse_value_gbp": 14593489.0
       },
       {
         "date": "2025-12-09",
-        "strategy_value_gbp": 14547558.0,
-        "ftse_value_gbp": 14572785.0
+        "strategy_value_gbp": 14567558.0,
+        "ftse_value_gbp": 14592785.0
       },
       {
         "date": "2025-12-10",
-        "strategy_value_gbp": 14546240.0,
-        "ftse_value_gbp": 14573428.0
+        "strategy_value_gbp": 14566240.0,
+        "ftse_value_gbp": 14593428.0
       },
       {
         "date": "2025-12-11",
-        "strategy_value_gbp": 14548919.0,
-        "ftse_value_gbp": 14578302.0
+        "strategy_value_gbp": 14568919.0,
+        "ftse_value_gbp": 14598302.0
       },
       {
         "date": "2025-12-12",
-        "strategy_value_gbp": 14546990.0,
-        "ftse_value_gbp": 14572533.0
+        "strategy_value_gbp": 14566990.0,
+        "ftse_value_gbp": 14592533.0
       },
       {
         "date": "2025-12-15",
-        "strategy_value_gbp": 14552401.0,
-        "ftse_value_gbp": 14583790.0
+        "strategy_value_gbp": 14572401.0,
+        "ftse_value_gbp": 14603790.0
       },
       {
         "date": "2025-12-16",
-        "strategy_value_gbp": 14552929.0,
-        "ftse_value_gbp": 14576354.0
+        "strategy_value_gbp": 14572929.0,
+        "ftse_value_gbp": 14596354.0
       },
       {
         "date": "2025-12-17",
-        "strategy_value_gbp": 14554066.0,
-        "ftse_value_gbp": 14586412.0
+        "strategy_value_gbp": 14574066.0,
+        "ftse_value_gbp": 14606412.0
       },
       {
         "date": "2025-12-18",
-        "strategy_value_gbp": 14558208.0,
-        "ftse_value_gbp": 14593858.0
+        "strategy_value_gbp": 14578208.0,
+        "ftse_value_gbp": 14613858.0
       },
       {
         "date": "2025-12-19",
-        "strategy_value_gbp": 14555445.0,
-        "ftse_value_gbp": 14599565.0
+        "strategy_value_gbp": 14575445.0,
+        "ftse_value_gbp": 14619565.0
       },
       {
         "date": "2025-12-22",
-        "strategy_value_gbp": 14555103.0,
-        "ftse_value_gbp": 14596481.0
+        "strategy_value_gbp": 14575103.0,
+        "ftse_value_gbp": 14616481.0
       },
       {
         "date": "2025-12-23",
-        "strategy_value_gbp": 14554350.0,
-        "ftse_value_gbp": 14598469.0
+        "strategy_value_gbp": 14574350.0,
+        "ftse_value_gbp": 14618469.0
       },
       {
         "date": "2025-12-24",
-        "strategy_value_gbp": 14553863.0,
-        "ftse_value_gbp": 14596398.0
+        "strategy_value_gbp": 14573863.0,
+        "ftse_value_gbp": 14616398.0
       },
       {
         "date": "2025-12-29",
-        "strategy_value_gbp": 14553917.0,
-        "ftse_value_gbp": 14596486.0
+        "strategy_value_gbp": 14573917.0,
+        "ftse_value_gbp": 14616486.0
       },
       {
         "date": "2025-12-30",
-        "strategy_value_gbp": 14563023.0,
-        "ftse_value_gbp": 14603989.0
+        "strategy_value_gbp": 14583023.0,
+        "ftse_value_gbp": 14623989.0
       },
       {
         "date": "2025-12-31",
-        "strategy_value_gbp": 14562983.0,
-        "ftse_value_gbp": 14602785.0
+        "strategy_value_gbp": 14582983.0,
+        "ftse_value_gbp": 14622785.0
       },
       {
         "date": "2026-01-02",
-        "strategy_value_gbp": 14565577.0,
-        "ftse_value_gbp": 14604166.0
+        "strategy_value_gbp": 14585577.0,
+        "ftse_value_gbp": 14624166.0
       },
       {
         "date": "2026-01-05",
-        "strategy_value_gbp": 14572114.0,
-        "ftse_value_gbp": 14609330.0
+        "strategy_value_gbp": 14592114.0,
+        "ftse_value_gbp": 14629330.0
       },
       {
         "date": "2026-01-06",
-        "strategy_value_gbp": 14578729.0,
-        "ftse_value_gbp": 14619500.0
+        "strategy_value_gbp": 14598729.0,
+        "ftse_value_gbp": 14639500.0
       },
       {
         "date": "2026-01-07",
-        "strategy_value_gbp": 14575195.0,
-        "ftse_value_gbp": 14613666.0
+        "strategy_value_gbp": 14595195.0,
+        "ftse_value_gbp": 14633666.0
       },
       {
         "date": "2026-01-08",
-        "strategy_value_gbp": 14580152.0,
-        "ftse_value_gbp": 14613408.0
+        "strategy_value_gbp": 14600152.0,
+        "ftse_value_gbp": 14633408.0
       },
       {
         "date": "2026-01-09",
-        "strategy_value_gbp": 14587683.0,
-        "ftse_value_gbp": 14619637.0
+        "strategy_value_gbp": 14607683.0,
+        "ftse_value_gbp": 14639637.0
       },
       {
         "date": "2026-01-12",
-        "strategy_value_gbp": 14582570.0,
-        "ftse_value_gbp": 14620675.0
+        "strategy_value_gbp": 14602570.0,
+        "ftse_value_gbp": 14640675.0
       },
       {
         "date": "2026-01-13",
-        "strategy_value_gbp": 14583981.0,
-        "ftse_value_gbp": 14619826.0
+        "strategy_value_gbp": 14603981.0,
+        "ftse_value_gbp": 14639826.0
       },
       {
         "date": "2026-01-14",
-        "strategy_value_gbp": 14586400.0,
-        "ftse_value_gbp": 14622979.0
+        "strategy_value_gbp": 14606400.0,
+        "ftse_value_gbp": 14642979.0
       },
       {
         "date": "2026-01-15",
-        "strategy_value_gbp": 14594869.0,
-        "ftse_value_gbp": 14627758.0
+        "strategy_value_gbp": 14614869.0,
+        "ftse_value_gbp": 14647758.0
       },
       {
         "date": "2026-01-16",
-        "strategy_value_gbp": 14592803.0,
-        "ftse_value_gbp": 14627268.0
+        "strategy_value_gbp": 14612803.0,
+        "ftse_value_gbp": 14647268.0
       },
       {
         "date": "2026-01-19",
-        "strategy_value_gbp": 14594432.0,
-        "ftse_value_gbp": 14623919.0
+        "strategy_value_gbp": 14614432.0,
+        "ftse_value_gbp": 14643919.0
       },
       {
         "date": "2026-01-20",
-        "strategy_value_gbp": 14587328.0,
-        "ftse_value_gbp": 14619337.0
+        "strategy_value_gbp": 14607328.0,
+        "ftse_value_gbp": 14639337.0
       },
       {
         "date": "2026-01-21",
-        "strategy_value_gbp": 14591950.0,
-        "ftse_value_gbp": 14620326.0
+        "strategy_value_gbp": 14611950.0,
+        "ftse_value_gbp": 14640326.0
       },
       {
         "date": "2026-01-22",
-        "strategy_value_gbp": 14600541.0,
-        "ftse_value_gbp": 14621974.0
+        "strategy_value_gbp": 14620541.0,
+        "ftse_value_gbp": 14641974.0
       },
       {
         "date": "2026-01-23",
-        "strategy_value_gbp": 14601247.0,
-        "ftse_value_gbp": 14621427.0
+        "strategy_value_gbp": 14621247.0,
+        "ftse_value_gbp": 14641427.0
       },
       {
         "date": "2026-01-26",
-        "strategy_value_gbp": 14609343.0,
-        "ftse_value_gbp": 14621725.0
+        "strategy_value_gbp": 14629343.0,
+        "ftse_value_gbp": 14641725.0
       },
       {
         "date": "2026-01-27",
-        "strategy_value_gbp": 14608358.0,
-        "ftse_value_gbp": 14624376.0
+        "strategy_value_gbp": 14628358.0,
+        "ftse_value_gbp": 14644376.0
       },
       {
         "date": "2026-01-28",
-        "strategy_value_gbp": 14614249.0,
-        "ftse_value_gbp": 14621998.0
+        "strategy_value_gbp": 14634249.0,
+        "ftse_value_gbp": 14641998.0
       },
       {
         "date": "2026-01-29",
-        "strategy_value_gbp": 14623854.0,
-        "ftse_value_gbp": 14622295.0
+        "strategy_value_gbp": 14643854.0,
+        "ftse_value_gbp": 14642295.0
       },
       {
         "date": "2026-01-30",
-        "strategy_value_gbp": 14620728.0,
-        "ftse_value_gbp": 14624393.0
+        "strategy_value_gbp": 14640728.0,
+        "ftse_value_gbp": 14644393.0
       },
       {
         "date": "2026-02-02",
-        "strategy_value_gbp": 14625911.0,
-        "ftse_value_gbp": 14630284.0
+        "strategy_value_gbp": 14645911.0,
+        "ftse_value_gbp": 14650284.0
       },
       {
         "date": "2026-02-03",
-        "strategy_value_gbp": 14624919.0,
-        "ftse_value_gbp": 14628450.0
+        "strategy_value_gbp": 14644919.0,
+        "ftse_value_gbp": 14648450.0
       },
       {
         "date": "2026-02-04",
-        "strategy_value_gbp": 14621300.0,
-        "ftse_value_gbp": 14632678.0
+        "strategy_value_gbp": 14641300.0,
+        "ftse_value_gbp": 14652678.0
       },
       {
         "date": "2026-02-05",
-        "strategy_value_gbp": 14616671.0,
-        "ftse_value_gbp": 14627588.0
+        "strategy_value_gbp": 14636671.0,
+        "ftse_value_gbp": 14647588.0
       },
       {
         "date": "2026-02-06",
-        "strategy_value_gbp": 14620726.0,
-        "ftse_value_gbp": 14630449.0
+        "strategy_value_gbp": 14640726.0,
+        "ftse_value_gbp": 14650449.0
       },
       {
         "date": "2026-02-09",
-        "strategy_value_gbp": 14620838.0,
-        "ftse_value_gbp": 14631117.0
+        "strategy_value_gbp": 14640838.0,
+        "ftse_value_gbp": 14651117.0
       },
       {
         "date": "2026-02-10",
-        "strategy_value_gbp": 14617269.0,
-        "ftse_value_gbp": 14629632.0
+        "strategy_value_gbp": 14637269.0,
+        "ftse_value_gbp": 14649632.0
       },
       {
         "date": "2026-02-11",
-        "strategy_value_gbp": 14615097.0,
-        "ftse_value_gbp": 14635362.0
+        "strategy_value_gbp": 14635097.0,
+        "ftse_value_gbp": 14655362.0
       },
       {
         "date": "2026-02-12",
-        "strategy_value_gbp": 14610349.0,
-        "ftse_value_gbp": 14631454.0
+        "strategy_value_gbp": 14630349.0,
+        "ftse_value_gbp": 14651454.0
       },
       {
         "date": "2026-02-13",
-        "strategy_value_gbp": 14610347.0,
-        "ftse_value_gbp": 14633238.0
+        "strategy_value_gbp": 14630347.0,
+        "ftse_value_gbp": 14653238.0
       },
       {
         "date": "2026-02-16",
-        "strategy_value_gbp": 14605841.0,
-        "ftse_value_gbp": 14634368.0
+        "strategy_value_gbp": 14625841.0,
+        "ftse_value_gbp": 14654368.0
       },
       {
         "date": "2026-02-17",
-        "strategy_value_gbp": 14604962.0,
-        "ftse_value_gbp": 14639682.0
+        "strategy_value_gbp": 14624962.0,
+        "ftse_value_gbp": 14659682.0
       },
       {
         "date": "2026-02-18",
-        "strategy_value_gbp": 14607285.0,
-        "ftse_value_gbp": 14648068.0
+        "strategy_value_gbp": 14627285.0,
+        "ftse_value_gbp": 14668068.0
       },
       {
         "date": "2026-02-19",
-        "strategy_value_gbp": 14610986.0,
-        "ftse_value_gbp": 14643527.0
+        "strategy_value_gbp": 14630986.0,
+        "ftse_value_gbp": 14663527.0
       },
       {
         "date": "2026-02-20",
-        "strategy_value_gbp": 14617324.0,
-        "ftse_value_gbp": 14648246.0
+        "strategy_value_gbp": 14637324.0,
+        "ftse_value_gbp": 14668246.0
       },
       {
         "date": "2026-02-23",
-        "strategy_value_gbp": 14609015.0,
-        "ftse_value_gbp": 14646993.0
+        "strategy_value_gbp": 14629015.0,
+        "ftse_value_gbp": 14666993.0
       },
       {
         "date": "2026-02-24",
-        "strategy_value_gbp": 14604784.0,
-        "ftse_value_gbp": 14646333.0
+        "strategy_value_gbp": 14624784.0,
+        "ftse_value_gbp": 14666333.0
       },
       {
         "date": "2026-02-25",
-        "strategy_value_gbp": 14611183.0,
-        "ftse_value_gbp": 14656102.0
+        "strategy_value_gbp": 14631183.0,
+        "ftse_value_gbp": 14676102.0
       },
       {
         "date": "2026-02-26",
-        "strategy_value_gbp": 14613767.0,
-        "ftse_value_gbp": 14659502.0
+        "strategy_value_gbp": 14633767.0,
+        "ftse_value_gbp": 14679502.0
       },
       {
         "date": "2026-02-27",
-        "strategy_value_gbp": 14615678.0,
-        "ftse_value_gbp": 14664861.0
+        "strategy_value_gbp": 14635678.0,
+        "ftse_value_gbp": 14684861.0
       },
       {
         "date": "2026-03-02",
-        "strategy_value_gbp": 14605556.0,
-        "ftse_value_gbp": 14652968.0
+        "strategy_value_gbp": 14625556.0,
+        "ftse_value_gbp": 14672968.0
       },
       {
         "date": "2026-03-03",
-        "strategy_value_gbp": 14580422.0,
-        "ftse_value_gbp": 14625935.0
+        "strategy_value_gbp": 14600422.0,
+        "ftse_value_gbp": 14645935.0
       },
       {
         "date": "2026-03-04",
-        "strategy_value_gbp": 14590230.0,
-        "ftse_value_gbp": 14634191.0
+        "strategy_value_gbp": 14610230.0,
+        "ftse_value_gbp": 14654191.0
       },
       {
         "date": "2026-03-05",
-        "strategy_value_gbp": 14577524.0,
-        "ftse_value_gbp": 14619438.0
+        "strategy_value_gbp": 14597524.0,
+        "ftse_value_gbp": 14639438.0
       },
       {
         "date": "2026-03-06",
-        "strategy_value_gbp": 14567687.0,
-        "ftse_value_gbp": 14606293.0
+        "strategy_value_gbp": 14587687.0,
+        "ftse_value_gbp": 14626293.0
       },
       {
         "date": "2026-03-09",
-        "strategy_value_gbp": 14548630.0,
-        "ftse_value_gbp": 14600726.0
+        "strategy_value_gbp": 14568630.0,
+        "ftse_value_gbp": 14620726.0
       },
       {
         "date": "2026-03-10",
-        "strategy_value_gbp": 14565503.0,
-        "ftse_value_gbp": 14617726.0
+        "strategy_value_gbp": 14585503.0,
+        "ftse_value_gbp": 14637726.0
       },
       {
         "date": "2026-03-11",
-        "strategy_value_gbp": 14555833.0,
-        "ftse_value_gbp": 14611806.0
+        "strategy_value_gbp": 14575833.0,
+        "ftse_value_gbp": 14631806.0
       },
       {
         "date": "2026-03-12",
-        "strategy_value_gbp": 14549355.0,
-        "ftse_value_gbp": 14606282.0
+        "strategy_value_gbp": 14569355.0,
+        "ftse_value_gbp": 14626282.0
       },
       {
         "date": "2026-03-13",
-        "strategy_value_gbp": 14540476.0,
-        "ftse_value_gbp": 14601781.0
+        "strategy_value_gbp": 14560476.0,
+        "ftse_value_gbp": 14621781.0
       },
       {
         "date": "2026-03-16",
-        "strategy_value_gbp": 14541295.0,
-        "ftse_value_gbp": 14606052.0
+        "strategy_value_gbp": 14561295.0,
+        "ftse_value_gbp": 14626052.0
       },
       {
         "date": "2026-03-17",
-        "strategy_value_gbp": 14542287.0,
-        "ftse_value_gbp": 14613704.0
+        "strategy_value_gbp": 14562287.0,
+        "ftse_value_gbp": 14633704.0
       },
       {
         "date": "2026-03-18",
-        "strategy_value_gbp": 14536868.0,
-        "ftse_value_gbp": 14605056.0
+        "strategy_value_gbp": 14556868.0,
+        "ftse_value_gbp": 14625056.0
       },
       {
         "date": "2026-03-19",
-        "strategy_value_gbp": 14512934.0,
-        "ftse_value_gbp": 14583007.0
+        "strategy_value_gbp": 14532934.0,
+        "ftse_value_gbp": 14603007.0
       },
       {
         "date": "2026-03-20",
-        "strategy_value_gbp": 14504292.0,
-        "ftse_value_gbp": 14570131.0
+        "strategy_value_gbp": 14524292.0,
+        "ftse_value_gbp": 14590131.0
       },
       {
         "date": "2026-03-23",
-        "strategy_value_gbp": 14500539.0,
-        "ftse_value_gbp": 14567509.0
+        "strategy_value_gbp": 14520539.0,
+        "ftse_value_gbp": 14587509.0
       },
       {
         "date": "2026-03-24",
-        "strategy_value_gbp": 14497146.0,
-        "ftse_value_gbp": 14572435.0
+        "strategy_value_gbp": 14517146.0,
+        "ftse_value_gbp": 14592435.0
       },
       {
         "date": "2026-03-25",
-        "strategy_value_gbp": 14509990.0,
-        "ftse_value_gbp": 14585763.0
+        "strategy_value_gbp": 14529990.0,
+        "ftse_value_gbp": 14605763.0
       },
       {
         "date": "2026-03-26",
-        "strategy_value_gbp": 14495348.0,
-        "ftse_value_gbp": 14571467.0
+        "strategy_value_gbp": 14515348.0,
+        "ftse_value_gbp": 14591467.0
       },
       {
         "date": "2026-03-27",
-        "strategy_value_gbp": 14483253.0,
-        "ftse_value_gbp": 14568872.0
+        "strategy_value_gbp": 14503253.0,
+        "ftse_value_gbp": 14588872.0
       },
       {
         "date": "2026-03-30",
-        "strategy_value_gbp": 14490821.0,
-        "ftse_value_gbp": 14584231.0
+        "strategy_value_gbp": 14510821.0,
+        "ftse_value_gbp": 14604231.0
       },
       {
         "date": "2026-03-31",
-        "strategy_value_gbp": 14497267.0,
-        "ftse_value_gbp": 14590511.0
+        "strategy_value_gbp": 14517267.0,
+        "ftse_value_gbp": 14610511.0
       },
       {
         "date": "2026-04-01",
-        "strategy_value_gbp": 14521478.0,
-        "ftse_value_gbp": 14613301.0
+        "strategy_value_gbp": 14541478.0,
+        "ftse_value_gbp": 14633301.0
       },
       {
         "date": "2026-04-02",
-        "strategy_value_gbp": 14516541.0,
-        "ftse_value_gbp": 14619667.0
+        "strategy_value_gbp": 14536541.0,
+        "ftse_value_gbp": 14639667.0
       },
       {
         "date": "2026-04-07",
-        "strategy_value_gbp": 14508768.0,
-        "ftse_value_gbp": 14609021.0
+        "strategy_value_gbp": 14528768.0,
+        "ftse_value_gbp": 14629021.0
       },
       {
         "date": "2026-04-08",
-        "strategy_value_gbp": 14555886.0,
-        "ftse_value_gbp": 14644219.0
+        "strategy_value_gbp": 14575886.0,
+        "ftse_value_gbp": 14664219.0
       },
       {
         "date": "2026-04-09",
-        "strategy_value_gbp": 14553049.0,
-        "ftse_value_gbp": 14641783.0
+        "strategy_value_gbp": 14573049.0,
+        "ftse_value_gbp": 14661783.0
       },
       {
         "date": "2026-04-10",
-        "strategy_value_gbp": 14550615.0,
-        "ftse_value_gbp": 14642164.0
+        "strategy_value_gbp": 14570615.0,
+        "ftse_value_gbp": 14662164.0
       },
       {
         "date": "2026-04-13",
-        "strategy_value_gbp": 14551349.0,
-        "ftse_value_gbp": 14639363.0
+        "strategy_value_gbp": 14571349.0,
+        "ftse_value_gbp": 14659363.0
       },
       {
         "date": "2026-04-14",
-        "strategy_value_gbp": 14571236.0,
-        "ftse_value_gbp": 14645437.0
+        "strategy_value_gbp": 14591236.0,
+        "ftse_value_gbp": 14665437.0
       },
       {
         "date": "2026-04-15",
-        "strategy_value_gbp": 14571148.0,
-        "ftse_value_gbp": 14638882.0
+        "strategy_value_gbp": 14591148.0,
+        "ftse_value_gbp": 14658882.0
       },
       {
         "date": "2026-04-16",
-        "strategy_value_gbp": 14579425.0,
-        "ftse_value_gbp": 14643319.0
+        "strategy_value_gbp": 14599425.0,
+        "ftse_value_gbp": 14663319.0
       },
       {
         "date": "2026-04-17",
-        "strategy_value_gbp": 14599192.0,
-        "ftse_value_gbp": 14655025.0
+        "strategy_value_gbp": 14619192.0,
+        "ftse_value_gbp": 14675025.0
       },
       {
         "date": "2026-04-20",
-        "strategy_value_gbp": 14588007.0,
-        "ftse_value_gbp": 14646177.0
+        "strategy_value_gbp": 14608007.0,
+        "ftse_value_gbp": 14666177.0
       },
       {
         "date": "2026-04-21",
-        "strategy_value_gbp": 14580970.0,
-        "ftse_value_gbp": 14632954.0
+        "strategy_value_gbp": 14600970.0,
+        "ftse_value_gbp": 14652954.0
       },
       {
         "date": "2026-04-22",
-        "strategy_value_gbp": 14575392.0,
-        "ftse_value_gbp": 14630357.0
+        "strategy_value_gbp": 14595392.0,
+        "ftse_value_gbp": 14650357.0
       },
       {
         "date": "2026-04-23",
-        "strategy_value_gbp": 14566373.0,
-        "ftse_value_gbp": 14626654.0
+        "strategy_value_gbp": 14586373.0,
+        "ftse_value_gbp": 14646654.0
       },
       {
         "date": "2026-04-24",
-        "strategy_value_gbp": 14553535.0,
-        "ftse_value_gbp": 14616683.0
+        "strategy_value_gbp": 14573535.0,
+        "ftse_value_gbp": 14636683.0
       },
       {
         "date": "2026-04-27",
-        "strategy_value_gbp": 14551312.0,
-        "ftse_value_gbp": 14610311.0
+        "strategy_value_gbp": 14571312.0,
+        "ftse_value_gbp": 14630311.0
       },
       {
         "date": "2026-04-28",
-        "strategy_value_gbp": 14542185.0,
-        "ftse_value_gbp": 14610103.0
+        "strategy_value_gbp": 14562185.0,
+        "ftse_value_gbp": 14630103.0
       },
       {
         "date": "2026-04-29",
-        "strategy_value_gbp": 14532582.0,
-        "ftse_value_gbp": 14597017.0
+        "strategy_value_gbp": 14552582.0,
+        "ftse_value_gbp": 14617017.0
       },
       {
         "date": "2026-04-30",
-        "strategy_value_gbp": 14541514.0,
-        "ftse_value_gbp": 14614662.0
+        "strategy_value_gbp": 14561514.0,
+        "ftse_value_gbp": 14634662.0
       },
       {
         "date": "2026-05-01",
-        "strategy_value_gbp": 14542006.0,
-        "ftse_value_gbp": 14612754.0
+        "strategy_value_gbp": 14562006.0,
+        "ftse_value_gbp": 14632754.0
       },
       {
         "date": "2026-05-05",
-        "strategy_value_gbp": 14531598.0,
-        "ftse_value_gbp": 14596353.0
+        "strategy_value_gbp": 14551598.0,
+        "ftse_value_gbp": 14616353.0
       },
       {
         "date": "2026-05-06",
-        "strategy_value_gbp": 14554864.0,
-        "ftse_value_gbp": 14621701.0
+        "strategy_value_gbp": 14574864.0,
+        "ftse_value_gbp": 14641701.0
       },
       {
         "date": "2026-05-07",
-        "strategy_value_gbp": 14552512.0,
-        "ftse_value_gbp": 14605564.0
+        "strategy_value_gbp": 14572512.0,
+        "ftse_value_gbp": 14625564.0
       },
       {
         "date": "2026-05-08",
-        "strategy_value_gbp": 14546745.0,
-        "ftse_value_gbp": 14600882.0
+        "strategy_value_gbp": 14566745.0,
+        "ftse_value_gbp": 14620882.0
       },
       {
         "date": "2026-05-11",
-        "strategy_value_gbp": 14542946.0,
-        "ftse_value_gbp": 14603205.0
+        "strategy_value_gbp": 14562946.0,
+        "ftse_value_gbp": 14623205.0
       },
       {
         "date": "2026-05-12",
-        "strategy_value_gbp": 14537187.0,
-        "ftse_value_gbp": 14600485.0
+        "strategy_value_gbp": 14557187.0,
+        "ftse_value_gbp": 14620485.0
       },
       {
         "date": "2026-05-13",
-        "strategy_value_gbp": 14537944.0,
-        "ftse_value_gbp": 14606768.0
+        "strategy_value_gbp": 14557944.0,
+        "ftse_value_gbp": 14626768.0
       },
       {
         "date": "2026-05-14",
-        "strategy_value_gbp": 14541029.0,
-        "ftse_value_gbp": 14613088.0
+        "strategy_value_gbp": 14561029.0,
+        "ftse_value_gbp": 14633088.0
       },
       {
         "date": "2026-05-15",
-        "strategy_value_gbp": 14532492.0,
-        "ftse_value_gbp": 14590493.0
+        "strategy_value_gbp": 14552492.0,
+        "ftse_value_gbp": 14610493.0
       },
       {
         "date": "2026-05-18",
-        "strategy_value_gbp": 14530525.0,
-        "ftse_value_gbp": 14591228.0
+        "strategy_value_gbp": 14550525.0,
+        "ftse_value_gbp": 14611228.0
       },
       {
         "date": "2026-05-19",
-        "strategy_value_gbp": 14545183.0,
-        "ftse_value_gbp": 14614947.0
+        "strategy_value_gbp": 14565183.0,
+        "ftse_value_gbp": 14634947.0
       },
       {
         "date": "2026-05-20",
-        "strategy_value_gbp": 14533019.0,
-        "ftse_value_gbp": 14606292.0
+        "strategy_value_gbp": 14553019.0,
+        "ftse_value_gbp": 14626292.0
       },
       {
         "date": "2026-05-21",
-        "strategy_value_gbp": 14555290.0,
-        "ftse_value_gbp": 14624492.0
+        "strategy_value_gbp": 14575290.0,
+        "ftse_value_gbp": 14644492.0
       },
       {
         "date": "2026-05-22",
-        "strategy_value_gbp": 14570102.0,
-        "ftse_value_gbp": 14628486.0
+        "strategy_value_gbp": 14590102.0,
+        "ftse_value_gbp": 14648486.0
       },
       {
         "date": "2026-05-26",
-        "strategy_value_gbp": 14581052.0,
-        "ftse_value_gbp": 14638501.0
+        "strategy_value_gbp": 14601052.0,
+        "ftse_value_gbp": 14658501.0
       },
       {
         "date": "2026-05-27",
-        "strategy_value_gbp": 14575645.0,
-        "ftse_value_gbp": 14631382.0
+        "strategy_value_gbp": 14595645.0,
+        "ftse_value_gbp": 14651382.0
       },
       {
         "date": "2026-05-28",
-        "strategy_value_gbp": 14557874.0,
-        "ftse_value_gbp": 14621492.0
+        "strategy_value_gbp": 14577874.0,
+        "ftse_value_gbp": 14641492.0
       },
       {
         "date": "2026-05-29",
-        "strategy_value_gbp": 14557240.0,
-        "ftse_value_gbp": 14619457.0
+        "strategy_value_gbp": 14577240.0,
+        "ftse_value_gbp": 14639457.0
       },
       {
         "date": "2026-06-01",
-        "strategy_value_gbp": 14537198.0,
-        "ftse_value_gbp": 14606169.0
+        "strategy_value_gbp": 14557198.0,
+        "ftse_value_gbp": 14626169.0
       },
       {
         "date": "2026-06-02",
-        "strategy_value_gbp": 14540753.0,
-        "ftse_value_gbp": 14612320.0
+        "strategy_value_gbp": 14560753.0,
+        "ftse_value_gbp": 14632320.0
       },
       {
         "date": "2026-06-03",
-        "strategy_value_gbp": 14528168.0,
-        "ftse_value_gbp": 14603062.0
+        "strategy_value_gbp": 14548168.0,
+        "ftse_value_gbp": 14623062.0
       },
       {
         "date": "2026-06-04",
-        "strategy_value_gbp": 14524412.0,
-        "ftse_value_gbp": 14605530.0
+        "strategy_value_gbp": 14544412.0,
+        "ftse_value_gbp": 14625530.0
       },
       {
         "date": "2026-06-05",
-        "strategy_value_gbp": 14531693.0,
-        "ftse_value_gbp": 14607203.0
+        "strategy_value_gbp": 14551693.0,
+        "ftse_value_gbp": 14627203.0
       },
       {
         "date": "2026-06-08",
-        "strategy_value_gbp": 14529232.0,
-        "ftse_value_gbp": 14607215.0
+        "strategy_value_gbp": 14549232.0,
+        "ftse_value_gbp": 14627215.0
       },
       {
         "date": "2026-06-09",
-        "strategy_value_gbp": 14527970.0,
-        "ftse_value_gbp": 14582809.0
+        "strategy_value_gbp": 14547970.0,
+        "ftse_value_gbp": 14602809.0
       },
       {
         "date": "2026-06-10",
-        "strategy_value_gbp": 14533408.0,
-        "ftse_value_gbp": 14585041.0
+        "strategy_value_gbp": 14553408.0,
+        "ftse_value_gbp": 14605041.0
       },
       {
         "date": "2026-06-11",
-        "strategy_value_gbp": 14542543.0,
-        "ftse_value_gbp": 14593607.0
+        "strategy_value_gbp": 14562543.0,
+        "ftse_value_gbp": 14613607.0
       },
       {
         "date": "2026-06-12",
-        "strategy_value_gbp": 14562807.0,
-        "ftse_value_gbp": 14622418.0
+        "strategy_value_gbp": 14582807.0,
+        "ftse_value_gbp": 14642418.0
       },
       {
         "date": "2026-06-15",
-        "strategy_value_gbp": 14580306.0,
-        "ftse_value_gbp": 14631138.0
+        "strategy_value_gbp": 14600306.0,
+        "ftse_value_gbp": 14651138.0
       },
       {
         "date": "2026-06-16",
-        "strategy_value_gbp": 14556414.0,
-        "ftse_value_gbp": 14626420.0
+        "strategy_value_gbp": 14576414.0,
+        "ftse_value_gbp": 14646420.0
       },
       {
         "date": "2026-06-17",
-        "strategy_value_gbp": 14561977.0,
-        "ftse_value_gbp": 14624214.0
+        "strategy_value_gbp": 14581977.0,
+        "ftse_value_gbp": 14644214.0
       },
       {
         "date": "2026-06-18",
-        "strategy_value_gbp": 14560385.0,
-        "ftse_value_gbp": 14618748.0
+        "strategy_value_gbp": 14580385.0,
+        "ftse_value_gbp": 14638748.0
       },
       {
         "date": "2026-06-19",
-        "strategy_value_gbp": 14549920.0,
-        "ftse_value_gbp": 14610436.0
+        "strategy_value_gbp": 14569920.0,
+        "ftse_value_gbp": 14630436.0
       },
       {
         "date": "2026-06-23",
-        "strategy_value_gbp": 14543837.0,
-        "ftse_value_gbp": 14606849.0
+        "strategy_value_gbp": 14563837.0,
+        "ftse_value_gbp": 14626849.0
       },
       {
         "date": "2026-06-24",
-        "strategy_value_gbp": 14558906.0,
-        "ftse_value_gbp": 14611905.0
+        "strategy_value_gbp": 14578806.0,
+        "ftse_value_gbp": 14631855.0
       },
       {
         "date": "2026-06-25",
-        "strategy_value_gbp": 14572785.0,
-        "ftse_value_gbp": 14618806.0
+        "strategy_value_gbp": 14592997.0,
+        "ftse_value_gbp": 14638759.0
       }
     ],
     "summary": {
       "as_of": "2026-06-25",
-      "n_positions": 1450,
-      "capital_deployed_gbp": 14500000.0,
-      "strategy_value_gbp": 14572785.0,
-      "ftse_value_gbp": 14618806.0,
-      "excess_gbp": -46022.0,
+      "n_positions": 1452,
+      "capital_deployed_gbp": 14520000.0,
+      "strategy_value_gbp": 14592997.0,
+      "ftse_value_gbp": 14638759.0,
+      "excess_gbp": -45762.0,
       "excess_pct": -0.31,
       "strategy_trend_30d_pct": -0.1,
       "ftse_trend_30d_pct": -0.1,
@@ -43939,7 +44004,7 @@
       },
       {
         "date": "2025-07-09",
-        "all": 0.45,
+        "all": 0.44,
         "ftse": 0.0,
         "t5": 1.7,
         "t1b": -1.5,
@@ -43979,7 +44044,7 @@
       },
       {
         "date": "2025-07-16",
-        "all": 0.49,
+        "all": 0.48,
         "ftse": 0.0,
         "t5": 1.78,
         "t1b": -1.57,
@@ -44363,7 +44428,7 @@
       },
       {
         "date": "2025-09-23",
-        "all": 0.11,
+        "all": 0.1,
         "ftse": 0.0,
         "t5": 2.22,
         "t1b": -2.63,
@@ -44611,7 +44676,7 @@
       },
       {
         "date": "2025-11-05",
-        "all": -0.25,
+        "all": -0.24,
         "ftse": 0.0,
         "t5": 1.63,
         "t1b": -2.45,
@@ -44875,7 +44940,7 @@
       },
       {
         "date": "2025-12-22",
-        "all": -0.29,
+        "all": -0.28,
         "ftse": 0.0,
         "t5": 1.81,
         "t1b": -2.03,
@@ -44947,7 +45012,7 @@
       },
       {
         "date": "2026-01-07",
-        "all": -0.27,
+        "all": -0.26,
         "ftse": 0.0,
         "t5": 1.79,
         "t1b": -2.75,
@@ -45235,7 +45300,7 @@
       },
       {
         "date": "2026-02-26",
-        "all": -0.32,
+        "all": -0.31,
         "ftse": 0.0,
         "t5": 1.45,
         "t1b": -2.38,
@@ -45507,7 +45572,7 @@
       },
       {
         "date": "2026-04-17",
-        "all": -0.39,
+        "all": -0.38,
         "ftse": 0.0,
         "t5": 2.43,
         "t1b": -2.45,
@@ -45547,7 +45612,7 @@
       },
       {
         "date": "2026-04-24",
-        "all": -0.44,
+        "all": -0.43,
         "ftse": 0.0,
         "t5": 2.46,
         "t1b": -3.16,
@@ -45683,7 +45748,7 @@
       },
       {
         "date": "2026-05-20",
-        "all": -0.51,
+        "all": -0.5,
         "ftse": 0.0,
         "t5": 2.2,
         "t1b": -2.35,
@@ -45897,7 +45962,7 @@
       },
       "all": {
         "label": "All buy signals",
-        "n": 1450
+        "n": 1452
       }
     },
     "pct_by_horizon": {
@@ -46316,7 +46381,7 @@
             -0.07,
             -0.05,
             -0.05,
-            -0.06,
+            -0.05,
             -0.05,
             -0.05,
             -0.06,
@@ -46441,16 +46506,16 @@
             -0.25,
             -0.25,
             -0.25,
-            -0.25,
+            -0.24,
             -0.25,
             -0.26,
             -0.26,
+            -0.27,
             -0.28,
             -0.28,
             -0.28,
             -0.28,
-            -0.28,
-            -0.3,
+            -0.29,
             -0.3,
             -0.31,
             -0.3,
@@ -46483,11 +46548,11 @@
             -0.35,
             -0.35,
             -0.34,
-            -0.34,
+            -0.33,
             -0.34,
             -0.34,
             -0.36,
-            -0.37,
+            -0.36,
             -0.37,
             -0.38,
             -0.38,
@@ -48446,7 +48511,7 @@
             0.11,
             0.11,
             0.1,
-            0.1,
+            0.09,
             0.09,
             0.11,
             0.11,
@@ -48456,14 +48521,14 @@
             0.1,
             0.1,
             0.09,
-            0.1,
-            0.1,
-            0.1,
-            0.1,
-            0.1,
-            0.1,
-            0.1,
-            0.1,
+            0.09,
+            0.09,
+            0.09,
+            0.09,
+            0.09,
+            0.09,
+            0.09,
+            0.09,
             0.09,
             0.09,
             0.09,
@@ -50283,9 +50348,9 @@
             -0.08,
             -0.08,
             -0.08,
-            -0.09,
             -0.08,
             -0.08,
+            -0.08,
             -0.09,
             -0.08,
             -0.09,
@@ -50319,6 +50384,14 @@
             -0.13,
             -0.13,
             -0.13,
+            -0.14,
+            -0.14,
+            -0.14,
+            -0.14,
+            -0.14,
+            -0.14,
+            -0.14,
+            -0.14,
             -0.14,
             -0.14,
             -0.14,
@@ -50328,14 +50401,6 @@
             -0.14,
             -0.15,
             -0.14,
-            -0.14,
-            -0.14,
-            -0.14,
-            -0.14,
-            -0.14,
-            -0.14,
-            -0.15,
-            -0.15,
             -0.14,
             -0.15,
             -0.15,
@@ -50380,7 +50445,7 @@
             -0.27,
             -0.29,
             -0.29,
-            -0.31,
+            -0.3,
             -0.3,
             -0.3,
             -0.3,
@@ -50423,13 +50488,13 @@
             -0.38,
             -0.38,
             -0.38,
-            -0.39,
+            -0.38,
             -0.38,
             -0.4,
             -0.4,
             -0.4,
             -0.4,
-            -0.41,
+            -0.4,
             -0.4,
             -0.42,
             -0.42,
@@ -50799,12 +50864,12 @@
             0.47,
             0.46,
             0.45,
-            0.45,
+            0.44,
             0.41,
             0.44,
             0.43,
             0.46,
-            0.49,
+            0.48,
             0.5,
             0.51,
             0.51,
@@ -50852,7 +50917,7 @@
             -0.02,
             0.05,
             0.05,
-            0.11,
+            0.1,
             0.08,
             0.08,
             0.06,
@@ -50883,7 +50948,7 @@
             -0.2,
             -0.2,
             -0.24,
-            -0.25,
+            -0.24,
             -0.27,
             -0.28,
             -0.42,
@@ -50916,7 +50981,7 @@
             -0.22,
             -0.25,
             -0.3,
-            -0.29,
+            -0.28,
             -0.3,
             -0.29,
             -0.29,
@@ -50925,7 +50990,7 @@
             -0.27,
             -0.26,
             -0.28,
-            -0.27,
+            -0.26,
             -0.23,
             -0.22,
             -0.26,
@@ -50961,7 +51026,7 @@
             -0.26,
             -0.29,
             -0.31,
-            -0.32,
+            -0.31,
             -0.34,
             -0.33,
             -0.31,
@@ -50995,12 +51060,12 @@
             -0.51,
             -0.47,
             -0.44,
-            -0.39,
+            -0.38,
             -0.4,
             -0.36,
             -0.38,
             -0.42,
-            -0.44,
+            -0.43,
             -0.41,
             -0.47,
             -0.44,
@@ -51017,7 +51082,7 @@
             -0.4,
             -0.42,
             -0.48,
-            -0.51,
+            -0.5,
             -0.48,
             -0.4,
             -0.4,
@@ -52889,7 +52954,7 @@
             0.18,
             0.15,
             0.11,
-            0.05,
+            0.04,
             0.03,
             0.01,
             0.0,
@@ -52905,17 +52970,17 @@
             0.23,
             0.27,
             0.32,
-            0.32,
+            0.31,
             0.34,
             0.3,
             0.31,
             0.35,
-            0.33,
+            0.32,
             0.24,
             0.21,
             0.22,
             0.22,
-            0.22,
+            0.21,
             0.19,
             0.19,
             0.17,
@@ -52945,8 +53010,8 @@
             -0.12,
             -0.17,
             -0.09,
-            -0.13,
-            -0.15,
+            -0.12,
+            -0.14,
             -0.11,
             -0.15,
             -0.18,
@@ -52970,7 +53035,7 @@
             -0.18,
             -0.18,
             -0.19,
-            -0.19,
+            -0.18,
             -0.24,
             -0.26,
             -0.23,
@@ -52993,19 +53058,19 @@
             -0.38,
             -0.39,
             -0.37,
-            -0.33,
+            -0.32,
             -0.31,
-            -0.46,
+            -0.45,
             -0.4,
             -0.46,
             -0.47,
             -0.5,
-            -0.53,
+            -0.52,
             -0.51,
             -0.57,
             -0.58,
             -0.6,
-            -0.6,
+            -0.59,
             -0.57,
             -0.58,
             -0.56,
@@ -53013,15 +53078,15 @@
             -0.5,
             -0.51,
             -0.5,
-            -0.51,
+            -0.5,
             -0.54,
-            -0.52,
+            -0.51,
             -0.54,
             -0.59,
             -0.62,
             -0.57,
             -0.51,
-            -0.46,
+            -0.45,
             -0.46,
             -0.41,
             -0.46,
@@ -53035,7 +53100,7 @@
             -0.65,
             -0.67,
             -0.66,
-            -0.62,
+            -0.61,
             -0.63,
             -0.6,
             -0.67,
@@ -53051,7 +53116,7 @@
             -0.6,
             -0.57,
             -0.65,
-            -0.64,
+            -0.63,
             -0.52,
             -0.55,
             -0.56,
@@ -53061,13 +53126,13 @@
             -0.58,
             -0.61,
             -0.58,
-            -0.68,
+            -0.67,
             -0.59,
             -0.51,
             -0.54,
             -0.56,
             -0.6,
-            -0.51,
+            -0.5,
             -0.5,
             -0.6,
             -0.68,
@@ -53078,15 +53143,15 @@
             -0.77,
             -0.85,
             -0.84,
-            -0.88,
             -0.87,
+            -0.86,
             -0.86,
             -0.9,
             -0.81,
             -0.77,
             -0.88,
             -0.92,
-            -0.98,
+            -0.97,
             -0.98,
             -1.01,
             -1.05,
@@ -53097,44 +53162,44 @@
             -1.04,
             -1.06,
             -1.08,
-            -1.07,
-            -1.16,
+            -1.06,
+            -1.15,
             -1.2,
-            -1.24,
             -1.23,
+            -1.22,
             -1.32,
-            -1.24,
-            -1.16,
+            -1.23,
+            -1.15,
             -1.12,
+            -1.17,
             -1.18,
-            -1.18,
-            -1.11,
             -1.1,
-            -1.05,
+            -1.1,
+            -1.04,
             -1.02,
-            -0.98,
+            -0.97,
             -0.87,
             -0.91,
-            -0.96,
-            -0.94,
-            -0.94,
-            -0.99,
-            -0.94,
-            -0.96,
-            -0.96,
+            -0.95,
             -0.93,
+            -0.94,
+            -0.98,
+            -0.94,
+            -0.96,
+            -0.95,
+            -0.92,
             -1.0,
             -0.94,
-            -0.93,
-            -0.97,
+            -0.92,
+            -0.96,
             -1.07,
             -1.09,
             -1.06,
-            -0.95,
+            -0.94,
             -0.95,
             -0.93,
             -0.97,
-            -0.91,
+            -0.9,
             -0.69,
             -0.68,
             -0.82,
@@ -53142,7 +53207,7 @@
             -0.89,
             -0.91,
             -0.96,
-            -1.0,
+            -0.99,
             -1.0,
             -0.85,
             -0.89,
@@ -53150,13 +53215,13 @@
             -0.72,
             -0.79,
             -0.93,
-            -0.82,
+            -0.81,
             -0.87,
             -0.81,
             -0.8,
             -0.85,
             -0.96,
-            -0.86,
+            -0.85,
             -0.84
           ],
           "t4_other_buy": [
@@ -54696,7 +54761,7 @@
             0.11,
             0.11,
             0.07,
-            0.08,
+            0.07,
             0.11,
             0.12,
             0.1,
@@ -54714,7 +54779,7 @@
             0.46,
             0.44,
             0.42,
-            0.46,
+            0.45,
             0.48,
             0.55,
             0.55,
@@ -54741,24 +54806,24 @@
             0.51,
             0.52,
             0.51,
-            0.47,
+            0.46,
             0.41,
             0.43,
-            0.43,
             0.42,
+            0.41,
             0.37,
             0.34,
             0.36,
             0.34,
             0.31,
-            0.3,
+            0.29,
             0.27,
             0.26,
             0.27,
             0.23,
             0.28,
             0.23,
-            0.2,
+            0.19,
             0.21,
             0.2,
             0.18,
@@ -54833,17 +54898,17 @@
             -0.21,
             -0.18,
             -0.18,
-            -0.14,
+            -0.13,
             -0.15,
             -0.13,
             -0.15,
-            -0.17,
-            -0.13,
+            -0.16,
+            -0.12,
             -0.19,
             -0.12,
-            -0.2,
+            -0.19,
             -0.24,
-            -0.31,
+            -0.3,
             -0.28,
             -0.3,
             -0.28,
@@ -54892,13 +54957,13 @@
             -0.38,
             -0.39,
             -0.38,
-            -0.36,
             -0.35,
-            -0.32,
+            -0.35,
+            -0.31,
             -0.25,
             -0.37,
             -0.4,
-            -0.42,
+            -0.41,
             -0.41,
             -0.44,
             -0.5,
@@ -54907,26 +54972,26 @@
             -0.52,
             -0.5,
             -0.53,
-            -0.6,
+            -0.59,
             -0.61,
             -0.61,
             -0.65,
-            -0.7,
+            -0.69,
             -0.69,
             -0.68,
             -0.76,
             -0.73,
             -0.67,
-            -0.69,
+            -0.68,
             -0.67,
-            -0.64,
+            -0.63,
             -0.53,
             -0.46,
             -0.41,
             -0.36,
             -0.35,
             -0.29,
-            -0.33,
+            -0.32,
             -0.37,
             -0.38,
             -0.35,
@@ -54938,8 +55003,8 @@
             -0.47,
             -0.38,
             -0.37,
-            -0.44,
-            -0.47,
+            -0.43,
+            -0.46,
             -0.55,
             -0.59,
             -0.47,
@@ -54954,7 +55019,7 @@
             -0.54,
             -0.57,
             -0.58,
-            -0.6,
+            -0.59,
             -0.61,
             -0.57,
             -0.6,
@@ -55320,12 +55385,12 @@
             0.37,
             0.48,
             0.51,
-            0.47,
+            0.46,
             0.43,
             0.49,
             0.48,
             0.59,
-            0.62,
+            0.61,
             0.69,
             0.72,
             0.72,
@@ -55342,7 +55407,7 @@
             0.57,
             0.55,
             0.51,
-            0.58,
+            0.57,
             0.55,
             0.47,
             0.42,
@@ -55353,7 +55418,7 @@
             0.09,
             0.3,
             0.26,
-            0.33,
+            0.32,
             0.31,
             0.33,
             0.43,
@@ -55361,13 +55426,13 @@
             0.35,
             0.32,
             0.19,
-            0.26,
+            0.25,
             0.26,
             0.22,
             0.29,
             0.1,
             0.12,
-            0.2,
+            0.19,
             0.18,
             0.11,
             0.16,
@@ -55417,14 +55482,14 @@
             -0.43,
             -0.51,
             -0.44,
-            -0.44,
+            -0.43,
             -0.63,
             -0.65,
             -0.73,
-            -0.76,
+            -0.75,
             -0.94,
             -1.04,
-            -1.08,
+            -1.07,
             -1.03,
             -0.94,
             -0.81,
@@ -55439,7 +55504,7 @@
             -0.7,
             -0.75,
             -0.77,
-            -0.77,
+            -0.76,
             -0.77,
             -0.68,
             -0.68,
@@ -55449,30 +55514,30 @@
             -0.69,
             -0.78,
             -0.67,
-            -0.83,
+            -0.82,
             -0.84,
             -0.96,
             -0.9,
             -0.93,
             -0.91,
-            -0.9,
+            -0.89,
             -0.92,
             -0.88,
             -0.84,
             -0.82,
-            -0.97,
+            -0.96,
             -0.86,
             -0.77,
             -0.8,
             -0.84,
-            -0.82,
+            -0.81,
             -0.86,
             -0.78,
             -0.79,
             -0.81,
             -0.85,
             -0.77,
-            -0.61,
+            -0.6,
             -0.58,
             -0.49,
             -0.6,
@@ -55488,16 +55553,16 @@
             -0.73,
             -0.96,
             -0.93,
-            -0.98,
+            -0.97,
             -1.02,
             -1.1,
             -1.25,
-            -1.19,
-            -1.15,
-            -1.21,
-            -1.26,
+            -1.18,
+            -1.14,
+            -1.2,
+            -1.25,
             -1.37,
-            -1.38,
+            -1.37,
             -1.45,
             -1.48,
             -1.45,
@@ -55513,19 +55578,19 @@
             -1.54,
             -1.47,
             -1.41,
-            -1.34,
             -1.33,
-            -1.46,
+            -1.33,
+            -1.45,
             -1.5,
             -1.47,
             -1.59,
             -1.68,
             -1.73,
-            -1.7,
+            -1.69,
             -1.8,
             -1.78,
             -1.67,
-            -1.74,
+            -1.73,
             -1.74,
             -1.7,
             -1.49,
@@ -55537,13 +55602,13 @@
             -1.2,
             -1.26,
             -1.24,
-            -1.22,
-            -1.37,
+            -1.21,
+            -1.36,
             -1.24,
             -1.4,
             -1.34,
             -1.2,
-            -1.22,
+            -1.21,
             -0.99,
             -0.98,
             -1.09,
@@ -55552,11 +55617,11 @@
             -1.4,
             -1.27,
             -1.29,
-            -1.48,
+            -1.47,
             -1.51,
             -1.41,
-            -1.32,
-            -1.36,
+            -1.31,
+            -1.35,
             -1.27,
             -1.26,
             -1.17,
@@ -55571,13 +55636,13 @@
             -1.29,
             -1.46,
             -1.29,
-            -1.54,
+            -1.53,
             -1.47,
             -1.36,
             -1.66,
             -1.47,
             -1.22,
-            -1.05
+            -1.04
           ],
           "t5": [
             0.0,
@@ -57468,18 +57533,18 @@
             -0.17,
             -0.28,
             -0.32,
-            -0.36,
+            -0.35,
             -0.41,
             -0.49,
             -0.48,
             -0.42,
-            -0.5,
+            -0.49,
             -0.54,
             -0.54,
             -0.61,
             -0.53,
             -0.41,
-            -0.46,
+            -0.45,
             -0.31,
             -0.38,
             -0.17,
@@ -57490,11 +57555,11 @@
             0.03,
             0.17,
             0.09,
-            0.08,
+            0.07,
             0.08,
             0.28,
             0.26,
-            -0.39,
+            -0.38,
             -0.22,
             -0.29,
             -0.3,
@@ -57504,16 +57569,16 @@
             0.02,
             0.11,
             0.27,
-            0.4,
+            0.39,
             0.34,
             0.11,
             0.01,
             -0.05,
             -0.0,
-            -0.22,
+            -0.21,
             -0.18,
             -0.22,
-            -0.16,
+            -0.15,
             -0.18,
             -0.19,
             -0.16,
@@ -57534,18 +57599,18 @@
             -0.31,
             -0.27,
             -0.29,
-            -0.45,
-            -0.4,
+            -0.44,
+            -0.39,
             -0.53,
-            -0.5,
+            -0.49,
             -0.61,
             -0.72,
             -0.74,
             -0.77,
-            -0.66,
+            -0.65,
             -0.63,
             -0.59,
-            -0.57,
+            -0.56,
             -0.6,
             -0.69,
             -0.68,
@@ -57554,43 +57619,43 @@
             -0.61,
             -0.59,
             -0.69,
-            -0.67,
+            -0.66,
             -0.66,
             -0.7,
             -0.51,
             -0.56,
             -0.48,
-            -0.55,
+            -0.54,
             -0.53,
             -0.54,
             -0.64,
             -0.5,
             -0.71,
             -0.67,
-            -0.86,
+            -0.85,
             -0.75,
             -0.77,
             -0.75,
-            -0.69,
-            -0.74,
+            -0.68,
+            -0.73,
             -0.65,
             -0.67,
             -0.57,
             -0.73,
-            -0.55,
+            -0.54,
             -0.37,
             -0.48,
             -0.56,
             -0.49,
             -0.48,
             -0.3,
-            -0.39,
+            -0.38,
             -0.49,
             -0.51,
             -0.35,
             -0.11,
             -0.13,
-            -0.14,
+            -0.13,
             -0.29,
             -0.28,
             -0.26,
@@ -57600,48 +57665,48 @@
             -0.55,
             -0.44,
             -0.41,
-            -0.39,
+            -0.38,
             -0.35,
             -0.63,
             -0.43,
             -0.42,
             -0.52,
-            -0.64,
+            -0.63,
             -0.77,
             -0.66,
             -0.71,
+            -0.73,
             -0.74,
-            -0.75,
             -0.95,
             -0.97,
-            -1.07,
+            -1.06,
             -1.12,
-            -1.17,
+            -1.16,
             -1.18,
-            -0.94,
+            -0.93,
             -0.75,
             -0.95,
             -1.08,
+            -1.01,
             -1.02,
-            -1.02,
-            -1.12,
-            -1.22,
-            -1.32,
-            -1.18,
+            -1.11,
+            -1.21,
+            -1.31,
+            -1.17,
             -1.03,
             -0.88,
-            -0.97,
+            -0.96,
             -1.03,
             -1.13,
-            -1.05,
+            -1.04,
             -1.05,
             -0.98,
             -1.1,
-            -1.06,
+            -1.05,
             -1.09,
             -1.06,
-            -1.07,
-            -1.09,
+            -1.06,
+            -1.08,
             -1.12,
             -1.13,
             -0.95,
@@ -57651,8 +57716,8 @@
             -0.83,
             -0.66,
             -0.72,
-            -0.81,
-            -0.79,
+            -0.8,
+            -0.78,
             -0.78,
             -0.96,
             -0.81,
@@ -57666,10 +57731,10 @@
             -0.92,
             -1.01,
             -1.01,
-            -0.76,
+            -0.75,
             -0.77,
             -0.88,
-            -1.04,
+            -1.03,
             -0.87,
             -0.64,
             -0.65,
@@ -57678,20 +57743,20 @@
             -0.66,
             -0.64,
             -0.62,
-            -0.86,
+            -0.85,
             -0.75,
             -0.55,
             -0.69,
             -0.44,
             -0.4,
             -0.6,
-            -0.83,
+            -0.82,
             -0.51,
             -0.73,
-            -0.8,
-            -0.69,
-            -1.0,
-            -0.86,
+            -0.79,
+            -0.68,
+            -0.99,
+            -0.85,
             -0.7,
             -0.62
           ],
@@ -58901,7 +58966,7 @@
             -2.71,
             -3.33,
             -2.86,
-            -2.33
+            -2.17
           ],
           "s1_cluster_buy": [
             0.0,
@@ -59245,14 +59310,14 @@
             0.46,
             0.54,
             0.58,
-            0.49,
+            0.48,
             0.61,
             0.65,
-            0.61,
+            0.6,
             0.57,
             0.61,
             0.6,
-            0.74,
+            0.73,
             0.74,
             0.83,
             0.86,
@@ -59260,8 +59325,8 @@
             0.87,
             0.79,
             0.8,
-            0.79,
-            0.81,
+            0.78,
+            0.8,
             0.72,
             0.66,
             0.54,
@@ -59269,7 +59334,7 @@
             0.6,
             0.7,
             0.68,
-            0.6,
+            0.59,
             0.68,
             0.67,
             0.62,
@@ -59325,7 +59390,7 @@
             -0.05,
             -0.1,
             -0.1,
-            -0.14,
+            -0.13,
             -0.28,
             -0.35,
             -0.29,
@@ -59370,14 +59435,14 @@
             -0.81,
             -0.83,
             -0.71,
-            -0.75,
+            -0.74,
             -0.71,
             -0.75,
             -0.79,
             -0.68,
             -0.81,
-            -0.66,
-            -0.84,
+            -0.65,
+            -0.83,
             -0.9,
             -1.04,
             -0.97,
@@ -59391,13 +59456,13 @@
             -1.15,
             -1.03,
             -0.95,
-            -1.0,
-            -1.07,
+            -0.99,
+            -1.06,
             -1.04,
             -1.12,
             -1.05,
             -1.07,
-            -1.08,
+            -1.07,
             -1.1,
             -1.04,
             -0.85,
@@ -59406,10 +59471,10 @@
             -0.77,
             -0.66,
             -0.56,
-            -0.65,
+            -0.64,
             -0.75,
             -0.79,
-            -0.87,
+            -0.86,
             -0.85,
             -0.97,
             -0.94,
@@ -59418,23 +59483,23 @@
             -1.05,
             -1.07,
             -1.14,
-            -1.24,
+            -1.23,
             -1.42,
             -1.32,
-            -1.33,
+            -1.32,
             -1.37,
             -1.41,
-            -1.53,
+            -1.52,
             -1.54,
-            -1.59,
+            -1.58,
             -1.62,
             -1.57,
             -1.57,
             -1.45,
-            -1.31,
-            -1.46,
-            -1.6,
-            -1.55,
+            -1.3,
+            -1.45,
+            -1.59,
+            -1.54,
             -1.52,
             -1.55,
             -1.66,
@@ -59443,19 +59508,19 @@
             -1.54,
             -1.47,
             -1.49,
-            -1.64,
+            -1.63,
             -1.69,
             -1.66,
-            -1.73,
+            -1.72,
             -1.79,
-            -1.85,
+            -1.84,
             -1.83,
             -1.91,
             -1.87,
             -1.8,
-            -1.88,
+            -1.87,
             -1.83,
-            -1.77,
+            -1.76,
             -1.51,
             -1.39,
             -1.33,
@@ -59467,18 +59532,18 @@
             -1.12,
             -1.08,
             -1.28,
-            -1.13,
-            -1.28,
+            -1.12,
+            -1.27,
             -1.22,
-            -1.0,
-            -1.15,
+            -0.99,
+            -1.14,
             -0.91,
             -0.84,
             -1.0,
             -1.17,
-            -1.38,
+            -1.37,
             -1.42,
-            -1.23,
+            -1.22,
             -1.26,
             -1.46,
             -1.48,
@@ -59491,21 +59556,21 @@
             -1.24,
             -1.24,
             -1.32,
-            -1.29,
+            -1.28,
             -1.24,
-            -1.34,
-            -1.04,
+            -1.33,
+            -1.03,
             -1.06,
             -1.21,
             -1.47,
             -1.34,
-            -1.54,
+            -1.53,
             -1.45,
             -1.37,
-            -1.85,
+            -1.84,
             -1.58,
             -1.45,
-            -1.34
+            -1.33
           ],
           "b1_lone_conviction_buy": [
             0.0,
@@ -59849,9 +59914,9 @@
             0.19,
             0.16,
             0.24,
-            0.35,
+            0.34,
             0.36,
-            0.44,
+            0.43,
             0.45,
             0.37,
             0.48,
@@ -59863,7 +59928,7 @@
             0.59,
             0.61,
             0.69,
-            0.72,
+            0.71,
             0.72,
             0.69,
             0.63,
@@ -59875,7 +59940,7 @@
             0.44,
             0.53,
             0.5,
-            0.59,
+            0.58,
             0.56,
             0.51,
             0.58,
@@ -59892,7 +59957,7 @@
             0.34,
             0.34,
             0.37,
-            0.52,
+            0.51,
             0.51,
             0.44,
             0.4,
@@ -59924,7 +59989,7 @@
             0.24,
             0.35,
             0.3,
-            0.46,
+            0.45,
             0.32,
             0.27,
             0.19,
@@ -59958,34 +60023,34 @@
             -1.1,
             -1.2,
             -1.22,
-            -1.41,
+            -1.4,
             -1.51,
             -1.54,
             -1.43,
             -1.34,
-            -1.28,
+            -1.27,
             -1.23,
             -1.08,
             -1.16,
             -1.23,
-            -1.16,
+            -1.15,
             -0.95,
             -1.01,
-            -0.79,
+            -0.78,
             -0.76,
             -0.84,
             -0.89,
-            -0.97,
+            -0.96,
             -0.96,
             -0.76,
             -0.84,
-            -0.83,
+            -0.82,
             -0.87,
-            -0.91,
+            -0.9,
             -0.83,
             -1.03,
             -0.85,
-            -1.07,
+            -1.06,
             -1.09,
             -1.34,
             -1.23,
@@ -60017,32 +60082,32 @@
             -0.72,
             -0.95,
             -0.87,
-            -1.04,
+            -1.03,
             -1.11,
             -1.22,
-            -1.12,
+            -1.11,
             -1.06,
-            -1.49,
-            -1.46,
-            -1.52,
+            -1.48,
+            -1.45,
+            -1.51,
             -1.57,
             -1.8,
-            -2.04,
-            -1.9,
+            -2.03,
+            -1.89,
             -1.84,
             -2.02,
             -2.11,
-            -2.39,
+            -2.38,
             -2.45,
-            -2.57,
+            -2.56,
             -2.6,
             -2.61,
             -2.58,
-            -2.43,
+            -2.42,
             -2.28,
             -2.72,
-            -2.74,
-            -2.72,
+            -2.73,
+            -2.71,
             -2.72,
             -2.88,
             -2.95,
@@ -60052,32 +60117,32 @@
             -2.54,
             -2.53,
             -2.91,
-            -2.96,
+            -2.95,
             -2.83,
             -3.12,
             -3.41,
-            -3.46,
-            -3.48,
+            -3.45,
+            -3.47,
             -3.74,
             -3.64,
             -3.46,
             -3.54,
             -3.44,
-            -3.33,
+            -3.32,
             -2.95,
-            -2.78,
+            -2.77,
             -2.71,
-            -2.56,
-            -2.6,
-            -2.37,
+            -2.55,
+            -2.59,
+            -2.36,
             -2.34,
             -2.43,
             -2.41,
-            -2.36,
+            -2.35,
             -2.57,
             -2.34,
-            -2.62,
-            -2.49,
+            -2.61,
+            -2.48,
             -2.2,
             -2.24,
             -1.89,
@@ -60085,35 +60150,35 @@
             -1.96,
             -2.39,
             -2.47,
-            -2.35,
+            -2.34,
             -2.22,
             -2.29,
             -2.5,
-            -2.54,
+            -2.53,
             -2.48,
-            -2.41,
-            -2.49,
+            -2.4,
+            -2.48,
             -2.35,
-            -2.42,
+            -2.41,
             -2.27,
-            -2.33,
-            -2.38,
+            -2.32,
+            -2.37,
             -2.54,
-            -2.62,
+            -2.61,
             -2.7,
-            -2.81,
+            -2.8,
             -2.48,
             -2.5,
-            -2.57,
+            -2.56,
             -2.73,
-            -2.4,
+            -2.39,
             -2.88,
             -2.68,
-            -2.48,
+            -2.47,
             -2.8,
             -2.67,
             -2.34,
-            -2.1
+            -2.09
           ],
           "t5": [
             0.0,
@@ -61990,7 +62055,7 @@
             -0.05,
             -0.11,
             -0.12,
-            -0.19,
+            -0.18,
             -0.16,
             -0.23,
             -0.16,
@@ -61999,7 +62064,7 @@
             -0.23,
             -0.16,
             -0.25,
-            -0.17,
+            -0.16,
             -0.13,
             -0.26,
             -0.36,
@@ -62012,7 +62077,7 @@
             -0.49,
             -0.54,
             -0.57,
-            -0.64,
+            -0.63,
             -0.6,
             -0.41,
             -0.47,
@@ -62020,7 +62085,7 @@
             -0.5,
             -0.5,
             -0.39,
-            -0.33,
+            -0.32,
             -0.34,
             -0.28,
             -0.26,
@@ -62036,7 +62101,7 @@
             -0.4,
             -0.42,
             -0.33,
-            -0.34,
+            -0.33,
             -0.31,
             -0.17,
             -0.08,
@@ -62044,17 +62109,17 @@
             0.05,
             -0.05,
             -0.2,
-            -0.11,
+            -0.1,
             0.18,
             -0.08,
             -0.0,
             0.14,
             0.06,
             0.16,
-            0.18,
+            0.17,
             0.14,
             0.42,
-            0.31,
+            0.3,
             0.05,
             0.06,
             0.18,
@@ -62066,19 +62131,19 @@
             -0.33,
             -0.37,
             -0.34,
-            -0.44,
+            -0.43,
             -0.68,
             -0.62,
-            -0.62,
+            -0.61,
             -0.81,
-            -0.78,
+            -0.77,
             -0.98,
             -0.96,
             -1.09,
-            -1.24,
-            -1.16,
+            -1.23,
+            -1.15,
             -1.12,
-            -0.97,
+            -0.96,
             -1.03,
             -0.89,
             -0.76,
@@ -62092,25 +62157,25 @@
             -0.68,
             -0.68,
             -0.67,
-            -0.74,
+            -0.73,
             -0.34,
             -0.58,
             -0.49,
             -0.55,
-            -0.43,
+            -0.42,
             -0.34,
             -0.7,
             -0.42,
             -0.77,
             -0.82,
             -1.16,
-            -0.99,
+            -0.98,
             -1.01,
             -0.95,
-            -0.84,
+            -0.83,
             -0.93,
             -0.73,
-            -0.64,
+            -0.63,
             -0.57,
             -0.88,
             -0.53,
@@ -62132,64 +62197,64 @@
             -0.4,
             -0.7,
             -0.82,
-            -0.91,
-            -1.06,
+            -0.9,
+            -1.05,
             -0.94,
             -0.91,
             -0.72,
             -0.66,
-            -1.16,
+            -1.15,
             -0.9,
             -0.9,
-            -1.05,
-            -1.21,
+            -1.04,
+            -1.2,
             -1.46,
             -1.26,
             -1.35,
             -1.55,
             -1.67,
-            -2.14,
-            -2.16,
+            -2.13,
+            -2.15,
+            -2.22,
             -2.23,
-            -2.24,
-            -2.21,
-            -2.18,
+            -2.2,
+            -2.17,
             -1.76,
             -1.47,
-            -1.95,
-            -2.13,
-            -2.09,
+            -1.94,
+            -2.12,
+            -2.08,
             -2.03,
-            -2.15,
             -2.14,
-            -2.17,
-            -1.85,
+            -2.14,
+            -2.16,
+            -1.84,
             -1.61,
-            -1.35,
-            -1.41,
-            -1.7,
-            -1.81,
-            -1.53,
+            -1.34,
+            -1.4,
+            -1.69,
+            -1.8,
+            -1.52,
             -1.86,
-            -2.04,
+            -2.03,
             -2.18,
-            -2.2,
-            -2.4,
-            -2.29,
+            -2.19,
+            -2.39,
+            -2.28,
             -2.09,
-            -2.18,
-            -2.01,
+            -2.17,
+            -2.0,
             -1.92,
             -1.49,
             -1.41,
-            -1.31,
-            -1.28,
+            -1.3,
+            -1.27,
             -1.28,
             -0.87,
-            -0.84,
-            -1.04,
-            -1.02,
-            -0.9,
+            -0.83,
+            -1.03,
+            -1.01,
+            -0.89,
             -1.09,
             -0.81,
             -1.14,
@@ -62197,18 +62262,18 @@
             -0.66,
             -0.97,
             -0.65,
-            -0.54,
+            -0.53,
             -0.66,
-            -1.24,
             -1.23,
+            -1.22,
             -1.15,
             -0.86,
             -0.89,
-            -1.06,
+            -1.05,
             -1.24,
             -1.11,
             -0.87,
-            -0.95,
+            -0.94,
             -0.84,
             -0.92,
             -0.58,
@@ -62216,7 +62281,7 @@
             -0.44,
             -0.75,
             -0.7,
-            -0.5,
+            -0.49,
             -0.74,
             -0.42,
             -0.39,
@@ -63437,7 +63502,7 @@
             -4.24,
             -4.91,
             -4.32,
-            -3.74
+            -3.58
           ],
           "s1_cluster_buy": [
             0.0,
@@ -63766,7 +63831,7 @@
             0.13,
             0.12,
             0.11,
-            0.12,
+            0.11,
             0.07,
             0.08,
             0.11,
@@ -63777,7 +63842,7 @@
             0.26,
             0.21,
             0.29,
-            0.44,
+            0.43,
             0.46,
             0.54,
             0.58,
@@ -63786,7 +63851,7 @@
             0.65,
             0.61,
             0.57,
-            0.62,
+            0.61,
             0.61,
             0.73,
             0.74,
@@ -63801,22 +63866,22 @@
             0.74,
             0.67,
             0.56,
-            0.67,
+            0.66,
             0.62,
             0.72,
             0.7,
-            0.6,
+            0.59,
             0.69,
             0.69,
             0.62,
             0.57,
             0.47,
             0.4,
-            0.45,
+            0.44,
             0.3,
             0.14,
             0.31,
-            0.3,
+            0.29,
             0.35,
             0.33,
             0.34,
@@ -63863,7 +63928,7 @@
             0.12,
             0.02,
             -0.17,
-            -0.29,
+            -0.28,
             -0.24,
             -0.06,
             -0.03,
@@ -63874,9 +63939,9 @@
             -0.36,
             -0.55,
             -0.6,
+            -0.68,
+            -0.7,
             -0.69,
-            -0.7,
-            -0.7,
             -0.72,
             -1.02,
             -1.18,
@@ -63884,164 +63949,164 @@
             -1.02,
             -1.39,
             -1.45,
-            -1.56,
-            -1.56,
-            -1.78,
-            -1.89,
+            -1.55,
+            -1.55,
+            -1.77,
+            -1.88,
             -1.9,
             -1.72,
             -1.63,
             -1.47,
             -1.35,
-            -1.2,
+            -1.19,
             -1.34,
             -1.37,
             -1.29,
             -1.11,
-            -1.22,
+            -1.21,
             -0.97,
             -0.97,
             -1.0,
             -1.11,
-            -1.17,
+            -1.16,
             -1.15,
             -0.86,
-            -1.03,
+            -1.02,
             -0.96,
             -1.03,
             -1.06,
             -0.91,
             -1.18,
-            -0.97,
+            -0.96,
             -1.21,
             -1.33,
             -1.62,
             -1.5,
-            -1.55,
+            -1.54,
             -1.5,
-            -1.43,
+            -1.42,
             -1.53,
             -1.41,
             -1.36,
             -1.41,
-            -1.72,
+            -1.71,
             -1.47,
             -1.34,
-            -1.51,
+            -1.5,
             -1.58,
             -1.65,
             -1.73,
-            -1.55,
+            -1.54,
             -1.53,
             -1.53,
-            -1.63,
+            -1.62,
             -1.49,
             -1.07,
-            -1.02,
+            -1.01,
             -0.84,
             -1.08,
             -0.88,
-            -0.81,
+            -0.8,
             -1.04,
             -1.26,
             -1.31,
             -1.39,
             -1.41,
-            -1.59,
+            -1.58,
             -1.48,
             -1.36,
-            -1.83,
-            -1.65,
+            -1.82,
+            -1.64,
             -1.68,
             -1.81,
             -2.03,
-            -2.33,
-            -2.11,
-            -2.14,
             -2.32,
-            -2.36,
-            -2.66,
-            -2.8,
-            -2.85,
-            -2.85,
-            -2.82,
-            -2.89,
+            -2.11,
+            -2.13,
+            -2.32,
+            -2.35,
             -2.65,
+            -2.79,
+            -2.85,
+            -2.85,
+            -2.81,
+            -2.88,
+            -2.64,
             -2.4,
-            -2.89,
+            -2.88,
             -3.09,
-            -3.05,
+            -3.04,
             -3.05,
             -3.14,
-            -3.29,
-            -3.36,
-            -3.17,
+            -3.28,
+            -3.35,
+            -3.16,
             -3.0,
             -2.85,
-            -2.92,
+            -2.91,
             -3.3,
-            -3.41,
-            -3.21,
+            -3.4,
+            -3.2,
             -3.39,
-            -3.67,
-            -3.72,
-            -3.84,
-            -4.1,
+            -3.66,
+            -3.71,
+            -3.83,
+            -4.09,
             -3.94,
-            -3.86,
-            -3.94,
+            -3.85,
+            -3.93,
             -3.74,
             -3.61,
             -3.2,
-            -2.98,
-            -2.83,
-            -2.7,
-            -2.73,
-            -2.46,
-            -2.4,
+            -2.97,
+            -2.82,
+            -2.69,
+            -2.72,
+            -2.45,
+            -2.39,
+            -2.52,
             -2.53,
-            -2.54,
+            -2.46,
+            -2.75,
             -2.46,
             -2.76,
-            -2.46,
-            -2.77,
             -2.62,
             -2.31,
-            -2.58,
+            -2.57,
             -2.17,
             -1.98,
-            -2.18,
+            -2.17,
             -2.56,
             -2.8,
             -2.72,
             -2.46,
-            -2.58,
+            -2.57,
             -2.78,
-            -2.82,
+            -2.81,
             -2.83,
             -2.71,
-            -2.82,
+            -2.81,
             -2.62,
             -2.65,
-            -2.48,
+            -2.47,
             -2.5,
             -2.61,
-            -2.71,
-            -2.69,
-            -2.61,
+            -2.7,
+            -2.68,
+            -2.6,
             -2.73,
             -2.34,
-            -2.42,
-            -2.54,
-            -2.85,
+            -2.41,
+            -2.53,
+            -2.84,
             -2.58,
             -3.1,
-            -2.8,
+            -2.79,
             -2.61,
-            -3.12,
-            -2.93,
+            -3.11,
+            -2.92,
             -2.69,
-            -2.53
+            -2.51
           ],
           "b1_lone_conviction_buy": [
             0.0,
@@ -64382,8 +64447,8 @@
             0.09,
             0.1,
             0.11,
-            0.2,
-            0.17,
+            0.19,
+            0.16,
             0.24,
             0.35,
             0.36,
@@ -64392,7 +64457,7 @@
             0.37,
             0.48,
             0.51,
-            0.48,
+            0.47,
             0.44,
             0.5,
             0.49,
@@ -64409,7 +64474,7 @@
             0.6,
             0.55,
             0.45,
-            0.55,
+            0.54,
             0.51,
             0.6,
             0.57,
@@ -64434,7 +64499,7 @@
             0.35,
             0.22,
             0.31,
-            0.33,
+            0.32,
             0.26,
             0.29,
             0.02,
@@ -64483,22 +64548,22 @@
             -0.55,
             -0.63,
             -0.71,
-            -0.69,
+            -0.68,
             -0.67,
             -0.65,
             -0.91,
-            -1.06,
+            -1.05,
             -0.94,
             -0.83,
             -1.17,
             -1.14,
-            -1.26,
+            -1.25,
             -1.27,
             -1.46,
             -1.59,
             -1.64,
             -1.57,
-            -1.47,
+            -1.46,
             -1.41,
             -1.37,
             -1.19,
@@ -64512,11 +64577,11 @@
             -0.99,
             -1.02,
             -1.05,
-            -0.99,
+            -0.98,
             -0.79,
             -0.85,
             -0.83,
-            -0.91,
+            -0.9,
             -0.93,
             -0.84,
             -1.07,
@@ -64530,19 +64595,19 @@
             -1.26,
             -1.35,
             -1.25,
-            -1.07,
+            -1.06,
             -0.93,
             -1.28,
             -0.97,
             -0.78,
-            -0.93,
+            -0.92,
             -0.96,
             -0.94,
-            -1.15,
+            -1.14,
             -0.95,
-            -0.95,
+            -0.94,
             -0.98,
-            -1.08,
+            -1.07,
             -0.9,
             -0.4,
             -0.33,
@@ -64556,100 +64621,100 @@
             -0.97,
             -1.07,
             -1.22,
-            -1.04,
-            -0.96,
+            -1.03,
+            -0.95,
             -1.73,
-            -1.8,
-            -1.98,
+            -1.79,
+            -1.97,
             -2.21,
-            -2.6,
+            -2.59,
             -2.96,
             -2.69,
             -2.53,
             -2.9,
-            -3.13,
-            -3.73,
-            -3.77,
-            -4.1,
-            -4.17,
-            -4.14,
+            -3.12,
+            -3.72,
+            -3.76,
+            -4.09,
+            -4.16,
+            -4.13,
             -4.02,
             -3.81,
-            -3.68,
+            -3.67,
             -4.43,
             -4.31,
             -4.29,
-            -4.34,
-            -4.63,
-            -4.73,
-            -4.91,
-            -4.7,
-            -4.49,
-            -4.15,
-            -4.05,
-            -4.67,
-            -4.77,
+            -4.33,
             -4.62,
+            -4.73,
+            -4.9,
+            -4.69,
+            -4.48,
+            -4.15,
+            -4.04,
+            -4.66,
+            -4.77,
+            -4.61,
             -5.27,
-            -5.83,
-            -6.01,
-            -5.94,
-            -6.5,
-            -6.26,
-            -5.64,
+            -5.82,
+            -6.0,
+            -5.93,
+            -6.49,
+            -6.25,
+            -5.63,
             -5.74,
-            -5.44,
-            -5.19,
-            -4.56,
+            -5.43,
+            -5.18,
+            -4.55,
             -4.16,
-            -4.17,
+            -4.16,
             -3.67,
-            -3.87,
+            -3.86,
             -3.51,
             -3.59,
-            -3.67,
-            -3.67,
+            -3.66,
+            -3.66,
             -3.56,
-            -3.94,
-            -3.55,
-            -4.0,
+            -3.93,
+            -3.54,
+            -3.99,
             -3.55,
             -2.92,
-            -2.96,
+            -2.95,
             -2.0,
             -2.16,
-            -2.29,
+            -2.28,
             -3.22,
             -3.29,
             -3.03,
             -2.79,
             -2.91,
             -3.43,
-            -3.27,
+            -3.26,
             -3.38,
-            -3.28,
+            -3.27,
             -3.35,
-            -2.92,
             -2.91,
-            -2.63,
-            -2.79,
-            -2.89,
-            -3.17,
-            -3.32,
-            -3.71,
-            -3.84,
+            -2.91,
+            -2.62,
+            -2.78,
+            -2.88,
+            -3.16,
+            -3.31,
+            -3.7,
+            -3.83,
             -3.31,
             -3.17,
             -3.33,
-            -3.47,
+            -3.46,
             -2.74,
-            -3.35,
-            -3.18,
+            -3.34,
+            -3.17,
             -2.86,
             -3.27,
             -3.29,
             -2.84,
-            -2.65
+            -2.64
           ],
           "t5": [
             0.0,
@@ -66494,7 +66559,7 @@
             0.09,
             0.1,
             0.15,
-            0.19,
+            0.18,
             0.15,
             0.11,
             0.05,
@@ -66531,22 +66596,22 @@
             -0.25,
             -0.19,
             -0.17,
+            -0.28,
             -0.29,
-            -0.29,
-            -0.22,
+            -0.21,
             -0.29,
             -0.19,
-            -0.17,
+            -0.16,
             -0.35,
-            -0.44,
-            -0.44,
+            -0.43,
+            -0.43,
             -0.51,
-            -0.56,
+            -0.55,
             -0.62,
             -0.62,
             -0.51,
             -0.57,
-            -0.62,
+            -0.61,
             -0.65,
             -0.7,
             -0.67,
@@ -66561,14 +66626,14 @@
             -0.38,
             -0.35,
             -0.36,
-            -0.52,
+            -0.51,
             -0.46,
             -0.5,
             -0.38,
             -0.36,
             -0.46,
             -0.36,
-            -0.45,
+            -0.44,
             -0.54,
             -0.54,
             -0.45,
@@ -66582,7 +66647,7 @@
             -0.35,
             -0.26,
             0.02,
-            -0.23,
+            -0.22,
             -0.14,
             -0.0,
             -0.06,
@@ -66598,151 +66663,151 @@
             -0.13,
             -0.33,
             -0.38,
-            -0.41,
+            -0.4,
             -0.39,
             -0.44,
             -0.41,
             -0.51,
             -0.76,
-            -0.72,
+            -0.71,
             -0.71,
             -0.92,
-            -0.86,
+            -0.85,
             -1.06,
             -1.04,
             -1.22,
-            -1.43,
-            -1.32,
+            -1.42,
+            -1.31,
             -1.39,
-            -1.25,
+            -1.24,
             -1.3,
             -1.18,
             -1.03,
             -1.16,
-            -1.21,
-            -1.16,
+            -1.2,
+            -1.15,
             -1.0,
             -1.09,
             -0.77,
             -0.65,
-            -0.83,
-            -0.89,
+            -0.82,
+            -0.88,
             -0.78,
-            -0.89,
+            -0.88,
             -0.44,
-            -0.72,
+            -0.71,
             -0.65,
             -0.72,
             -0.54,
             -0.35,
             -0.73,
-            -0.46,
+            -0.45,
             -0.82,
-            -0.9,
-            -1.32,
+            -0.89,
+            -1.31,
             -1.05,
-            -1.1,
-            -1.01,
+            -1.09,
+            -1.0,
             -0.75,
             -0.84,
-            -0.68,
+            -0.67,
             -0.61,
             -0.63,
-            -0.98,
-            -0.45,
-            -0.08,
+            -0.97,
+            -0.44,
+            -0.07,
             -0.46,
             -0.52,
-            -0.68,
+            -0.67,
             -0.58,
             -0.34,
             -0.5,
             -0.77,
-            -0.73,
+            -0.72,
             -0.46,
             0.13,
             0.1,
             0.06,
             -0.24,
             -0.25,
-            -0.45,
-            -0.91,
+            -0.44,
+            -0.9,
             -1.34,
-            -1.36,
-            -1.46,
-            -1.22,
+            -1.35,
+            -1.45,
+            -1.21,
             -1.07,
             -0.79,
             -0.65,
             -1.62,
             -1.31,
-            -1.52,
+            -1.51,
             -1.81,
-            -2.09,
-            -2.54,
-            -2.22,
-            -2.32,
-            -2.62,
-            -2.88,
-            -3.86,
-            -3.91,
-            -3.99,
-            -4.18,
-            -4.2,
-            -4.11,
-            -3.5,
-            -3.19,
-            -4.03,
-            -4.14,
-            -4.04,
-            -4.03,
-            -4.22,
-            -4.36,
-            -4.59,
+            -2.08,
+            -2.53,
+            -2.21,
+            -2.31,
+            -2.61,
+            -2.87,
+            -3.85,
+            -3.9,
+            -3.98,
             -4.17,
-            -3.93,
-            -3.4,
-            -3.43,
-            -3.96,
-            -4.14,
-            -3.74,
+            -4.19,
             -4.1,
-            -4.52,
-            -5.02,
-            -5.01,
-            -5.46,
-            -5.16,
-            -4.7,
-            -4.62,
-            -4.11,
-            -3.89,
+            -3.49,
             -3.18,
-            -2.98,
-            -2.92,
-            -2.73,
-            -2.86,
-            -2.34,
+            -4.02,
+            -4.12,
+            -4.02,
+            -4.02,
+            -4.21,
+            -4.35,
+            -4.58,
+            -4.16,
+            -3.92,
+            -3.39,
+            -3.42,
+            -3.94,
+            -4.13,
+            -3.73,
+            -4.09,
+            -4.51,
+            -5.01,
+            -4.99,
+            -5.45,
+            -5.14,
+            -4.69,
+            -4.6,
+            -4.1,
+            -3.88,
+            -3.17,
+            -2.97,
+            -2.91,
+            -2.72,
+            -2.85,
+            -2.33,
             -2.39,
-            -2.58,
+            -2.57,
             -2.6,
-            -2.37,
-            -2.71,
+            -2.36,
+            -2.7,
             -2.16,
-            -2.62,
-            -2.18,
+            -2.61,
+            -2.17,
             -1.79,
-            -2.35,
-            -1.26,
+            -2.34,
+            -1.25,
             -1.25,
             -1.4,
-            -2.42,
-            -2.63,
-            -2.57,
-            -2.13,
-            -2.24,
+            -2.41,
+            -2.62,
+            -2.56,
+            -2.12,
+            -2.23,
             -2.61,
-            -2.61,
-            -2.71,
+            -2.6,
+            -2.7,
             -2.36,
             -2.37,
             -1.88,
@@ -66762,7 +66827,7 @@
             -1.04,
             -1.0,
             -0.54,
-            -0.82,
+            -0.81,
             -1.24,
             -0.52,
             -0.7
@@ -67973,7 +68038,7 @@
             -4.39,
             -4.78,
             -4.05,
-            -3.39
+            -3.23
           ],
           "s1_cluster_buy": [
             0.0,
@@ -68295,7 +68360,7 @@
             0.07,
             0.06,
             0.1,
-            0.14,
+            0.13,
             0.12,
             0.12,
             0.11,
@@ -68328,26 +68393,26 @@
             0.75,
             0.84,
             0.87,
-            0.9,
+            0.89,
             0.88,
             0.78,
             0.83,
             0.81,
             0.83,
-            0.75,
-            0.69,
+            0.74,
+            0.68,
             0.57,
             0.68,
             0.63,
             0.73,
-            0.71,
+            0.7,
             0.59,
             0.68,
             0.69,
             0.61,
             0.57,
             0.48,
-            0.41,
+            0.4,
             0.45,
             0.29,
             0.14,
@@ -68360,9 +68425,9 @@
             0.46,
             0.33,
             0.26,
-            0.12,
+            0.11,
             0.2,
-            0.28,
+            0.27,
             0.17,
             0.23,
             -0.09,
@@ -68414,7 +68479,7 @@
             -0.73,
             -0.74,
             -0.75,
-            -1.07,
+            -1.06,
             -1.23,
             -1.08,
             -1.04,
@@ -68425,159 +68490,159 @@
             -1.86,
             -2.01,
             -2.05,
-            -1.92,
+            -1.91,
             -1.81,
-            -1.67,
+            -1.66,
             -1.54,
             -1.33,
-            -1.46,
-            -1.56,
+            -1.45,
+            -1.55,
             -1.57,
             -1.38,
-            -1.48,
+            -1.47,
             -1.14,
             -1.13,
-            -1.21,
+            -1.2,
             -1.28,
             -1.29,
             -1.19,
             -0.89,
             -1.05,
             -0.97,
-            -1.07,
-            -1.09,
+            -1.06,
+            -1.08,
             -0.9,
             -1.25,
-            -1.02,
-            -1.33,
+            -1.01,
+            -1.32,
             -1.46,
-            -1.89,
-            -1.74,
+            -1.88,
+            -1.73,
             -1.81,
             -1.74,
-            -1.64,
-            -1.74,
+            -1.63,
+            -1.73,
             -1.61,
-            -1.49,
-            -1.46,
-            -1.86,
-            -1.42,
+            -1.48,
+            -1.45,
+            -1.85,
+            -1.41,
             -1.25,
             -1.45,
             -1.53,
             -1.54,
             -1.73,
             -1.54,
+            -1.52,
             -1.53,
-            -1.54,
             -1.58,
-            -1.37,
+            -1.36,
             -0.81,
             -0.71,
             -0.48,
             -0.7,
             -0.33,
             -0.5,
-            -0.88,
+            -0.87,
             -1.34,
             -1.25,
-            -1.43,
-            -1.48,
+            -1.42,
+            -1.47,
             -1.7,
             -1.49,
-            -1.28,
+            -1.27,
             -2.19,
-            -1.95,
+            -1.94,
             -2.11,
-            -2.49,
+            -2.48,
             -2.91,
-            -3.39,
-            -3.05,
+            -3.38,
+            -3.04,
             -2.98,
-            -3.4,
+            -3.39,
             -3.54,
-            -4.28,
-            -4.44,
-            -4.73,
-            -4.79,
+            -4.27,
+            -4.43,
+            -4.72,
+            -4.78,
+            -4.63,
             -4.64,
-            -4.65,
-            -4.31,
-            -4.02,
-            -4.98,
-            -5.07,
-            -5.01,
-            -5.01,
-            -5.21,
-            -5.49,
-            -5.72,
-            -5.42,
-            -5.23,
-            -4.86,
+            -4.3,
+            -4.01,
+            -4.97,
+            -5.06,
+            -5.0,
+            -5.0,
+            -5.2,
+            -5.48,
+            -5.71,
+            -5.41,
+            -5.22,
             -4.85,
-            -5.5,
-            -5.67,
-            -5.37,
-            -5.9,
-            -6.42,
-            -6.64,
-            -6.76,
-            -7.31,
-            -6.91,
+            -4.84,
+            -5.49,
+            -5.65,
+            -5.36,
+            -5.89,
             -6.41,
-            -6.57,
-            -6.02,
-            -5.74,
-            -5.01,
-            -4.53,
-            -4.42,
-            -3.95,
+            -6.63,
+            -6.75,
+            -7.29,
+            -6.9,
+            -6.39,
+            -6.55,
+            -6.01,
+            -5.73,
+            -5.0,
+            -4.52,
+            -4.41,
+            -3.94,
             -4.09,
-            -3.68,
+            -3.67,
             -3.69,
-            -3.82,
-            -3.86,
-            -3.7,
-            -4.17,
-            -3.64,
-            -4.14,
+            -3.81,
+            -3.85,
+            -3.69,
+            -4.16,
+            -3.63,
+            -4.13,
             -3.61,
-            -3.01,
-            -3.51,
-            -2.36,
+            -3.0,
+            -3.5,
+            -2.35,
             -2.25,
             -2.47,
-            -3.42,
-            -3.76,
-            -3.55,
-            -3.07,
-            -3.26,
-            -3.76,
-            -3.51,
+            -3.41,
             -3.75,
+            -3.54,
+            -3.06,
+            -3.25,
+            -3.75,
+            -3.5,
+            -3.74,
             -3.57,
-            -3.67,
+            -3.66,
             -3.1,
-            -3.04,
-            -2.67,
-            -2.71,
+            -3.03,
+            -2.66,
+            -2.7,
             -2.91,
             -3.05,
-            -3.01,
-            -3.12,
-            -3.33,
+            -3.0,
+            -3.11,
+            -3.32,
             -2.63,
             -2.59,
             -2.85,
-            -3.2,
+            -3.19,
             -2.6,
             -3.31,
             -3.05,
-            -2.75,
-            -3.43,
-            -3.36,
+            -2.74,
+            -3.42,
+            -3.35,
             -2.96,
-            -2.98
+            -2.96
           ],
           "b1_lone_conviction_buy": [
             0.0,
@@ -68903,7 +68968,7 @@
       "t3_ned_buy": {
         "label": "T3 NED",
         "color": "#047857",
-        "n": 329
+        "n": 330
       },
       "t4_other_buy": {
         "label": "T4 Other",
@@ -68933,7 +68998,7 @@
       "f1_first_time_buy": {
         "label": "F1 First Buy",
         "color": "#9333ea",
-        "n": 992
+        "n": 994
       },
       "b1_lone_conviction_buy": {
         "label": "B1 Conviction",
@@ -68942,7 +69007,7 @@
       }
     }
   },
-  "total_companies": 644,
+  "total_companies": 648,
   "pending_classification": 0,
   "capital_deployed": {
     "weeks": [
@@ -68973,7 +69038,7 @@
       94585.0,
       89798.0,
       84367.0,
-      73894.0
+      74894.0
     ],
     "small": [
       33873.0,
@@ -68988,7 +69053,7 @@
       35236.0,
       36349.0,
       41888.0,
-      39888.0
+      40888.0
     ],
     "large": [
       44392.0,
@@ -69005,8 +69070,8 @@
       42479.0,
       34006.0
     ],
-    "ma3m_all": 80141.0,
-    "ma3m_small": 33786.0,
+    "ma3m_all": 80218.0,
+    "ma3m_small": 33863.0,
     "ma3m_large": 46355.0,
     "all_count": [
       143,
@@ -69021,7 +69086,7 @@
       187,
       178,
       159,
-      138
+      140
     ],
     "small_count": [
       62,
@@ -69036,7 +69101,7 @@
       67,
       70,
       76,
-      72
+      74
     ],
     "large_count": [
       81,
@@ -69053,8 +69118,8 @@
       83,
       66
     ],
-    "ma3m_all_count": 152.7,
-    "ma3m_small_count": 62.8,
+    "ma3m_all_count": 152.8,
+    "ma3m_small_count": 63.0,
     "ma3m_large_count": 89.8
   },
   "conviction_top10": [
