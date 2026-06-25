@@ -717,11 +717,13 @@ def iter_archive(start_date: str, end_date: str) -> Iterator[dict]:
                 filing_url, rns_id, headline = m.group(1), m.group(2), m.group(3).strip()
                 if filing_url.startswith("/"):
                     filing_url = BASE_URL + filing_url
-                is_pdmr = bool(_PDMR_URL_HINT_RE.search(filing_url)) or any(
-                    h in headline.lower() for h in _PDMR_HEADLINE_HINTS
-                )
-                if not is_pdmr:
-                    continue
+                # B-196: the advanced-search query is already scoped to the
+                # directors-dealings category, so the restrictive URL/headline
+                # hint gate below was redundant double-filtering that silently
+                # dropped real director buys with non-standard slugs/headlines
+                # (e.g. GANA "Director Share Purchase" -> /director-share-purchase-/,
+                # which matched neither _PDMR_URL_HINT_RE nor _PDMR_HEADLINE_HINTS).
+                # Keep ONLY the same fail-open headline check the index path uses.
                 if not _row_is_pdmr(headline):
                     continue
                 page_rns_ids.append(rns_id)

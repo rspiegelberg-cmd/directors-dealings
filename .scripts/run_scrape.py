@@ -338,9 +338,11 @@ def run(args) -> int:
                         seen_ids.add(_rid)
                         yield _r
                 except Exception as _e:  # noqa: BLE001 - soft backstop
-                    if verbose:
-                        print(f"  ! discovery source '{_name}' error "
-                              f"(continuing): {_e!r}")
+                    # B-196: log UNCONDITIONALLY (not only --verbose) so a
+                    # raising advanced-search /draw endpoint is visible in the
+                    # daily CI log instead of silently leaving only iter_index.
+                    print(f"[run_scrape] discovery source '{_name}' failed "
+                          f"(continuing): {_e!r}")
                     continue
 
         for row in _discover_rows():
