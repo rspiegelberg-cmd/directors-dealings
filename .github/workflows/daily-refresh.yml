@@ -1,11 +1,17 @@
 name: Daily refresh — Directors Dealings
 
-# M4 (B-185/B-186): every morning, run the pipeline against Supabase, rebuild the
-# dashboard, and commit the result back so Vercel auto-deploys. The live company
-# pages read Supabase directly, so they're current the moment the pipeline writes;
-# this job refreshes the static index / performance pages too.
+# B-194 local-compute flow. The heavy steps (eval_signals/backtest) are far too
+# slow over the network to eu-west-1 Supabase (they timed out at 45-60min), so
+# the daily job now:
+#   1. DOWNLOADS Supabase -> a fresh local SQLite on the runner,
+#   2. RUNS the full pipeline in-process against that local copy (DD_FORCE_SQLITE),
+#   3. UPLOADS the changed tables back to Supabase (the durable store),
+#   4. commits the rebuilt static pages for Vercel.
+# Proven by b194-test.yml: a 30-47min timeout became a ~6min clean run.
+# The live front/company pages read Supabase directly, so they are current the
+# moment the upload finishes.
 #
-# Run it by hand any time from the Actions tab → this workflow → "Run workflow".
+# Run by hand any time: Actions tab -> this workflow -> "Run workflow".
 
 on:
   schedule:
@@ -13,16 +19,16 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: write                 # needed to push the rebuilt outputs/ back
+  contents: write
 
 concurrency:
   group: daily-refresh
-  cancel-in-progress: false       # never interrupt a run that's writing to the DB
+  cancel-in-progress: false       # never interrupt a run mid-upload
 
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 30           # local compute finishes in minutes; 30 = margin
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,19 +41,29 @@ jobs:
       - name: Install dependencies
         run: pip install requests beautifulsoup4 pandas "psycopg[binary]"
 
-      - name: Run pipeline against Supabase
-        id: pipeline
-        continue-on-error: true   # a soft data-quality audit shouldn't block the
-                                  # deploy; the commit step only pushes if the
-                                  # dashboard actually changed (real crashes leave
-                                  # it unchanged → no-op).
+      - name: Download Supabase -> local SQLite
         env:
           DD_DATABASE_URL: ${{ secrets.DD_DATABASE_URL }}
+        run: python .scripts/download_from_postgres.py
+
+      - name: Run pipeline on LOCAL SQLite (in-process, fast)
+        id: pipeline
+        continue-on-error: true   # a soft data-quality audit shouldn't hard-fail
+                                  # the run; the upload is gated on success below.
+        env:
+          DD_FORCE_SQLITE: "1"    # compute against the local copy, not the network
           DD_FMP_API_KEY: ${{ secrets.DD_FMP_API_KEY }}
           PYTHONDONTWRITEBYTECODE: "1"
         run: python .scripts/refresh_all.py
 
+      - name: Upload results -> Supabase
+        if: steps.pipeline.outcome == 'success'
+        env:
+          DD_DATABASE_URL: ${{ secrets.DD_DATABASE_URL }}
+        run: python .scripts/migrate_to_postgres.py
+
       - name: Commit & push rebuilt dashboard
+        if: always()
         run: |
           git config user.name  "directors-dealings-bot"
           git config user.email "actions@users.noreply.github.com"
@@ -56,11 +72,12 @@ jobs:
             echo "No dashboard changes to commit."
           else
             git commit -m "Daily refresh $(date -u +%Y-%m-%dT%H:%MZ)"
+            git pull --rebase --autostash origin main || true
             git push
             echo "Pushed refreshed dashboard — Vercel will redeploy."
           fi
 
-      - name: Surface pipeline failure (after deploy attempt)
-        if: steps.pipeline.outcome == 'failure'
+      - name: Surface pipeline failure (so a skipped upload is never silent)
+        if: steps.pipeline.outcome != 'success'
         run: |
-          echo "::warning::refresh_all exited non-zero (likely the data-quality audit). The DB and dashboard were still updated where possible; review the pipeline step log."
+          echo "::warning::refresh_all did not exit clean (outcome=${{ steps.pipeline.outcome }}); upload to Supabase was SKIPPED to avoid pushing a bad state. Review the pipeline log."
