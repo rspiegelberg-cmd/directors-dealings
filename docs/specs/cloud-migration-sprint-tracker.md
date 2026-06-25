@@ -3,9 +3,9 @@
 **Living status board.** Detail for every B-NNN is in `cloud-migration-execution-plan.md`. Update the **Status** column as work moves; mark gates ✅ when passed. Issues continue the project's B-NNN sequence (next free = **B-172**) and carry the usual agent labels for Linear.
 
 **Status legend:** ⬜ Todo · 🟦 In Progress · ✅ Done · ⛔ Blocked · ⏸ Deferred
-**Overall:** 🟢 LIVE URL — https://directors-dealings.vercel.app/. Data in Supabase; **company pages are live + working** (direct browser read). M0–M3 done.
-⚠️ **M4 BLOCKED — architecture pivot (2026-06-23).** The cloud pipeline CANNOT reliably rebuild/publish the front page: heavy compute (`eval_signals` >45min, `backtest` >60min) is too slow on US GitHub runners against eu-west-1 Supabase (thousands of small queries × transatlantic latency). The `rendered_pages` publish approach is **abandoned**. **Decision: rebuild the front page as a live, client-side direct-read page** (like the company pages) → **new Sprint M6** (spec: `live-front-page-spec.md`). Daily-refresh reliability gets its own re-architecture task (compute on runner-local SQLite, bulk-sync to Supabase). **Do NOT delete local files** until the live front page ships AND the daily refresh is reliable.
-**Linear:** synced 2026-06-22 — 6 milestones + 18 issues. B-NNN→DIR map at the bottom.
+**Overall:** 🟢 LIVE + SELF-RUNNING — https://directors-dealings.vercel.app/ (and the GitHub Pages twin). Data in Supabase; front + company pages read it directly in the browser. **M0–M4, M6 + DR all done (2026-06-25).** The 6am job downloads→computes-local→uploads in ~6 min, plus a manual ↻ Refresh button. **Remaining: M5 decommission only** (B-188 retire FUSE notes, B-189 archive local DB) — parked until the daily refresh has run unattended cleanly for ~a week.
+✅ **M4 reliability SOLVED (2026-06-23 pivot, shipped 2026-06-25).** The direct-against-Supabase pipeline timed out (eval_signals >45min / backtest >60min over transatlantic latency); the `rendered_pages` publish approach was abandoned. Fix: front page rebuilt as a live client-side direct-read page (M6), and the daily refresh re-architected to compute on runner-local SQLite then bulk-sync to Supabase (B-194), with a race-proof push. **Local files NOT yet deleted** — see M5.
+**Linear:** synced 2026-06-25 — all delivered issues Done; B-190–197 added (DIR-127–131). B-NNN→DIR map at the bottom.
 **Environment:** Supabase project `directors-dealings` — ref `mmiaiauybzsdcbrrcxfc`, host `db.mmiaiauybzsdcbrrcxfc.supabase.co`, region eu-west-1, Postgres 17.6. Driveable directly via the connected Supabase connector.
 
 > **Critical path:** everything is gated on **B-173** (does cloud-IP scraping work from GitHub Actions?). The existing local SQLite + GitHub Pages system stays fully working until **M5**, so this can pause or roll back at any gate.
@@ -65,21 +65,21 @@
 
 | Status | B-ID | Item | Agent label | Pri | Pts |
 |--------|------|------|-------------|-----|-----|
-| ⬜ | B-182 | Vercel lift-and-shift static `outputs/` (Gate 2a) | `agent:dashboard-designer` | P1 | 2 |
-| ⬜ | B-183 | Dynamic `company.html` template + Supabase fetch | `agent:dashboard-designer` | P1 | 5 |
-| ⬜ | B-184 | Cut over + remove `pending_review.json` (Gate 2b) | `agent:dashboard-designer` | P1 | 2 |
+| ✅ | B-182 | Vercel lift-and-shift static `outputs/` (Gate 2a) — site live | `agent:dashboard-designer` | P1 | 2 |
+| ✅ | B-183 | Dynamic `company.html` template + Supabase fetch | `agent:dashboard-designer` | P1 | 5 |
+| ✅ | B-184 | Cut over + remove `pending_review.json` (Gate 2b) — 880 static pages gone | `agent:dashboard-designer` | P1 | 2 |
 
-**Gate M3:** ⬜ 2a static-live · ⬜ 2b template-live (bundle 48 MB → ~one template).
+**Gate M3:** ✅ 2a static-live · ✅ 2b template-live (bundle 48 MB → one dynamic template).
 
 ## Sprint M4 — Cloud pipeline on GitHub Actions — *"Cloud Migration — M4 Cloud Pipeline"*
 
 | Status | B-ID | Item | Agent label | Pri | Pts |
 |--------|------|------|-------------|-----|-----|
-| ⬜ | B-185 | Daily cron workflow + Vercel deploy hook | `agent:general-purpose` | P1 | 3 |
-| ⬜ | B-186 | Incremental refresh (rolling window + scoped eval) | `agent:general-purpose` | P1 | 3 |
-| ⬜ | B-187 | Secrets to Actions/Vercel; anon key only on front end | `agent:general-purpose` | P1 | 1 |
+| ✅ | B-185 | Daily cron workflow + auto-deploy — `daily-refresh.yml` live (delivered via the B-194 local-compute rewrite) | `agent:general-purpose` | P1 | 3 |
+| ✅ | B-186 | Incremental refresh — rolling window (`_compute_scrape_days`) + idempotent upserts; satisfied by B-194 | `agent:general-purpose` | P1 | 3 |
+| ✅ | B-187 | Secrets in Actions (DD_DATABASE_URL, DD_FMP_API_KEY) + Supabase (GITHUB_TOKEN); front end uses publishable key only | `agent:general-purpose` | P1 | 1 |
 
-**Gate M4:** ⬜ full daily refresh runs with the PC off; site updates.
+**Gate M4:** ✅ full daily refresh runs with the PC off; site updates (~6 min run, verified).
 
 ## Sprint M5 — Decommission + docs — *"Cloud Migration — M5 Decommission"*
 
@@ -99,12 +99,12 @@ Replaces the abandoned pipeline-render/`rendered_pages` approach. Full detail in
 
 | Status | B-ID | Item | Agent label | Pri | Pts |
 |--------|------|------|-------------|-----|-----|
-| ⬜ | B-190 | Phase 1 — `public_recent_dealings_v` + This Week table + active clusters + top tiles (client-side, reuse company-page code) | `agent:dashboard-designer` | P1 | 5 |
+| ✅ | B-190 | Phase 1 DONE — live front page (This Week table + active clusters + top tiles) reading Supabase directly in the browser; `company.html` rebuilt to parity. DIR-127. | `agent:dashboard-designer` | P1 | 5 |
 | ✅ | B-191 | Phase 2 DONE — Capital-Deployed chart (client-side, `public_capital_monthly_v`) + Conviction panel. Conviction shipped first as a client-side port of conviction.py; now B-194 populates `conviction_scores`, so UPGRADED to read the REAL graded scores via new `public_conviction_v` (all 6 factors incl. Earn/Past), with the client-side estimate as fallback. Awaiting push. | `agent:dashboard-designer` | P1 | 3 |
 | ⬜ | B-192 | Phase 3 — polish/parity (brewing clusters, sparklines, mobile, paper P&L tile) | `agent:dashboard-designer` | P2 | 2 |
-| 🟦 | B-193 | Remove dead publish path. **DONE so far**: `build_dashboard` no longer renders/writes `outputs/index.html` (the daily build was regenerating the old static page and clobbering the live one → merge conflict 2026-06-25; now skipped). **Remaining (low pri, cosmetic)**: delete the now-unused `_publish_live_index`/`_live_shell_html` funcs, drop `rebuild-pages.yml` + `rendered_pages` table/view. | `agent:general-purpose` | P1 | 2 |
+| ✅ | B-193 | DONE — `build_dashboard` no longer writes `outputs/index.html`; removed `_publish_live_index`/`_live_shell_html`; dropped Supabase `rendered_pages` table/view. DIR-129. | `agent:general-purpose` | P1 | 2 |
 
-**Gate M6:** ⬜ front page live + current with all panels, no pipeline dependency for display.
+**Gate M6:** ✅ front page live + current with all panels, no pipeline dependency for display. (B-192 polish remains as an optional enhancement.)
 
 ## Sprint DR — Daily-refresh reliability (compute re-architecture) — *NEW 2026-06-23*
 
@@ -114,22 +114,24 @@ latency problem. The front page (M6) fixes *display*; this fixes *data freshness
 | Status | B-ID | Item | Agent label | Pri | Pts |
 |--------|------|------|-------------|-----|-----|
 | ✅ | B-194 | **DONE + LIVE 2026-06-25.** Daily run #7 (full flow) GREEN: downloaded → computed → uploaded in ~6min. **conviction_scores 0→162 rows** (window 06-25), signals refreshed (2751), data current to 06-25. The 6am job is now self-sufficient — signals + conviction refresh automatically. Heavy compute on runner-LOCAL SQLite (download→compute DD_FORCE_SQLITE→upload). **DESIGNED** (infra-review, low-risk, mostly reuse) — design: `b194-local-compute-design.md`. **Phase 1 DONE + PASS** (Rupert ran `download_from_postgres.py` 2026-06-25 — all 12 tables parity OK, incl. prices 784,812; bug fixed = set DD_FORCE_SQLITE before db.migrate so it builds a sqlite schema while DD_DATABASE_URL drives the psycopg source). **Phase 3a PROVEN 2026-06-25**: b194-test.yml ran **Success in 6m 8s, CLEAN (no exit-1)** — full pipeline (scrape→signals→backtest→build) completed vs the old 30-47min timeout. **Phase 3b DONE (code)**: `daily-refresh.yml` rewritten to the full flow (download → refresh_all DD_FORCE_SQLITE → migrate_to_postgres upload [gated on pipeline success] → commit; job timeout 120→30). Next: Rupert push + trigger Daily refresh ONCE (this one DOES write back) → verify upload parity + signals refreshed, then the 6am schedule is self-sufficient. **This is the fix for the whole reliability problem** — signals/conviction will refresh automatically. | `agent:general-purpose` | P1 | 8 |
-| ⬜ | B-195 | Interim safety net — alert (email) if a scheduled daily run fails or publishes stale | `agent:general-purpose` | P2 | 1 |
-| 🟦 | B-196 | Scraper coverage gap (CTA/KLSO/GANA real director buys missed). **DIAGNOSED**: not the parser (all 3 parse to clean BUYs) — it's DISCOVERY: daily run read only 5 index pages, so filings off those pages were never fetched. v1 (20 pages + archive backstop) DIDN'T land it: 2nd audit found the archive (a) dies silently on the `/draw` AJAX endpoint, and (b) had a REDUNDANT URL/headline gate (scrape_investegate.py:720-724) that dropped GANA's non-standard "Director Share Purchase"/`/director-share-purchase-/` form. **FIX v2 CODED**: removed the redundant archive gate (keep only the fail-open `_row_is_pdmr` the index uses) + made the backstop log loudly (run_scrape.py). Awaiting push + scrape re-test. Cheap confirm: `python .scripts/discover_preview.py --from 2026-06-20 --to 2026-06-25 --max-pages 20`. | `agent:data-integrity-auditor` | P1 | 2 |
+| ✅ | B-195 | DONE — covered free by GitHub's built-in Actions-failure email notifications (no token/code needed). Noted alongside B-197/DIR-131. | `agent:general-purpose` | P2 | 1 |
+| ✅ | B-196 | DONE + LIVE — **corrected diagnosis: NOT discovery, NOT exclusion.** The 3 buys (CTA/KLSO/GANA) were discovered + fetched but the PARSER dropped them on non-standard RNS layouts (labels "Name of entity"/"Full name of person Dealing", nested `Price (p)`/`Volume(s)` pence-in-header, inline price/vol, sub-penny). Fixed `parse_pdmr.py` (`_extract_via_aggregate_table`); all 3 ingested to Supabase + verified. DIR-130. | `agent:data-integrity-auditor` | P1 | 2 |
 
-**Gate DR:** ⬜ scheduled 6am run completes reliably in the cloud, PC off, signals fresh.
+**Gate DR:** ✅ scheduled run completes reliably in the cloud (~6 min), PC off, signals + conviction fresh.
 
 ## Progress summary
 
-| Sprint | Done / total | Pts done / total | Gate |
-|--------|--------------|------------------|------|
-| M0 | 0 / 3 | 0 / 6 | ⬜ |
-| M1 | 0 / 4 | 0 / 11 | ⬜ |
-| M2 | 0 / 3 | 0 / 9 | ⬜ |
-| M3 | 0 / 3 | 0 / 9 | ⬜ |
-| M4 | 0 / 3 | 0 / 7 | ⬜ |
-| M5 | 0 / 2 | 0 / 3 | ⬜ |
-| **Total** | **0 / 18** | **0 / 45** | — |
+| Sprint | Done / total | Gate |
+|--------|--------------|------|
+| M0 | 3 / 3 | ✅ |
+| M1 | 4 / 4 | ✅ |
+| M2 | 3 / 3 | ✅ |
+| M3 | 3 / 3 | ✅ |
+| M4 | 3 / 3 | ✅ |
+| M6 | 3 / 4 | ✅ (B-192 polish optional, open) |
+| DR | 3 / 3 | ✅ |
+| M5 | 0 / 2 | ⬜ parked (B-188, B-189 — wait ~a week) |
+| **Total** | **22 / 24** | live + self-running; only M5 cleanup left |
 
 ## B-NNN → Linear ID map (synced 2026-06-22)
 
@@ -142,4 +144,6 @@ latency problem. The front page (M6) fixes *display*; this fixes *data freshness
 | B-176 | DIR-105 | | B-182 | DIR-111 | | B-188 | DIR-117 |
 | B-177 | DIR-106 | | B-183 | DIR-112 | | B-189 | DIR-118 |
 
-All 18 issues are in **Backlog** under the 6 "Cloud Migration — M*" milestones. To begin, say *"start sprint M0"* (moves M0 issues to Todo / a cycle) — cycles are created in the Linear UI, then issues assigned via the `directors-dealings-pm` skill.
+**M6 + DR (added 2026-06-25):** B-190 → DIR-127 · B-194 → DIR-128 · B-193 → DIR-129 · B-196 → DIR-130 · B-197 → DIR-131. (B-191 folded into DIR-127; B-192 open, no ticket yet; B-195 covered free, noted in DIR-131.)
+
+**Status 2026-06-25:** migration complete and live — all delivered issues are **Done** in Linear. Only **M5 decommission** remains open (B-188/DIR-117 retire FUSE notes, B-189/DIR-118 archive local DB), parked until the daily refresh has run unattended cleanly for ~a week. B-192 (front-page polish) is an optional enhancement.
