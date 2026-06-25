@@ -1000,7 +1000,9 @@ _BOILERPLATE_DIRECTOR_RE = re.compile(
 # below uses two strict passes (Layout-B-explicit first, then
 # Layout-A 2-cell 'Name') to keep these disambiguated.
 _LABEL_COMPANY_EXPLICIT_RE = re.compile(
-    r"^\s*(?:full\s+name\s+of\s+(?:the\s+)?entity|issuer\s+name|name\s+of\s+(?:the\s+)?issuer)\s*$",
+    r"^\s*(?:full\s+name\s+of\s+(?:the\s+)?entity"
+    r"|name\s+of\s+(?:the\s+)?entity"
+    r"|issuer\s+name|name\s+of\s+(?:the\s+)?issuer)\s*$",
     re.IGNORECASE,
 )
 _LABEL_NAME_RE = re.compile(r"^\s*name\s*$", re.IGNORECASE)
@@ -1773,10 +1775,20 @@ def _parse_table_date(cell: str) -> str | None:
 
 # KV labels used by the aggregate template. Anchored ^...$ so a partial
 # in-prose hit can't match.
-_LABEL_PDMR_NAME_RE = re.compile(r"^\s*name\s*$", re.IGNORECASE)
+# B-196 (2026-06-25): some MAR-template issuers label the PDMR-name row
+# "Full name of person Dealing" / "Full name of person dealing" instead of
+# the bare "Name" (CT Automotive 9632038). Accept that variant so the
+# aggregate path can resolve the director from the detail KV block.
+_LABEL_PDMR_NAME_RE = re.compile(
+    r"^\s*(?:name|full\s+name\s+of\s+(?:the\s+)?person(?:\s+dealing)?)\s*$",
+    re.IGNORECASE,
+)
 _LABEL_POSITION_RE = re.compile(r"^\s*position\s*/?\s*status\s*$", re.IGNORECASE)
+# B-196: tolerate the trailing-"s" plural the Gana Media template uses
+# ("Price(s) and volumes(s)", rns 9634964) in addition to the canonical
+# "Price(s) and volume(s)".
 _LABEL_PRICE_VOL_RE = re.compile(
-    r"^\s*price\s*\(s\)\s*(?:and|&)\s*volume\s*\(s\)\s*$",
+    r"^\s*price\s*\(s\)\s*(?:and|&)\s*volumes?\s*\(s\)\s*$",
     re.IGNORECASE,
 )
 _LABEL_AGG_VOLUME_RE = re.compile(
@@ -1787,9 +1799,17 @@ _LABEL_TX_DATE_RE = re.compile(
     r"^\s*date\s+of\s+(?:the\s+)?transaction\s*$", re.IGNORECASE
 )
 # Header recognisers for the nested tranche sub-table.
+# B-196 (2026-06-25): the headers also appear as "Price (p)" / "Price(s)"
+# and "Volume(s)" / "Volumes(s)" (CT Automotive 9632038, Gana Media
+# 9634964). Tolerate an optional unit/plural suffix in parentheses (and the
+# stray trailing "s" Gana uses) so these tranche tables are recognised.
 _TRANCHE_HDR_DATE_RE = re.compile(r"^\s*date\s*$", re.IGNORECASE)
-_TRANCHE_HDR_PRICE_RE = re.compile(r"^\s*price\s*$", re.IGNORECASE)
-_TRANCHE_HDR_VOLUME_RE = re.compile(r"^\s*volume\s*$", re.IGNORECASE)
+_TRANCHE_HDR_PRICE_RE = re.compile(
+    r"^\s*prices?\s*(?:\([^)]*\))?\s*$", re.IGNORECASE
+)
+_TRANCHE_HDR_VOLUME_RE = re.compile(
+    r"^\s*volumes?\s*(?:\([^)]*\))?\s*$", re.IGNORECASE
+)
 
 
 def _find_aggregate_tranche_table(soup):
@@ -1822,6 +1842,40 @@ def _find_aggregate_tranche_table(soup):
     return None, None
 
 
+# B-196 (2026-06-25): inline "Price: 3.25p Volume: 229,499 ..." cell parser.
+# Some MAR-template issuers (Kelso 9630876) write the price/volume pair as
+# free text inside the "c) Price(s) and volume(s)" KV cell with no nested
+# sub-table. Two labelled sub-strings — "Price: <val>" and "Volume: <val>" —
+# let us scope each number to its own label so a stray figure elsewhere in
+# the cell can't be mis-read. Returns (price_gbp, shares); either may be 0.
+# Price token: a single number with optional currency/pence markers, captured
+# up to (but not into) the "Volume" label so the two figures never cross.
+_INLINE_PRICE_RE = re.compile(
+    r"Price\s*\(?s?\)?\s*[:\-]?\s*"
+    r"([£$€]?\s*\d[\d,]*(?:\.\d+)?\s*(?:p|pence|gbp|usd|eur)?)",
+    re.IGNORECASE,
+)
+_INLINE_VOLUME_RE = re.compile(
+    r"Volumes?\s*\(?s?\)?\s*[:\-]?\s*(\d[\d,]*)",
+    re.IGNORECASE,
+)
+
+
+def _parse_inline_price_volume(cell: str) -> tuple:
+    """Parse a free-text 'Price: .. Volume: ..' KV cell into (price_gbp, shares)."""
+    if not cell:
+        return 0.0, 0
+    price_gbp = 0.0
+    shares = 0
+    mp = _INLINE_PRICE_RE.search(cell)
+    if mp:
+        price_gbp, _w = _parse_price_cell(mp.group(1))
+    mv = _INLINE_VOLUME_RE.search(cell)
+    if mv:
+        shares, _w = _parse_volume_cell(mv.group(1))
+    return price_gbp, shares
+
+
 def _extract_via_aggregate_table(html: str) -> tuple:
     """Year-as-shares refix Step B — table-aware aggregate / tranche-sum.
 
@@ -1851,47 +1905,75 @@ def _extract_via_aggregate_table(html: str) -> tuple:
 
     soup = BeautifulSoup(html, "html.parser")
 
-    # Must have the price/volume KV label AND a nested tranche table to be
-    # this template. If either is missing, defer to the standard paths.
-    if not _find_kv_in_soup(soup, _LABEL_PRICE_VOL_RE):
-        return None, None
+    # This is the MAR Article 19 template if EITHER the "Price(s) and
+    # volume(s)" KV label is present OR a bare Price|Volume tranche sub-table
+    # is found. B-196 (2026-06-25): some issuers label the price/volume row
+    # differently — CT Automotive (9632038) uses "Number of shared acquired
+    # or disposed of" — so the KV-label gate alone dropped a real filing to
+    # the legacy year-bleeding path. The nested Price|Volume tranche table is
+    # itself a reliable signal of this template, so accept either anchor.
+    has_pv_label = bool(_find_kv_in_soup(soup, _LABEL_PRICE_VOL_RE))
     tranche_table, header_cells = _find_aggregate_tranche_table(soup)
-    if tranche_table is None:
+    if tranche_table is None and not has_pv_label:
         return None, None
 
-    # Column map for the tranche sub-table.
+    # Column map for the tranche sub-table (only when one was found).
     col: dict = {}
-    for i, ct in enumerate(header_cells):
-        if "date" not in col and _TRANCHE_HDR_DATE_RE.match(ct):
-            col["date"] = i
-        elif "price" not in col and _TRANCHE_HDR_PRICE_RE.match(ct):
-            col["price"] = i
-        elif "volume" not in col and _TRANCHE_HDR_VOLUME_RE.match(ct):
-            col["volume"] = i
-    if "price" not in col or "volume" not in col:
-        return None, None
+    # B-196: the per-share price unit can live in the column HEADER rather
+    # than each cell ("Price (p)" with bare "30.60" cells — CT Automotive).
+    # Detect a pence-denominated price header so bare numeric cells are
+    # converted pence->pounds instead of being read as whole pounds.
+    price_header_is_pence = False
+    if header_cells is not None:
+        for i, ct in enumerate(header_cells):
+            if "date" not in col and _TRANCHE_HDR_DATE_RE.match(ct):
+                col["date"] = i
+            elif "price" not in col and _TRANCHE_HDR_PRICE_RE.match(ct):
+                col["price"] = i
+                if re.search(r"\(\s*p(?:ence)?\s*\)", ct, re.IGNORECASE):
+                    price_header_is_pence = True
+            elif "volume" not in col and _TRANCHE_HDR_VOLUME_RE.match(ct):
+                col["volume"] = i
 
-    tranche_rows = tranche_table.find_all("tr")[1:]  # skip header
     tranche_volumes: list = []
     tranche_prices: list = []
     tranche_dates: list = []
-    for tr in tranche_rows:
-        cells = [c.get_text(" ", strip=True) for c in tr.find_all(["th", "td"])]
-        if not cells or all(not c.strip() for c in cells):
-            continue
-        max_idx = max(col.values())
-        if len(cells) <= max_idx:
-            continue
-        v, _vw = _parse_volume_cell(cells[col["volume"]])
-        p, _pw = _parse_price_cell(cells[col["price"]])
-        if v <= 0:
-            continue
-        tranche_volumes.append(v)
-        tranche_prices.append(p)
-        if "date" in col:
-            d = _parse_table_date(cells[col["date"]])
-            if d:
-                tranche_dates.append(d)
+    if tranche_table is not None and "price" in col and "volume" in col:
+        tranche_rows = tranche_table.find_all("tr")[1:]  # skip header
+        for tr in tranche_rows:
+            cells = [c.get_text(" ", strip=True) for c in tr.find_all(["th", "td"])]
+            if not cells or all(not c.strip() for c in cells):
+                continue
+            max_idx = max(col.values())
+            if len(cells) <= max_idx:
+                continue
+            v, _vw = _parse_volume_cell(cells[col["volume"]])
+            price_cell = cells[col["price"]]
+            # B-196: a bare numeric price under a "(p)" header is pence.
+            if price_header_is_pence and not re.search(
+                r"[£$€]|\bp\b|pence|gbp|usd|eur", price_cell, re.IGNORECASE
+            ):
+                price_cell = price_cell.strip() + " pence"
+            p, _pw = _parse_price_cell(price_cell)
+            if v <= 0:
+                continue
+            tranche_volumes.append(v)
+            tranche_prices.append(p)
+            if "date" in col:
+                d = _parse_table_date(cells[col["date"]])
+                if d:
+                    tranche_dates.append(d)
+
+    # B-196: inline price/volume fallback. Some issuers (Kelso 9630876) put
+    # the data as free text in the "c) Price(s) and volume(s)" KV cell with
+    # NO nested sub-table: "Price: 3.25p Volume: 229,499 Ordinary Shares".
+    # When no tranche rows were collected, parse that cell directly.
+    if not tranche_volumes and has_pv_label:
+        pv_cell = _find_kv_in_soup(soup, _LABEL_PRICE_VOL_RE) or ""
+        ip, iv = _parse_inline_price_volume(pv_cell)
+        if iv > 0:
+            tranche_volumes.append(iv)
+            tranche_prices.append(ip)
 
     if not tranche_volumes:
         return None, None

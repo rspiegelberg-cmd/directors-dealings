@@ -454,7 +454,12 @@ class TestBuildOrchestrator(unittest.TestCase):
                 )
             finally:
                 db_mod.DB_PATH = orig_path
-            self.assertTrue((out_dir / "index.html").exists())
+            # M6 (live front page): build_dashboard no longer writes index.html.
+            # The front page is a hand-maintained live page that reads Supabase
+            # directly in the browser; the daily build was clobbering it, so the
+            # index render step is now a deliberate no-op. (Front-page render
+            # abandoned 2026-06-23 — see project_live_frontpage_decision.)
+            self.assertFalse((out_dir / "index.html").exists())
             self.assertTrue((out_dir / "performance.html").exists())
             # B-184: static company pages are no longer generated.
             self.assertFalse((out_dir / "companies" / "DNLM.html").exists())

@@ -102,7 +102,7 @@ Replaces the abandoned pipeline-render/`rendered_pages` approach. Full detail in
 | ⬜ | B-190 | Phase 1 — `public_recent_dealings_v` + This Week table + active clusters + top tiles (client-side, reuse company-page code) | `agent:dashboard-designer` | P1 | 5 |
 | ✅ | B-191 | Phase 2 DONE — Capital-Deployed chart (client-side, `public_capital_monthly_v`) + Conviction panel. Conviction shipped first as a client-side port of conviction.py; now B-194 populates `conviction_scores`, so UPGRADED to read the REAL graded scores via new `public_conviction_v` (all 6 factors incl. Earn/Past), with the client-side estimate as fallback. Awaiting push. | `agent:dashboard-designer` | P1 | 3 |
 | ⬜ | B-192 | Phase 3 — polish/parity (brewing clusters, sparklines, mobile, paper P&L tile) | `agent:dashboard-designer` | P2 | 2 |
-| ⬜ | B-193 | Remove dead publish path: `_publish_live_index` from `build_dashboard`, drop `rebuild-pages.yml` + `rendered_pages` table/view, stop overwriting `outputs/index.html` | `agent:general-purpose` | P1 | 2 |
+| 🟦 | B-193 | Remove dead publish path. **DONE so far**: `build_dashboard` no longer renders/writes `outputs/index.html` (the daily build was regenerating the old static page and clobbering the live one → merge conflict 2026-06-25; now skipped). **Remaining (low pri, cosmetic)**: delete the now-unused `_publish_live_index`/`_live_shell_html` funcs, drop `rebuild-pages.yml` + `rendered_pages` table/view. | `agent:general-purpose` | P1 | 2 |
 
 **Gate M6:** ⬜ front page live + current with all panels, no pipeline dependency for display.
 
