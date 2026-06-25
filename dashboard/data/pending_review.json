@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-25T12:47:19Z",
-  "total": 63,
+  "generated_at": "2026-06-25T13:22:48Z",
+  "total": 64,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
@@ -18,7 +18,7 @@
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 14
+      "count": 15
     },
     {
       "id": "corporate_actions",
@@ -884,6 +884,23 @@
         "multiple_distinct_prices",
         "zero_shares_non_grant",
         "zero_price_non_grant",
+        "llm_error:MissingApiKeyError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9630125",
+      "url": "https://www.investegate.co.uk/announcement/rns/fdm-group-holdings---fdm/notification-of-transaction-of-director/9630125",
+      "headline": "Notification of Transaction of Director",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_separate_price_volume",
+        "required_fields_missing",
         "llm_error:MissingApiKeyError"
       ],
       "extracted": [],
