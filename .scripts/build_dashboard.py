@@ -701,30 +701,16 @@ def build(out_dir: Path, signals_path: Path, dealings_path: Path,
         DEFAULT_AUDIT_REPORT
     )
 
-    # ---- index.html ----
-    n = render_index.render_to_file(
-        signals_path=signals_path, dealings_path=dealings_path,
-        out_path=out_dir / "index.html", build_sha=build_sha,
-        health_panel_html=health_panel_html)
-    summary["pages"].append(("index.html", n,
-                             _sha256(out_dir / "index.html")))
-    summary["bytes"] += n
+    # ---- index.html — DO NOT GENERATE (B-193 / M6) ----
+    # The front page is now a LIVE, client-side page: outputs/index.html reads
+    # Supabase directly in the browser (like the company pages), and is HAND-
+    # MAINTAINED, not generated here. If build_dashboard regenerated it, the
+    # daily job would overwrite the live page with the old static render and
+    # clobber it (caused a merge conflict 2026-06-25). So we deliberately leave
+    # outputs/index.html untouched. The old render_index +
+    # rendered_pages/_publish_live_index publish path is dead.
     if verbose:
-        print(f"[index] {n} bytes")
-
-    # ---- Live front page (cloud only) ----
-    # On Postgres, publish the full rendered front page into Supabase and
-    # leave a thin live shell on disk. The front page is then always current
-    # the moment the pipeline runs, and a stale local push can't overwrite it.
-    # On SQLite (local-only), keep the full static page exactly as before.
-    try:
-        if db.backend() == "postgres":
-            _publish_live_index(out_dir / "index.html", build_sha)
-            summary["live_index_published"] = True
-            if verbose:
-                print("[index] published to rendered_pages + wrote live shell")
-    except Exception as e:  # noqa: BLE001
-        print(f"[index] WARNING: live-publish failed ({e!r}); keeping static page")
+        print("[index] skipped — front page is the live client-side page")
 
     # ---- performance.html (combined / "All") ----
     n = render_performance.render_to_file(
