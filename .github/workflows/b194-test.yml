@@ -1,0 +1,57 @@
+name: B-194 test — local-compute pipeline (read-only)
+
+# Phase 3a of B-194 (docs/specs/b194-local-compute-design.md). Proves the core
+# hypothesis SAFELY: download Supabase -> local SQLite, run the FULL pipeline
+# in-process against that local SQLite (DD_FORCE_SQLITE=1), and confirm it
+# FINISHES FAST instead of timing out at the signal/backtest steps.
+#
+# IMPORTANT: this workflow does NOT upload anything back to Supabase — it is
+# read-only against your live database. The upload step is added only after the
+# speed is proven. Run it by hand from the Actions tab.
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 pandas "psycopg[binary]"
+
+      - name: Download Supabase -> local SQLite
+        env:
+          DD_DATABASE_URL: ${{ secrets.DD_DATABASE_URL }}
+        run: python .scripts/download_from_postgres.py
+
+      - name: Run FULL pipeline on LOCAL SQLite (timed)
+        id: pipeline
+        continue-on-error: true   # the data-quality audit can exit non-zero; we
+                                  # still want to see the timings + that compute ran.
+        env:
+          DD_FORCE_SQLITE: "1"    # compute in-process against the local copy.
+          DD_FMP_API_KEY: ${{ secrets.DD_FMP_API_KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          echo "Pipeline start: $(date -u +%H:%M:%S) UTC"
+          python .scripts/refresh_all.py --verbose
+          echo "Pipeline end:   $(date -u +%H:%M:%S) UTC"
+
+      - name: Result
+        run: |
+          echo "Pipeline step outcome: ${{ steps.pipeline.outcome }}"
+          echo "If the pipeline reached build_dashboard (signals + backtest done"
+          echo "without timing out), the local-compute approach works and we can"
+          echo "wire in the upload step next. Nothing was written to Supabase."
