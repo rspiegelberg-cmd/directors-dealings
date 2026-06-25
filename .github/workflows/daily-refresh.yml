@@ -72,9 +72,29 @@ jobs:
             echo "No dashboard changes to commit."
           else
             git commit -m "Daily refresh $(date -u +%Y-%m-%dT%H:%MZ)"
-            git pull --rebase --autostash origin main || true
-            git push
-            echo "Pushed refreshed dashboard — Vercel will redeploy."
+            # Race-safe push. A concurrent push (a manual run, the refresh
+            # button, or a local push) can move origin/main between our fetch
+            # and push -> the bare push dies with exit 128 (this failed run #8).
+            # Retry: try the push first (fast path when nothing raced us); on
+            # rejection, rebase our commit onto the latest origin/main and auto-
+            # resolve conflicts in the generated outputs/ files in favour of this
+            # fresh build (-X theirs). The hand-maintained index.html is never
+            # staged by the bot, so it is never touched. Abort any failed rebase
+            # so we never leave a half-applied state.
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              if git push; then pushed=1; break; fi
+              echo "push rejected (attempt $attempt); syncing with origin/main and retrying"
+              git fetch origin main || true
+              git rebase -X theirs origin/main || git rebase --abort || true
+              sleep $((attempt * 3))
+            done
+            if [ "$pushed" = 1 ]; then
+              echo "Pushed refreshed dashboard — Vercel will redeploy."
+            else
+              echo "::error::Could not push dashboard after 5 attempts."
+              exit 1
+            fi
           fi
 
       - name: Surface pipeline failure (so a skipped upload is never silent)
