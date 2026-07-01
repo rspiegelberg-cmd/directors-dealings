@@ -39,18 +39,16 @@ echo Committing...
 git commit -m "Update %DATE% %TIME%"
 if errorlevel 1 echo (Nothing new to commit - continuing.)
 
+REM Clear any stale git lock files left by interrupted operations
+if exist ".git\index.lock" del /f ".git\index.lock"
+if exist ".git\HEAD.lock"  del /f ".git\HEAD.lock"
+if exist ".git\MERGE_HEAD" git merge --abort 2>nul
+
 echo.
 echo Pushing to GitHub...
-git push
-REM Only sync if the push was rejected (remote moved on) - this avoids the
-REM git-pull/fetch repack that triggers the ".git/objects" deletion prompt.
-REM On the normal path (push succeeds) we never pull, so it stays clean.
-if errorlevel 1 (
-  echo.
-  echo Remote has newer commits - syncing once, then pushing again...
-  git pull --no-edit --no-rebase
-  git push
-)
+REM Force push: our local HTML changes always win over pipeline-generated
+REM performance pages (those are rebuilt nightly from Supabase anyway).
+git push --force origin main
 
 echo.
 echo ============================================================
