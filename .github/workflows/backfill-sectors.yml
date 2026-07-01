@@ -1,0 +1,52 @@
+name: Backfill sectors — Directors Dealings
+
+# Runs backfill_sectors.py against the live Supabase DB using the
+# already-stored secrets. Trigger manually from the Actions tab.
+# Free FMP tier = ~250 requests/day; the script is resumable (results
+# cached in _fmp_cache/). Run once per day until 0 tickers remain.
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Max tickers to process (default 240, free-tier safe)"
+        required: false
+        default: "240"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: backfill-sectors
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests "psycopg[binary]"
+
+      - name: Run sector backfill against Supabase
+        env:
+          DD_DATABASE_URL: ${{ secrets.DD_DATABASE_URL }}
+          DD_FMP_API_KEY:  ${{ secrets.DD_FMP_API_KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python .scripts/backfill_sectors.py --limit ${{ github.event.inputs.limit || 240 }} --verbose
+
+      - name: Run normalise pass (fix FMP name variants)
+        env:
+          DD_DATABASE_URL: ${{ secrets.DD_DATABASE_URL }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python .scripts/backfill_sectors.py --normalise

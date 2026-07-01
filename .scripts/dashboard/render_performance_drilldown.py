@@ -591,7 +591,9 @@ def _rollup_row_html(row: dict, existing_pages: set | None,
             f'cursor-pointer hover:bg-indigo-50{italic_cls}" '
             f'data-href="{h.esc(href)}" tabindex="0" role="link" '
             f'aria-label="View {h.esc(ticker)} company page">'
-            f'<td class="px-3 py-2 font-mono text-slate-700">{h.esc(ticker)}</td>'
+            f'<td class="px-3 py-2 font-mono">'
+            f'<a href="{h.esc(href)}" class="text-indigo-600 hover:underline">{h.esc(ticker)}</a>'
+            f'</td>'
             f'<td class="px-3 py-2 text-slate-700">{h.esc(company)}</td>'
             f'<td class="px-3 py-2 text-right text-slate-700">{int(n)}</td>'
             f'<td class="px-3 py-2 text-right">{h.car_cell(hit_pct)}</td>'
@@ -878,7 +880,7 @@ def _client_render_script(*, cohort_type: str, cohort_key: str,
              '" tabindex="0" role="link" aria-label="View ' + esc(ticker) +
              ' company page">' +
              '<td class="px-2 py-1.5 text-slate-700">' + esc(date) + '</td>' +
-             '<td class="px-2 py-1.5 font-mono text-slate-700">' + esc(ticker) + '</td>' +
+             '<td class="px-2 py-1.5 font-mono"><a href="' + esc(href) + '" class="text-indigo-600 hover:underline" onclick="event.stopPropagation()">' + esc(ticker) + '</a></td>' +
              '<td class="px-2 py-1.5 text-slate-700" title="' + esc(director) + '">' +
              esc(directorDisplay) + '</td>' +
              '<td class="px-2 py-1.5">' + badge + '</td>' +
@@ -969,7 +971,7 @@ def _client_render_script(*, cohort_type: str, cohort_key: str,
              'cursor-pointer hover:bg-indigo-50' + italicCls +
              '" data-href="' + esc(href) + '" tabindex="0" role="link" ' +
              'aria-label="View ' + esc(ticker) + ' company page">' +
-             '<td class="px-3 py-2 font-mono text-slate-700">' + esc(ticker) + '</td>' +
+             '<td class="px-3 py-2 font-mono"><a href="' + esc(href) + '" class="text-indigo-600 hover:underline" onclick="event.stopPropagation()">' + esc(ticker) + '</a></td>' +
              '<td class="px-3 py-2 text-slate-700">' + esc(company) + '</td>' +
              '<td class="px-3 py-2 text-right text-slate-700">' + Math.floor(n) + '</td>' +
              '<td class="px-3 py-2 text-right">' + carCell(hitPct) + '</td>' +
