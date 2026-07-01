@@ -465,30 +465,6 @@ async function loadDbStats(rows) {
     stats = d[0] || null;
   } catch (e) { /* fall through */ }
 
-  // Sector breakdown from pre-aggregated view (avoids PostgREST row-cap issues)
-  let sectorStats = [];
-  try {
-    const ssRes = await fetch(`${SUPABASE_URL}/rest/v1/public_sector_stats_v?select=*`,
-      { headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY } });
-    if (!ssRes.ok) throw new Error(`sector_stats ${ssRes.status}`);
-    sectorStats = await ssRes.json();
-  } catch(e) {
-    // fallback: derive from in-memory rows (partial, recent-only)
-    const fallback = {};
-    rows.forEach(r => {
-      const s = r.sector; if (!s) return;
-      fallback[s] = fallback[s] || { sector: s, companies: new Set(), directors: new Set(), buys: 0, sells: 0 };
-      if (r.ticker)   fallback[s].companies.add(r.ticker);
-      if (r.director) fallback[s].directors.add(r.director.trim().toLowerCase());
-      if (r.type === "BUY")  fallback[s].buys++;
-      if (r.type === "SELL") fallback[s].sells++;
-    });
-    sectorStats = Object.values(fallback).map(f => ({
-      sector: f.sector, companies: f.companies.size,
-      directors: f.directors.size, buys: f.buys, sells: f.sells
-    }));
-  }
-
   const statTile = (label, value, note) =>
     `<div class="bg-white border border-slate-200 rounded-lg px-3 py-2.5">
       <div class="text-[10px] uppercase tracking-wide text-slate-400">${label}</div>
@@ -512,24 +488,135 @@ async function loadDbStats(rows) {
     + statTile("No sector data", noSector, "companies missing")
     + statTile("No mkt cap data", noCap, "companies missing");
 
-  // Sector breakdown table
-  const sectors = sectorStats.slice().sort((a, b) => b.companies - a.companies);
-  if (sectors.length) {
-    const sectorRows = sectors.map(d =>
-      `<tr class="border-t border-slate-100"><td class="py-1 px-2 text-xs text-slate-700">${esc(d.sector)}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.companies}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.directors}</td><td class="py-1 px-2 text-xs text-right tabular-nums text-emerald-700">${d.buys}</td><td class="py-1 px-2 text-xs text-right tabular-nums text-red-600">${d.sells}</td></tr>`
-    ).join("");
-    inner.insertAdjacentHTML("afterend", `
-      <div class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
-        <div class="px-4 py-3 border-b border-slate-100"><h3 class="text-xs uppercase tracking-wide text-slate-400">Companies &amp; directors by sector</h3></div>
-        <div class="overflow-x-auto"><table class="w-full">
-          <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-100">
-            <th class="py-1 px-2 font-medium">Sector</th><th class="py-1 px-2 font-medium text-right">Companies</th><th class="py-1 px-2 font-medium text-right">Directors</th><th class="py-1 px-2 font-medium text-right text-emerald-700">Buys</th><th class="py-1 px-2 font-medium text-right text-red-600">Sells</th>
-          </tr></thead><tbody>${sectorRows}</tbody>
-        </table></div>
-      </div>`);
+  // Sector table — stable container so dropdown re-renders only this block
+  let sectorContainer = document.getElementById("sector-table-container");
+  if (!sectorContainer) {
+    sectorContainer = document.createElement("div");
+    sectorContainer.id = "sector-table-container";
+    inner.insertAdjacentElement("afterend", sectorContainer);
   }
+  await renderSectorTable(null, sectorContainer);
 
   el.classList.remove("hidden");
+}
+
+async function renderSectorTable(startDate, container, selectedDaysHint = "") {
+  container.innerHTML = `<div class="mt-4 py-6 text-center text-slate-400 text-xs">Loading sector data…</div>`;
+
+  const fmtGBP = v => {
+    if (!v && v !== 0) return "£0";
+    const sign = v < 0 ? "-" : "";
+    const n = Math.abs(v);
+    if (n >= 1e9) return sign + "£" + (n / 1e9).toFixed(1) + "bn";
+    if (n >= 1e6) return sign + "£" + (n / 1e6).toFixed(1) + "m";
+    if (n >= 1e3) return sign + "£" + (n / 1e3).toFixed(0) + "k";
+    return sign + "£" + Math.round(n).toLocaleString();
+  };
+
+  let data = [];
+  try {
+    const url = startDate
+      ? `${SUPABASE_URL}/rest/v1/rpc/get_sector_stats?start_date=${encodeURIComponent(startDate)}`
+      : `${SUPABASE_URL}/rest/v1/rpc/get_sector_stats`;
+    const res = await fetch(url, { headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY } });
+    if (!res.ok) throw new Error(`get_sector_stats HTTP ${res.status}`);
+    data = await res.json();
+  } catch(e) {
+    container.innerHTML = `<div class="mt-4 py-4 text-center text-red-400 text-xs">Sector data unavailable</div>`;
+    return;
+  }
+
+  // Sort: Other always last, rest by companies desc
+  const sorted = data.slice().sort((a, b) => {
+    if (a.sector === "Other") return 1;
+    if (b.sector === "Other") return -1;
+    return (b.companies || 0) - (a.companies || 0);
+  });
+
+  // Totals row (sum of all rows)
+  const tot = sorted.reduce((acc, d) => {
+    acc.companies  += d.companies  || 0;
+    acc.directors  += d.directors  || 0;
+    acc.buys       += d.buys       || 0;
+    acc.sells      += d.sells      || 0;
+    acc.buy_value  += d.buy_value  || 0;
+    acc.sell_value += d.sell_value || 0;
+    return acc;
+  }, { companies: 0, directors: 0, buys: 0, sells: 0, buy_value: 0, sell_value: 0 });
+
+  const bodyRows = sorted.map(d => {
+    const netVol = (d.buys || 0) - (d.sells || 0);
+    const netVal = (d.buy_value || 0) - (d.sell_value || 0);
+    const netVolCls = netVol >= 0 ? "text-emerald-700" : "text-red-600";
+    const netValCls = netVal >= 0 ? "text-emerald-700" : "text-red-600";
+    return `<tr class="border-t border-slate-100">
+      <td class="py-1 px-2 text-xs text-slate-700">${esc(d.sector)}</td>
+      <td class="py-1 px-2 text-xs text-right tabular-nums">${fmtInt(d.companies)}</td>
+      <td class="py-1 px-2 text-xs text-right tabular-nums">${fmtInt(d.directors)}</td>
+      <td class="py-1 px-2 text-xs text-right tabular-nums text-emerald-700">${fmtInt(d.buys)}</td>
+      <td class="py-1 px-2 text-xs text-right tabular-nums text-red-600">${fmtInt(d.sells)}</td>
+      <td class="py-1 px-2 text-xs text-right tabular-nums text-emerald-700">${fmtGBP(d.buy_value)}</td>
+      <td class="py-1 px-2 text-xs text-right tabular-nums text-red-600">${fmtGBP(d.sell_value)}</td>
+      <td class="py-1 px-2 text-xs text-right tabular-nums ${netVolCls}">${netVol >= 0 ? "+" : ""}${fmtInt(netVol)}</td>
+      <td class="py-1 px-2 text-xs text-right tabular-nums ${netValCls}">${netVal >= 0 ? "+" : "-"}${fmtGBP(Math.abs(netVal))}</td>
+    </tr>`;
+  }).join("");
+
+  const totNetVol = tot.buys - tot.sells;
+  const totNetVal = tot.buy_value - tot.sell_value;
+  const totNetVolCls = totNetVol >= 0 ? "text-emerald-700" : "text-red-600";
+  const totNetValCls = totNetVal >= 0 ? "text-emerald-700" : "text-red-600";
+  const totRow = `
+    <tr class="border-t-2 border-slate-300 bg-slate-50">
+      <td class="py-1.5 px-2 text-xs font-semibold text-slate-700">Total</td>
+      <td class="py-1.5 px-2 text-xs text-right tabular-nums font-semibold">${fmtInt(tot.companies)}</td>
+      <td class="py-1.5 px-2 text-xs text-right tabular-nums font-semibold">${fmtInt(tot.directors)}</td>
+      <td class="py-1.5 px-2 text-xs text-right tabular-nums font-semibold text-emerald-700">${fmtInt(tot.buys)}</td>
+      <td class="py-1.5 px-2 text-xs text-right tabular-nums font-semibold text-red-600">${fmtInt(tot.sells)}</td>
+      <td class="py-1.5 px-2 text-xs text-right tabular-nums font-semibold text-emerald-700">${fmtGBP(tot.buy_value)}</td>
+      <td class="py-1.5 px-2 text-xs text-right tabular-nums font-semibold text-red-600">${fmtGBP(tot.sell_value)}</td>
+      <td class="py-1.5 px-2 text-xs text-right tabular-nums font-semibold ${totNetVolCls}">${totNetVol >= 0 ? "+" : ""}${fmtInt(totNetVol)}</td>
+      <td class="py-1.5 px-2 text-xs text-right tabular-nums font-semibold ${totNetValCls}">${totNetVal >= 0 ? "+" : "-"}${fmtGBP(Math.abs(totNetVal))}</td>
+    </tr>`;
+
+  // Dropdown options — use the hint passed in (avoids recomputing from date, which drifts)
+  const periods = [["", "All Time"], ["30", "Last 30 Days"], ["90", "Last 90 Days"], ["180", "Last 180 Days"], ["365", "Last 365 Days"]];
+  const options = periods.map(([v, l]) =>
+    `<option value="${v}"${v === selectedDaysHint ? " selected" : ""}>${esc(l)}</option>`
+  ).join("");
+
+  container.innerHTML = `
+    <div class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
+      <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="text-xs uppercase tracking-wide text-slate-400">Companies &amp; directors by sector</h3>
+        <select id="sector-date-filter" class="text-xs border border-slate-200 rounded px-2 py-1 text-slate-600 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 cursor-pointer">
+          ${options}
+        </select>
+      </div>
+      <div class="overflow-x-auto"><table class="w-full">
+        <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-100">
+          <th class="py-1.5 px-2 font-medium">Sector</th>
+          <th class="py-1.5 px-2 font-medium text-right">Cos</th>
+          <th class="py-1.5 px-2 font-medium text-right">Dirs</th>
+          <th class="py-1.5 px-2 font-medium text-right text-emerald-700">Buys</th>
+          <th class="py-1.5 px-2 font-medium text-right text-red-600">Sells</th>
+          <th class="py-1.5 px-2 font-medium text-right text-emerald-700">Buy £</th>
+          <th class="py-1.5 px-2 font-medium text-right text-red-600">Sell £</th>
+          <th class="py-1.5 px-2 font-medium text-right text-slate-500">Net Vol</th>
+          <th class="py-1.5 px-2 font-medium text-right text-slate-500">Net £</th>
+        </tr></thead>
+        <tbody>${bodyRows}</tbody>
+        <tfoot>${totRow}</tfoot>
+      </table></div>
+    </div>`;
+
+  document.getElementById("sector-date-filter").addEventListener("change", async e => {
+    const days = e.target.value;
+    const newStart = days
+      ? new Date(Date.now() - parseInt(days, 10) * 86400000).toISOString().slice(0, 10)
+      : null;
+    await renderSectorTable(newStart, container, days);
+  });
 }
 
 function render(rows, monthly, convRows) {
