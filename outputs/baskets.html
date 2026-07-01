@@ -1,218 +1,241 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-sha" content="4401d08">
-<title>Basket Report — Small-Cap Conviction</title>
+<title>Baskets — Directors Dealings</title>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   html, body { background:#f8fafc; color:#0f172a; }
-  .tabular-nums { font-variant-numeric: tabular-nums; }
-  .pulse-highlight { animation: pulseBg 2s ease-out 1; }
-  @keyframes pulseBg {
-    0%   { background-color: #fef3c7; }
-    100% { background-color: transparent; }
-  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spin { animation: spin 1s linear infinite; display:inline-block; }
+  @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .pulse-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans">
-<header class="border-b border-slate-200 bg-white px-4 sm:px-6 h-auto min-h-[48px] py-2 sm:py-0 sm:h-12 flex items-center justify-between gap-2">
-<h1 class="text-sm font-semibold text-slate-900 tracking-tight min-w-0 truncate">Basket Report — Small-Cap Conviction</h1>
-<nav class="flex items-center flex-shrink-0"><button id="refreshBtn" type="button" class="text-xs px-2.5 py-1 rounded border border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5" title="Run the full refresh pipeline (scrape -> parse -> backfill -> eval -> rebuild). Slow (~15+ min) and uses LLM credits."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span id="refreshBtnLabel">Refresh</span></button><a href="index.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Today</a> <a href="performance_small.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Small Cap</a> <a href="performance_large.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Large Cap</a> <a href="performance.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">All</a> <a href="baskets.html" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Baskets</a> <a href="/review" class="text-xs text-indigo-600 hover:text-indigo-700 ml-4">Review</a></nav>
+
+<!-- ===== GLOBAL NAV ===== -->
+<header class="border-b border-slate-200 bg-white px-4 sm:px-6 h-12 flex items-center justify-between gap-2 sticky top-0 z-30">
+  <h1 class="text-sm font-semibold text-slate-900 tracking-tight truncate">Directors Dealings</h1>
+  <nav class="flex items-center gap-3 text-xs text-slate-500">
+    <a class="hover:text-slate-900" href="./index.html">Today</a>
+    <a class="hover:text-slate-900" href="./performance.html">Performance</a>
+    <a class="font-semibold text-slate-900" href="./baskets.html">Baskets</a>
+    <a class="hover:text-slate-900" href="review.html">Review</a>
+    <button id="refreshBtn" title="Fetch the latest filings now" class="inline-flex items-center gap-1 rounded border border-slate-300 px-2 py-0.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 disabled:opacity-50">&#8635; Refresh</button>
+    <span class="inline-flex items-center gap-1 text-emerald-600"><span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>Live</span>
+  </nav>
 </header>
-<main class="max-w-7xl mx-auto">
 
-<div class="px-4 sm:px-6 py-6">
-
-  <!-- Page header -->
-  <div class="mb-6">
-    <h2 class="text-xl font-bold text-slate-900">
-      Basket Report &mdash; Small-Cap Conviction
-    </h2>
-    <p class="text-sm text-slate-500 mt-1">
-      Pre-registered signal baskets, ranked by median net CAR at T+90
-      vs FTSE All-Share / AIM benchmark. Small-cap = market cap &lt; &pound;500m.
-    </p>
+<!-- ===== SEARCH BAR ===== -->
+<div class="bg-white border-b border-slate-100 px-4 sm:px-6 py-2">
+  <div class="max-w-6xl mx-auto">
+    <input id="globalSearch" type="search" placeholder="Search ticker or company in baskets…"
+      class="w-full sm:w-72 text-sm border border-slate-200 rounded px-3 py-1.5 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-400">
   </div>
-
-  <!-- Basket cards -->
-  <div class="max-w-4xl">
-    <p class="text-slate-400 py-8 text-center">No basket data available. Run export_baskets_json.py first.</p>
-  </div>
-
-  <!-- Footer caveat -->
-  <div class="max-w-4xl mt-6 p-4 rounded bg-slate-50 border border-slate-200 text-xs text-slate-500">
-    <strong class="text-slate-700">Methodology note:</strong>
-    Performance is historical and net of 50 bps spread + 0.5% stamp duty on Main Market buys.
-    Median used (not mean) to reduce outlier distortion. Baskets with n &lt; 30
-    are marked with a warning badge and lack statistical significance.
-    Not investment advice.
-  </div>
-
 </div>
 
+<main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
+  <div class="pt-5 pb-1">
+    <h2 class="text-xl font-semibold">Signal Baskets</h2>
+    <p class="text-sm text-slate-500 mt-1">Each basket groups buy signals by type. Live from the Directors Dealings database.</p>
+  </div>
+
+  <div id="app"><div class="py-20 text-center text-slate-400 text-sm flex flex-col items-center gap-3">
+    <svg class="spin w-8 h-8 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+    <span>Loading baskets…</span>
+  </div></div>
+
+  <footer class="mt-10 pt-4 border-t border-slate-200 text-[11px] text-slate-400">
+    <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 align-middle mr-1"></span>
+    Live from the Directors Dealings database. UK RNS PDMR announcements only.
+    Baskets are informational groupings — not investment advice.
+  </footer>
 </main>
-<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-07-01 09:33 UTC &middot; build 4401d08</footer>
 
 <script>
-(function(){
-  const $ = function(id){ return document.getElementById(id); };
-  let pollTimer = null;
-  let lastStatus = 'idle';
+const SUPABASE_URL = "https://mmiaiauybzsdcbrrcxfc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_vADFSIyRre-9sGyhDnXBcA_H167SU8B";
 
-  function setBtn(label, disabled){
-    const btn = $('refreshBtn');
-    if (!btn) return;
-    const lab = $('refreshBtnLabel');
-    if (lab) lab.textContent = label;
-    btn.disabled = !!disabled;
-    btn.classList.toggle('opacity-60', !!disabled);
-    btn.classList.toggle('cursor-not-allowed', !!disabled);
-  }
-  function showToast(msg, ok){
-    const t = document.createElement('div');
-    t.className = (ok ? 'bg-emerald-600' : 'bg-rose-600')
-      + ' fixed bottom-4 right-4 text-white text-xs px-4 py-2 rounded shadow-lg z-50';
-    t.textContent = msg;
-    document.body.appendChild(t);
-    setTimeout(function(){ t.remove(); }, ok ? 4000 : 8000);
-  }
-  function startPolling(){
-    if (pollTimer) clearInterval(pollTimer);
-    pollTimer = setInterval(pollStatus, 5000);
-    pollStatus();
-  }
-  function stopPolling(){
-    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
-  }
-  function pollStatus(){
-    fetch('/api/refresh-status').then(function(r){ return r.json(); })
-      .then(function(s){
-        lastStatus = s.status || 'idle';
-        if (lastStatus === 'running'){
-          const step = s.step_label || s.step || 'Working...';
-          setBtn('Refreshing - ' + step, true);
-        } else if (lastStatus === 'done'){
-          stopPolling();
-          showToast('Refresh complete. Reloading...', true);
-          setTimeout(function(){ window.location.reload(); }, 800);
-        } else if (lastStatus === 'error'){
-          stopPolling();
-          setBtn('Refresh', false);
-          showToast('Refresh failed: ' + (s.error || 'unknown'), false);
-        } else {
-          setBtn('Refresh', false);
-        }
-      }).catch(function(){ /* swallow */ });
-  }
-  function closeModal(){
-    const m = $('refreshModal');
-    if (m) m.remove();
-  }
-  function openConfirmModal(){
-    const modal = document.createElement('div');
-    modal.id = 'refreshModal';
-    modal.className = 'fixed inset-0 bg-slate-900/40 flex items-center '
-      + 'justify-center z-50';
-    modal.innerHTML =
-      '<div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">'
-      + '<h3 class="text-sm font-semibold text-slate-900 mb-2">'
-      + 'Run full refresh pipeline?</h3>'
-      + '<p class="text-xs text-slate-700 mb-3 leading-relaxed">'
-      + 'This will run the 6-step pipeline end-to-end:</p>'
-      + '<ol class="text-xs text-slate-700 mb-4 list-decimal pl-5 space-y-1">'
-      + '<li>Scrape Investegate RNS (last 60 days)</li>'
-      + '<li>Backfill share prices (Yahoo)</li>'
-      + '<li>Update sector benchmarks</li>'
-      + '<li>Recompute signal firings</li>'
-      + '<li>Rebuild signals/dealings JSON</li>'
-      + '<li>Regenerate dashboard HTML</li>'
-      + '</ol>'
-      + '<div class="bg-amber-50 border border-amber-200 rounded p-3 mb-4">'
-      + '<p class="text-[11px] text-amber-800 font-medium mb-1">'
-      + 'Heads up</p>'
-      + '<p class="text-[11px] text-amber-700 leading-relaxed">'
-      + 'Takes ~15-30 min. The scrape step uses Anthropic LLM credits '
-      + '(budget cap ~$50/run, set in run_scrape.py). Yahoo Finance may '
-      + 'rate-limit if run too often.</p>'
-      + '</div>'
-      + '<label class="flex items-center gap-2 text-xs text-slate-700 mb-4">'
-      + '<input id="refreshNoLlm" type="checkbox" class="rounded">'
-      + 'Skip LLM fallback (regex-only parsing)'
-      + '</label>'
-      + '<div class="flex justify-end gap-2">'
-      + '<button id="refreshCancel" class="px-3 py-1.5 text-xs border '
-      + 'border-slate-300 rounded text-slate-600 hover:bg-slate-50">'
-      + 'Cancel</button>'
-      + '<button id="refreshConfirm" class="px-3 py-1.5 text-xs '
-      + 'bg-indigo-600 text-white rounded hover:bg-indigo-700">'
-      + 'Run pipeline</button>'
-      + '</div></div>';
-    document.body.appendChild(modal);
-    $('refreshCancel').onclick = closeModal;
-    $('refreshConfirm').onclick = function(){
-      const noLlm = $('refreshNoLlm').checked;
-      closeModal();
-      setBtn('Starting...', true);
-      fetch('/api/refresh-all', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ no_llm: noLlm })
-      }).then(function(resp){
-        if (resp.status === 409){
-          showToast('A refresh is already running.', false);
-        } else if (!resp.ok){
-          throw new Error('HTTP ' + resp.status);
-        } else {
-          showToast('Refresh started.', true);
-        }
-        startPolling();
-      }).catch(function(err){
-        setBtn('Refresh', false);
-        var hint = err.message;
-        if (/failed to fetch/i.test(hint)){
-          hint = 'server unreachable. Run `python server.py` and visit '
-            + 'http://localhost:5000 in your browser.';
-        }
-        showToast('Could not start refresh: ' + hint, false);
-      });
-    };
-  }
+const app = document.getElementById("app");
+const esc = s => (s == null ? "" : String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;" }[c])));
+const day = s => (s ? String(s).slice(0, 10) : "");
+const fmtGbp = n => (n == null || n === "" ? "-" : "£" + Number(n).toLocaleString("en-GB", { maximumFractionDigits: 0 }));
+const companyUrl = t => "company.html?ticker=" + encodeURIComponent(t || "");
 
-  document.addEventListener('DOMContentLoaded', function(){
-    const btn = $('refreshBtn');
-    if (!btn) return;
-    // If the page was opened via file://, no Flask server is reachable.
-    // Disable the button and tell the user how to fix it -- silent
-    // "Failed to fetch" errors are the #1 confusion point.
-    if (window.location.protocol === 'file:'){
-      setBtn('Refresh (start server)', true);
-      btn.title = 'This page was opened from disk (file://). Run '
-        + '`python server.py` and visit http://localhost:5000 to enable '
-        + 'the Refresh button.';
-      btn.addEventListener('click', function(){
-        showToast('Open http://localhost:5000 (run python server.py first) '
-          + 'to use Refresh.', false);
-      });
-      return;
+const BASKET_DEFS = [
+  { key:"cluster", label:"Cluster Buyers", desc:"≥ 2 directors buying same ticker within 30 days", signals:["s1_cluster_buy","t0_cluster_combo"], color:"#2563eb", bg:"bg-blue-50", border:"border-blue-200", head:"text-blue-700", badge:"bg-blue-100 text-blue-700" },
+  { key:"ceo", label:"CEO / Founder", desc:"CEO or founder buys ≥ £100k", signals:["t1a_ceo_founder_buy"], color:"#dc2626", bg:"bg-red-50", border:"border-red-200", head:"text-red-700", badge:"bg-red-100 text-red-700" },
+  { key:"chair", label:"Chair Buyers", desc:"Executive or non-exec chair buys ≥ £25k", signals:["t7_chair_buy"], color:"#7c3aed", bg:"bg-violet-50", border:"border-violet-200", head:"text-violet-700", badge:"bg-violet-100 text-violet-700" },
+  { key:"first_time", label:"First-Time Buyers", desc:"Director's first-ever buy of this ticker", signals:["f1_first_time_buy"], color:"#9333ea", bg:"bg-purple-50", border:"border-purple-200", head:"text-purple-700", badge:"bg-purple-100 text-purple-700" },
+  { key:"cfo", label:"CFO Buyers", desc:"CFO buys ≥ £100k — financial-insider signal", signals:["t1b_cfo_buy"], color:"#db2777", bg:"bg-rose-50", border:"border-rose-200", head:"text-rose-700", badge:"bg-rose-100 text-rose-700" },
+  { key:"lone", label:"Lone Conviction", desc:"Single director ≥ £200k, no other buyers within 30d", signals:["b1_lone_conviction_buy"], color:"#0891b2", bg:"bg-cyan-50", border:"border-cyan-200", head:"text-cyan-700", badge:"bg-cyan-100 text-cyan-700" },
+  { key:"ned", label:"NED Buyers", desc:"Non-executive director buys ≥ £10k", signals:["t3_ned_buy"], color:"#059669", bg:"bg-emerald-50", border:"border-emerald-200", head:"text-emerald-700", badge:"bg-emerald-100 text-emerald-700" },
+  { key:"exec", label:"Senior Exec", desc:"Other senior exec buys ≥ £25k", signals:["t2_exec_buy"], color:"#d97706", bg:"bg-amber-50", border:"border-amber-200", head:"text-amber-700", badge:"bg-amber-100 text-amber-700" }
+];
+
+function timeAgo(iso) {
+  if (!iso) return "";
+  const days = Math.floor((Date.now() - new Date(iso + "T00:00:00Z").getTime()) / 86400000);
+  if (days === 0) return "today"; if (days === 1) return "yesterday";
+  if (days < 7) return days + "d ago"; if (days < 31) return Math.floor(days / 7) + "w ago";
+  return Math.floor(days / 30) + "mo ago";
+}
+
+async function fetchAll() {
+  const url = `${SUPABASE_URL}/rest/v1/public_company_v?order=date.desc,announced_at.desc&limit=1000`;
+  const res = await fetch(url, { headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY } });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res.json();
+}
+
+function buildBaskets(rows) {
+  const buys = rows.filter(r => (r.type || "").toUpperCase() === "BUY" && r.signals && r.signals.length);
+  return BASKET_DEFS.map(def => {
+    const matched = buys.filter(r => r.signals.some(s => def.signals.includes(s)));
+    const tickerMap = {};
+    for (const r of matched) {
+      const t = r.ticker; if (!t) continue;
+      if (!tickerMap[t]) tickerMap[t] = { ticker:t, company:r.company||"", sector:r.sector||"", value:0, count:0, dirs:new Set(), last:day(r.date) };
+      const c = tickerMap[t];
+      c.count++; c.value += Number(r.value)||0;
+      if (r.director) c.dirs.add(r.director.trim());
+      const d = day(r.date); if (d > c.last) c.last = d;
     }
-    btn.addEventListener('click', openConfirmModal);
-    // On load, check status -- if running, attach to existing pipeline.
-    fetch('/api/refresh-status').then(function(r){ return r.json(); })
-      .then(function(s){
-        if (s.status === 'running'){
-          setBtn('Refreshing - ' + (s.step_label || 'Working...'), true);
-          startPolling();
-        }
-      }).catch(function(err){
-        // Server unreachable on a non-file:// page -- the server died
-        // or is on a different host. Tell the user something useful.
-        setBtn('Refresh (server down)', true);
-        btn.title = 'Could not reach /api/refresh-status. Is the Flask '
-          + 'server still running? Try restarting `python server.py`.';
+    const tickers = Object.values(tickerMap).sort((a,b) => b.value - a.value);
+    const allDirs = new Set(); matched.forEach(r => { if (r.director) allDirs.add(r.director.trim()); });
+    const totalValue = matched.reduce((s,r) => s + (Number(r.value)||0), 0);
+    const latestDate = matched.map(r => day(r.date)).filter(Boolean).sort().slice(-1)[0]||"";
+    const cutoff = (() => { const d=new Date(); d.setDate(d.getDate()-30); return d.toISOString().slice(0,10); })();
+    const recent = matched.filter(r => day(r.date) >= cutoff).length;
+    return { ...def, matched, tickers, allDirs, totalValue, latestDate, recent };
+  });
+}
+
+function basketCard(b) {
+  const rows = b.tickers.slice(0, 10).map(t =>
+    `<tr class="border-t border-slate-100 basket-row" data-search="${esc((t.ticker+" "+t.company).toLowerCase())}">
+      <td class="py-1.5 px-3"><a href="${companyUrl(t.ticker)}" class="text-indigo-600 hover:underline font-medium">${esc(t.ticker)}</a></td>
+      <td class="py-1.5 px-3 text-slate-600 text-xs max-w-[160px] truncate">${esc(t.company)}</td>
+      <td class="py-1.5 px-3 text-xs text-slate-500">${esc(t.sector)}</td>
+      <td class="py-1.5 px-3 text-right tabular-nums text-xs font-medium">${fmtGbp(t.value)}</td>
+      <td class="py-1.5 px-3 text-right text-xs text-slate-500">${t.dirs.size} dir${t.dirs.size!==1?"s":""}</td>
+      <td class="py-1.5 px-3 text-right text-xs text-slate-400">${esc(timeAgo(t.last))}</td>
+    </tr>`).join("")
+  + (b.tickers.length > 10 ? `<tr><td colspan="6" class="px-3 py-1.5 text-xs text-slate-400 italic">… and ${b.tickers.length - 10} more tickers</td></tr>` : "");
+
+  return `<div class="mt-4 bg-white border ${b.border} rounded-lg overflow-hidden" id="basket-${b.key}">
+    <div class="px-4 py-3 border-b ${b.border} ${b.bg} flex items-start justify-between gap-2 flex-wrap">
+      <div>
+        <h3 class="text-sm font-semibold ${b.head}">${esc(b.label)}</h3>
+        <p class="text-[11px] text-slate-500 mt-0.5">${esc(b.desc)}</p>
+      </div>
+      <div class="flex flex-wrap gap-1.5 text-[11px]">
+        <span class="px-2 py-0.5 rounded-full ${b.badge} font-semibold">${b.matched.length} signals</span>
+        <span class="px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-600">${b.tickers.length} tickers</span>
+        <span class="px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-600">${b.allDirs.size} directors</span>
+        <span class="px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-600">${fmtGbp(b.totalValue)}</span>
+        ${b.recent ? `<span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">${b.recent} last 30d ▶</span>` : ""}
+        ${b.latestDate ? `<span class="px-2 py-0.5 rounded-full bg-slate-50 text-slate-400 border border-slate-100">latest ${esc(timeAgo(b.latestDate))}</span>` : ""}
+      </div>
+    </div>
+    ${b.tickers.length ? `<div class="overflow-x-auto"><table class="w-full text-sm min-w-[540px]">
+      <thead><tr class="text-left text-[10px] uppercase tracking-wide text-slate-400 border-b border-slate-100">
+        <th class="py-1.5 px-3 font-medium">Ticker</th><th class="py-1.5 px-3 font-medium">Company</th>
+        <th class="py-1.5 px-3 font-medium">Sector</th><th class="py-1.5 px-3 font-medium text-right">Total £</th>
+        <th class="py-1.5 px-3 font-medium text-right">Directors</th><th class="py-1.5 px-3 font-medium text-right">Last buy</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>` : `<div class="px-4 py-3 text-sm text-slate-400">No signals in the loaded dataset.</div>`}
+  </div>`;
+}
+
+function summaryStrip(baskets) {
+  return `<div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 mt-4">${
+    baskets.map(b => `<a href="#basket-${b.key}" class="block bg-white border border-slate-200 rounded-lg px-3 py-2.5 hover:border-slate-300">
+      <div class="text-[10px] uppercase tracking-wide text-slate-400 truncate">${esc(b.label)}</div>
+      <div class="text-xl font-semibold text-slate-900 mt-0.5">${b.tickers.length}</div>
+      <div class="text-[10px] text-slate-400">${b.matched.length} signals</div>
+    </a>`).join("")
+  }</div>`;
+}
+
+function activityChart(rows) {
+  const start = new Date(); start.setMonth(start.getMonth()-18);
+  const startM = start.toISOString().slice(0,7);
+  const buys = rows.filter(r => (r.type||"").toUpperCase()==="BUY" && r.signals && r.signals.length && day(r.date).slice(0,7) >= startM);
+  const months = {};
+  for (const r of buys) {
+    const m = day(r.date).slice(0,7); if (!m) continue;
+    months[m] = months[m] || {};
+    for (const def of BASKET_DEFS) {
+      if (r.signals.some(s => def.signals.includes(s))) months[m][def.key] = (months[m][def.key]||0)+1;
+    }
+  }
+  const labels = Object.keys(months).sort();
+  if (labels.length < 2) return "";
+  const datasets = BASKET_DEFS.slice(0,4).map(def => ({
+    label: def.label, data: labels.map(m => months[m][def.key]||0),
+    borderColor: def.color, backgroundColor: def.color+"22", borderWidth:1.5, pointRadius:0, tension:.2, fill:false
+  }));
+  return `<section class="mt-4 bg-white border border-slate-200 rounded-lg p-4">
+    <h3 class="text-xs uppercase tracking-wide text-slate-500 mb-3">Signal activity — top 4 baskets by month</h3>
+    <div class="relative" style="height:200px"><canvas id="actChart"></canvas></div>
+    <script>
+    (function(){
+      const ctx=document.getElementById("actChart");
+      if(!ctx)return;
+      new Chart(ctx,{type:"line",
+        data:{labels:${JSON.stringify(labels)},datasets:${JSON.stringify(datasets)}},
+        options:{maintainAspectRatio:false,animation:false,interaction:{mode:"index",intersect:false},
+          plugins:{legend:{position:"top",align:"end",labels:{boxWidth:10,font:{size:11}}},
+            tooltip:{callbacks:{label:c=>c.dataset.label+": "+c.parsed.y}}},
+          scales:{x:{ticks:{maxTicksLimit:12,font:{size:10},color:"#94a3b8"},grid:{display:false}},
+                  y:{ticks:{font:{size:10},color:"#94a3b8"},grid:{color:"#f1f5f9"},min:0}}}
       });
+    })();
+    <\/script>
+  </section>`;
+}
+
+function applySearch(q) {
+  q = (q||"").toLowerCase().trim();
+  document.querySelectorAll(".basket-row").forEach(row => {
+    row.style.display = (!q || (row.dataset.search||"").includes(q)) ? "" : "none";
+  });
+}
+
+async function init() {
+  try {
+    const rows = await fetchAll();
+    if (!rows.length) { app.innerHTML = `<div class="py-20 text-center text-slate-400 text-sm">No data loaded.</div>`; return; }
+    const baskets = buildBaskets(rows);
+    app.innerHTML = summaryStrip(baskets) + activityChart(rows) + baskets.map(basketCard).join("");
+    const srch = document.getElementById("globalSearch");
+    if (srch) srch.addEventListener("input", e => applySearch(e.target.value));
+  } catch (e) {
+    app.innerHTML = `<div class="py-20 text-center text-rose-600 text-sm">Couldn't load baskets (${esc(e.message)}).</div>`;
+  }
+}
+init();
+
+// Refresh button
+(function(){
+  const btn=document.getElementById("refreshBtn");
+  if(!btn)return;
+  const label=btn.innerHTML;
+  btn.addEventListener("click",async function(){
+    btn.disabled=true; btn.innerHTML='<span class="spin">&#8635;</span> Refreshing…';
+    try {
+      const r=await fetch(SUPABASE_URL+"/functions/v1/trigger-refresh",
+        {method:"POST",headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,"Content-Type":"application/json"}});
+      const d=await r.json().catch(()=>({}));
+      btn.innerHTML=(d&&d.ok)?((d.status==="triggered")?"&#10003; Started":"&#10003; OK"):"&#10007; Failed";
+      if(d&&d.ok) alert(d.message||"Refresh started."); else alert((d&&d.error)||"Could not start refresh.");
+    } catch(e){ btn.innerHTML="&#10007; Failed"; alert("Error: "+e.message); }
+    finally { setTimeout(()=>{ btn.disabled=false; btn.innerHTML=label; },8000); }
   });
 })();
 </script>
