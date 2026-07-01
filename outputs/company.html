@@ -9,25 +9,59 @@
 <style>
   html, body { background:#f8fafc; color:#0f172a; }
   .mk-btn[aria-pressed="false"], .tf-btn[aria-pressed="false"] { opacity:.35; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spin { animation: spin 1s linear infinite; display:inline-block; }
+  @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .pulse-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans">
 
-<header class="border-b border-slate-200 bg-white px-4 sm:px-6 h-12 flex items-center gap-3">
-  <a href="./index.html" class="text-xs text-slate-500 hover:text-slate-900">&larr; All directors dealings</a>
+<!-- ===== GLOBAL NAV ===== -->
+<header class="border-b border-slate-200 bg-white px-4 sm:px-6 h-12 flex items-center justify-between gap-2 sticky top-0 z-30">
+  <h1 class="text-sm font-semibold text-slate-900 tracking-tight truncate">Directors Dealings</h1>
+  <nav class="flex items-center gap-3 text-xs text-slate-500">
+    <a class="hover:text-slate-900" href="./index.html">Today</a>
+    <a class="hover:text-slate-900" href="./performance.html">Performance</a>
+    <a class="hover:text-slate-900" href="./baskets.html">Baskets</a>
+    <a class="hover:text-slate-900" href="/review">Review</a>
+    <button id="refreshBtn" title="Fetch the latest filings now" class="inline-flex items-center gap-1 rounded border border-slate-300 px-2 py-0.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 disabled:opacity-50">&#8635; Refresh</button>
+    <span class="inline-flex items-center gap-1 text-emerald-600"><span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>Live</span>
+  </nav>
 </header>
 
+<!-- ===== SEARCH BAR ===== -->
+<div class="bg-white border-b border-slate-100 px-4 sm:px-6 py-2">
+  <div class="max-w-6xl mx-auto flex items-center gap-3">
+    <a href="./index.html" class="text-xs text-slate-500 hover:text-slate-900 shrink-0">&larr; Today</a>
+    <form id="tickerForm" class="flex gap-2" onsubmit="return false">
+      <input id="tickerInput" type="search" placeholder="Jump to ticker…"
+        class="w-40 sm:w-52 text-sm border border-slate-200 rounded px-3 py-1.5 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-400">
+      <button type="submit" onclick="jumpTicker()" class="px-3 py-1.5 text-xs rounded bg-indigo-600 text-white hover:bg-indigo-700">Go</button>
+    </form>
+  </div>
+</div>
+<script>
+function jumpTicker() {
+  const v = document.getElementById("tickerInput").value.trim().toUpperCase();
+  if (v) location.href = "company.html?ticker=" + encodeURIComponent(v);
+}
+</script>
+
 <main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
-  <div id="app"><div class="py-20 text-center text-slate-400 text-sm">Loading company…</div></div>
+  <div id="app"><div class="py-20 text-center text-slate-400 text-sm flex flex-col items-center gap-3">
+    <svg class="spin w-8 h-8 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+    <span>Loading company…</span>
+  </div></div>
   <footer class="mt-10 pt-4 border-t border-slate-200 text-[11px] text-slate-400">
     <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 align-middle mr-1"></span>
     Live from the Directors Dealings database. Director-dealing data sourced from UK RNS PDMR announcements.
     Signal badges are colour-coded by conviction tier — hover any badge for its definition.
+    Short interest data sourced from FCA via <a class="underline" href="https://www.fca.org.uk/markets/short-selling" target="_blank" rel="noopener">fca.org.uk</a>.
   </footer>
 </main>
 
 <script>
-// Public, read-only credentials (RLS restricts the anon key to the serving views).
 const SUPABASE_URL = "https://mmiaiauybzsdcbrrcxfc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_vADFSIyRre-9sGyhDnXBcA_H167SU8B";
 
@@ -41,7 +75,7 @@ const fmtGbp = n => (n == null || n === "" ? "-" : "£" + Number(n).toLocaleStri
 const esc = s => (s == null ? "" : String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c])));
 const day = s => (s ? String(s).slice(0, 10) : "");
 
-// ---- Signal tier palette (mirror of render_helpers.TIER_PALETTE) -----------
+// ---- Signal tier palette --------------------------------------------------
 const TIER = {
   t0:"bg-red-600 text-white", t1a:"bg-red-500 text-white", t1b:"bg-rose-500 text-white",
   t7:"bg-violet-500 text-white", t2:"bg-amber-500 text-white", t3:"bg-emerald-500 text-white",
@@ -79,7 +113,7 @@ function sigBadges(sigs) {
   }).join("") + '</span>';
 }
 
-// ---- Role chips (mirror of render_helpers.role_chip) -----------------------
+// ---- Role chips ------------------------------------------------------------
 const ROLE_CLS = {
   "CEO":"bg-indigo-100 text-indigo-700", "CFO":"bg-indigo-100 text-indigo-700",
   "Other Chief":"bg-indigo-50 text-indigo-600", "Founder":"bg-emerald-100 text-emerald-700",
@@ -171,6 +205,102 @@ function chartSection(hasPrices) {
     </section>`;
 }
 
+// ---- Short Interest Section ------------------------------------------------
+function shortInterestSection(shorts) {
+  if (!shorts || !shorts.length) {
+    return `<section class="mt-4 bg-white border border-slate-200 rounded-lg p-4">
+      <h2 class="text-xs uppercase tracking-wide text-slate-500 mb-2">FCA Short Interest</h2>
+      <p class="text-sm text-slate-400">No reportable short positions on file for ${esc(ticker)}. (Positions below 0.5% of issued share capital are not publicly reported.)</p>
+    </section>`;
+  }
+
+  // Sort by date desc, then group by holder
+  const sorted = shorts.slice().sort((a, b) => day(b.position_date) < day(a.position_date) ? -1 : 1);
+
+  // Current (most recent per holder) + chart series
+  const byHolder = {};
+  for (const s of sorted) {
+    const h = s.position_holder || "Unknown";
+    if (!byHolder[h]) byHolder[h] = [];
+    byHolder[h].push(s);
+  }
+
+  // Latest per holder → summary table
+  const current = Object.entries(byHolder).map(([h, rows]) => ({
+    holder: h,
+    pct: rows[0].net_short_pct,
+    date: day(rows[0].position_date)
+  })).sort((a, b) => (b.pct || 0) - (a.pct || 0));
+
+  const totalShort = current.reduce((s, r) => s + (r.pct || 0), 0);
+  const maxDate = current.map(r => r.date).filter(Boolean).sort().slice(-1)[0] || "";
+
+  const rows = current.map(r => {
+    const pct = Number(r.pct || 0);
+    const barW = Math.min(100, pct / 5 * 100);  // scale to 5% max
+    return `<tr class="border-t border-slate-100">
+      <td class="px-3 py-2 text-sm text-slate-700">${esc(r.holder)}</td>
+      <td class="px-3 py-2 text-right tabular-nums font-semibold text-rose-600">${pct.toFixed(2)}%</td>
+      <td class="px-3 py-2">
+        <div class="flex items-center gap-2">
+          <div class="flex-1 bg-slate-100 rounded-full h-1.5"><div class="bg-rose-500 h-1.5 rounded-full" style="width:${barW.toFixed(1)}%"></div></div>
+        </div>
+      </td>
+      <td class="px-3 py-2 text-xs text-slate-500 tabular-nums">${esc(r.date)}</td>
+    </tr>`;
+  }).join("");
+
+  // Trend chart: aggregate net short by date
+  const byDate = {};
+  for (const s of sorted) {
+    const d = day(s.position_date);
+    if (!d) continue;
+    byDate[d] = (byDate[d] || 0) + (s.net_short_pct || 0);
+  }
+  const dateKeys = Object.keys(byDate).sort();
+  const chartId = "shortChart_" + ticker;
+
+  return `<section class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
+    <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between gap-2 flex-wrap">
+      <div>
+        <h2 class="text-xs uppercase tracking-wide text-slate-500">FCA Short Interest</h2>
+        <p class="text-[11px] text-slate-400 mt-0.5">Reported net short positions ≥ 0.5% · ${esc(current.length)} holder${current.length !== 1 ? "s" : ""} · total <span class="text-rose-600 font-semibold">${totalShort.toFixed(2)}%</span> · as at ${esc(maxDate)}</p>
+      </div>
+      <a href="https://www.fca.org.uk/markets/short-selling" target="_blank" rel="noopener" class="text-[11px] text-slate-400 hover:text-slate-600">FCA ↗</a>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm min-w-[480px]">
+        <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-100">
+          <th class="px-3 py-2 font-medium">Short Seller</th><th class="px-3 py-2 font-medium text-right">Net Short %</th>
+          <th class="px-3 py-2 font-medium">Position</th><th class="px-3 py-2 font-medium">Last Reported</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    ${dateKeys.length >= 3 ? `<div class="px-4 py-3 border-t border-slate-100">
+      <p class="text-[11px] text-slate-400 mb-2">Aggregate net short % (all holders combined)</p>
+      <div class="relative" style="height:100px"><canvas id="${chartId}"></canvas></div>
+    </div>
+    <script>
+    (function(){
+      const ctx = document.getElementById("${chartId}");
+      if (!ctx) return;
+      new Chart(ctx, {
+        type:"line",
+        data:{ labels:${JSON.stringify(dateKeys)}, datasets:[{ label:"Net short %",
+          data:${JSON.stringify(dateKeys.map(k => Math.round(byDate[k]*100)/100))},
+          borderColor:"#e11d48", backgroundColor:"rgba(225,29,72,.07)", borderWidth:1.5,
+          pointRadius:0, tension:.2, fill:true }]},
+        options:{ maintainAspectRatio:false, animation:false,
+          plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: c => c.parsed.y.toFixed(2)+"%" }}},
+          scales:{ x:{ ticks:{ maxTicksLimit:8, font:{ size:10 }, color:"#94a3b8" }, grid:{ display:false }},
+                   y:{ ticks:{ font:{ size:10 }, color:"#94a3b8", callback: v => v+"%"}, grid:{ color:"#f1f5f9" }, min:0 }}}
+      });
+    })();
+    <\/script>` : ""}
+  </section>`;
+}
+
 function dealingsTable(rows, latestClose) {
   const body = rows.map(r => {
     const type = (r.type || "").toUpperCase();
@@ -179,7 +309,6 @@ function dealingsTable(rows, latestClose) {
       : (type === "SELL" || type === "SELL_TAX") ? "bg-rose-100 text-rose-700"
       : "bg-slate-100 text-slate-500";
     const price = Number(r.price) || 0;
-    // Rtn: gross return vs latest close (BUY rows only), mirrors old page.
     let rtnCell = '<span class="text-slate-300">-</span>';
     if (type === "BUY" && latestClose && price > 0) {
       const ret = Math.round((latestClose / price - 1) * 1000) / 10;
@@ -208,13 +337,18 @@ function dealingsTable(rows, latestClose) {
       <td class="px-3 py-2 text-center">${review}</td>
     </tr>`;
   }).join("");
+
   const types = [...new Set(rows.map(r => ((r.type || "").toUpperCase()) || "OTHER"))];
   const TYPE_CLS = { BUY: "bg-emerald-600 border-emerald-600", SELL: "bg-rose-600 border-rose-600", SELL_TAX: "bg-rose-600 border-rose-600" };
   const orderT = ["BUY", "SELL", "SELL_TAX"];
   const sortedTypes = [...orderT.filter(t => types.includes(t)), ...types.filter(t => !orderT.includes(t)).sort()];
-  const chips = sortedTypes.map(t =>
-    `<button type="button" data-tf="${esc(t)}" aria-pressed="true" class="tf-btn px-2 py-0.5 rounded text-[11px] font-semibold text-white border ${TYPE_CLS[t] || "bg-slate-600 border-slate-600"}">${esc(t)}</button>`
-  ).join("");
+
+  // Default: BUY=on, everything else=off
+  const chips = sortedTypes.map(t => {
+    const on = (t === "BUY");
+    return `<button type="button" data-tf="${esc(t)}" aria-pressed="${on}" class="tf-btn px-2 py-0.5 rounded text-[11px] font-semibold text-white border ${TYPE_CLS[t] || "bg-slate-600 border-slate-600"}">${esc(t)}</button>`;
+  }).join("");
+
   return `
     <section class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
       <div class="flex items-center justify-between gap-2 flex-wrap px-4 py-3 border-b border-slate-200">
@@ -222,7 +356,7 @@ function dealingsTable(rows, latestClose) {
         <div class="flex flex-wrap gap-1.5" title="Click a type to show/hide those rows">${chips}</div>
       </div>
       <div class="overflow-x-auto">
-        <table class="w-full text-sm min-w-[860px]">
+        <table class="w-full text-sm min-w-[860px]" id="dealingsTable">
           <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-200">
             <th class="px-3 py-2 font-medium">Date</th><th class="px-3 py-2 font-medium">Director</th>
             <th class="px-3 py-2 font-medium">Role</th><th class="px-3 py-2 font-medium">Type</th>
@@ -245,9 +379,13 @@ function wireTypeFilters() {
       const next = btn.getAttribute("aria-pressed") !== "true";
       btn.setAttribute("aria-pressed", String(next));
       const sel = (window.CSS && CSS.escape) ? CSS.escape(t) : t;
-      document.querySelectorAll('tr[data-type="' + sel + '"]')
+      document.querySelectorAll('#dealingsTable tr[data-type="' + sel + '"]')
         .forEach(r => { r.style.display = next ? "" : "none"; });
     });
+  });
+  // Apply initial state: hide non-BUY rows
+  document.querySelectorAll("#dealingsTable tbody tr").forEach(r => {
+    if (r.dataset.type !== "BUY") r.style.display = "none";
   });
 }
 
@@ -270,7 +408,6 @@ function buildCharts(prices, dealings, reporting) {
     if (ty === "BUY") { buy[i] = closes[i]; (buyNames[i] = buyNames[i] || []).push(nm); }
     else if (ty === "SELL" || ty === "SELL_TAX") { sell[i] = closes[i]; (sellNames[i] = sellNames[i] || []).push(nm); }
   }
-  // Earnings → vertical-line indices within the visible window.
   const earnIdx = [];
   for (const r of (reporting || [])) {
     const rd = day(r.report_date);
@@ -285,13 +422,8 @@ function buildCharts(prices, dealings, reporting) {
     afterDatasetsDraw(chart) {
       if (!earnVisible) return;
       const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
-      ctx.save();
-      ctx.strokeStyle = "rgba(217,119,6,.55)";
-      ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
-      earnIdx.forEach(i => {
-        const xp = x.getPixelForValue(i);
-        ctx.beginPath(); ctx.moveTo(xp, top); ctx.lineTo(xp, bottom); ctx.stroke();
-      });
+      ctx.save(); ctx.strokeStyle = "rgba(217,119,6,.55)"; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+      earnIdx.forEach(i => { const xp = x.getPixelForValue(i); ctx.beginPath(); ctx.moveTo(xp, top); ctx.lineTo(xp, bottom); ctx.stroke(); });
       ctx.restore();
     }
   };
@@ -303,33 +435,20 @@ function buildCharts(prices, dealings, reporting) {
 
   priceChart = new Chart(document.getElementById("priceChart"), {
     type: "line",
-    data: {
-      labels,
-      datasets: [
-        { label: "Close", data: closes, borderColor: "#2563eb", backgroundColor: "rgba(37,99,235,.07)",
-          borderWidth: 1.5, pointRadius: 0, tension: .15, fill: true },
-        mkSet("Buys", buy, "#059669"),
-        mkSet("Sells", sell, "#e11d48")
-      ]
-    },
+    data: { labels, datasets: [
+      { label: "Close", data: closes, borderColor: "#2563eb", backgroundColor: "rgba(37,99,235,.07)", borderWidth: 1.5, pointRadius: 0, tension: .15, fill: true },
+      mkSet("Buys", buy, "#059669"), mkSet("Sells", sell, "#e11d48")
+    ]},
     options: {
-      maintainAspectRatio: false, animation: false,
-      interaction: { mode: "nearest", intersect: false },
+      maintainAspectRatio: false, animation: false, interaction: { mode: "nearest", intersect: false },
       plugins: {
         legend: { display: false },
-        tooltip: {
-          mode: "index", intersect: false,
-          filter: item => item.parsed.y !== null,
-          callbacks: {
-            title: items => items.length ? labels[items[0].dataIndex] : "",
-            label: ctx => {
-              const i = ctx.dataIndex;
+        tooltip: { mode: "index", intersect: false, filter: item => item.parsed.y !== null,
+          callbacks: { title: items => items.length ? labels[items[0].dataIndex] : "",
+            label: ctx => { const i = ctx.dataIndex;
               if (ctx.datasetIndex === 1) return "Buy — " + (buyNames[i] || []).join(", ");
               if (ctx.datasetIndex === 2) return "Sell — " + (sellNames[i] || []).join(", ");
-              return "Close: " + ctx.formattedValue;
-            }
-          }
-        }
+              return "Close: " + ctx.formattedValue; }}}
       },
       scales: {
         x: { ticks: { maxTicksLimit: 8, font: { size: 10 }, color: "#94a3b8" }, grid: { display: false } },
@@ -342,11 +461,7 @@ function buildCharts(prices, dealings, reporting) {
   volumeChart = new Chart(document.getElementById("volumeChart"), {
     type: "bar",
     data: { labels, datasets: [{ label: "Volume", data: vols, backgroundColor: "#cbd5e1", barPercentage: 1, categoryPercentage: 1 }] },
-    options: {
-      maintainAspectRatio: false, animation: false,
-      plugins: { legend: { display: false }, tooltip: { enabled: false } },
-      scales: { x: { display: false }, y: { display: false } }
-    }
+    options: { maintainAspectRatio: false, animation: false, plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
   });
 
   document.querySelectorAll(".mk-btn").forEach(btn => {
@@ -365,7 +480,7 @@ function buildCharts(prices, dealings, reporting) {
   });
 }
 
-function render(dealings, prices, reporting) {
+function render(dealings, prices, reporting, shorts) {
   if (!dealings || !dealings.length) {
     app.innerHTML = `<div class="py-20 text-center text-rose-600 text-sm">No dealings found for <b>${esc(ticker)}</b>.</div>`;
     return;
@@ -379,6 +494,7 @@ function render(dealings, prices, reporting) {
   }
   app.innerHTML = renderHeader(company, r0, dealings.length, reporting)
     + chartSection(prices && prices.length)
+    + shortInterestSection(shorts)
     + dealingsTable(dealings, latestClose);
   wireTypeFilters();
   if (prices && prices.length) buildCharts(prices, dealings, reporting);
@@ -392,17 +508,40 @@ async function load() {
   document.title = ticker + " — Directors Dealings";
   const tq = `ticker=eq.${encodeURIComponent(ticker)}`;
   try {
-    const [dealings, prices, reporting] = await Promise.all([
+    const [dealings, prices, reporting, shorts] = await Promise.all([
       fetchView("public_company_v", `${tq}&order=date.desc,announced_at.desc&limit=500`),
       fetchView("public_prices_v", `${tq}&order=date.desc&limit=420`),
-      fetchView("public_reporting_v", `${tq}&order=report_date.asc&limit=60`)
+      fetchView("public_reporting_v", `${tq}&order=report_date.asc&limit=60`),
+      fetchView("public_short_positions_v", `${tq}&order=position_date.desc&limit=200`).catch(() => [])
     ]);
-    render(dealings, prices, reporting);
+    render(dealings, prices, reporting, shorts);
   } catch (e) {
     app.innerHTML = `<div class="py-20 text-center text-rose-600 text-sm">Couldn't load data (${esc(e.message)}).</div>`;
   }
 }
 load();
+
+// B-197: Refresh button
+(function () {
+  const btn = document.getElementById("refreshBtn");
+  if (!btn) return;
+  const label = btn.innerHTML;
+  btn.addEventListener("click", async function () {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin inline-block">&#8635;</span> Refreshing…';
+    try {
+      const r = await fetch(SUPABASE_URL + "/functions/v1/trigger-refresh", {
+        method: "POST", headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY, "Content-Type": "application/json" }
+      });
+      const d = await r.json().catch(function () { return {}; });
+      if (d && d.ok) {
+        btn.innerHTML = (d.status === "triggered") ? "&#10003; Started" : "&#10003; OK";
+        alert(d.message || "Refresh requested. New data in a few minutes — reload the page to see it.");
+      } else { btn.innerHTML = "&#10007; Failed"; alert((d && d.error) ? d.error : "Could not start a refresh."); }
+    } catch (e) { btn.innerHTML = "&#10007; Failed"; alert("Could not reach the refresh service (" + e.message + ")."); }
+    finally { setTimeout(function () { btn.disabled = false; btn.innerHTML = label; }, 8000); }
+  });
+})();
 </script>
 </body>
 </html>

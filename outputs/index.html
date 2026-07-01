@@ -3,28 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Directors Dealings — This Week</title>
+<title>Directors Dealings — Today</title>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   html, body { background:#f8fafc; color:#0f172a; }
   .tf-btn[aria-pressed="false"] { opacity:.35; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spin { animation: spin 1s linear infinite; display:inline-block; }
+  @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .pulse-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans">
 
-<header class="border-b border-slate-200 bg-white px-4 sm:px-6 h-12 flex items-center justify-between gap-2">
-  <h1 class="text-sm font-semibold text-slate-900 tracking-tight truncate">Directors Dealings — This Week</h1>
+<!-- ===== GLOBAL NAV ===== -->
+<header class="border-b border-slate-200 bg-white px-4 sm:px-6 h-12 flex items-center justify-between gap-2 sticky top-0 z-30">
+  <h1 class="text-sm font-semibold text-slate-900 tracking-tight truncate">Directors Dealings</h1>
   <nav class="flex items-center gap-3 text-xs text-slate-500">
+    <a class="font-semibold text-slate-900" href="./index.html">Today</a>
     <a class="hover:text-slate-900" href="./performance.html">Performance</a>
     <a class="hover:text-slate-900" href="./baskets.html">Baskets</a>
+    <a class="hover:text-slate-900" href="/review">Review</a>
     <button id="refreshBtn" title="Fetch the latest filings now" class="inline-flex items-center gap-1 rounded border border-slate-300 px-2 py-0.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 disabled:opacity-50">&#8635; Refresh</button>
-    <span class="inline-flex items-center gap-1 text-emerald-600"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Live</span>
-  </nav><!-- build: b197 refresh-button 2026-06-25 -->
+    <span id="liveIndicator" class="inline-flex items-center gap-1 text-emerald-600"><span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>Live</span>
+  </nav>
 </header>
 
+<!-- ===== SEARCH BAR ===== -->
+<div class="bg-white border-b border-slate-100 px-4 sm:px-6 py-2">
+  <div class="max-w-6xl mx-auto">
+    <input id="globalSearch" type="search" placeholder="Search ticker or company…"
+      class="w-full sm:w-72 text-sm border border-slate-200 rounded px-3 py-1.5 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-400">
+  </div>
+</div>
+
 <main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
-  <div id="app"><div class="py-20 text-center text-slate-400 text-sm">Loading latest dealings…</div></div>
+  <div id="app"><div class="py-20 text-center text-slate-400 text-sm flex flex-col items-center gap-3">
+    <svg class="spin w-8 h-8 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+    <span>Loading latest dealings…</span>
+  </div></div>
+
+  <!-- DB Stats footer (filled by JS) -->
+  <div id="dbStats" class="mt-8 hidden">
+    <div class="border-t border-slate-200 pt-6">
+      <h2 class="text-xs uppercase tracking-wide text-slate-400 mb-3">Database coverage</h2>
+      <div id="dbStatsInner" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
+    </div>
+  </div>
+
   <footer class="mt-10 pt-4 border-t border-slate-200 text-[11px] text-slate-400">
     <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 align-middle mr-1"></span>
     Live from the Directors Dealings database. UK RNS PDMR announcements. Signal badges are colour-coded by conviction tier — hover for definitions.
@@ -32,7 +59,6 @@
 </main>
 
 <script>
-// Public, read-only credentials (RLS restricts the anon key to the serving views).
 const SUPABASE_URL = "https://mmiaiauybzsdcbrrcxfc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_vADFSIyRre-9sGyhDnXBcA_H167SU8B";
 
@@ -44,7 +70,7 @@ const day = s => (s ? String(s).slice(0, 10) : "");
 const companyUrl = t => "company.html?ticker=" + encodeURIComponent(t || "");
 function addDays(iso, n) { const d = new Date(iso + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
 
-// ---- Signal tier palette (mirror of render_helpers.TIER_PALETTE) -----------
+// ---- Signal tier palette --------------------------------------------------
 const TIER = {
   t0:"bg-red-600 text-white", t1a:"bg-red-500 text-white", t1b:"bg-rose-500 text-white",
   t7:"bg-violet-500 text-white", t2:"bg-amber-500 text-white", t3:"bg-emerald-500 text-white",
@@ -75,7 +101,7 @@ function sigBadges(sigs) {
   }).join("") + '</span>';
 }
 
-// ---- Role chips ------------------------------------------------------------
+// ---- Role chips -----------------------------------------------------------
 const ROLE_CLS = {
   "CEO":"bg-indigo-100 text-indigo-700", "CFO":"bg-indigo-100 text-indigo-700", "Other Chief":"bg-indigo-50 text-indigo-600",
   "Founder":"bg-emerald-100 text-emerald-700", "Chair (executive)":"bg-violet-100 text-violet-700", "Non-Exec Chair":"bg-violet-50 text-violet-600",
@@ -136,12 +162,44 @@ function buildCapitalChart(monthly) {
   });
 }
 
-// ---- Conviction score — faithful port of .scripts/conviction.py ------------
-// Composite: 100 × ( Σ wi·Fi ) × sectorMult. Live we have F1 (role), F2 (buy
-// size, absolute), F3 (company size). No earnings date → drop F4 + renormalise
-// (per spec decision 2026-06-18). No trailing return → F5 neutral 0.5. No
-// sector beta → F6 = 1.0 (no discount). This is exactly what conviction.py
-// returns for that missing-data state. Earn/Past light up once B-194 runs.
+// ---- Inline sparkline (SVG) -----------------------------------------------
+function sparkline(values, color) {
+  if (!values || values.length < 2) return "";
+  const w = 80, h = 28, pad = 2;
+  const min = Math.min(...values), max = Math.max(...values);
+  const range = max - min || 1;
+  const pts = values.map((v, i) => {
+    const x = pad + (i / (values.length - 1)) * (w - pad * 2);
+    const y = h - pad - ((v - min) / range) * (h - pad * 2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" class="inline-block align-middle opacity-70"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+}
+
+// Build weekly counts from rows over last 13 weeks
+function weeklyCountSeries(rows, field, since90) {
+  // bucket by ISO week
+  const buckets = {};
+  for (const r of rows) {
+    const d = day(r.date);
+    if (d < since90) continue;
+    const dt = new Date(d + "T00:00:00Z");
+    const yr = dt.getUTCFullYear(), wk = isoWeek(dt);
+    const key = `${yr}-${String(wk).padStart(2,"0")}`;
+    buckets[key] = (buckets[key] || 0) + 1;
+  }
+  const keys = Object.keys(buckets).sort();
+  return keys.map(k => buckets[k]);
+}
+function isoWeek(d) {
+  const tmp = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  const day1 = tmp.getUTCDay() || 7;
+  tmp.setUTCDate(tmp.getUTCDate() + 4 - day1);
+  const y0 = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+  return Math.ceil((((tmp - y0) / 86400000) + 1) / 7);
+}
+
+// ---- Conviction score -------------------------------------------------------
 const CONV_W = { who: 0.25, buy_size: 0.25, company_size: 0.20, past_performance: 0.15 };
 const ROLE_STRENGTH = {
   "CEO": 1.0, "Founder": 1.0, "Chair (executive)": 1.0, "Non-Exec Chair": 1.0, "CFO": 0.9,
@@ -155,8 +213,6 @@ function logRamp(v, floor, ceil) {
   const lo = Math.log10(floor), hi = Math.log10(ceil);
   return clamp01((Math.log10(v) - lo) / (hi - lo));
 }
-function f1Who(role) { return ROLE_STRENGTH[role] ?? 0.2; }
-function f2BuySize(v) { return logRamp(Number(v) || 0, 5000, 5000000); }
 function f3CompanySize(cap) {
   if (!cap || cap <= 0) return 0.5;
   if (cap <= 50e6) return 1.0; if (cap >= 10e9) return 0.1;
@@ -165,10 +221,15 @@ function f3CompanySize(cap) {
 }
 function bandFor(s) { return s < 40 ? "Low" : s < 60 ? "Moderate" : s < 80 ? "High" : "Exceptional"; }
 function convictionScore(r) {
-  const sub = { who: f1Who(r.role_normalized), buy_size: f2BuySize(r.value), company_size: f3CompanySize(r.market_cap_gbp), past_performance: 0.5 };
-  const total = CONV_W.who + CONV_W.buy_size + CONV_W.company_size + CONV_W.past_performance; // F4 dropped
+  const sub = {
+    who: ROLE_STRENGTH[r.role_normalized] ?? 0.2,
+    buy_size: logRamp(Number(r.value) || 0, 5000, 5000000),
+    company_size: f3CompanySize(r.market_cap_gbp),
+    past_performance: 0.5
+  };
+  const total = Object.values(CONV_W).reduce((a, b) => a + b, 0);
   let s = 0; for (const k in CONV_W) s += (CONV_W[k] / total) * clamp01(sub[k]);
-  const score = clamp01(s) * 100; // F6 = 1.0
+  const score = clamp01(s) * 100;
   return { score, band: bandFor(score), sub };
 }
 const CONV_BAND_CLS = { Low: "bg-slate-100 text-slate-500", Moderate: "bg-amber-100 text-amber-700", High: "bg-emerald-100 text-emerald-700", Exceptional: "bg-emerald-600 text-white" };
@@ -177,10 +238,11 @@ function bandBadge(band, score) {
 }
 function factorChip(short, value, unknown) {
   if (unknown || value == null) {
-    return `<span class="inline-flex flex-col items-center px-1 py-0.5 rounded bg-slate-50 text-[9px] leading-tight" title="${short}: needs pipeline (B-194)"><span class="text-slate-400">${short}</span><span class="text-slate-400 italic">n/a</span></span>`;
+    return `<span class="inline-flex flex-col items-center px-1 py-0.5 rounded bg-slate-50 text-[9px] leading-tight" title="${short}: needs pipeline"><span class="text-slate-400">${short}</span><span class="text-slate-400 italic">n/a</span></span>`;
   }
   return `<span class="inline-flex flex-col items-center px-1 py-0.5 rounded bg-indigo-50 text-[9px] leading-tight"><span class="text-slate-500">${short}</span><span class="text-indigo-700 font-semibold tabular-nums">${Math.round(value * 100)}%</span></span>`;
 }
+
 function convictionPanel(rows, since) {
   const scored = rows
     .filter(r => (r.type || "").toUpperCase() === "BUY" && day(r.date) >= since)
@@ -195,19 +257,20 @@ function convictionPanel(rows, since) {
       <td class="px-3 py-2">${bandBadge(d.band, d.score)}</td>
       <td class="px-3 py-2"><a href="${companyUrl(r.ticker)}" class="text-blue-600 hover:underline font-medium">${esc(r.ticker)}</a><div class="text-[10px] text-slate-500 truncate max-w-[12rem]">${esc(r.company || "")}</div></td>
       <td class="px-3 py-2 text-slate-700">${esc(r.director || "")}<div class="text-[10px] text-slate-400 mt-0.5">${roleChip(r.role, r.role_normalized)}</div></td>
-      <td class="px-3 py-2 text-right tabular-nums text-slate-600">${fmtGbp(r.value)}<div class="text-[10px] text-slate-400">${esc(day(r.date))}</div></td>
+      <td class="px-3 py-2 text-slate-500 text-[11px] tabular-nums">${esc(day(r.date))}</td>
+      <td class="px-3 py-2 text-right tabular-nums text-slate-600">${fmtGbp(r.value)}</td>
       <td class="px-3 py-2">${factors}</td>
     </tr>`;
   }).join("");
   return `<section class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
     <div class="px-4 py-3 border-b border-slate-200 flex items-baseline justify-between gap-2 flex-wrap">
       <h2 class="text-xs uppercase tracking-wide text-slate-500">Conviction — top picks (last 4 weeks)</h2>
-      <span class="text-[10px] text-slate-400">score 0–100 · Who / Size / Cap live · Earn &amp; Past need pipeline (B-194)</span>
+      <span class="text-[10px] text-slate-400">score 0–100 · Who / Size / Cap live · Earn &amp; Past need pipeline</span>
     </div>
-    <div class="overflow-x-auto"><table class="w-full text-sm min-w-[680px]">
+    <div class="overflow-x-auto"><table class="w-full text-sm min-w-[720px]">
       <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-200">
         <th class="px-3 py-2 font-medium text-center">#</th><th class="px-3 py-2 font-medium">Score</th><th class="px-3 py-2 font-medium">Company</th>
-        <th class="px-3 py-2 font-medium">Director</th><th class="px-3 py-2 font-medium text-right">Value</th><th class="px-3 py-2 font-medium">Factors</th>
+        <th class="px-3 py-2 font-medium">Director</th><th class="px-3 py-2 font-medium">Reported</th><th class="px-3 py-2 font-medium text-right">Value</th><th class="px-3 py-2 font-medium">Factors</th>
       </tr></thead><tbody>${body}</tbody></table></div></section>`;
 }
 
@@ -219,8 +282,6 @@ async function fetchConviction() {
   } catch (e) { return []; }
 }
 
-// Real graded conviction scores from the pipeline (preferred over the live
-// client-side estimate once conviction_scores is populated — all 6 factors).
 function realConvictionPanel(convRows) {
   if (!convRows || !convRows.length) return "";
   const maxW = convRows.map(r => r.window_end).filter(Boolean).sort().slice(-1)[0];
@@ -237,7 +298,8 @@ function realConvictionPanel(convRows) {
       <td class="px-3 py-2">${bandBadge(d.band || "Low", d.score || 0)}${hot}</td>
       <td class="px-3 py-2"><a href="${companyUrl(d.ticker)}" class="text-blue-600 hover:underline font-medium">${esc(d.ticker)}</a><div class="text-[10px] text-slate-500 truncate max-w-[12rem]">${esc(d.company || "")}</div></td>
       <td class="px-3 py-2 text-slate-700">${esc(d.director || "")}<div class="text-[10px] text-slate-400 mt-0.5">${roleChip(null, d.role_normalized)}</div></td>
-      <td class="px-3 py-2 text-right tabular-nums text-slate-600">${fmtGbp(d.value)}<div class="text-[10px] text-slate-400">${esc(day(d.date))}</div></td>
+      <td class="px-3 py-2 text-slate-500 text-[11px] tabular-nums">${esc(day(d.date))}</td>
+      <td class="px-3 py-2 text-right tabular-nums text-slate-600">${fmtGbp(d.value)}</td>
       <td class="px-3 py-2">${factors}</td>
     </tr>`;
   }).join("");
@@ -246,22 +308,28 @@ function realConvictionPanel(convRows) {
       <h2 class="text-xs uppercase tracking-wide text-slate-500">Conviction — top picks (4-week window)</h2>
       <span class="text-[10px] text-slate-400">live graded score 0–100 · all 6 factors · window ${esc(maxW || "")}</span>
     </div>
-    <div class="overflow-x-auto"><table class="w-full text-sm min-w-[680px]">
+    <div class="overflow-x-auto"><table class="w-full text-sm min-w-[720px]">
       <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-200">
         <th class="px-3 py-2 font-medium text-center">#</th><th class="px-3 py-2 font-medium">Score</th><th class="px-3 py-2 font-medium">Company</th>
-        <th class="px-3 py-2 font-medium">Director</th><th class="px-3 py-2 font-medium text-right">Value</th><th class="px-3 py-2 font-medium">Factors</th>
+        <th class="px-3 py-2 font-medium">Director</th><th class="px-3 py-2 font-medium">Reported</th><th class="px-3 py-2 font-medium text-right">Value</th><th class="px-3 py-2 font-medium">Factors</th>
       </tr></thead><tbody>${body}</tbody></table></div></section>`;
 }
 
-function tile(label, value, sub) {
+// ---- Summary tiles with sparklines ----------------------------------------
+function tile(label, value, sub, spark) {
   return `<div class="bg-white border border-slate-200 rounded-lg px-4 py-3">
     <div class="text-[11px] uppercase tracking-wide text-slate-500">${label}</div>
-    <div class="text-2xl font-semibold text-slate-900 mt-0.5">${value}</div>
-    ${sub ? `<div class="text-[11px] text-slate-400 mt-0.5">${sub}</div>` : ""}</div>`;
+    <div class="flex items-end justify-between gap-2 mt-0.5">
+      <div>
+        <div class="text-2xl font-semibold text-slate-900">${value}</div>
+        ${sub ? `<div class="text-[11px] text-slate-400 mt-0.5">${sub}</div>` : ""}
+      </div>
+      ${spark || ""}
+    </div>
+  </div>`;
 }
 
 function clustersFrom(rows, since) {
-  // Active cluster = >=2 distinct directors BUYING the same ticker within the window.
   const byTicker = {};
   for (const r of rows) {
     if ((r.type || "").toUpperCase() !== "BUY") continue;
@@ -292,8 +360,10 @@ function dealingsTable(rows) {
     const tkey = type || "OTHER";
     const tcls = type === "BUY" ? "bg-emerald-100 text-emerald-700" : (type === "SELL" || type === "SELL_TAX") ? "bg-rose-100 text-rose-700" : "bg-slate-100 text-slate-500";
     const url = r.url || "";
+    const fp = esc(r.fingerprint || "");
     const src = url ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="RNS announcement">↗</a>` : `<span class="text-slate-200">↗</span>`;
-    return `<tr data-type="${esc(tkey)}" class="border-b border-slate-100 hover:bg-slate-50">
+    const rev = fp ? `<a href="/review?tab=b&fp=${fp}" class="text-slate-300 hover:text-indigo-500 ml-1" title="Open in PDMR review">✎</a>` : "";
+    return `<tr data-type="${esc(tkey)}" data-search="${esc((r.ticker||"")+" "+(r.company||"")).toLowerCase()}" class="border-b border-slate-100 hover:bg-slate-50">
       <td class="px-3 py-2 text-slate-600">${esc(day(r.date))}</td>
       <td class="px-3 py-2"><a class="text-indigo-600 hover:underline font-medium" href="${companyUrl(r.ticker)}">${esc(r.ticker)}</a></td>
       <td class="px-3 py-2 text-slate-700 max-w-[180px] truncate">${esc(r.company || "")}</td>
@@ -302,26 +372,33 @@ function dealingsTable(rows) {
       <td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${tcls}">${esc(type || "-")}</span></td>
       <td class="px-3 py-2 text-right tabular-nums">${fmtGbp(r.value)}</td>
       <td class="px-3 py-2">${sigBadges(r.signals)}</td>
-      <td class="px-3 py-2 text-center">${src}</td>
+      <td class="px-3 py-2 text-center">${src}${rev}</td>
     </tr>`;
   }).join("");
   const types = [...new Set(rows.map(r => ((r.type || "").toUpperCase()) || "OTHER"))];
   const TYPE_CLS = { BUY: "bg-emerald-600 border-emerald-600", SELL: "bg-rose-600 border-rose-600", SELL_TAX: "bg-rose-600 border-rose-600" };
   const orderT = ["BUY", "SELL", "SELL_TAX"];
   const sortedTypes = [...orderT.filter(t => types.includes(t)), ...types.filter(t => !orderT.includes(t)).sort()];
-  const chips = sortedTypes.map(t => `<button type="button" data-tf="${esc(t)}" aria-pressed="true" class="tf-btn px-2 py-0.5 rounded text-[11px] font-semibold text-white border ${TYPE_CLS[t] || "bg-slate-600 border-slate-600"}">${esc(t)}</button>`).join("");
+  // Default: BUY=on, everything else=off
+  const chips = sortedTypes.map(t => {
+    const on = (t === "BUY");
+    return `<button type="button" data-tf="${esc(t)}" aria-pressed="${on}" class="tf-btn px-2 py-0.5 rounded text-[11px] font-semibold text-white border ${TYPE_CLS[t] || "bg-slate-600 border-slate-600"}">${esc(t)}</button>`;
+  }).join("");
   return `
     <section class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
       <div class="flex items-center justify-between gap-2 flex-wrap px-4 py-3 border-b border-slate-200">
         <h2 class="text-xs uppercase tracking-wide text-slate-500">This week's dealings</h2>
-        <div class="flex flex-wrap gap-1.5" title="Click a type to show/hide">${chips}</div>
+        <div class="flex flex-wrap gap-1.5 items-center">
+          <span class="text-[10px] text-slate-400 mr-1">Filter:</span>${chips}
+          <a href="/review" class="ml-2 text-[11px] text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded px-2 py-0.5">Review ✎</a>
+        </div>
       </div>
       <div class="overflow-x-auto">
-        <table class="w-full text-sm min-w-[820px]">
+        <table class="w-full text-sm min-w-[820px]" id="dealingsTable">
           <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-200">
             <th class="px-3 py-2 font-medium">Date</th><th class="px-3 py-2 font-medium">Ticker</th><th class="px-3 py-2 font-medium">Company</th>
             <th class="px-3 py-2 font-medium">Director</th><th class="px-3 py-2 font-medium">Role</th><th class="px-3 py-2 font-medium">Type</th>
-            <th class="px-3 py-2 font-medium text-right">Value</th><th class="px-3 py-2 font-medium">Signals</th><th class="px-3 py-2 font-medium text-center">RNS</th>
+            <th class="px-3 py-2 font-medium text-right">Value</th><th class="px-3 py-2 font-medium">Signals</th><th class="px-3 py-2 font-medium text-center">Links</th>
           </tr></thead>
           <tbody>${body}</tbody>
         </table>
@@ -335,25 +412,131 @@ function wireTypeFilters() {
       const t = btn.dataset.tf;
       const next = btn.getAttribute("aria-pressed") !== "true";
       btn.setAttribute("aria-pressed", String(next));
-      const sel = (window.CSS && CSS.escape) ? CSS.escape(t) : t;
-      document.querySelectorAll('tr[data-type="' + sel + '"]').forEach(r => { r.style.display = next ? "" : "none"; });
+      applyFilters();
     });
   });
+  // Apply initial filter state
+  applyFilters();
+}
+
+function applyFilters() {
+  const activeTypes = new Set();
+  document.querySelectorAll(".tf-btn[aria-pressed='true']").forEach(b => activeTypes.add(b.dataset.tf));
+  const q = (document.getElementById("globalSearch")?.value || "").toLowerCase().trim();
+  document.querySelectorAll("#dealingsTable tbody tr").forEach(row => {
+    const typeMatch = activeTypes.has(row.dataset.type);
+    const searchMatch = !q || (row.dataset.search || "").includes(q);
+    row.style.display = (typeMatch && searchMatch) ? "" : "none";
+  });
+}
+
+// ---- DB stats section -------------------------------------------------------
+async function loadDbStats(rows) {
+  const el = document.getElementById("dbStats");
+  const inner = document.getElementById("dbStatsInner");
+  if (!el || !inner) return;
+
+  // Total RNS filings from in-memory data
+  const totalRns = rows.length;
+  const allTickers = [...new Set(rows.map(r => r.ticker).filter(Boolean))];
+  const allDirectors = [...new Set(rows.map(r => (r.director||"").trim().toLowerCase()).filter(Boolean))];
+
+  // Sector breakdown from data
+  const sectorMap = {};
+  rows.forEach(r => {
+    const s = r.sector || "No sector";
+    sectorMap[s] = sectorMap[s] || { companies: new Set(), dirs: new Set() };
+    if (r.ticker) sectorMap[s].companies.add(r.ticker);
+    if (r.director) sectorMap[s].dirs.add(r.director.trim().toLowerCase());
+  });
+  const noSector = rows.filter(r => !r.sector).map(r => r.ticker).filter(Boolean);
+  const noCap = rows.filter(r => !r.market_cap_gbp).map(r => r.ticker).filter(Boolean);
+  const noSectorUniq = new Set(noSector).size;
+  const noCapUniq = new Set(noCap).size;
+  const noBoth = new Set(rows.filter(r => !r.sector && !r.market_cap_gbp).map(r => r.ticker).filter(Boolean)).size;
+
+  const statTile = (label, value, note) =>
+    `<div class="bg-white border border-slate-200 rounded-lg px-3 py-2.5">
+      <div class="text-[10px] uppercase tracking-wide text-slate-400">${label}</div>
+      <div class="text-xl font-semibold text-slate-800 mt-0.5">${value}</div>
+      ${note ? `<div class="text-[10px] text-slate-400 mt-0.5">${note}</div>` : ""}
+    </div>`;
+
+  // Sector breakdown table
+  const sectors = Object.entries(sectorMap)
+    .filter(([k]) => k !== "No sector")
+    .sort((a, b) => b[1].companies.size - a[1].companies.size);
+  const sectorRows = sectors.map(([s, d]) =>
+    `<tr class="border-t border-slate-100"><td class="py-1 px-2 text-xs text-slate-700">${esc(s)}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.companies.size}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.dirs.size}</td></tr>`
+  ).join("");
+
+  inner.innerHTML = statTile("Total filings (loaded)", fmtInt(totalRns), "last 600 records")
+    + statTile("Companies", fmtInt(allTickers.length), "in dataset")
+    + statTile("Directors", fmtInt(allDirectors.length), "unique names")
+    + statTile("No sector data", fmtInt(noSectorUniq), "companies missing")
+    + statTile("No mkt cap data", fmtInt(noCapUniq), "companies missing")
+    + statTile("Missing both", fmtInt(noBoth), "sector + cap absent");
+
+  if (sectorRows) {
+    inner.insertAdjacentHTML("afterend", `
+      <div class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
+        <div class="px-4 py-3 border-b border-slate-100"><h3 class="text-xs uppercase tracking-wide text-slate-400">Companies &amp; directors by sector</h3></div>
+        <div class="overflow-x-auto"><table class="w-full">
+          <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-100">
+            <th class="py-1 px-2 font-medium">Sector</th><th class="py-1 px-2 font-medium text-right">Companies</th><th class="py-1 px-2 font-medium text-right">Directors</th>
+          </tr></thead><tbody>${sectorRows}</tbody>
+        </table></div>
+      </div>`);
+  }
+
+  el.classList.remove("hidden");
 }
 
 function render(rows, monthly, convRows) {
   if (!rows || !rows.length) { app.innerHTML = `<div class="py-20 text-center text-slate-400 text-sm">No dealings found.</div>`; return; }
   const maxDate = rows.map(r => day(r.date)).filter(Boolean).sort().slice(-1)[0];
-  const win7 = addDays(maxDate, -7);
+  const win7  = addDays(maxDate, -7);
   const win28 = addDays(maxDate, -28);
   const win30 = addDays(maxDate, -30);
-  const week = rows.filter(r => day(r.date) >= win7);
+  const win90 = addDays(maxDate, -90);
+  const week  = rows.filter(r => day(r.date) >= win7);
+  const q90   = rows.filter(r => day(r.date) >= win90);
   const clusters = clustersFrom(rows, win30);
 
-  const tiles = `<div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5">
-    ${tile("Dealings this week", fmtInt(week.length), "to " + esc(maxDate))}
-    ${tile("Active clusters", fmtInt(clusters.length), "≥2 buyers · 30 days")}
-    ${tile("Companies", fmtInt(new Set(week.map(r => r.ticker)).size), "this week")}
+  // Sparkline data (weekly buckets over 90 days)
+  const dealSeries    = weeklyCountSeries(rows.filter(r => day(r.date) >= win90), "date", win90);
+  const clusterSeries = weeklyCountSeries(rows.filter(r => {
+    if ((r.type||"").toUpperCase() !== "BUY") return false;
+    if (day(r.date) < win90) return false;
+    return true;
+  }), "date", win90);
+  const compWeekly = (() => {
+    const bkt = {};
+    for (const r of q90) {
+      const dt = new Date((r.date||"").slice(0,10)+"T00:00:00Z");
+      const yr = dt.getUTCFullYear(), wk = isoWeek(dt);
+      const key = `${yr}-${String(wk).padStart(2,"0")}`;
+      (bkt[key] = bkt[key] || new Set()).add(r.ticker);
+    }
+    return Object.keys(bkt).sort().map(k => bkt[k].size);
+  })();
+
+  // Pct change vs 3mo ago for companies
+  const compNow = new Set(week.map(r => r.ticker)).size;
+  const comp90  = new Set(q90.filter(r => day(r.date) < addDays(win90, 7)).map(r => r.ticker)).size;
+  const dealChg = dealSeries.length > 1
+    ? Math.round((dealSeries[dealSeries.length-1] / (dealSeries[0] || 1) - 1) * 100) : 0;
+
+  const sparkDeal    = sparkline(dealSeries, "#2563eb");
+  const sparkCluster = sparkline(clusterSeries, "#059669");
+  const sparkComp    = sparkline(compWeekly, "#7c3aed");
+
+  const dealChgTxt = dealChg > 0 ? `<span class="text-emerald-600">▲${dealChg}%</span>` : dealChg < 0 ? `<span class="text-rose-600">▼${Math.abs(dealChg)}%</span>` : "";
+
+  const tiles = `<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
+    ${tile("Dealings this week", fmtInt(week.length), "to " + esc(maxDate) + (dealChgTxt ? " · " + dealChgTxt + " vs 90d ago" : ""), sparkDeal)}
+    ${tile("Active clusters", fmtInt(clusters.length), "≥2 buyers · 30 days", sparkCluster)}
+    ${tile("Companies", fmtInt(compNow), "this week", sparkComp)}
   </div>`;
 
   const clusterHtml = clusters.length
@@ -364,10 +547,18 @@ function render(rows, monthly, convRows) {
   const capHtml = `<section class="mt-4 bg-white border border-slate-200 rounded-lg p-4">
     <h2 class="text-xs uppercase tracking-wide text-slate-500 mb-2">Capital deployed — director buys (£k / month)</h2>
     <div class="relative" style="height:220px"><canvas id="capChart"></canvas></div></section>`;
+
   const topHtml = (convRows && convRows.length) ? realConvictionPanel(convRows) : convictionPanel(rows, win28);
   app.innerHTML = tiles + topHtml + clusterHtml + capHtml + dealingsTable(week);
   wireTypeFilters();
   buildCapitalChart(monthly);
+
+  // Search wiring
+  const srch = document.getElementById("globalSearch");
+  if (srch) srch.addEventListener("input", applyFilters);
+
+  // Load DB stats async
+  loadDbStats(rows);
 }
 
 (async function () {
@@ -377,15 +568,14 @@ function render(rows, monthly, convRows) {
   } catch (e) { app.innerHTML = `<div class="py-20 text-center text-rose-600 text-sm">Couldn't load data (${esc(e.message)}).</div>`; }
 })();
 
-// B-197: manual refresh button. Calls the trigger-refresh edge function, which
-// holds the GitHub token server-side and dispatches the daily-refresh workflow.
-// The pipeline takes a few minutes; reload the page afterwards to see new data.
+// B-197: Refresh button → Supabase edge function
 (function () {
   const btn = document.getElementById("refreshBtn");
   if (!btn) return;
   const label = btn.innerHTML;
   btn.addEventListener("click", async function () {
-    btn.disabled = true; btn.innerHTML = "&#8635; Refreshing…";
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin inline-block">&#8635;</span> Refreshing…';
     try {
       const r = await fetch(SUPABASE_URL + "/functions/v1/trigger-refresh", {
         method: "POST",
