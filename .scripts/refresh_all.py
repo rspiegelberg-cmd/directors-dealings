@@ -135,6 +135,11 @@ STEPS = [
      "backfill_benchmarks.py",   ["--rate-limit", "0.5"], 60 * 10),
     ("sectors",    "Resolving ticker sectors + AIM flags",
      "fetch_sectors.py",         [],                 60 * 5),
+    # FMP sector backfill: fills sector for tickers not in sector_map.csv.
+    # Only fetches tickers with NULL sector, so fast on typical days (~5s).
+    # SOFT: rate-limit hits or API errors don't abort the pipeline.
+    ("sector_fmp", "Backfilling missing sectors via FMP",
+     "backfill_sectors.py",      [],                 60 * 10, True),
     # B-011 / Sprint 10 Phase 2: classify IT/CEF/VCT/REIT issuers BEFORE
     # signals so the universe filter in eval_signals._universe_rows
     # (Phase 1) sees up-to-date is_excluded_issuer flags. Default
