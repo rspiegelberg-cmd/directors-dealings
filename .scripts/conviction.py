@@ -373,72 +373,85 @@ def f5_past_performance(trailing_return: Optional[float]) -> float:
 
 
 # ===========================================================================
-# F6 — Sector multiplier (data-driven, can boost OR discount)  spec §3 F6
+# F6 — Dynamic sector multiplier (net-buy volume, revised 2026-07-01)
 # ===========================================================================
-# Recalibrated 2026-07-01 from 30-day hit rates across 1,341 BUY transactions
-# over the 12 months to 2026-07-01. "Hit" = stock price higher 30 trading
-# days (~42 calendar days) after the buy date.  Multipliers scaled linearly:
-# worst sector (Technology 41.9%) → 0.75, best (Utilities 67.4%) → 1.25.
+# F6 is now computed live from net director activity in the trailing 30
+# calendar days: net_buys = BUY count − (SELL + SELL_TAX) count per sector.
+# This replaces the old static hit-rate table.
 #
-#   Sector                  | trades | hit_rate | avg_ret | mult
-#   ------------------------|--------|----------|---------|------
-#   Utilities               |     46 |  67.4%   | +1.6%   | 1.25
-#   Financials              |    288 |  65.6%   | +3.6%   | 1.20
-#   Communication Services  |     77 |  61.0%   | +6.2%   | 1.10
-#   Consumer Staples        |    136 |  59.6%   | -0.2%   | 1.10
-#   Consumer Discretionary  |    162 |  56.8%   | +1.6%   | 1.05
-#   Energy                  |     27 |  55.6%   | -1.9%   | 1.00  (n=27 caution)
-#   Real Estate             |     76 |  53.9%   | -0.7%   | 0.95
-#   Industrials             |    246 |  53.3%   | -0.1%   | 0.95
-#   Materials               |    125 |  50.4%   | +13.1%  | 0.90  (skewed avg)
-#   Health Care             |     35 |  45.7%   | -0.1%   | 0.80  (n=35 caution)
-#   Technology              |    124 |  41.9%   | +0.2%   | 0.75
+# Net-buy → F6 score mapping (symmetric dead-band ±4):
+#   net ≥ 21          →  +1.00   (sector_mult = 2.00)
+#   15 ≤ net ≤ 20     →  +0.75   (sector_mult = 1.75)
+#   10 ≤ net ≤ 14     →  +0.50   (sector_mult = 1.50)
+#    5 ≤ net ≤  9     →  +0.25   (sector_mult = 1.25)
+#   −4 ≤ net ≤  4     →   0.00   (sector_mult = 1.00  — neutral dead-band)
+#   −9 ≤ net ≤ −5     →  −0.25   (sector_mult = 0.75)
+#  −14 ≤ net ≤ −10    →  −0.50   (sector_mult = 0.50)
+#  −20 ≤ net ≤ −15    →  −0.75   (sector_mult = 0.25)
+#        net ≤ −21    →  −1.00   (sector_mult = 0.00 — score zeroed)
 #
-# Returns are raw price change (not benchmark-adjusted). Multipliers are
-# provisional v1 priors — reviewed quarterly in the champion/challenger loop.
-# Final score is still capped at 100.
-SECTOR_MULTIPLIERS: dict[str, float] = {
-    "Utilities": 1.25,
-    "Financials": 1.20,
-    "Communication Services": 1.10,
-    "Consumer Staples": 1.10,
-    "Consumer Discretionary": 1.05,
-    "Energy": 1.00,
-    "Real Estate": 0.95,
-    "Industrials": 0.95,
-    "Materials": 0.90,
-    "Health Care": 0.80,
-    "Technology": 0.75,
-}
-_SECTOR_MULT_DEFAULT = 1.00  # unknown sector -> neutral
+# sector_mult = max(0.0, 1.0 + f6_score)
+#
+# The map is computed once per pipeline run by
+# conviction_pipeline.compute_sector_f6_map(conn) and passed in as
+# sector_f6_map={...} to every conviction_score() call.  Unit tests that
+# do not supply a map receive a neutral 1.0 multiplier.
 
 
-def f6_sector_multiplier(sector: Optional[str] = None) -> float:
-    """F6 sector multiplier (0.75-1.20). Data-driven from paper-trade history.
+def net_buys_to_f6(net: int) -> float:
+    """Map trailing-30d net buy count to an F6 score (-1.0 … +1.0).
+
+    Symmetric dead-band of ±4; returns one of:
+    {-1.0, -0.75, -0.5, -0.25, 0.0, +0.25, +0.5, +0.75, +1.0}.
+    """
+    if net >= 21:
+        return 1.0
+    if net >= 15:
+        return 0.75
+    if net >= 10:
+        return 0.5
+    if net >= 5:
+        return 0.25
+    if net >= -4:
+        return 0.0
+    if net >= -9:
+        return -0.25
+    if net >= -14:
+        return -0.5
+    if net >= -20:
+        return -0.75
+    return -1.0
+
+
+def f6_sector_multiplier(sector: Optional[str] = None,
+                         sector_f6_map: Optional[dict] = None) -> float:
+    """F6 sector multiplier from the live 30-day net-buy map.
 
     Args:
-      sector: sector name string from tickers_meta.sector (e.g. "Materials").
-              None / unknown -> neutral 1.0 (no boost or penalty).
+      sector:        sector tag from tickers_meta (e.g. "Financials").
+      sector_f6_map: pre-computed {sector: f6_score} dict produced by
+                     conviction_pipeline.compute_sector_f6_map(conn).
+                     Pass None (or omit) for unit tests → neutral 1.0.
 
-    May exceed 1.0 for sectors with strong historical hit rates; final score
-    is still capped at 100 in the composite.
+    Returns sector_mult = max(0.0, 1.0 + f6_score).
+      f6 = +1.0  → mult 2.00 (strong net buying)
+      f6 =  0.0  → mult 1.00 (neutral / dead-band)
+      f6 = -1.0  → mult 0.00 (strong net selling; score zeroed)
+    Final score is still capped at 100 by the composite() function.
     """
-    if not sector:
-        return _SECTOR_MULT_DEFAULT
-    return SECTOR_MULTIPLIERS.get(sector.strip(), _SECTOR_MULT_DEFAULT)
+    if not sector or not sector_f6_map:
+        return 1.0  # unknown sector / no map → neutral
+    f6 = sector_f6_map.get(sector.strip(), 0.0)
+    return max(0.0, 1.0 + f6)
 
 
-# Keep old guardrail function for backward compatibility with any callers that
-# haven't migrated yet. Deprecated — use f6_sector_multiplier() instead.
-_GUARDRAIL_MAX = 1.0
-
-
+# Deprecated — kept for any callers that haven't been updated yet.
 def f6_sector_guardrail(sector_beta_hotness: Optional[float] = None) -> float:
-    """Deprecated: use f6_sector_multiplier(sector) instead."""
+    """Deprecated: use f6_sector_multiplier(sector, sector_f6_map) instead."""
     if sector_beta_hotness is None:
-        return _GUARDRAIL_MAX
+        return 1.0
     h = _clamp01(sector_beta_hotness)
-    return _GUARDRAIL_MAX - h * (_GUARDRAIL_MAX - 0.7)
+    return 1.0 - h * (1.0 - 0.7)
 
 
 # ===========================================================================
@@ -543,9 +556,10 @@ def conviction_score(*,
                      days_to_next_results: Optional[float] = None,
                      days_since_last_results: Optional[float] = None,
                      sector: Optional[str] = None,
+                     sector_f6_map: Optional[dict] = None,          # live net-buy map
                      # Deprecated params kept for call-site compat during migration:
-                     trailing_return: Optional[float] = None,      # ignored
-                     sector_beta_hotness: Optional[float] = None,  # ignored
+                     trailing_return: Optional[float] = None,       # ignored
+                     sector_beta_hotness: Optional[float] = None,   # ignored
                      weights: Optional[dict[str, float]] = None
                      ) -> ConvictionResult:
     """End-to-end convenience: raw inputs -> 0-100 ConvictionResult.
@@ -582,7 +596,7 @@ def conviction_score(*,
         "earnings_timing": (0.0 if drop_earnings else f4_earnings_timing(
             days_to_next_results, days_since_last_results)),
     }
-    sector_mult = f6_sector_multiplier(sector)
+    sector_mult = f6_sector_multiplier(sector, sector_f6_map)
 
     return composite(
         subscores,

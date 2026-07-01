@@ -329,6 +329,43 @@ def sector_hotness(conn, benchmark_symbol: Optional[str],
 
 
 # ---------------------------------------------------------------------------
+# F6 — dynamic sector net-buy map (replaces static SECTOR_MULTIPLIERS table).
+# ---------------------------------------------------------------------------
+
+def compute_sector_f6_map(conn) -> dict:
+    """Build {sector: f6_score} from net director activity in trailing 30 days.
+
+    Counts BUY transactions as +1 and SELL/SELL_TAX as -1 per sector over the
+    last 30 calendar days, then maps the net count to an F6 score via
+    conviction.net_buys_to_f6().
+
+    Called once per pipeline run and stored in _Caches; passed to every
+    conviction.conviction_score() call as sector_f6_map=.
+
+    Unknown/untagged sectors are excluded — they fall back to neutral (1.0)
+    in the engine.
+    """
+    rows = conn.execute(
+        "SELECT COALESCE(tm.sector, '') AS sector, "
+        "       SUM(CASE WHEN t.type = 'BUY' THEN 1 "
+        "                WHEN t.type IN ('SELL', 'SELL_TAX') THEN -1 "
+        "                ELSE 0 END) AS net_buys "
+        "FROM transactions t "
+        "LEFT JOIN tickers_meta tm ON t.ticker = tm.ticker "
+        "WHERE t.date >= date('now', '-30 days') "
+        "  AND COALESCE(tm.sector, '') != '' "
+        "GROUP BY COALESCE(tm.sector, '')"
+    ).fetchall()
+    f6_map: dict = {}
+    for r in rows:
+        sector = _row_get(r, "sector")
+        net = _row_get(r, "net_buys") or 0
+        if sector:
+            f6_map[sector] = conviction.net_buys_to_f6(int(net))
+    return f6_map
+
+
+# ---------------------------------------------------------------------------
 # Per-buy scoring.
 # ---------------------------------------------------------------------------
 
@@ -337,6 +374,7 @@ class _Caches:
 
     def __init__(self, conn):
         self.company_top_tier = build_company_top_tier(conn)
+        self.sector_f6_map: dict = compute_sector_f6_map(conn)
         self.ticker_meta: dict = {}
         for r in conn.execute(
             "SELECT ticker, benchmark_symbol, market_cap_gbp, sector "
@@ -397,6 +435,7 @@ def _factor_inputs(conn, tx_row, caches: _Caches) -> dict:
             "value_gbp": float(value_gbp) if value_gbp is not None else None,
             "avg_daily_turnover_gbp": turnover,
             "market_cap_gbp": float(market_cap) if market_cap else None,
+            "sector_f6_map": caches.sector_f6_map,
             "days_to_next_results": days_to_next,
             "days_since_last_results": days_since_last,
             "sector": sector,
@@ -492,6 +531,7 @@ def score_window(conn, as_of, days: int = 28) -> list[dict]:
             "result": result.as_dict(),
             "score": result.score,
             "band": result.band,
+            "sector": caches.ticker_meta.get(_row_get(r, "ticker"), {}).get("sector"),
         })
 
     scored.sort(key=lambda d: d["score"], reverse=True)
