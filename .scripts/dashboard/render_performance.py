@@ -3693,9 +3693,10 @@ def _paper_book_section(signals_data: dict,
                 f'title="Filter to this signal">{sig_badge}</button>'
             )
 
+            search_val = f"{ticker} {company} {director}".lower()
             row_cls = "border-t border-slate-100 bg-white"
             rows_html.append(
-                f'<tr class="{row_cls} text-xs" data-paper-sid="{sid}">'
+                f'<tr class="{row_cls} text-xs" data-paper-sid="{sid}" data-paper-search="{h.esc(search_val)}">'
                 f'<td class="px-2 py-1.5 whitespace-nowrap">{badge_btn}</td>'
                 f'<td class="px-2 py-1.5 font-medium text-slate-800">{ticker}</td>'
                 f'<td class="px-2 py-1.5 text-slate-500 truncate max-w-[120px]">{company}</td>'
@@ -3742,15 +3743,20 @@ def _paper_book_section(signals_data: dict,
     )
 
     # B-124: clicking a row's signal badge filters the table to that signal.
+    # Also wires the search box (ticker / company / director).
     filter_script = (
         '<script>(function(){'
         'var sec=document.currentScript.closest("section");if(!sec)return;'
         'var rows=sec.querySelectorAll("tr[data-paper-sid]");'
         'var statusEl=sec.querySelector("[data-pb-filter-status]");'
+        'var searchEl=sec.querySelector("[data-pb-search]");'
         'var active=null;'
         'function apply(){'
+        'var q=(searchEl?searchEl.value:"").toLowerCase().trim();'
         'rows.forEach(function(r){'
-        'r.style.display=(!active||r.getAttribute("data-paper-sid")===active)?"":"none";});'
+        'var sigMatch=(!active||r.getAttribute("data-paper-sid")===active);'
+        'var srchMatch=(!q||(r.getAttribute("data-paper-search")||"").includes(q));'
+        'r.style.display=(sigMatch&&srchMatch)?"":"none";});'
         'if(statusEl){'
         'if(active){statusEl.innerHTML="Filtered to <span class=\\"font-semibold\\">"'
         '+active+"</span> &middot; <button type=\\"button\\" data-pb-clear '
@@ -3761,11 +3767,13 @@ def _paper_book_section(signals_data: dict,
         'var s=b.getAttribute("data-pb-filter");active=(active===s)?null:s;apply();});});'
         'sec.addEventListener("click",function(e){'
         'if(e.target.closest("[data-pb-clear]")){active=null;apply();}});'
+        'if(searchEl)searchEl.addEventListener("input",apply);'
         '})();</script>'
     )
     return (
         '<section class="m-6 bg-white border border-slate-200 rounded-lg overflow-hidden">'
-        '<div class="px-4 py-3 border-b border-slate-100">'
+        '<div class="px-4 py-3 border-b border-slate-100 flex items-start justify-between gap-4 flex-wrap">'
+        '<div>'
         '<h2 class="text-xs uppercase tracking-wide text-slate-500">'
         'Live paper book</h2>'
         '<p class="text-[10px] text-slate-400 mt-0.5">'
@@ -3774,6 +3782,9 @@ def _paper_book_section(signals_data: dict,
         '<span class="text-slate-500">click a signal badge to filter</span></p>'
         '<div data-pb-filter-status class="text-[10px] text-amber-700 mt-1" '
         'style="display:none"></div>'
+        '</div>'
+        '<input data-pb-search type="search" placeholder="Search ticker / company…" '
+        'class="text-xs border border-slate-200 rounded px-2 py-1 w-48 focus:outline-none focus:ring-1 focus:ring-indigo-300">'
         '</div>'
         + stats_html
         + table_html

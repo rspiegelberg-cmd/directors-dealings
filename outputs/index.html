@@ -24,7 +24,7 @@
     <a class="font-semibold text-slate-900" href="./index.html">Today</a>
     <a class="hover:text-slate-900" href="./performance.html">Performance</a>
     <a class="hover:text-slate-900" href="./baskets.html">Baskets</a>
-    <a class="hover:text-slate-900" href="review.html">Review ✎</a>
+    <a id="reviewNavLink" class="hover:text-slate-900" href="review.html">Review ✎</a>
     <button id="refreshBtn" title="Fetch the latest filings now" class="inline-flex items-center gap-1 rounded border border-slate-300 px-2 py-0.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 disabled:opacity-50">&#8635; Refresh</button>
     <span id="liveIndicator" class="inline-flex items-center gap-1 text-emerald-600"><span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>Live</span>
   </nav>
@@ -61,6 +61,9 @@
 <script>
 const SUPABASE_URL = "https://mmiaiauybzsdcbrrcxfc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_vADFSIyRre-9sGyhDnXBcA_H167SU8B";
+const isLocalhost = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+// Hide Review link on live site (review.html is a local-only admin tool)
+if (!isLocalhost) { const rl = document.getElementById("reviewNavLink"); if (rl) rl.style.display = "none"; }
 
 const app = document.getElementById("app");
 const fmtInt = n => (n == null ? "" : Number(n).toLocaleString("en-GB"));
@@ -291,7 +294,8 @@ function convReset() { localStorage.removeItem(CONV_DISMISS_KEY); document.query
 function realConvictionPanel(convRows) {
   if (!convRows || !convRows.length) return "";
   const maxW = convRows.map(r => r.window_end).filter(Boolean).sort().slice(-1)[0];
-  const items = convRows.filter(r => r.window_end === maxW)
+  const cutoff28 = addDays(new Date().toISOString().slice(0, 10), -28);
+  const items = convRows.filter(r => r.window_end === maxW && day(r.date) >= cutoff28)
     .sort((a, b) => (a.rank_in_window ?? 999) - (b.rank_in_window ?? 999) || (b.score || 0) - (a.score || 0))
     .slice(0, 10);
   if (!items.length) return "";
@@ -377,7 +381,7 @@ function dealingsTable(rows) {
     const url = r.url || "";
     const fp = esc(r.fingerprint || "");
     const src = url ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="RNS announcement">↗</a>` : `<span class="text-slate-200">↗</span>`;
-    const rev = fp ? `<a href="review.html?tab=b&fp=${fp}" class="text-slate-300 hover:text-indigo-500 ml-1" title="Open in PDMR review">✎</a>` : "";
+    const rev = (fp && isLocalhost) ? `<a href="review.html?tab=b&fp=${fp}" class="text-slate-300 hover:text-indigo-500 ml-1" title="Open in PDMR review">✎</a>` : "";
     return `<tr data-type="${esc(tkey)}" data-search="${esc((r.ticker||"")+" "+(r.company||"")).toLowerCase()}" class="border-b border-slate-100 hover:bg-slate-50">
       <td class="px-3 py-2 text-slate-600">${esc(day(r.date))}</td>
       <td class="px-3 py-2"><a class="text-indigo-600 hover:underline font-medium" href="${companyUrl(r.ticker)}">${esc(r.ticker)}</a></td>
@@ -405,7 +409,7 @@ function dealingsTable(rows) {
         <h2 class="text-xs uppercase tracking-wide text-slate-500">This week's dealings</h2>
         <div class="flex flex-wrap gap-1.5 items-center">
           <span class="text-[10px] text-slate-400 mr-1">Filter:</span>${chips}
-          <a href="review.html" class="ml-2 text-[11px] text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded px-2 py-0.5">Review ✎</a>
+          ${isLocalhost ? '<a href="review.html" class="ml-2 text-[11px] text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded px-2 py-0.5">Review ✎</a>' : ''}
         </div>
       </div>
       <div class="overflow-x-auto">
@@ -439,8 +443,9 @@ function applyFilters() {
   document.querySelectorAll(".tf-btn[aria-pressed='true']").forEach(b => activeTypes.add(b.dataset.tf));
   const q = (document.getElementById("globalSearch")?.value || "").toLowerCase().trim();
   document.querySelectorAll("#dealingsTable tbody tr").forEach(row => {
-    const typeMatch = activeTypes.has(row.dataset.type);
     const searchMatch = !q || (row.dataset.search || "").includes(q);
+    // When a search query is active, bypass the type filter so all matching rows show
+    const typeMatch = q ? true : activeTypes.has(row.dataset.type);
     row.style.display = (typeMatch && searchMatch) ? "" : "none";
   });
 }
@@ -518,12 +523,15 @@ function render(rows, monthly, convRows) {
   if (!rows || !rows.length) { app.innerHTML = `<div class="py-20 text-center text-slate-400 text-sm">No dealings found.</div>`; return; }
   const maxDate = rows.map(r => day(r.date)).filter(Boolean).sort().slice(-1)[0];
   const win7  = addDays(maxDate, -7);
+  const win14 = addDays(maxDate, -14);
   const win28 = addDays(maxDate, -28);
   const win30 = addDays(maxDate, -30);
   const win90 = addDays(maxDate, -90);
-  const week  = rows.filter(r => day(r.date) >= win7);
+  const week     = rows.filter(r => day(r.date) >= win7);
+  const prevWeek = rows.filter(r => day(r.date) >= win14 && day(r.date) < win7);
   const q90   = rows.filter(r => day(r.date) >= win90);
-  const clusters = clustersFrom(rows, win30);
+  const clusters     = clustersFrom(rows, win30);
+  const clustersPrev = clustersFrom(rows.filter(r => day(r.date) < win7), addDays(win7, -30));
 
   // Sparkline data (weekly buckets over 90 days)
   const dealSeries    = weeklyCountSeries(rows.filter(r => day(r.date) >= win90), "date", win90);
@@ -543,22 +551,26 @@ function render(rows, monthly, convRows) {
     return Object.keys(bkt).sort().map(k => bkt[k].size);
   })();
 
-  // Pct change vs 3mo ago for companies
-  const compNow = new Set(week.map(r => r.ticker)).size;
-  const comp90  = new Set(q90.filter(r => day(r.date) < addDays(win90, 7)).map(r => r.ticker)).size;
-  const dealChg = dealSeries.length > 1
-    ? Math.round((dealSeries[dealSeries.length-1] / (dealSeries[0] || 1) - 1) * 100) : 0;
+  // Week-on-week comparisons
+  const compNow  = new Set(week.map(r => r.ticker)).size;
+  const compPrev = new Set(prevWeek.map(r => r.ticker)).size;
+  function wkChg(now, prev) {
+    if (!prev) return "";
+    const d = now - prev;
+    if (!d) return "";
+    return d > 0
+      ? ` · <span class="text-emerald-600">▲${d}</span> vs prev week`
+      : ` · <span class="text-rose-600">▼${Math.abs(d)}</span> vs prev week`;
+  }
 
   const sparkDeal    = sparkline(dealSeries, "#2563eb");
   const sparkCluster = sparkline(clusterSeries, "#059669");
   const sparkComp    = sparkline(compWeekly, "#7c3aed");
 
-  const dealChgTxt = dealChg > 0 ? `<span class="text-emerald-600">▲${dealChg}%</span>` : dealChg < 0 ? `<span class="text-rose-600">▼${Math.abs(dealChg)}%</span>` : "";
-
   const tiles = `<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
-    ${tile("Dealings this week", fmtInt(week.length), "to " + esc(maxDate) + (dealChgTxt ? " · " + dealChgTxt + " vs 90d ago" : ""), sparkDeal)}
-    ${tile("Active clusters", fmtInt(clusters.length), "≥2 buyers · 30 days", sparkCluster)}
-    ${tile("Companies", fmtInt(compNow), "this week", sparkComp)}
+    ${tile("Dealings this week", fmtInt(week.length), "to " + esc(maxDate) + wkChg(week.length, prevWeek.length), sparkDeal)}
+    ${tile("Active clusters", fmtInt(clusters.length), "≥2 buyers · 30 days" + wkChg(clusters.length, clustersPrev.length), sparkCluster)}
+    ${tile("Companies", fmtInt(compNow), "this week" + wkChg(compNow, compPrev), sparkComp)}
   </div>`;
 
   const clusterHtml = clusters.length

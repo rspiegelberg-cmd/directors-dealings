@@ -30,6 +30,7 @@
 // Public, read-only credentials (RLS restricts the anon key to the serving views).
 const SUPABASE_URL = "https://mmiaiauybzsdcbrrcxfc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_vADFSIyRre-9sGyhDnXBcA_H167SU8B";
+const isLocalhost = location.hostname === "localhost" || location.hostname === "127.0.0.1";
 
 const app = document.getElementById("app");
 const params = new URLSearchParams(location.search);
@@ -191,7 +192,7 @@ function dealingsTable(rows, latestClose) {
       ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600" title="Open RNS announcement">↗</a>`
       : `<span class="text-slate-200" title="no RNS link on file">↗</span>`;
     const fp = esc(r.fingerprint || "");
-    const review = fp
+    const review = (fp && isLocalhost)
       ? `<a href="review.html?tab=b&fp=${fp}" class="text-slate-300 hover:text-indigo-500" title="Open in PDMR review">✎</a>`
       : "";
     return `<tr data-type="${esc(tkey)}" class="border-b border-slate-100 hover:bg-slate-50">
@@ -213,7 +214,7 @@ function dealingsTable(rows, latestClose) {
   const orderT = ["BUY", "SELL", "SELL_TAX"];
   const sortedTypes = [...orderT.filter(t => types.includes(t)), ...types.filter(t => !orderT.includes(t)).sort()];
   const chips = sortedTypes.map(t =>
-    `<button type="button" data-tf="${esc(t)}" aria-pressed="true" class="tf-btn px-2 py-0.5 rounded text-[11px] font-semibold text-white border ${TYPE_CLS[t] || "bg-slate-600 border-slate-600"}">${esc(t)}</button>`
+    `<button type="button" data-tf="${esc(t)}" aria-pressed="${t === 'BUY' || t === 'SELL' ? 'true' : 'false'}" class="tf-btn px-2 py-0.5 rounded text-[11px] font-semibold text-white border ${TYPE_CLS[t] || "bg-slate-600 border-slate-600"}">${esc(t)}</button>`
   ).join("");
   return `
     <section class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
@@ -248,6 +249,12 @@ function wireTypeFilters() {
       document.querySelectorAll('tr[data-type="' + sel + '"]')
         .forEach(r => { r.style.display = next ? "" : "none"; });
     });
+  });
+  // Apply initial filter state — hide rows for types not active by default
+  document.querySelectorAll(".tf-btn[aria-pressed='false']").forEach(btn => {
+    const t = btn.dataset.tf;
+    const sel = (window.CSS && CSS.escape) ? CSS.escape(t) : t;
+    document.querySelectorAll('tr[data-type="' + sel + '"]').forEach(r => { r.style.display = "none"; });
   });
 }
 
@@ -365,7 +372,30 @@ function buildCharts(prices, dealings, reporting) {
   });
 }
 
-function render(dealings, prices, reporting) {
+function shortInterestSection(shorts) {
+  if (!shorts || !shorts.length) return "";
+  const rows = shorts.slice(0, 10).map(s => `
+    <tr class="border-t border-slate-100">
+      <td class="px-3 py-2 text-sm text-slate-700">${esc(s.position_holder || "-")}</td>
+      <td class="px-3 py-2 text-right tabular-nums text-sm font-medium text-rose-700">${(Number(s.net_short_pct) || 0).toFixed(2)}%</td>
+      <td class="px-3 py-2 text-sm text-slate-500">${esc(day(s.position_date))}</td>
+    </tr>`).join("");
+  const latest = day(shorts[0].position_date);
+  return `<section class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
+    <div class="px-4 py-3 border-b border-slate-200">
+      <h2 class="text-xs uppercase tracking-wide text-slate-500">FCA Short Positions <span class="ml-1 font-normal normal-case text-slate-400">as at ${esc(latest)}</span></h2>
+    </div>
+    <div class="overflow-x-auto"><table class="w-full text-sm">
+      <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-200">
+        <th class="px-3 py-2 font-medium">Short Seller</th>
+        <th class="px-3 py-2 font-medium text-right">Net Short %</th>
+        <th class="px-3 py-2 font-medium">As At</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div></section>`;
+}
+
+function render(dealings, prices, reporting, shorts) {
   if (!dealings || !dealings.length) {
     app.innerHTML = `<div class="py-20 text-center text-rose-600 text-sm">No dealings found for <b>${esc(ticker)}</b>.</div>`;
     return;
@@ -378,6 +408,7 @@ function render(dealings, prices, reporting) {
     latestClose = asc[asc.length - 1].close;
   }
   app.innerHTML = renderHeader(company, r0, dealings.length, reporting)
+    + shortInterestSection(shorts)
     + chartSection(prices && prices.length)
     + dealingsTable(dealings, latestClose);
   wireTypeFilters();
@@ -392,12 +423,13 @@ async function load() {
   document.title = ticker + " — Directors Dealings";
   const tq = `ticker=eq.${encodeURIComponent(ticker)}`;
   try {
-    const [dealings, prices, reporting] = await Promise.all([
+    const [dealings, prices, reporting, shorts] = await Promise.all([
       fetchView("public_company_v", `${tq}&order=date.desc,announced_at.desc&limit=500`),
       fetchView("public_prices_v", `${tq}&order=date.desc&limit=420`),
-      fetchView("public_reporting_v", `${tq}&order=report_date.asc&limit=60`)
+      fetchView("public_reporting_v", `${tq}&order=report_date.asc&limit=60`),
+      fetchView("public_short_positions_v", `${tq}&order=position_date.desc&limit=50`).catch(() => [])
     ]);
-    render(dealings, prices, reporting);
+    render(dealings, prices, reporting, shorts);
   } catch (e) {
     app.innerHTML = `<div class="py-20 text-center text-rose-600 text-sm">Couldn't load data (${esc(e.message)}).</div>`;
   }
