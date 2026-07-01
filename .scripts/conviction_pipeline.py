@@ -339,12 +339,13 @@ class _Caches:
         self.company_top_tier = build_company_top_tier(conn)
         self.ticker_meta: dict = {}
         for r in conn.execute(
-            "SELECT ticker, benchmark_symbol, market_cap_gbp "
+            "SELECT ticker, benchmark_symbol, market_cap_gbp, sector "
             "FROM tickers_meta"
         ).fetchall():
             self.ticker_meta[_row_get(r, "ticker")] = {
                 "benchmark_symbol": _row_get(r, "benchmark_symbol"),
                 "market_cap_gbp": _row_get(r, "market_cap_gbp"),
+                "sector": _row_get(r, "sector"),
             }
 
 
@@ -370,13 +371,13 @@ def _factor_inputs(conn, tx_row, caches: _Caches) -> dict:
 
     meta = caches.ticker_meta.get(ticker, {})
     market_cap = meta.get("market_cap_gbp")
-    benchmark = meta.get("benchmark_symbol")
+    sector = meta.get("sector")  # for data-driven F6 multiplier
 
     value_gbp = _row_get(tx_row, "value")
     turnover = avg_daily_turnover(conn, ticker, as_of)
     days_to_next, days_since_last = earnings_distances(conn, ticker, buy_day)
-    tret = trailing_return(conn, ticker, as_of)
-    hotness = sector_hotness(conn, benchmark, as_of)
+    # F5 (trailing_return) removed 2026-07-01 — direction unresolved.
+    # F6 now uses sector name, not benchmark hotness.
 
     inputs_missing: list[str] = []
     if turnover is None:
@@ -385,23 +386,20 @@ def _factor_inputs(conn, tx_row, caches: _Caches) -> dict:
         inputs_missing.append("company_size")
     if days_to_next is None and days_since_last is None:
         inputs_missing.append("earnings_timing")
-    if tret is None:
-        inputs_missing.append("past_performance")
-    if hotness is None:
+    if not sector:
         inputs_missing.append("sector_mult")
 
     return {
         "kwargs": {
             "tier": tier,
             "is_pca": is_pca,
-            "company_top_tier": company_top,
+            "company_top_tier": company_top,  # kept for compat; not used by engine
             "value_gbp": float(value_gbp) if value_gbp is not None else None,
             "avg_daily_turnover_gbp": turnover,
             "market_cap_gbp": float(market_cap) if market_cap else None,
             "days_to_next_results": days_to_next,
             "days_since_last_results": days_since_last,
-            "trailing_return": tret,
-            "sector_beta_hotness": hotness,
+            "sector": sector,
         },
         "inputs_missing": inputs_missing,
         "tier": tier,

@@ -296,7 +296,7 @@ function realConvictionPanel(convRows) {
   const maxW = convRows.map(r => r.window_end).filter(Boolean).sort().slice(-1)[0];
   const cutoff28 = addDays(new Date().toISOString().slice(0, 10), -28);
   const items = convRows.filter(r => r.window_end === maxW && day(r.date) >= cutoff28)
-    .sort((a, b) => (a.rank_in_window ?? 999) - (b.rank_in_window ?? 999) || (b.score || 0) - (a.score || 0))
+    .sort((a, b) => (b.score || 0) - (a.score || 0))
     .slice(0, 10);
   if (!items.length) return "";
   const dismissed = new Set(convDismissed());
@@ -465,14 +465,40 @@ async function loadDbStats(rows) {
     stats = d[0] || null;
   } catch (e) { /* fall through */ }
 
-  // Sector breakdown from in-memory rows (good enough — covers recent activity)
+  // Sector breakdown from full DB (tickers_meta for companies, all transactions for directors)
   const sectorMap = {};
-  rows.forEach(r => {
-    const s = r.sector || "No sector";
-    sectorMap[s] = sectorMap[s] || { companies: new Set(), dirs: new Set() };
-    if (r.ticker) sectorMap[s].companies.add(r.ticker);
-    if (r.director) sectorMap[s].dirs.add(r.director.trim().toLowerCase());
-  });
+  try {
+    const [tmRes, txRes] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/tickers_meta?select=sector,ticker&sector=not.is.null&sector=not.eq.&limit=2000`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY } }),
+      fetch(`${SUPABASE_URL}/rest/v1/public_company_v?select=sector,director,type&limit=9999`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY } })
+    ]);
+    const tmRows = tmRes.ok ? await tmRes.json() : [];
+    const txRows = txRes.ok ? await txRes.json() : [];
+    tmRows.forEach(r => {
+      if (!r.sector) return;
+      sectorMap[r.sector] = sectorMap[r.sector] || { companies: new Set(), dirs: new Set(), buys: 0, sells: 0 };
+      if (r.ticker) sectorMap[r.sector].companies.add(r.ticker);
+    });
+    txRows.forEach(r => {
+      if (!r.sector) return;
+      sectorMap[r.sector] = sectorMap[r.sector] || { companies: new Set(), dirs: new Set(), buys: 0, sells: 0 };
+      if (r.director) sectorMap[r.sector].dirs.add(r.director.trim().toLowerCase());
+      if (r.type === "BUY")  sectorMap[r.sector].buys++;
+      if (r.type === "SELL") sectorMap[r.sector].sells++;
+    });
+  } catch(e) {
+    // fallback to in-memory rows
+    rows.forEach(r => {
+      const s = r.sector || "No sector";
+      sectorMap[s] = sectorMap[s] || { companies: new Set(), dirs: new Set(), buys: 0, sells: 0 };
+      if (r.ticker) sectorMap[s].companies.add(r.ticker);
+      if (r.director) sectorMap[s].dirs.add(r.director.trim().toLowerCase());
+      if (r.type === "BUY")  sectorMap[s].buys++;
+      if (r.type === "SELL") sectorMap[s].sells++;
+    });
+  }
 
   const statTile = (label, value, note) =>
     `<div class="bg-white border border-slate-200 rounded-lg px-3 py-2.5">
@@ -503,14 +529,14 @@ async function loadDbStats(rows) {
     .sort((a, b) => b[1].companies.size - a[1].companies.size);
   if (sectors.length) {
     const sectorRows = sectors.map(([s, d]) =>
-      `<tr class="border-t border-slate-100"><td class="py-1 px-2 text-xs text-slate-700">${esc(s)}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.companies.size}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.dirs.size}</td></tr>`
+      `<tr class="border-t border-slate-100"><td class="py-1 px-2 text-xs text-slate-700">${esc(s)}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.companies.size}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.dirs.size}</td><td class="py-1 px-2 text-xs text-right tabular-nums text-emerald-700">${d.buys}</td><td class="py-1 px-2 text-xs text-right tabular-nums text-red-600">${d.sells}</td></tr>`
     ).join("");
     inner.insertAdjacentHTML("afterend", `
       <div class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
-        <div class="px-4 py-3 border-b border-slate-100"><h3 class="text-xs uppercase tracking-wide text-slate-400">Companies &amp; directors by sector (recent activity)</h3></div>
+        <div class="px-4 py-3 border-b border-slate-100"><h3 class="text-xs uppercase tracking-wide text-slate-400">Companies &amp; directors by sector</h3></div>
         <div class="overflow-x-auto"><table class="w-full">
           <thead><tr class="text-left text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-100">
-            <th class="py-1 px-2 font-medium">Sector</th><th class="py-1 px-2 font-medium text-right">Companies</th><th class="py-1 px-2 font-medium text-right">Directors</th>
+            <th class="py-1 px-2 font-medium">Sector</th><th class="py-1 px-2 font-medium text-right">Companies</th><th class="py-1 px-2 font-medium text-right">Directors</th><th class="py-1 px-2 font-medium text-right text-emerald-700">Buys</th><th class="py-1 px-2 font-medium text-right text-red-600">Sells</th>
           </tr></thead><tbody>${sectorRows}</tbody>
         </table></div>
       </div>`);

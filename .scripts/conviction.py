@@ -48,11 +48,13 @@ except Exception:  # pragma: no cover
 # weight, so it does not appear here. These sum to 1.0 before the sector
 # guardrail is applied. Revised ONLY on out-of-sample forward data (§5/§7).
 WEIGHTS: dict[str, float] = {
-    "who": 0.25,           # F1
-    "buy_size": 0.25,      # F2
-    "company_size": 0.20,  # F3
-    "earnings_timing": 0.15,  # F4
-    "past_performance": 0.15,  # F5
+    "who": 0.30,              # F1
+    "buy_size": 0.30,         # F2
+    "company_size": 0.22,     # F3
+    "earnings_timing": 0.18,  # F4
+    # F5 (past_performance) removed 2026-07-01 — direction unresolved pending
+    # forward data; will be re-added with correct sign once proven. Weight
+    # redistributed across F1-F4.
 }
 
 # §4 strength bands (lower-inclusive, upper-exclusive except the top band).
@@ -99,7 +101,7 @@ _TIER_STRENGTH: dict[str, float] = {
     "T6": 0.5,    # Company Secretary / General Counsel
     "T3": 0.3,    # NED  (kept low — our scans show NEDs lag)
     "T4": 0.2,    # Catch-all (PDMR-only / Other / Parser fragment)
-    "T5": 0.3,    # Bare PCA with NO senior director to inherit from (fallback)
+    "T5": 1.0,    # PCA — independently strong traders (decision 2026-07-01)
 }
 _DEFAULT_TIER_STRENGTH = 0.2
 
@@ -151,11 +153,15 @@ def f1_who(tier: Optional[str],
                           (low) T5 strength.
 
     The caller decides who is a PCA — we accept either an explicit is_pca
-    flag or tier == "T5"; both route to inheritance.
+    flag or tier == "T5". PCAs score at max (1.0) independently: they are
+    consistently among the strongest traders in our data and are no longer
+    treated as proxies for their linked director (decision 2026-07-01).
+    The company_top_tier arg is retained for signature compatibility but is
+    no longer used.
     """
     pca = is_pca or (tier or "").strip() == "T5"
-    if pca and company_top_tier:
-        return role_strength_from_tier(company_top_tier)
+    if pca:
+        return 1.0  # PCA always max — independent strong-trader evidence
     return role_strength_from_tier(tier)
 
 
@@ -367,35 +373,72 @@ def f5_past_performance(trailing_return: Optional[float]) -> float:
 
 
 # ===========================================================================
-# F6 — Sector guardrail (MULTIPLIER, not a booster)   spec §3 F6 / §4
+# F6 — Sector multiplier (data-driven, can boost OR discount)  spec §3 F6
 # ===========================================================================
-# NOT additive. Used to DISCOUNT a score when the whole sector is running, so
-# we don't mistake sector beta for director skill. Range 0.7-1.0:
-#   * sector calm / no elevated beta            -> 1.0 (no discount)
-#   * sector running hot (high recent beta)     -> 0.7 (max discount)
-# The spec is explicit that sector should pull scores toward CAUTION, never
-# lift them, until forward data says otherwise.
-_GUARDRAIL_MIN = 0.7
+# Recalibrated 2026-07-01 from 30-day hit rates across 1,341 BUY transactions
+# over the 12 months to 2026-07-01. "Hit" = stock price higher 30 trading
+# days (~42 calendar days) after the buy date.  Multipliers scaled linearly:
+# worst sector (Technology 41.9%) → 0.75, best (Utilities 67.4%) → 1.25.
+#
+#   Sector                  | trades | hit_rate | avg_ret | mult
+#   ------------------------|--------|----------|---------|------
+#   Utilities               |     46 |  67.4%   | +1.6%   | 1.25
+#   Financials              |    288 |  65.6%   | +3.6%   | 1.20
+#   Communication Services  |     77 |  61.0%   | +6.2%   | 1.10
+#   Consumer Staples        |    136 |  59.6%   | -0.2%   | 1.10
+#   Consumer Discretionary  |    162 |  56.8%   | +1.6%   | 1.05
+#   Energy                  |     27 |  55.6%   | -1.9%   | 1.00  (n=27 caution)
+#   Real Estate             |     76 |  53.9%   | -0.7%   | 0.95
+#   Industrials             |    246 |  53.3%   | -0.1%   | 0.95
+#   Materials               |    125 |  50.4%   | +13.1%  | 0.90  (skewed avg)
+#   Health Care             |     35 |  45.7%   | -0.1%   | 0.80  (n=35 caution)
+#   Technology              |    124 |  41.9%   | +0.2%   | 0.75
+#
+# Returns are raw price change (not benchmark-adjusted). Multipliers are
+# provisional v1 priors — reviewed quarterly in the champion/challenger loop.
+# Final score is still capped at 100.
+SECTOR_MULTIPLIERS: dict[str, float] = {
+    "Utilities": 1.25,
+    "Financials": 1.20,
+    "Communication Services": 1.10,
+    "Consumer Staples": 1.10,
+    "Consumer Discretionary": 1.05,
+    "Energy": 1.00,
+    "Real Estate": 0.95,
+    "Industrials": 0.95,
+    "Materials": 0.90,
+    "Health Care": 0.80,
+    "Technology": 0.75,
+}
+_SECTOR_MULT_DEFAULT = 1.00  # unknown sector -> neutral
+
+
+def f6_sector_multiplier(sector: Optional[str] = None) -> float:
+    """F6 sector multiplier (0.75-1.20). Data-driven from paper-trade history.
+
+    Args:
+      sector: sector name string from tickers_meta.sector (e.g. "Materials").
+              None / unknown -> neutral 1.0 (no boost or penalty).
+
+    May exceed 1.0 for sectors with strong historical hit rates; final score
+    is still capped at 100 in the composite.
+    """
+    if not sector:
+        return _SECTOR_MULT_DEFAULT
+    return SECTOR_MULTIPLIERS.get(sector.strip(), _SECTOR_MULT_DEFAULT)
+
+
+# Keep old guardrail function for backward compatibility with any callers that
+# haven't migrated yet. Deprecated — use f6_sector_multiplier() instead.
 _GUARDRAIL_MAX = 1.0
 
 
 def f6_sector_guardrail(sector_beta_hotness: Optional[float] = None) -> float:
-    """F6 sector guardrail MULTIPLIER (0.7-1.0). 1.0 = no discount.
-
-    Args:
-      sector_beta_hotness: 0.0-1.0 measure of how hot/elevated the sector's
-                           recent run is (0.0 = calm, 1.0 = running hard).
-                           Computed upstream in Phase 2 from the sector
-                           benchmark series. None -> no discount (1.0).
-
-    Linearly maps hotness 0->1 to multiplier 1.0->0.7. Never exceeds 1.0 (it
-    is a guardrail, not a booster) and never drops below 0.7 (so one factor
-    can't zero out an otherwise-strong buy).
-    """
+    """Deprecated: use f6_sector_multiplier(sector) instead."""
     if sector_beta_hotness is None:
         return _GUARDRAIL_MAX
     h = _clamp01(sector_beta_hotness)
-    return _GUARDRAIL_MAX - h * (_GUARDRAIL_MAX - _GUARDRAIL_MIN)
+    return _GUARDRAIL_MAX - h * (_GUARDRAIL_MAX - 0.7)
 
 
 # ===========================================================================
@@ -469,10 +512,10 @@ def composite(subscores: dict[str, float],
     weighted_sum = _clamp01(weighted_sum)
 
     mult = sector_multiplier
-    if mult > _GUARDRAIL_MAX:
-        mult = _GUARDRAIL_MAX  # never let F6 act as a booster
     if mult < 0.0:
         mult = 0.0
+    # mult may exceed 1.0 for positive-history sectors (F6 is now data-driven,
+    # not a guardrail-only). The final score is capped at 100 below.
 
     score = 100.0 * weighted_sum * mult
     if score < 0.0:
@@ -499,8 +542,10 @@ def conviction_score(*,
                      market_cap_gbp: Optional[float] = None,
                      days_to_next_results: Optional[float] = None,
                      days_since_last_results: Optional[float] = None,
-                     trailing_return: Optional[float] = None,
-                     sector_beta_hotness: Optional[float] = None,
+                     sector: Optional[str] = None,
+                     # Deprecated params kept for call-site compat during migration:
+                     trailing_return: Optional[float] = None,      # ignored
+                     sector_beta_hotness: Optional[float] = None,  # ignored
                      weights: Optional[dict[str, float]] = None
                      ) -> ConvictionResult:
     """End-to-end convenience: raw inputs -> 0-100 ConvictionResult.
@@ -536,9 +581,8 @@ def conviction_score(*,
         "company_size": f3_company_size(market_cap_gbp),
         "earnings_timing": (0.0 if drop_earnings else f4_earnings_timing(
             days_to_next_results, days_since_last_results)),
-        "past_performance": f5_past_performance(trailing_return),
     }
-    sector_mult = f6_sector_guardrail(sector_beta_hotness)
+    sector_mult = f6_sector_multiplier(sector)
 
     return composite(
         subscores,
