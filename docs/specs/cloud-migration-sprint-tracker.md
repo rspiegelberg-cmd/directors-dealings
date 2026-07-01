@@ -3,7 +3,7 @@
 **Living status board.** Detail for every B-NNN is in `cloud-migration-execution-plan.md`. Update the **Status** column as work moves; mark gates ✅ when passed. Issues continue the project's B-NNN sequence (next free = **B-172**) and carry the usual agent labels for Linear.
 
 **Status legend:** ⬜ Todo · 🟦 In Progress · ✅ Done · ⛔ Blocked · ⏸ Deferred
-**Overall:** 🟢 LIVE + SELF-RUNNING — https://directors-dealings.vercel.app/ (and the GitHub Pages twin). Data in Supabase; front + company pages read it directly in the browser. **M0–M4, M6 + DR all done (2026-06-25).** The 6am job downloads→computes-local→uploads in ~6 min, plus a manual ↻ Refresh button. **Remaining: M5 decommission only** (B-188 retire FUSE notes, B-189 archive local DB) — parked until the daily refresh has run unattended cleanly for ~a week.
+**Overall:** 🟢 LIVE + SELF-RUNNING — https://directors-dealings.vercel.app/ (and the GitHub Pages twin). Data in Supabase; front + company pages read it directly in the browser. **M0–M4, M6 + DR all done (2026-06-25).** The 6am job downloads→computes-local→uploads in ~6 min, plus a manual ↻ Refresh button. **M5 decommission closed out 2026-06-26** (Rupert overrode the burn-in park): B-188 ✅ (FUSE notes retired from CLAUDE.md), B-189 code/docs ✅ — only the manual `.data/directors.db` archive remains for Rupert.
 ✅ **M4 reliability SOLVED (2026-06-23 pivot, shipped 2026-06-25).** The direct-against-Supabase pipeline timed out (eval_signals >45min / backtest >60min over transatlantic latency); the `rendered_pages` publish approach was abandoned. Fix: front page rebuilt as a live client-side direct-read page (M6), and the daily refresh re-architected to compute on runner-local SQLite then bulk-sync to Supabase (B-194), with a race-proof push. **Local files NOT yet deleted** — see M5.
 **Linear:** synced 2026-06-25 — all delivered issues Done; B-190–197 added (DIR-127–131). B-NNN→DIR map at the bottom.
 **Environment:** Supabase project `directors-dealings` — ref `mmiaiauybzsdcbrrcxfc`, host `db.mmiaiauybzsdcbrrcxfc.supabase.co`, region eu-west-1, Postgres 17.6. Driveable directly via the connected Supabase connector.
@@ -85,10 +85,12 @@
 
 | Status | B-ID | Item | Agent label | Pri | Pts |
 |--------|------|------|-------------|-----|-----|
-| ⬜ | B-188 | Retire FUSE regime from `CLAUDE.md`; document new backend | `agent:general-purpose` | P2 | 2 |
-| ⬜ | B-189 | Archive local DB; update deploy scripts/docs | `agent:data-integrity-auditor` | P2 | 1 |
+| ✅ | B-188 | DONE 2026-06-26 — `CLAUDE.md` rewritten: FUSE/two-zone/snapshot regime removed (grep-verified absent), new "Backend & how it runs now (cloud)" section added (Supabase source of truth, db.py dual-backend `DD_DATABASE_URL`/`DD_FORCE_SQLITE`, daily download→compute-local→upload flow, connector-based read-only inspection). One surviving FUSE quirk kept (stale bash cache on code → Read tool is ground truth). DIR-117. | `agent:general-purpose` | P2 | 2 |
+| 🟦 | B-189 | Code/docs DONE 2026-06-26 — `HOW-IT-RUNS-NOW.md` operator note created; `push_to_github.bat` slimmed to a clean commit+push (dropped obsolete DB-backup step); `backup_db.bat` retired to a graceful no-op; `start.bat` de-gated (removed db_health local-DB hard-fails) and marked optional legacy preview. **Remaining: Rupert archives `.data/directors.db`** (one reversible move command pasted) → then Done. DIR-118. | `agent:data-integrity-auditor` | P2 | 1 |
 
-**Gate M5:** ⬜ docs updated; running fully in the cloud.
+**Gate M5:** 🟦 docs + scripts updated; cloud is the source of truth. Final step = Rupert's one-line DB archive, then ✅.
+
+**Rupert overrode the ~1-week burn-in park (2026-06-26)** and elected to close M5 immediately. (Cloud went live 2026-06-25; burn-in was ~1 day.)
 
 ---
 
@@ -130,8 +132,8 @@ latency problem. The front page (M6) fixes *display*; this fixes *data freshness
 | M4 | 3 / 3 | ✅ |
 | M6 | 3 / 4 | ✅ (B-192 polish optional, open) |
 | DR | 3 / 3 | ✅ |
-| M5 | 0 / 2 | ⬜ parked (B-188, B-189 — wait ~a week) |
-| **Total** | **22 / 24** | live + self-running; only M5 cleanup left |
+| M5 | 1.5 / 2 | 🟦 B-188 ✅; B-189 code/docs ✅, awaiting Rupert's DB archive |
+| **Total** | **23.5 / 24** | live + self-running; only the manual DB archive remains |
 
 ## B-NNN → Linear ID map (synced 2026-06-22)
 

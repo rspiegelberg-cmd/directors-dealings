@@ -1,65 +1,26 @@
 @echo off
-setlocal enabledelayedexpansion
-title Directors Dealings - Database Backup
+title Directors Dealings - Database Backup (RETIRED)
 REM ============================================================
-REM  Copies the database to OneDrive AND Google Drive (whichever
-REM  are set up on this PC). Keeps the 14 most recent copies in
-REM  each. Run this when the pipeline is NOT mid-run.
+REM  RETIRED 2026-06 (cloud migration M5).
+REM
+REM  This script used to copy the local SQLite database
+REM  (.data\directors.db) to OneDrive / Google Drive. That local
+REM  database is no longer the live data -- the data now lives in
+REM  Supabase Postgres, which is its own backup, and every daily
+REM  refresh is also saved in the GitHub history.
+REM
+REM  There is nothing to back up here anymore. This file is kept
+REM  only so anything that still calls it exits cleanly.
+REM
+REM  See docs/specs/HOW-IT-RUNS-NOW.md for the current setup.
 REM ============================================================
-
-set "SRC=C:\Dev\DirectorsDealings\.data\directors.db"
-if not exist "%SRC%" (
-  echo ERROR: Database not found at %SRC%
-  pause
-  exit /b 1
-)
-
-REM --- Timestamp like 2026-06-13_0915 ---
-for /f %%a in ('powershell -NoProfile -Command "Get-Date -Format yyyy-MM-dd_HHmm"') do set "TS=%%a"
-set "NAME=directors_%TS%.db"
-
-set "ANYDONE=0"
-
-REM ---------- OneDrive ----------
-if defined OneDrive (
-  call :backup "%OneDrive%\DirectorsDealings-Backups" OneDrive
-) else (
-  echo [skip] OneDrive not detected on this PC.
-)
-
-REM ---------- Google Drive ----------
-set "GDRIVE="
-if exist "G:\My Drive" set "GDRIVE=G:\My Drive"
-if exist "%USERPROFILE%\Google Drive" set "GDRIVE=%USERPROFILE%\Google Drive"
-if defined GDRIVE (
-  call :backup "!GDRIVE!\DirectorsDealings-Backups" "Google Drive"
-) else (
-  echo [skip] Google Drive folder not found ^(looked for G:\My Drive and your user folder^).
-)
 
 echo.
-if "%ANYDONE%"=="0" (
-  echo No cloud folders were found. Make sure OneDrive or Google Drive
-  echo desktop sync is set up, then run this again.
-) else (
-  echo Backup complete.
-)
+echo  backup_db.bat is RETIRED.
+echo.
+echo  The database now lives in Supabase (its own backup), and every
+echo  daily refresh is saved in the GitHub history. Nothing local to
+echo  back up. See docs\specs\HOW-IT-RUNS-NOW.md.
 echo.
 if /i not "%~1"=="nopause" pause
 exit /b 0
-
-REM ============================================================
-:backup
-REM  %~1 = destination folder, %~2 = label
-set "DEST=%~1"
-if not exist "%DEST%" mkdir "%DEST%"
-copy /Y "%SRC%" "%DEST%\%NAME%" >nul
-if errorlevel 1 (
-  echo [FAIL] %~2 - could not copy ^(is the file locked by a running pipeline?^)
-  goto :eof
-)
-echo [OK]   %~2: %DEST%\%NAME%
-set "ANYDONE=1"
-REM --- prune: keep the 14 newest, delete the rest ---
-for /f "skip=14 delims=" %%f in ('dir /b /o-d "%DEST%\directors_*.db" 2^>nul') do del "%DEST%\%%f"
-goto :eof

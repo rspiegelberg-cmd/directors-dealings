@@ -1,12 +1,15 @@
 @echo off
-title Directors Dealings - Backup + Push
+title Directors Dealings - Push to GitHub (deploy)
 REM ============================================================
-REM  ONE double-click does everything:
-REM    1. Backs up the database to OneDrive / Google Drive
-REM    2. Saves all changes to git and pushes to GitHub
+REM  ONE double-click deploys your code changes:
+REM    saves all changes to git and pushes to GitHub.
 REM  The live website updates a minute or two after the push.
-REM  Run this AFTER rebuilding the dashboard, when the pipeline
-REM  is NOT mid-run.
+REM
+REM  NOTE (cloud migration, 2026-06): the old "back up the
+REM  database" step was REMOVED. The data now lives in Supabase,
+REM  which is its own backup, and every daily refresh is saved in
+REM  the GitHub history. There is nothing local to back up.
+REM  See docs/specs/HOW-IT-RUNS-NOW.md.
 REM ============================================================
 cd /d C:\Dev\DirectorsDealings
 
@@ -24,13 +27,7 @@ git config maintenance.auto false
 git config fetch.writeCommitGraph false
 
 echo ============================================================
-echo  STEP 1 of 2 - Backing up the database to the cloud
-echo ============================================================
-call backup_db.bat nopause
-
-echo.
-echo ============================================================
-echo  STEP 2 of 2 - Saving and pushing to GitHub
+echo  Saving and pushing to GitHub
 echo ============================================================
 
 echo.
@@ -39,7 +36,7 @@ git add -A
 
 echo.
 echo Committing...
-git commit -m "Update dashboard %DATE% %TIME%"
+git commit -m "Update %DATE% %TIME%"
 if errorlevel 1 echo (Nothing new to commit - continuing.)
 
 echo.
