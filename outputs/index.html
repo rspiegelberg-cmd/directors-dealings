@@ -465,39 +465,28 @@ async function loadDbStats(rows) {
     stats = d[0] || null;
   } catch (e) { /* fall through */ }
 
-  // Sector breakdown from full DB (tickers_meta for companies, all transactions for directors)
-  const sectorMap = {};
+  // Sector breakdown from pre-aggregated view (avoids PostgREST row-cap issues)
+  let sectorStats = [];
   try {
-    const [tmRes, txRes] = await Promise.all([
-      fetch(`${SUPABASE_URL}/rest/v1/tickers_meta?select=sector,ticker&limit=2000`,
-        { headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY } }),
-      fetch(`${SUPABASE_URL}/rest/v1/public_company_v?select=sector,director,type&limit=9999`,
-        { headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY } })
-    ]);
-    const tmRows = tmRes.ok ? await tmRes.json() : [];
-    const txRows = txRes.ok ? await txRes.json() : [];
-    tmRows.forEach(r => {
-      if (!r.sector || r.sector.trim() === '') return;
-      sectorMap[r.sector] = sectorMap[r.sector] || { companies: new Set(), dirs: new Set(), buys: 0, sells: 0 };
-      if (r.ticker) sectorMap[r.sector].companies.add(r.ticker);
-    });
-    txRows.forEach(r => {
-      if (!r.sector) return;
-      sectorMap[r.sector] = sectorMap[r.sector] || { companies: new Set(), dirs: new Set(), buys: 0, sells: 0 };
-      if (r.director) sectorMap[r.sector].dirs.add(r.director.trim().toLowerCase());
-      if (r.type === "BUY")  sectorMap[r.sector].buys++;
-      if (r.type === "SELL") sectorMap[r.sector].sells++;
-    });
+    const ssRes = await fetch(`${SUPABASE_URL}/rest/v1/public_sector_stats_v?select=*`,
+      { headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY } });
+    if (!ssRes.ok) throw new Error(`sector_stats ${ssRes.status}`);
+    sectorStats = await ssRes.json();
   } catch(e) {
-    // fallback to in-memory rows
+    // fallback: derive from in-memory rows (partial, recent-only)
+    const fallback = {};
     rows.forEach(r => {
-      const s = r.sector || "No sector";
-      sectorMap[s] = sectorMap[s] || { companies: new Set(), dirs: new Set(), buys: 0, sells: 0 };
-      if (r.ticker) sectorMap[s].companies.add(r.ticker);
-      if (r.director) sectorMap[s].dirs.add(r.director.trim().toLowerCase());
-      if (r.type === "BUY")  sectorMap[s].buys++;
-      if (r.type === "SELL") sectorMap[s].sells++;
+      const s = r.sector; if (!s) return;
+      fallback[s] = fallback[s] || { sector: s, companies: new Set(), directors: new Set(), buys: 0, sells: 0 };
+      if (r.ticker)   fallback[s].companies.add(r.ticker);
+      if (r.director) fallback[s].directors.add(r.director.trim().toLowerCase());
+      if (r.type === "BUY")  fallback[s].buys++;
+      if (r.type === "SELL") fallback[s].sells++;
     });
+    sectorStats = Object.values(fallback).map(f => ({
+      sector: f.sector, companies: f.companies.size,
+      directors: f.directors.size, buys: f.buys, sells: f.sells
+    }));
   }
 
   const statTile = (label, value, note) =>
@@ -524,12 +513,10 @@ async function loadDbStats(rows) {
     + statTile("No mkt cap data", noCap, "companies missing");
 
   // Sector breakdown table
-  const sectors = Object.entries(sectorMap)
-    .filter(([k]) => k !== "No sector")
-    .sort((a, b) => b[1].companies.size - a[1].companies.size);
+  const sectors = sectorStats.slice().sort((a, b) => b.companies - a.companies);
   if (sectors.length) {
-    const sectorRows = sectors.map(([s, d]) =>
-      `<tr class="border-t border-slate-100"><td class="py-1 px-2 text-xs text-slate-700">${esc(s)}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.companies.size}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.dirs.size}</td><td class="py-1 px-2 text-xs text-right tabular-nums text-emerald-700">${d.buys}</td><td class="py-1 px-2 text-xs text-right tabular-nums text-red-600">${d.sells}</td></tr>`
+    const sectorRows = sectors.map(d =>
+      `<tr class="border-t border-slate-100"><td class="py-1 px-2 text-xs text-slate-700">${esc(d.sector)}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.companies}</td><td class="py-1 px-2 text-xs text-right tabular-nums">${d.directors}</td><td class="py-1 px-2 text-xs text-right tabular-nums text-emerald-700">${d.buys}</td><td class="py-1 px-2 text-xs text-right tabular-nums text-red-600">${d.sells}</td></tr>`
     ).join("");
     inner.insertAdjacentHTML("afterend", `
       <div class="mt-4 bg-white border border-slate-200 rounded-lg overflow-hidden">
