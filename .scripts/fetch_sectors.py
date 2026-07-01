@@ -141,13 +141,18 @@ def upsert_meta(conn, meta: TickerMeta) -> None:
     B-105 Sprint 26: INSERT OR REPLACE was changed to this pattern because
     INSERT OR REPLACE deletes + re-inserts the row, resetting the new
     Sprint 26 columns to NULL and undoing backfill_ticker_meta enrichment.
+
+    COALESCE on sector: fetch_sectors.py only knows sectors from sector_map.csv
+    (~110 tickers). For all others it resolves sector=NULL. Using COALESCE
+    preserves any sector written by backfill_sectors.py (FMP API) rather than
+    overwriting it with NULL on every daily refresh.
     """
     conn.execute(
         "INSERT INTO tickers_meta "
         "(ticker, sector, benchmark_symbol, is_aim, updated_at) "
         "VALUES (?, ?, ?, ?, ?) "
         "ON CONFLICT(ticker) DO UPDATE SET "
-        "  sector           = excluded.sector, "
+        "  sector           = COALESCE(excluded.sector, tickers_meta.sector), "
         "  benchmark_symbol = excluded.benchmark_symbol, "
         "  is_aim           = excluded.is_aim, "
         "  updated_at       = excluded.updated_at",
