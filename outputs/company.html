@@ -408,9 +408,9 @@ function render(dealings, prices, reporting, shorts) {
     latestClose = asc[asc.length - 1].close;
   }
   app.innerHTML = renderHeader(company, r0, dealings.length, reporting)
-    + shortInterestSection(shorts)
     + chartSection(prices && prices.length)
-    + dealingsTable(dealings, latestClose);
+    + dealingsTable(dealings, latestClose)
+    + shortInterestSection(shorts);
   wireTypeFilters();
   if (prices && prices.length) buildCharts(prices, dealings, reporting);
 }
