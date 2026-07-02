@@ -551,8 +551,9 @@ async function renderSectorTable(startDate, container, selectedDaysHint = "") {
     const netVal = (d.buy_value || 0) - (d.sell_value || 0);
     const netVolCls = netVol >= 0 ? "text-emerald-700" : "text-red-600";
     const netValCls = netVal >= 0 ? "text-emerald-700" : "text-red-600";
+    const sectorHref = "sector.html?sector=" + encodeURIComponent(d.sector) + (selectedDaysHint ? "&days=" + encodeURIComponent(selectedDaysHint) : "");
     return `<tr class="border-t border-slate-100">
-      <td class="py-1 px-2 text-xs text-slate-700">${esc(d.sector)}</td>
+      <td class="py-1 px-2 text-xs"><a class="text-indigo-600 hover:underline" href="${sectorHref}" title="View all companies and dealings in ${esc(d.sector)}">${esc(d.sector)}</a></td>
       <td class="py-1 px-2 text-xs text-right tabular-nums">${fmtInt(d.companies)}</td>
       <td class="py-1 px-2 text-xs text-right tabular-nums">${fmtInt(d.directors)}</td>
       <td class="py-1 px-2 text-xs text-right tabular-nums text-emerald-700">${fmtInt(d.buys)}</td>
