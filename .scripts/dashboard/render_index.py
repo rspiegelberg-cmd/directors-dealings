@@ -364,19 +364,34 @@ def _conviction_row(pick: dict) -> str:
         _conviction_factor_cell(f) for f in (pick.get("factors") or [])
     )
 
-    # Sector-beta caution flag: shown when the F6 guardrail discounted the
-    # score (sector_caution / sector_multiplier < 1.0).
-    sect_mult = pick.get("sector_multiplier")
-    is_hot = bool(pick.get("sector_caution")) or (
-        sect_mult is not None and _safe_lt(sect_mult, 1.0)
+    # Sector-momentum flags (revised 2026-07-01/02): sector_momentum is now a
+    # 0.0-1.0 sub-score folded additively into the composite, not a post-hoc
+    # multiplier — nothing is "discounted". Weak flag when notably BELOW
+    # neutral (net selling in the sector recently); hot flag when notably
+    # ABOVE neutral (net buying). Conservative, minimal thresholds; a full
+    # visual pass is Dashboard Designer's call, not this fix's scope.
+    sect_mom = pick.get("sector_momentum")
+    is_weak = bool(pick.get("sector_caution")) or (
+        sect_mom is not None and _safe_lt(sect_mom, 0.4)
     )
-    caution_flag = (
-        ' <span class="inline-flex items-center text-[9px] px-1 py-0.5 rounded '
-        'bg-amber-100 text-amber-800 font-semibold align-middle" '
-        'title="Sector running hot &mdash; score discounted so sector beta is '
-        'not mistaken for director skill.">&#9888; hot sector</span>'
-        if is_hot else ""
-    )
+    is_hot = (sect_mom is not None and not is_weak
+              and _safe_lt(0.65, sect_mom))
+    if is_weak:
+        caution_flag = (
+            ' <span class="inline-flex items-center text-[9px] px-1 py-0.5 rounded '
+            'bg-amber-100 text-amber-800 font-semibold align-middle" '
+            'title="Sector momentum weak &mdash; net selling in this sector '
+            'recently.">&#9888; weak sector</span>'
+        )
+    elif is_hot:
+        caution_flag = (
+            ' <span class="inline-flex items-center text-[9px] px-1 py-0.5 rounded '
+            'bg-emerald-100 text-emerald-800 font-semibold align-middle" '
+            'title="Sector momentum strong &mdash; net buying in this sector '
+            'recently.">&#9650; hot sector</span>'
+        )
+    else:
+        caution_flag = ""
 
     ticker_link = (
         f'<a href="{h.company_url(ticker)}" '

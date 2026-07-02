@@ -221,6 +221,14 @@ CREATE INDEX IF NOT EXISTS idx_director_pay_status ON director_pay (pay_status);
 -- writer has been failing silently against it in production (column mismatch
 -- swallowed by a try/except). Matching the code here FIXES that latent bug —
 -- the conviction panel will populate in the cloud. (Verified 2026-06-22.)
+--
+-- f6_sector_mult naming debt (2026-07-01/02): this column is historically
+-- named for the old 0.7-2.0x sector multiplier mechanism, but now holds the
+-- 0.0-1.0 "sector_momentum" sub-score — a genuine 5th ADDITIVE factor in the
+-- composite, not a post-hoc multiplier. Not renamed here to avoid an
+-- unapproved migration on the live table; see
+-- outputs/conviction-sector-weighting-review-2026-07-02.md Part 3 and
+-- schema_migrations/016_conviction_scores.sql for the same note.
 CREATE TABLE IF NOT EXISTS conviction_scores (
     fingerprint        TEXT NOT NULL,
     window_end         TEXT NOT NULL,

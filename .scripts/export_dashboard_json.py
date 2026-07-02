@@ -3392,12 +3392,15 @@ def _close_le(dates: list, closes: list, target) -> float | None:
 
 # B-171 sub-score display metadata — single source of truth for labels/order
 # used to build the per-factor display fields the panel renders.
+# "sector_momentum" replaced "past_performance" in this slot 2026-07-01 (see
+# conviction-sector-weighting-review-2026-07-02.md Part 3): sector momentum
+# is now a genuine 5th additive factor, not a post-hoc multiplier.
 _CONVICTION_FACTOR_LABELS = [
     ("who", "f1_who", "Who"),
     ("buy_size", "f2_buy_size", "Buy size"),
     ("company_size", "f3_company_size", "Company size"),
     ("earnings_timing", "f4_earnings_timing", "Earnings timing"),
-    ("past_performance", "f5_past_performance", "Past performance"),
+    ("sector_momentum", "f6_sector_mult", "Sector momentum"),
 ]
 
 
@@ -3538,8 +3541,15 @@ def build_conviction_picks(conn, today: date) -> dict:
                     entry["score"], entry["band"],
                     sub.get("who"), sub.get("buy_size"),
                     sub.get("company_size"), sub.get("earnings_timing"),
+                    # f5_past_performance: the old reversal-bias factor was
+                    # removed from the composite 2026-07-01; this column is
+                    # now always NULL (kept, not migrated — no schema change).
                     sub.get("past_performance"),
-                    entry["result"].get("sector_multiplier"),
+                    # f6_sector_mult: historically a 0.7-2.0x multiplier;
+                    # NOW holds the 0.0-1.0 sector_momentum sub-score (revised
+                    # 2026-07-01/02 — see conviction-sector-weighting-review
+                    # Part 3). Column NOT renamed (naming debt, Rupert's call).
+                    entry["result"].get("sector_momentum"),
                     json.dumps(entry["result"].get("weights_used", {})),
                     1 if entry["result"].get("earnings_dropped") else 0,
                     entry["rank_in_window"], surfaced,
@@ -3578,11 +3588,13 @@ def build_conviction_picks(conn, today: date) -> dict:
         missing = set(entry.get("inputs_missing", []))
         factors = []
         for key, fid, label in _CONVICTION_FACTOR_LABELS:
-            # company_size / earnings_timing / past_performance can be "unknown".
+            # company_size / earnings_timing / sector_momentum can be "unknown".
+            # Note: the underlying inputs_missing key for sector is still
+            # "sector_mult" (unrenamed — see conviction_pipeline._factor_inputs).
             is_unknown = (
                 (key == "company_size" and "company_size" in missing)
                 or (key == "earnings_timing" and "earnings_timing" in missing)
-                or (key == "past_performance" and "past_performance" in missing)
+                or (key == "sector_momentum" and "sector_mult" in missing)
             )
             factors.append({
                 "id": fid,
@@ -3602,7 +3614,11 @@ def build_conviction_picks(conn, today: date) -> dict:
             "value_gbp": entry["value_gbp"],
             "factors": factors,
             "inputs_missing": entry.get("inputs_missing", []),
-            "sector_caution": (entry["result"].get("sector_multiplier", 1.0) < 1.0),
+            # Revised 2026-07-01/02: sector_momentum is a 0.0-1.0 sub-score,
+            # not a 0.7-2.0x multiplier — "caution" now means notably BELOW
+            # neutral (0.5), i.e. net selling in the sector recently. Kept the
+            # "sector_caution" field name for renderer compatibility.
+            "sector_caution": (entry["result"].get("sector_momentum", 0.5) < 0.4),
         }
         top10.append(pick)
 
@@ -4560,31 +4576,3 @@ def run(out_dir=DEFAULT_OUT_DIR,
     summary["n_large_rows"] = len(_large_rows)
 
     return summary
-
-
-def main(argv=None):
-    p = argparse.ArgumentParser(description="Export dashboard JSON.")
-    p.add_argument("--dry-run",      action="store_true")
-    p.add_argument("--no-timestamp", action="store_true",
-                   help="Omit generated_at -- for round-trip diff tests.")
-    p.add_argument("--out-dir", default=str(DEFAULT_OUT_DIR), type=str)
-    p.add_argument("--csv-path", default=str(DEFAULT_CSV_PATH), type=str)
-    p.add_argument("--pending-path", default=str(DEFAULT_PENDING_PATH),
-                   type=str,
-                   help="Path to _pending_review.json for diagnostics panel.")
-    p.add_argument("--verbose", action="store_true")
-    args = p.parse_args(argv)
-    summary = run(
-        out_dir=Path(args.out_dir),
-        csv_path=Path(args.csv_path),
-        dry_run=args.dry_run,
-        emit_timestamp=not args.no_timestamp,
-        verbose=args.verbose,
-        pending_path=Path(args.pending_path),
-    )
-    print(json.dumps(summary, indent=2))
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

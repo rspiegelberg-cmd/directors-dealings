@@ -45,7 +45,8 @@ def _mk_conn():
         );
         CREATE TABLE tickers_meta (
             ticker TEXT PRIMARY KEY, benchmark_symbol TEXT,
-            market_cap_gbp REAL, is_excluded_issuer INTEGER DEFAULT 0
+            market_cap_gbp REAL, is_excluded_issuer INTEGER DEFAULT 0,
+            sector TEXT
         );
         CREATE TABLE reporting_dates (ticker TEXT, report_date TEXT);
         CREATE TABLE conviction_scores (

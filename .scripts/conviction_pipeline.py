@@ -16,14 +16,26 @@ Design constraints (CLAUDE.md Zone-A rules + spec §2/§6/§7):
   * Graceful degradation: missing volume/cap/earnings/sector inputs return
     None so the engine's own neutral / drop-and-renormalise rules apply.
 
-Factor → input mapping (spec §8, grounded against the live schema):
+Factor -> input mapping (spec Sec8, grounded against the live schema):
   F1 who                 <- signals.roles.classify_role(tx.role), with the
                             PCA-inheritance roster lift (build_company_top_tier)
-  F2 buy size            <- tx.value + avg_daily_turnover (price×volume join)
-  F3 company size        <- tickers_meta.market_cap_gbp
-  F4 earnings timing     <- reporting_dates distances around the buy
-  F5 past performance    <- trailing price return (NOT reversal_flag net-shares)
-  F6 sector guardrail    <- recent benchmark run via tickers_meta.benchmark_symbol
+  F2 buy size             <- tx.value + avg_daily_turnover (price x volume join)
+  F3 company size         <- tickers_meta.market_cap_gbp
+  F4 earnings timing      <- reporting_dates distances around the buy
+  F5 past performance     <- trailing price return (NOT reversal_flag net-shares);
+                            NOT currently wired into the composite (removed 2026-07-01)
+  F6 sector momentum      <- revised 2026-07-01 (conviction-sector-weighting-review,
+                            Part 3, APPROVED): sector momentum is now a genuine 5th
+                            ADDITIVE factor inside conviction.composite(), not a
+                            post-hoc multiplier. compute_sector_net_buy_count_map(conn)
+                            builds {sector: raw net_buy_count_30d} (BUY=+1, SELL/
+                            SELL_TAX=-1, trailing 30 calendar days); conviction.
+                            f5_sector_momentum() sigmoid-maps that raw count to a
+                            0.0-1.0 sub-score, weighted at WEIGHTS["sector_momentum"]
+                            (0.20) exactly like who/buy_size/company_size/
+                            earnings_timing. The old compute_sector_f6_map() /
+                            f6_sector_multiplier() mechanism is DEPRECATED (kept,
+                            unused) - see conviction.py's F6 section for detail.
 """
 from __future__ import annotations
 
@@ -283,16 +295,24 @@ def earnings_distances(conn, ticker: str, buy_day: Optional[str]):
 
 
 # ---------------------------------------------------------------------------
-# F6 — sector hotness (recent benchmark run, 0-1).
+# F6 — sector hotness (recent benchmark run, 0-1). DEPRECATED 2026-07-02.
 # ---------------------------------------------------------------------------
+# Kept unused (no longer called by score_buy / _factor_inputs) — see the
+# module docstring's F6 row. Superseded by compute_sector_net_buy_count_map()
+# + conviction.f5_sector_momentum() below.
 
 def sector_hotness(conn, benchmark_symbol: Optional[str],
                    as_of: Optional[str]) -> Optional[float]:
-    """Normalised recent benchmark run (0.0 calm .. 1.0 hot), or None.
+    """DEPRECATED — superseded 2026-07-02 by compute_sector_net_buy_count_map()
+    + conviction.f5_sector_momentum(). See
+    outputs/conviction-sector-weighting-review-2026-07-02.md Part 3.
+
+    Normalised recent benchmark run (0.0 calm .. 1.0 hot), or None.
 
     Measures how hard the sector benchmark has run over the trailing
     ~3 months ending strictly BEFORE as_of, and maps that run to 0-1 so the
-    engine's F6 guardrail can DISCOUNT (never lift) a hot-sector buy.
+    engine's (deprecated) F6 guardrail could DISCOUNT (never lift) a
+    hot-sector buy.
 
     Mapping (judgment, spec §6 — guardrail not booster):
       benchmark return <= 0%   -> 0.0  (calm / falling: no discount)
@@ -329,21 +349,24 @@ def sector_hotness(conn, benchmark_symbol: Optional[str],
 
 
 # ---------------------------------------------------------------------------
-# F6 — dynamic sector net-buy map (replaces static SECTOR_MULTIPLIERS table).
+# F6 (legacy name) — dynamic sector net-buy map. DEPRECATED 2026-07-02.
 # ---------------------------------------------------------------------------
 
 def compute_sector_f6_map(conn) -> dict:
-    """Build {sector: f6_score} from net director activity in trailing 30 days.
+    """DEPRECATED — superseded 2026-07-02 by compute_sector_net_buy_count_map()
+    + conviction.f5_sector_momentum(). See
+    outputs/conviction-sector-weighting-review-2026-07-02.md Part 3. Kept in
+    place (not deleted, not called by _factor_inputs/_Caches) in case any
+    other script still imports it.
+
+    Build {sector: f6_score} from net director activity in trailing 30 days.
 
     Counts BUY transactions as +1 and SELL/SELL_TAX as -1 per sector over the
     last 30 calendar days, then maps the net count to an F6 score via
-    conviction.net_buys_to_f6().
-
-    Called once per pipeline run and stored in _Caches; passed to every
-    conviction.conviction_score() call as sector_f6_map=.
+    conviction.net_buys_to_f6() (also deprecated).
 
     Unknown/untagged sectors are excluded — they fall back to neutral (1.0)
-    in the engine.
+    in the (deprecated) engine multiplier path.
     """
     rows = conn.execute(
         "SELECT COALESCE(tm.sector, '') AS sector, "
@@ -365,6 +388,43 @@ def compute_sector_f6_map(conn) -> dict:
     return f6_map
 
 
+def compute_sector_net_buy_count_map(conn) -> dict:
+    """Build {sector: raw net_buy_count_30d} from trailing-30-day director activity.
+
+    Same SQL shape as the deprecated compute_sector_f6_map() (same
+    date('now', '-30 days') flat window, same BUY=+1 / SELL,SELL_TAX=-1
+    aggregation, same LEFT JOIN tickers_meta pattern), but returns the RAW net
+    count per sector directly — no net_buys_to_f6() mapping applied.
+
+    Called once per pipeline run and stored in _Caches; passed to every
+    conviction.conviction_score() call as sector_net_buy_map=. The engine's
+    conviction.f5_sector_momentum() does the raw-count -> 0.0-1.0 sigmoid
+    mapping (revised 2026-07-01 — sector momentum is now a genuine 5th
+    additive factor, not a post-hoc multiplier).
+
+    Unknown/untagged sectors are excluded — they fall back to neutral (0.5)
+    via f5_sector_momentum(None) in the engine.
+    """
+    rows = conn.execute(
+        "SELECT COALESCE(tm.sector, '') AS sector, "
+        "       SUM(CASE WHEN t.type = 'BUY' THEN 1 "
+        "                WHEN t.type IN ('SELL', 'SELL_TAX') THEN -1 "
+        "                ELSE 0 END) AS net_buys "
+        "FROM transactions t "
+        "LEFT JOIN tickers_meta tm ON t.ticker = tm.ticker "
+        "WHERE t.date >= date('now', '-30 days') "
+        "  AND COALESCE(tm.sector, '') != '' "
+        "GROUP BY COALESCE(tm.sector, '')"
+    ).fetchall()
+    net_map: dict = {}
+    for r in rows:
+        sector = _row_get(r, "sector")
+        net = _row_get(r, "net_buys") or 0
+        if sector:
+            net_map[sector] = float(net)
+    return net_map
+
+
 # ---------------------------------------------------------------------------
 # Per-buy scoring.
 # ---------------------------------------------------------------------------
@@ -374,7 +434,10 @@ class _Caches:
 
     def __init__(self, conn):
         self.company_top_tier = build_company_top_tier(conn)
+        # DEPRECATED (unused) — kept for any external readers during migration.
         self.sector_f6_map: dict = compute_sector_f6_map(conn)
+        # Current sector-momentum input: raw {sector: net_buy_count_30d}.
+        self.sector_net_buy_map: dict = compute_sector_net_buy_count_map(conn)
         self.ticker_meta: dict = {}
         for r in conn.execute(
             "SELECT ticker, benchmark_symbol, market_cap_gbp, sector "
@@ -409,13 +472,13 @@ def _factor_inputs(conn, tx_row, caches: _Caches) -> dict:
 
     meta = caches.ticker_meta.get(ticker, {})
     market_cap = meta.get("market_cap_gbp")
-    sector = meta.get("sector")  # for data-driven F6 multiplier
+    sector = meta.get("sector")  # for the sector-momentum factor
 
     value_gbp = _row_get(tx_row, "value")
     turnover = avg_daily_turnover(conn, ticker, as_of)
     days_to_next, days_since_last = earnings_distances(conn, ticker, buy_day)
     # F5 (trailing_return) removed 2026-07-01 — direction unresolved.
-    # F6 now uses sector name, not benchmark hotness.
+    # sector_momentum uses sector name + the raw net-buy map, not benchmark hotness.
 
     inputs_missing: list[str] = []
     if turnover is None:
@@ -435,7 +498,7 @@ def _factor_inputs(conn, tx_row, caches: _Caches) -> dict:
             "value_gbp": float(value_gbp) if value_gbp is not None else None,
             "avg_daily_turnover_gbp": turnover,
             "market_cap_gbp": float(market_cap) if market_cap else None,
-            "sector_f6_map": caches.sector_f6_map,
+            "sector_net_buy_map": caches.sector_net_buy_map,
             "days_to_next_results": days_to_next,
             "days_since_last_results": days_since_last,
             "sector": sector,

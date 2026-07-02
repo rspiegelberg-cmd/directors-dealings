@@ -14,6 +14,8 @@ Coverage:
   * LOOKAHEAD exclusion (a post-buy price bar never moves the score)
   * rolling 28-day window bounds + full-distribution ranking
   * migration 016 reaches schema_version "16" and the table is idempotent
+  * compute_sector_net_buy_count_map() — the raw sector net-buy map that
+    replaced compute_sector_f6_map() (revised 2026-07-01/02)
 """
 from __future__ import annotations
 
@@ -47,10 +49,11 @@ def _mk_conn() -> sqlite3.Connection:
         );
         CREATE TABLE tickers_meta (
             ticker TEXT PRIMARY KEY, benchmark_symbol TEXT,
-            market_cap_gbp REAL, is_excluded_issuer INTEGER DEFAULT 0
+            market_cap_gbp REAL, is_excluded_issuer INTEGER DEFAULT 0,
+            sector TEXT
         );
         CREATE TABLE reporting_dates (
-            ticker TEXT, date TEXT
+            ticker TEXT, report_date TEXT
         );
         """
     )
@@ -227,9 +230,9 @@ class TestLookahead(unittest.TestCase):
 class TestEarningsDistances(unittest.TestCase):
     def test_next_and_last(self):
         conn = _mk_conn()
-        conn.execute("INSERT INTO reporting_dates (ticker, date) VALUES (?, ?)",
+        conn.execute("INSERT INTO reporting_dates (ticker, report_date) VALUES (?, ?)",
                      ("JJJ", "2026-07-10"))  # 25 days after buy
-        conn.execute("INSERT INTO reporting_dates (ticker, date) VALUES (?, ?)",
+        conn.execute("INSERT INTO reporting_dates (ticker, report_date) VALUES (?, ?)",
                      ("JJJ", "2026-05-20"))  # 26 days before buy
         conn.commit()
         nxt, last = cp.earnings_distances(conn, "JJJ", "2026-06-15")
@@ -241,6 +244,46 @@ class TestEarningsDistances(unittest.TestCase):
         nxt, last = cp.earnings_distances(conn, "KKK", "2026-06-15")
         self.assertIsNone(nxt)
         self.assertIsNone(last)
+
+
+class TestSectorNetBuyCountMap(unittest.TestCase):
+    """compute_sector_net_buy_count_map() — the raw {sector: net_count} map
+    that replaced compute_sector_f6_map() (revised 2026-07-01/02)."""
+
+    def test_net_count_is_raw_not_mapped(self):
+        conn = _mk_conn()
+        # 3 BUYs, 1 SELL in "Financials" within the trailing 30 days -> net +2
+        # (RAW count, NOT run through conviction.net_buys_to_f6()).
+        import datetime
+        today = datetime.date.today().isoformat()
+        _add_meta(conn, "AAA", cap=1.0)
+        conn.execute("UPDATE tickers_meta SET sector = 'Financials' WHERE ticker = 'AAA'")
+        for i in range(3):
+            _add_tx(conn, f"buy{i}", "AAA", "Chief Executive Officer",
+                    announced_at=today, date=today)
+        _add_tx(conn, "sell0", "AAA", "Chief Executive Officer",
+                type_="SELL", announced_at=today, date=today)
+        conn.commit()
+        net_map = cp.compute_sector_net_buy_count_map(conn)
+        self.assertEqual(net_map.get("Financials"), 2.0)
+
+    def test_untagged_sector_excluded(self):
+        conn = _mk_conn()
+        _add_meta(conn, "ZZZ", cap=1.0)  # no sector set (NULL)
+        _add_tx(conn, "f1", "ZZZ", "Chief Executive Officer")
+        conn.commit()
+        net_map = cp.compute_sector_net_buy_count_map(conn)
+        self.assertEqual(net_map, {})
+
+    def test_caches_expose_sector_net_buy_map(self):
+        conn = _mk_conn()
+        _add_meta(conn, "AAA", cap=1.0)
+        conn.execute("UPDATE tickers_meta SET sector = 'Energy' WHERE ticker = 'AAA'")
+        conn.commit()
+        caches = cp.build_caches(conn)
+        self.assertIsInstance(caches.sector_net_buy_map, dict)
+        # Deprecated map still present (kept, unused) for backward compat.
+        self.assertIsInstance(caches.sector_f6_map, dict)
 
 
 class TestScoreWindow(unittest.TestCase):

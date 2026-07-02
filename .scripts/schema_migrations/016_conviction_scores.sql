@@ -18,7 +18,20 @@
 --   scored_at          ISO timestamp the row was written (audit / re-score)
 --   score              0-100 composite conviction score
 --   band               Low / Moderate / High / Exceptional (§4 strength bands)
---   f1_who .. f6_sector_mult  the six 0.0-1.0 sub-scores (f6 is a 0.7-1.0 mult)
+--   f1_who .. f6_sector_mult  the sub-scores actually written per row.
+--                       f5_past_performance is unused/NULL since 2026-07-01
+--                       (the old reversal-bias factor was dropped from the
+--                       composite, direction unresolved). f6_sector_mult is
+--                       historically named for the old 0.7-2.0x sector
+--                       multiplier mechanism, but as of 2026-07-01/02 it
+--                       holds the 0.0-1.0 "sector_momentum" sub-score — a
+--                       genuine 5th ADDITIVE factor in the composite (sigmoid
+--                       of trailing-30d sector net director buy/sell count),
+--                       NOT a post-hoc multiplier. Column intentionally NOT
+--                       renamed (avoids an unapproved schema migration on the
+--                       live Postgres table) — see
+--                       outputs/conviction-sector-weighting-review-2026-07-02.md
+--                       Part 3 and conviction.py's f5_sector_momentum().
 --   weights_used       JSON of the post-renormalise additive weights actually used
 --   earnings_dropped   1 when F4 was dropped & weights re-normalised (§11 dec 3)
 --   rank_in_window     1-based rank across the WHOLE window's buy distribution

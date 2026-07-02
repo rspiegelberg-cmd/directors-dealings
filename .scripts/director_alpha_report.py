@@ -847,7 +847,7 @@ def run(conn, *, horizons, min_buys, include_excluded, out_dir: Path):
             "cars": cars,
             "score": result.score,
             "subscores": dict(result.subscores),
-            "sector_mult": result.sector_multiplier,
+            "sector_mult": result.sector_momentum,
         })
 
     qualified, full_lb = build_leaderboard(per_buy, horizons, min_buys)

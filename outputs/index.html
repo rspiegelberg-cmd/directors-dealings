@@ -304,8 +304,10 @@ function realConvictionPanel(convRows) {
   const body = items.map((d, i) => {
     const key = `${d.ticker}|${d.director}|${day(d.date)}`;
     const hidden = dismissed.has(key) ? ' style="display:none"' : "";
-    const hot = (d.f6_sector_mult != null && d.f6_sector_mult < 1)
-      ? ` <span class="inline-flex items-center text-[9px] px-1 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold align-middle" title="Sector running hot — score discounted">⚠ hot</span>` : "";
+    const hot = (d.f6_sector_mult != null && d.f6_sector_mult < 0.4)
+      ? ` <span class="inline-flex items-center text-[9px] px-1 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold align-middle" title="Sector momentum weak — net selling in this sector recently">⚠ weak sector</span>`
+      : (d.f6_sector_mult != null && d.f6_sector_mult > 0.65)
+      ? ` <span class="inline-flex items-center text-[9px] px-1 py-0.5 rounded bg-emerald-100 text-emerald-800 font-semibold align-middle" title="Sector momentum strong — net buying in this sector recently">▲ hot sector</span>` : "";
     const factors = `<div class="flex flex-wrap gap-1">${factorChip("Who", d.f1_who)}${factorChip("Size", d.f2_buy_size)}${factorChip("Cap", d.f3_company_size)}${factorChip("Earn", d.f4_earnings_timing, !!d.earnings_dropped)}${factorChip("Past", d.f5_past_performance)}</div>`;
     return `<tr data-conv-key="${esc(key)}" class="border-t border-slate-100 hover:bg-indigo-50"${hidden}>
       <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold">${i + 1}</span></td>

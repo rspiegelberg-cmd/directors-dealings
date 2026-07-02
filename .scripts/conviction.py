@@ -44,17 +44,26 @@ except Exception:  # pragma: no cover
 # ---------------------------------------------------------------------------
 # §4 — composite weights (provisional judgment priors, NOT fitted)
 # ---------------------------------------------------------------------------
-# Keys are the five ADDITIVE factors. F6 (sector) is a multiplier, not a
-# weight, so it does not appear here. These sum to 1.0 before the sector
-# guardrail is applied. Revised ONLY on out-of-sample forward data (§5/§7).
+# Keys are the five ADDITIVE factors, all combined inside the same weighted
+# sum / clamp01 (revised 2026-07-01 — see the sector-momentum note at F5
+# below). These sum to exactly 1.0. Revised ONLY on out-of-sample forward
+# data (§5/§7), or on an explicit Rupert-approved design change like this one.
+#
+# 2026-07-01 revision (conviction-sector-weighting-review, Part 3, APPROVED):
+# sector momentum folds into the main weighted sum as a genuine 5th factor
+# (sector_momentum, 0.20) instead of a post-hoc multiplier. The prior four
+# weights are scaled by 0.80 so the whole dict still sums to 1.0.
 WEIGHTS: dict[str, float] = {
-    "who": 0.30,              # F1
-    "buy_size": 0.30,         # F2
-    "company_size": 0.22,     # F3
-    "earnings_timing": 0.18,  # F4
-    # F5 (past_performance) removed 2026-07-01 — direction unresolved pending
-    # forward data; will be re-added with correct sign once proven. Weight
-    # redistributed across F1-F4.
+    "who": 0.24,               # F1  (0.30 x 0.80)
+    "buy_size": 0.24,          # F2  (0.30 x 0.80)
+    "company_size": 0.176,     # F3  (0.22 x 0.80)
+    "earnings_timing": 0.144,  # F4  (0.18 x 0.80)
+    "sector_momentum": 0.20,   # F5  (was the F6 multiplier; see f5_sector_momentum)
+    # F5 (past_performance, the old reversal-bias factor) removed 2026-07-01 —
+    # direction unresolved pending forward data; will be re-added with correct
+    # sign once proven. Not to be confused with the NEW "sector_momentum" key
+    # above, which reuses the "F5" slot name in some docs/exports as the fifth
+    # additive factor but is a distinct signal (sector net-buy momentum).
 }
 
 # §4 strength bands (lower-inclusive, upper-exclusive except the top band).
@@ -359,6 +368,13 @@ def f5_past_performance(trailing_return: Optional[float]) -> float:
     Missing data -> neutral 0.5 (we don't know the prior move, so don't bias).
     A buy after a fall scores high; a buy into a rally scores low; capped at
     both ends so an extreme crash reads the same as a -30% dip.
+
+    NOTE: this factor is currently NOT part of WEIGHTS / composite() — it was
+    removed 2026-07-01 pending forward data (direction unresolved). The
+    function is kept for any external callers and for a possible future
+    re-add with a validated sign. It is unrelated to the NEW
+    f5_sector_momentum() factor below, which is the current 5th weighted
+    factor despite the shared "F5" label collision in older docs.
     """
     if trailing_return is None:
         return 0.5
@@ -373,11 +389,45 @@ def f5_past_performance(trailing_return: Optional[float]) -> float:
 
 
 # ===========================================================================
-# F6 — Dynamic sector multiplier (net-buy volume, revised 2026-07-01)
+# F5 — Sector momentum (additive factor, superseded the F6 multiplier 2026-07-01)
 # ===========================================================================
-# F6 is now computed live from net director activity in the trailing 30
+# See docs/agents/quant-researcher.md-produced review
+# outputs/conviction-sector-weighting-review-2026-07-02.md Part 3 (Rupert
+# APPROVED): sector net-buy momentum is now a genuine 5th weighted factor
+# inside the same additive composite as who/buy_size/company_size/
+# earnings_timing, NOT a post-hoc multiplier applied after clamp01. This
+# replaces the old f6_sector_multiplier() mechanism below (kept, deprecated).
+
+def f5_sector_momentum(net_buy_count_30d: Optional[float], k: float = 12.0) -> float:
+    """Sector-momentum sub-score (0.0-1.0): sigmoid of trailing 30-day net director buy/sell count.
+
+    net_buy_count_30d: (# BUY) - (# SELL + # SELL_TAX) transactions in that sector over the
+    trailing 30 calendar days (flat window, no decay — Rupert's explicit spec, per Part 3 of
+    the sector-weighting review). None/missing -> neutral 0.5 (unknown sector, don't bias).
+
+    subscore = 1 / (1 + exp(-net_buy_count_30d / k)), so net=0 -> 0.5 neutral,
+    strongly positive net buying -> approaches 1.0, strongly negative -> approaches 0.0.
+    k=12 was calibrated against the observed live distribution (see the review doc) so the
+    hottest sector seen in ~3 months of data (net~+24) reads ~0.88, not pinned near 1.0.
+    """
+    if net_buy_count_30d is None:
+        return 0.5
+    x = float(net_buy_count_30d) / k
+    subscore = 1.0 / (1.0 + math.exp(-x))
+    return _clamp01(subscore)
+
+
+# ===========================================================================
+# F6 — Dynamic sector multiplier (net-buy volume, DEPRECATED 2026-07-02)
+# ===========================================================================
+# DEPRECATED — superseded 2026-07-02 by f5_sector_momentum(), see
+# docs/agents/quant-researcher.md-produced review
+# outputs/conviction-sector-weighting-review-2026-07-02.md Part 3. Kept in
+# place (not deleted) in case any other script still imports these; they are
+# no longer called by conviction_score()/composite().
+#
+# F6 was computed live from net director activity in the trailing 30
 # calendar days: net_buys = BUY count − (SELL + SELL_TAX) count per sector.
-# This replaces the old static hit-rate table.
 #
 # Net-buy → F6 score mapping (symmetric dead-band ±4):
 #   net ≥ 21          →  +1.00   (sector_mult = 2.00)
@@ -391,15 +441,14 @@ def f5_past_performance(trailing_return: Optional[float]) -> float:
 #        net ≤ −21    →  −1.00   (sector_mult = 0.00 — score zeroed)
 #
 # sector_mult = max(0.0, 1.0 + f6_score)
-#
-# The map is computed once per pipeline run by
-# conviction_pipeline.compute_sector_f6_map(conn) and passed in as
-# sector_f6_map={...} to every conviction_score() call.  Unit tests that
-# do not supply a map receive a neutral 1.0 multiplier.
 
 
 def net_buys_to_f6(net: int) -> float:
-    """Map trailing-30d net buy count to an F6 score (-1.0 … +1.0).
+    """DEPRECATED — superseded 2026-07-02 by f5_sector_momentum(), see
+    docs/agents/quant-researcher.md-produced review
+    outputs/conviction-sector-weighting-review-2026-07-02.md Part 3.
+
+    Map trailing-30d net buy count to an F6 score (-1.0 … +1.0).
 
     Symmetric dead-band of ±4; returns one of:
     {-1.0, -0.75, -0.5, -0.25, 0.0, +0.25, +0.5, +0.75, +1.0}.
@@ -425,7 +474,11 @@ def net_buys_to_f6(net: int) -> float:
 
 def f6_sector_multiplier(sector: Optional[str] = None,
                          sector_f6_map: Optional[dict] = None) -> float:
-    """F6 sector multiplier from the live 30-day net-buy map.
+    """DEPRECATED — superseded 2026-07-02 by f5_sector_momentum(), see
+    docs/agents/quant-researcher.md-produced review
+    outputs/conviction-sector-weighting-review-2026-07-02.md Part 3.
+
+    F6 sector multiplier from the live 30-day net-buy map.
 
     Args:
       sector:        sector tag from tickers_meta (e.g. "Financials").
@@ -447,7 +500,12 @@ def f6_sector_multiplier(sector: Optional[str] = None,
 
 # Deprecated — kept for any callers that haven't been updated yet.
 def f6_sector_guardrail(sector_beta_hotness: Optional[float] = None) -> float:
-    """Deprecated: use f6_sector_multiplier(sector, sector_f6_map) instead."""
+    """DEPRECATED — superseded 2026-07-02 by f5_sector_momentum(), see
+    docs/agents/quant-researcher.md-produced review
+    outputs/conviction-sector-weighting-review-2026-07-02.md Part 3.
+
+    Use f5_sector_momentum(net_buy_count_30d) instead.
+    """
     if sector_beta_hotness is None:
         return 1.0
     h = _clamp01(sector_beta_hotness)
@@ -465,7 +523,7 @@ class ConvictionResult:
     band: str                          # Low / Moderate / High / Exceptional
     subscores: dict[str, float] = field(default_factory=dict)  # each 0.0-1.0
     weights_used: dict[str, float] = field(default_factory=dict)  # post-renorm
-    sector_multiplier: float = 1.0
+    sector_momentum: float = 0.5       # the 0.0-1.0 sector_momentum sub-score actually used
     earnings_dropped: bool = False     # True if F4 was dropped & re-normalised
 
     def as_dict(self) -> dict:
@@ -475,7 +533,7 @@ class ConvictionResult:
             "band": self.band,
             "subscores": dict(self.subscores),
             "weights_used": dict(self.weights_used),
-            "sector_multiplier": self.sector_multiplier,
+            "sector_momentum": self.sector_momentum,
             "earnings_dropped": self.earnings_dropped,
         }
 
@@ -484,8 +542,9 @@ def _renormalise(weights: dict[str, float], drop: set[str]) -> dict[str, float]:
     """Drop `drop` keys and rescale the rest so they sum to 1.0 again.
 
     Used for the missing-earnings-date case (decision 2026-06-18): drop F4
-    and re-normalise the remaining four weights so a missing date neither
-    blocks nor penalises the buy.
+    and re-normalise the remaining weights so a missing date neither
+    blocks nor penalises the buy. Generic over whatever keys are present in
+    `weights`, so it works unchanged whether there are four or five factors.
     """
     kept = {k: v for k, v in weights.items() if k not in drop}
     total = sum(kept.values())
@@ -495,25 +554,25 @@ def _renormalise(weights: dict[str, float], drop: set[str]) -> dict[str, float]:
 
 
 def composite(subscores: dict[str, float],
-              sector_multiplier: float = 1.0,
               drop_earnings: bool = False,
               weights: Optional[dict[str, float]] = None) -> ConvictionResult:
     """Combine 0.0-1.0 sub-scores into a 0-100 ConvictionResult (spec §4).
 
-    formula:  100 × ( Σ wi·Fi ) × sector_guardrail(F6)
+    formula:  100 × clamp01( Σ wi·Fi )
 
     Args:
-      subscores:         dict with keys "who", "buy_size", "company_size",
-                         "earnings_timing", "past_performance", each 0.0-1.0.
-                         (F6 is the multiplier, passed separately.)
-      sector_multiplier: F6 guardrail multiplier (0.7-1.0). Trims, never lifts.
-      drop_earnings:     when True (earnings date unknown — decision
-                         2026-06-18), drop "earnings_timing" and re-normalise
-                         the remaining four weights so they sum to 1.0.
-      weights:           override the default WEIGHTS (Phase-4 calibration).
+      subscores:     dict with keys "who", "buy_size", "company_size",
+                     "earnings_timing", "sector_momentum", each 0.0-1.0.
+                     sector_momentum is a genuine 5th weighted factor inside
+                     this same sum (revised 2026-07-01 — see f5_sector_momentum);
+                     there is no longer a separate post-clamp multiplier.
+      drop_earnings: when True (earnings date unknown — decision
+                     2026-06-18), drop "earnings_timing" and re-normalise
+                     the remaining weights so they sum to 1.0.
+      weights:       override the default WEIGHTS (Phase-4 calibration).
 
-    The additive sum is clamped to [0,1] before the multiplier, and the final
-    score is clamped to [0,100].
+    The additive sum is clamped to [0,1], and the final score (100x that) is
+    therefore naturally bounded to [0,100] — no separate clamp needed.
     """
     w = dict(weights or WEIGHTS)
     drop: set[str] = {"earnings_timing"} if drop_earnings else set()
@@ -524,13 +583,7 @@ def composite(subscores: dict[str, float],
         weighted_sum += weight * _clamp01(subscores.get(key, 0.0))
     weighted_sum = _clamp01(weighted_sum)
 
-    mult = sector_multiplier
-    if mult < 0.0:
-        mult = 0.0
-    # mult may exceed 1.0 for positive-history sectors (F6 is now data-driven,
-    # not a guardrail-only). The final score is capped at 100 below.
-
-    score = 100.0 * weighted_sum * mult
+    score = 100.0 * weighted_sum
     if score < 0.0:
         score = 0.0
     elif score > 100.0:
@@ -541,7 +594,7 @@ def composite(subscores: dict[str, float],
         band=band_for(score),
         subscores={k: _clamp01(subscores.get(k, 0.0)) for k in WEIGHTS},
         weights_used=w_eff,
-        sector_multiplier=mult,
+        sector_momentum=_clamp01(subscores.get("sector_momentum", 0.5)),
         earnings_dropped=drop_earnings,
     )
 
@@ -556,7 +609,7 @@ def conviction_score(*,
                      days_to_next_results: Optional[float] = None,
                      days_since_last_results: Optional[float] = None,
                      sector: Optional[str] = None,
-                     sector_f6_map: Optional[dict] = None,          # live net-buy map
+                     sector_net_buy_map: Optional[dict] = None,      # raw {sector: net_buy_count_30d}
                      # Deprecated params kept for call-site compat during migration:
                      trailing_return: Optional[float] = None,       # ignored
                      sector_beta_hotness: Optional[float] = None,   # ignored
@@ -565,14 +618,22 @@ def conviction_score(*,
     """End-to-end convenience: raw inputs -> 0-100 ConvictionResult.
 
     This is the single entry point Phase 2 will call per BUY. It computes the
-    six factor curves, applies the missing-earnings-date rule, and combines.
+    five factor curves, applies the missing-earnings-date rule, and combines.
     All inputs are plain numbers / strings / None, so it stays DB-free and
     unit-testable.
 
     Missing-earnings rule (decision 2026-06-18): if BOTH timing inputs are
-    None we DROP F4 and re-normalise the remaining four weights — a missing
+    None we DROP F4 and re-normalise the remaining weights — a missing
     forward earnings date (the known ~23% coverage ceiling, §8) must not
     block or penalise the buy.
+
+    Sector momentum (revised 2026-07-01): `sector_net_buy_map` is the RAW
+    {sector: net_buy_count_30d} dict (NOT pre-mapped to a -1..+1 score, unlike
+    the deprecated sector_f6_map). We look up this buy's sector and pass the
+    raw count through f5_sector_momentum() to get the 0.0-1.0 sub-score, then
+    fold it into `subscores["sector_momentum"]` alongside who/buy_size/
+    company_size/earnings_timing — it is weighted and summed by composite()
+    exactly like the other four factors, not applied as a post-hoc multiplier.
 
     Field-name mapping for Phase-2 wiring (grounded against snapshots):
       tier                    <- signals.roles.classify_role(tx["role"])
@@ -583,11 +644,14 @@ def conviction_score(*,
       market_cap_gbp          <- tickers_meta.market_cap_gbp
       days_to_next_results    <- B-114 forward earnings date - tx["date"]
       days_since_last_results <- tx["date"] - B-161 last results date
-      trailing_return         <- B-159 trailing 1-3mo return for tx["ticker"]
-      sector_beta_hotness     <- sector benchmark recent run (0-1), Phase 2
+      sector_net_buy_map      <- conviction_pipeline.compute_sector_net_buy_count_map(conn)
     """
     drop_earnings = (days_to_next_results is None
                      and days_since_last_results is None)
+
+    net_buy_count = None
+    if sector and sector_net_buy_map:
+        net_buy_count = sector_net_buy_map.get(sector.strip())
 
     subscores = {
         "who": f1_who(tier, is_pca=is_pca, company_top_tier=company_top_tier),
@@ -595,12 +659,11 @@ def conviction_score(*,
         "company_size": f3_company_size(market_cap_gbp),
         "earnings_timing": (0.0 if drop_earnings else f4_earnings_timing(
             days_to_next_results, days_since_last_results)),
+        "sector_momentum": f5_sector_momentum(net_buy_count),
     }
-    sector_mult = f6_sector_multiplier(sector, sector_f6_map)
 
     return composite(
         subscores,
-        sector_multiplier=sector_mult,
         drop_earnings=drop_earnings,
         weights=weights,
     )

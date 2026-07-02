@@ -29,7 +29,7 @@ def _pick(**over):
         "director": "Jane Director",
         "role": "Chief Executive Officer",
         "value_gbp": 2_500_000.0,
-        "sector_multiplier": 1.0,
+        "sector_momentum": 0.5,
         "sector_caution": False,
         "inputs_missing": [],
         "factors": [
@@ -40,7 +40,7 @@ def _pick(**over):
              "unknown": False},
             {"id": "f4_earnings_timing", "label": "Earnings timing",
              "value": None, "unknown": True},
-            {"id": "f5_past_performance", "label": "Past performance",
+            {"id": "f6_sector_mult", "label": "Sector momentum",
              "value": 0.5, "unknown": False},
         ],
     }
@@ -93,13 +93,21 @@ class TestConvictionRow(unittest.TestCase):
         # Earnings timing is unknown in the fixture.
         self.assertIn("unknown", out)
 
-    def test_sector_caution_flag_shown_when_discounted(self):
+    def test_weak_sector_flag_shown_when_notably_below_neutral(self):
+        # Revised 2026-07-01/02: sector_momentum is additive (0.0-1.0), not a
+        # multiplier — "caution" now means notably BELOW neutral (net selling).
         out = render_index._conviction_row(
-            _pick(sector_multiplier=0.7, sector_caution=True))
+            _pick(sector_momentum=0.2, sector_caution=True))
+        self.assertIn("weak sector", out)
+
+    def test_hot_sector_flag_shown_when_notably_above_neutral(self):
+        out = render_index._conviction_row(
+            _pick(sector_momentum=0.8, sector_caution=False))
         self.assertIn("hot sector", out)
 
     def test_no_caution_when_calm(self):
         out = render_index._conviction_row(_pick())
+        self.assertNotIn("weak sector", out)
         self.assertNotIn("hot sector", out)
 
     def test_missing_value_em_dash(self):
