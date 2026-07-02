@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T09:33:46Z",
+  "generated_at": "2026-07-02T06:47:43Z",
   "schema_version": "1.0",
   "buckets": {
     "100k-500k": {
@@ -7,12 +7,12 @@
       "scope_note": "T1 + T2 buys only",
       "t1": {
         "30d": {
-          "benchmark_car_pct": -0.14,
-          "total_firings": 49,
-          "distinct_tickers": 16,
+          "benchmark_car_pct": 0.11,
+          "total_firings": 41,
+          "distinct_tickers": 15,
           "tickers_with_n3": 5,
-          "hit_pct": 53.1,
-          "median_car": 0.1,
+          "hit_pct": 43.9,
+          "median_car": -0.8,
           "top_firings": [
             {
               "date": "2026-06-17",
@@ -99,34 +99,6 @@
               "bench_return": 0.3
             },
             {
-              "date": "2026-06-01",
-              "ticker": "MAB1",
-              "company": "Mortgage Advice Bureau (Holdings) plc",
-              "director": "Mortgage Advice Bureau",
-              "role": "",
-              "role_normalized": "Other / unclassified",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 220116,
-              "car": 1.8,
-              "abs_return": 1.4,
-              "bench_return": -0.4
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "MAB1",
-              "company": "Mortgage Advice Bureau (Holdings) plc",
-              "director": "Mortgage Advice Bureau",
-              "role": "",
-              "role_normalized": "Other / unclassified",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 220116,
-              "car": 1.8,
-              "abs_return": 1.4,
-              "bench_return": -0.4
-            },
-            {
               "date": "2026-06-17",
               "ticker": "CGEO",
               "company": "Georgia Capital PLC",
@@ -152,6 +124,34 @@
               "value_gbp": 169923,
               "car": 1.5,
               "abs_return": 1.0,
+              "bench_return": -0.5
+            },
+            {
+              "date": "2026-06-17",
+              "ticker": "PAY",
+              "company": "PayPoint Plc",
+              "director": "Nick Wiles",
+              "role": "Chief Executive",
+              "role_normalized": "CEO",
+              "role_class": "",
+              "signal_tier": "t1a",
+              "value_gbp": 172500,
+              "car": 1.0,
+              "abs_return": 0.4,
+              "bench_return": -0.5
+            },
+            {
+              "date": "2026-06-17",
+              "ticker": "PAY",
+              "company": "PayPoint Plc",
+              "director": "Nick Wiles",
+              "role": "Chief Executive",
+              "role_normalized": "CEO",
+              "role_class": "T1a",
+              "signal_tier": "t1a",
+              "value_gbp": 172500,
+              "car": 1.0,
+              "abs_return": 0.4,
               "bench_return": -0.5
             }
           ],
@@ -307,20 +307,20 @@
               "latest_fire": "2026-06-17"
             },
             {
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "n": 14,
-              "hit_pct": 64.3,
-              "mean_car": 0.1,
-              "latest_fire": "2026-06-10"
-            },
-            {
               "ticker": "SOHO",
               "company": "",
               "n": 5,
               "hit_pct": 60.0,
               "mean_car": -0.2,
               "latest_fire": "2026-06-19"
+            },
+            {
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "n": 8,
+              "hit_pct": 37.5,
+              "mean_car": -0.5,
+              "latest_fire": "2026-06-10"
             },
             {
               "ticker": "PANR",
@@ -369,14 +369,6 @@
               "hit_pct": 100.0,
               "mean_car": 5.5,
               "latest_fire": "2026-06-17"
-            },
-            {
-              "ticker": "MAB1",
-              "company": "Mortgage Advice Bureau (Holdings) plc",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 1.8,
-              "latest_fire": "2026-06-01"
             },
             {
               "ticker": "PAY",
@@ -1626,10 +1618,10 @@
         },
         "1y": {
           "benchmark_car_pct": -0.04,
-          "total_firings": 302,
+          "total_firings": 301,
           "distinct_tickers": 83,
           "tickers_with_n3": 47,
-          "hit_pct": 53.6,
+          "hit_pct": 53.8,
           "median_car": 0.1,
           "top_firings": [
             {
@@ -2117,6 +2109,14 @@
               "latest_fire": "2026-06-10"
             },
             {
+              "ticker": "SOHO",
+              "company": "",
+              "n": 5,
+              "hit_pct": 60.0,
+              "mean_car": -0.2,
+              "latest_fire": "2026-06-19"
+            },
+            {
               "ticker": "STB",
               "company": "",
               "n": 5,
@@ -2139,14 +2139,6 @@
               "hit_pct": 50.0,
               "mean_car": 0.2,
               "latest_fire": "2026-01-29"
-            },
-            {
-              "ticker": "SOHO",
-              "company": "Social Housing REIT plc",
-              "n": 6,
-              "hit_pct": 50.0,
-              "mean_car": -0.3,
-              "latest_fire": "2026-06-19"
             },
             {
               "ticker": "WTB",
@@ -3631,258 +3623,15 @@
       },
       "t30": {
         "30d": {
-          "benchmark_car_pct": 0.9,
-          "total_firings": 8,
-          "distinct_tickers": 2,
-          "tickers_with_n3": 1,
-          "hit_pct": 100.0,
-          "median_car": 1.7,
-          "top_firings": [
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie van de Walle And Domitille Marie Ren",
-              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
-              "role_normalized": "PCA",
-              "role_class": "",
-              "signal_tier": "t5",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie Van de Walle",
-              "role": "Non-Executive Chair",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie van de Walle And Domitille Marie Ren",
-              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
-              "role_normalized": "PCA",
-              "role_class": "",
-              "signal_tier": "t5",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie Van de Walle",
-              "role": "Non-Executive Chair",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie Van de Walle",
-              "role": "Non-Executive Chair",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie van de Walle And Domitille Marie Ren",
-              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
-              "role_normalized": "PCA",
-              "role_class": "T5",
-              "signal_tier": "t5",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "MAB1",
-              "company": "Mortgage Advice Bureau (Holdings) plc",
-              "director": "Mortgage Advice Bureau",
-              "role": "",
-              "role_normalized": "Other / unclassified",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 220116,
-              "car": 0.9,
-              "abs_return": 1.8,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "MAB1",
-              "company": "Mortgage Advice Bureau (Holdings) plc",
-              "director": "Mortgage Advice Bureau",
-              "role": "",
-              "role_normalized": "Other / unclassified",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 220116,
-              "car": 0.9,
-              "abs_return": 1.8,
-              "bench_return": 0.9
-            }
-          ],
-          "bottom_firings": [
-            {
-              "date": "2026-06-01",
-              "ticker": "MAB1",
-              "company": "Mortgage Advice Bureau (Holdings) plc",
-              "director": "Mortgage Advice Bureau",
-              "role": "",
-              "role_normalized": "Other / unclassified",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 220116,
-              "car": 0.9,
-              "abs_return": 1.8,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "MAB1",
-              "company": "Mortgage Advice Bureau (Holdings) plc",
-              "director": "Mortgage Advice Bureau",
-              "role": "",
-              "role_normalized": "Other / unclassified",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 220116,
-              "car": 0.9,
-              "abs_return": 1.8,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie van de Walle And Domitille Marie Ren",
-              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
-              "role_normalized": "PCA",
-              "role_class": "",
-              "signal_tier": "t5",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie Van de Walle",
-              "role": "Non-Executive Chair",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie van de Walle And Domitille Marie Ren",
-              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
-              "role_normalized": "PCA",
-              "role_class": "",
-              "signal_tier": "t5",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie Van de Walle",
-              "role": "Non-Executive Chair",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie Van de Walle",
-              "role": "Non-Executive Chair",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "director": "Leslie van de Walle And Domitille Marie Ren",
-              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
-              "role_normalized": "PCA",
-              "role_class": "T5",
-              "signal_tier": "t5",
-              "value_gbp": 150300,
-              "car": 1.7,
-              "abs_return": 2.6,
-              "bench_return": 0.9
-            }
-          ],
-          "rollup": [
-            {
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "n": 6,
-              "hit_pct": 100.0,
-              "mean_car": 1.7,
-              "latest_fire": "2026-06-01"
-            },
-            {
-              "ticker": "MAB1",
-              "company": "Mortgage Advice Bureau (Holdings) plc",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 0.9,
-              "latest_fire": "2026-06-01"
-            }
-          ]
+          "benchmark_car_pct": null,
+          "total_firings": 0,
+          "distinct_tickers": 0,
+          "tickers_with_n3": 0,
+          "hit_pct": null,
+          "median_car": null,
+          "top_firings": [],
+          "bottom_firings": [],
+          "rollup": []
         },
         "90d": {
           "benchmark_car_pct": 0.05,
@@ -4881,11 +4630,11 @@
           ]
         },
         "1y": {
-          "benchmark_car_pct": 1.14,
-          "total_firings": 261,
-          "distinct_tickers": 72,
+          "benchmark_car_pct": 1.07,
+          "total_firings": 260,
+          "distinct_tickers": 71,
           "tickers_with_n3": 41,
-          "hit_pct": 48.7,
+          "hit_pct": 48.8,
           "median_car": -0.1,
           "top_firings": [
             {
@@ -5715,14 +5464,6 @@
               "hit_pct": 0.0,
               "mean_car": -14.4,
               "latest_fire": "2026-02-23"
-            },
-            {
-              "ticker": "SOHO",
-              "company": "Social Housing REIT plc",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -7.1,
-              "latest_fire": "2025-07-01"
             },
             {
               "ticker": "UTG",
@@ -7171,11 +6912,11 @@
           ]
         },
         "1y": {
-          "benchmark_car_pct": 5.36,
-          "total_firings": 187,
-          "distinct_tickers": 59,
+          "benchmark_car_pct": 5.34,
+          "total_firings": 186,
+          "distinct_tickers": 58,
           "tickers_with_n3": 32,
-          "hit_pct": 36.9,
+          "hit_pct": 37.1,
           "median_car": -5.2,
           "top_firings": [
             {
@@ -7893,14 +7634,6 @@
               "hit_pct": 0.0,
               "mean_car": -24.7,
               "latest_fire": "2025-12-10"
-            },
-            {
-              "ticker": "SOHO",
-              "company": "Social Housing REIT plc",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -7.3,
-              "latest_fire": "2025-07-01"
             },
             {
               "ticker": "SSPG",
@@ -8851,11 +8584,11 @@
         },
         "1y": {
           "benchmark_car_pct": 9.72,
-          "total_firings": 128,
-          "distinct_tickers": 45,
+          "total_firings": 127,
+          "distinct_tickers": 44,
           "tickers_with_n3": 23,
-          "hit_pct": 41.4,
-          "median_car": -3.2,
+          "hit_pct": 41.7,
+          "median_car": -3.0,
           "top_firings": [
             {
               "date": "2025-12-04",
@@ -9460,14 +9193,6 @@
               "hit_pct": 0.0,
               "mean_car": -45.5,
               "latest_fire": "2025-12-24"
-            },
-            {
-              "ticker": "SOHO",
-              "company": "Social Housing REIT plc",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -17.8,
-              "latest_fire": "2025-07-01"
             },
             {
               "ticker": "SSPG",
@@ -10313,54 +10038,15 @@
           "rollup": []
         },
         "1y": {
-          "benchmark_car_pct": 18.04,
-          "total_firings": 1,
-          "distinct_tickers": 1,
+          "benchmark_car_pct": null,
+          "total_firings": 0,
+          "distinct_tickers": 0,
           "tickers_with_n3": 0,
-          "hit_pct": 0.0,
-          "median_car": -11.0,
-          "top_firings": [
-            {
-              "date": "2025-07-01",
-              "ticker": "SOHO",
-              "company": "Social Housing REIT plc",
-              "director": "Benedict Luke Green",
-              "role": "PDMR (Principal of Investment Manager)",
-              "role_normalized": "PDMR-only",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 149242,
-              "car": -11.0,
-              "abs_return": 7.1,
-              "bench_return": 18.0
-            }
-          ],
-          "bottom_firings": [
-            {
-              "date": "2025-07-01",
-              "ticker": "SOHO",
-              "company": "Social Housing REIT plc",
-              "director": "Benedict Luke Green",
-              "role": "PDMR (Principal of Investment Manager)",
-              "role_normalized": "PDMR-only",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 149242,
-              "car": -11.0,
-              "abs_return": 7.1,
-              "bench_return": 18.0
-            }
-          ],
-          "rollup": [
-            {
-              "ticker": "SOHO",
-              "company": "Social Housing REIT plc",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -11.0,
-              "latest_fire": "2025-07-01"
-            }
-          ]
+          "hit_pct": null,
+          "median_car": null,
+          "top_firings": [],
+          "bottom_firings": [],
+          "rollup": []
         },
         "all": {
           "benchmark_car_pct": 17.97,
@@ -10815,12 +10501,12 @@
       "scope_note": "T1 + T2 buys only",
       "t1": {
         "30d": {
-          "benchmark_car_pct": -0.15,
-          "total_firings": 75,
-          "distinct_tickers": 39,
-          "tickers_with_n3": 4,
-          "hit_pct": 50.7,
-          "median_car": 0.1,
+          "benchmark_car_pct": 0.04,
+          "total_firings": 60,
+          "distinct_tickers": 35,
+          "tickers_with_n3": 3,
+          "hit_pct": 46.7,
+          "median_car": -0.3,
           "top_firings": [
             {
               "date": "2026-06-09",
@@ -11063,34 +10749,6 @@
               "bench_return": 0.1
             },
             {
-              "date": "2026-06-01",
-              "ticker": "CLX",
-              "company": "Calnex Solutions plc",
-              "director": "Graeme Bissett",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 19998,
-              "car": -3.8,
-              "abs_return": -4.2,
-              "bench_return": -0.4
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "CLX",
-              "company": "Calnex Solutions plc",
-              "director": "Graeme Bissett",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 19998,
-              "car": -3.8,
-              "abs_return": -4.2,
-              "bench_return": -0.4
-            },
-            {
               "date": "2026-06-09",
               "ticker": "UTL",
               "company": "UIL LIMITED",
@@ -11103,6 +10761,34 @@
               "car": -3.0,
               "abs_return": -2.4,
               "bench_return": 0.5
+            },
+            {
+              "date": "2026-06-02",
+              "ticker": "EMAN",
+              "company": "Everyman Media Group plc",
+              "director": "Charles Dorfman",
+              "role": "PDMR, Interim Creative Director",
+              "role_normalized": "PDMR-only",
+              "role_class": "T4",
+              "signal_tier": "t4",
+              "value_gbp": 8286,
+              "car": -2.4,
+              "abs_return": -2.3,
+              "bench_return": 0.1
+            },
+            {
+              "date": "2026-06-25",
+              "ticker": "COST",
+              "company": "COSTAIN GROUP PLC",
+              "director": "Amanda Lucia Fisher",
+              "role": "NON-EXECUTIVE DIRECTOR (PDMR)",
+              "role_normalized": "NED",
+              "role_class": "",
+              "signal_tier": "f1",
+              "value_gbp": 3976,
+              "car": -2.2,
+              "abs_return": -2.4,
+              "bench_return": -0.1
             }
           ],
           "rollup": [
@@ -11113,14 +10799,6 @@
               "hit_pct": 100.0,
               "mean_car": 1.8,
               "latest_fire": "2026-06-25"
-            },
-            {
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "n": 10,
-              "hit_pct": 100.0,
-              "mean_car": 1.2,
-              "latest_fire": "2026-06-01"
             },
             {
               "ticker": "RAT",
@@ -11259,14 +10937,6 @@
               "latest_fire": "2026-06-19"
             },
             {
-              "ticker": "CLX",
-              "company": "Calnex Solutions plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -3.8,
-              "latest_fire": "2026-06-01"
-            },
-            {
               "ticker": "COST",
               "company": "COSTAIN GROUP PLC",
               "n": 1,
@@ -11297,14 +10967,6 @@
               "hit_pct": 0.0,
               "mean_car": -2.4,
               "latest_fire": "2026-06-02"
-            },
-            {
-              "ticker": "EWG",
-              "company": "W.A.G payment solutions plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -2.5,
-              "latest_fire": "2026-06-01"
             },
             {
               "ticker": "FSTA",
@@ -11345,14 +11007,6 @@
               "hit_pct": 0.0,
               "mean_car": -0.5,
               "latest_fire": "2026-06-23"
-            },
-            {
-              "ticker": "LGEN",
-              "company": "Legal & General Group Plc",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -0.1,
-              "latest_fire": "2026-06-01"
             },
             {
               "ticker": "OMG",
@@ -11421,12 +11075,12 @@
           ]
         },
         "90d": {
-          "benchmark_car_pct": -0.09,
-          "total_firings": 328,
-          "distinct_tickers": 109,
-          "tickers_with_n3": 38,
-          "hit_pct": 59.1,
-          "median_car": 0.2,
+          "benchmark_car_pct": -0.11,
+          "total_firings": 318,
+          "distinct_tickers": 107,
+          "tickers_with_n3": 37,
+          "hit_pct": 61.0,
+          "median_car": 0.3,
           "top_firings": [
             {
               "date": "2026-04-21",
@@ -11937,14 +11591,6 @@
               "latest_fire": "2026-05-27"
             },
             {
-              "ticker": "DVNO",
-              "company": "Develop North Plc",
-              "n": 9,
-              "hit_pct": 0.0,
-              "mean_car": -2.7,
-              "latest_fire": "2026-04-02"
-            },
-            {
               "ticker": "ECEL",
               "company": "",
               "n": 4,
@@ -12367,14 +12013,6 @@
               "hit_pct": 0.0,
               "mean_car": -12.0,
               "latest_fire": "2026-05-05"
-            },
-            {
-              "ticker": "CLCO",
-              "company": "CloudCoCo",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -2.7,
-              "latest_fire": "2026-04-02"
             },
             {
               "ticker": "CLI",
@@ -14169,11 +13807,11 @@
           ]
         },
         "1y": {
-          "benchmark_car_pct": 0.09,
-          "total_firings": 983,
-          "distinct_tickers": 241,
+          "benchmark_car_pct": 0.07,
+          "total_firings": 972,
+          "distinct_tickers": 240,
           "tickers_with_n3": 107,
-          "hit_pct": 52.5,
+          "hit_pct": 52.1,
           "median_car": 0.1,
           "top_firings": [
             {
@@ -14877,14 +14515,6 @@
               "latest_fire": "2026-03-11"
             },
             {
-              "ticker": "MTO",
-              "company": "",
-              "n": 27,
-              "hit_pct": 55.6,
-              "mean_car": 0.2,
-              "latest_fire": "2026-04-01"
-            },
-            {
               "ticker": "SDY",
               "company": "",
               "n": 11,
@@ -15067,6 +14697,14 @@
               "hit_pct": 33.3,
               "mean_car": 0.1,
               "latest_fire": "2025-08-05"
+            },
+            {
+              "ticker": "MTO",
+              "company": "",
+              "n": 18,
+              "hit_pct": 33.3,
+              "mean_car": -0.2,
+              "latest_fire": "2026-04-01"
             },
             {
               "ticker": "RR",
@@ -15765,14 +15403,6 @@
               "latest_fire": "2026-05-06"
             },
             {
-              "ticker": "SAAS",
-              "company": "Microlise Group plc",
-              "n": 1,
-              "hit_pct": 100.0,
-              "mean_car": 4.0,
-              "latest_fire": "2025-07-01"
-            },
-            {
               "ticker": "SML",
               "company": "Strategic Minerals Plc",
               "n": 2,
@@ -16367,9 +15997,9 @@
             {
               "ticker": "TND",
               "company": "Tandem Group plc",
-              "n": 2,
+              "n": 1,
               "hit_pct": 0.0,
-              "mean_car": -2.6,
+              "mean_car": -0.9,
               "latest_fire": "2025-09-29"
             },
             {
@@ -18799,338 +18429,23 @@
       },
       "t30": {
         "30d": {
-          "benchmark_car_pct": 0.9,
-          "total_firings": 15,
-          "distinct_tickers": 4,
-          "tickers_with_n3": 1,
-          "hit_pct": 73.3,
-          "median_car": 10.4,
-          "top_firings": [
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "director": "Fiona Dawson",
-              "role": "NED",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 15700,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "director": "Stefan Oschmann",
-              "role": "NED",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 23162,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "director": "Andrew Bonfield",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 14884,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "director": "Elane Stock",
-              "role": "NED",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 17132,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "director": "Fiona Dawson",
-              "role": "NED",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 15700,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "director": "Stefan Oschmann",
-              "role": "NED",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 23162,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "director": "Andrew Bonfield",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 14884,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "director": "Elane Stock",
-              "role": "NED",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 17132,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "",
-              "director": "Marybeth Hays",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 15589,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "",
-              "director": "Marybeth Hays",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 15589,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            }
-          ],
-          "bottom_firings": [
-            {
-              "date": "2026-06-01",
-              "ticker": "EWG",
-              "company": "W.A.G payment solutions plc",
-              "director": "Steve Dryden",
-              "role": "Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 18937,
-              "car": -10.9,
-              "abs_return": -10.0,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "EWG",
-              "company": "W.A.G payment solutions plc",
-              "director": "Steve Dryden",
-              "role": "Director",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 18937,
-              "car": -10.9,
-              "abs_return": -10.0,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "CLX",
-              "company": "Calnex Solutions plc",
-              "director": "Graeme Bissett",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 19998,
-              "car": -9.3,
-              "abs_return": -8.5,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "CLX",
-              "company": "Calnex Solutions plc",
-              "director": "Graeme Bissett",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 19998,
-              "car": -9.3,
-              "abs_return": -8.5,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "LGEN",
-              "company": "Legal & General Group Plc",
-              "director": "Mark Jordy",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "f1",
-              "value_gbp": 2630,
-              "car": 5.4,
-              "abs_return": 6.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "director": "Stefan Oschmann",
-              "role": "NED",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 23162,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "director": "Andrew Bonfield",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 14884,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "director": "Elane Stock",
-              "role": "NED",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 17132,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "",
-              "director": "Marybeth Hays",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 15589,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            },
-            {
-              "date": "2026-06-01",
-              "ticker": "RKT",
-              "company": "",
-              "director": "Marybeth Hays",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 15589,
-              "car": 10.4,
-              "abs_return": 11.3,
-              "bench_return": 0.9
-            }
-          ],
-          "rollup": [
-            {
-              "ticker": "RKT",
-              "company": "Reckitt Benckiser",
-              "n": 10,
-              "hit_pct": 100.0,
-              "mean_car": 10.4,
-              "latest_fire": "2026-06-01"
-            },
-            {
-              "ticker": "LGEN",
-              "company": "Legal & General Group Plc",
-              "n": 1,
-              "hit_pct": 100.0,
-              "mean_car": 5.4,
-              "latest_fire": "2026-06-01"
-            },
-            {
-              "ticker": "CLX",
-              "company": "Calnex Solutions plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -9.3,
-              "latest_fire": "2026-06-01"
-            },
-            {
-              "ticker": "EWG",
-              "company": "W.A.G payment solutions plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -10.9,
-              "latest_fire": "2026-06-01"
-            }
-          ]
+          "benchmark_car_pct": null,
+          "total_firings": 0,
+          "distinct_tickers": 0,
+          "tickers_with_n3": 0,
+          "hit_pct": null,
+          "median_car": null,
+          "top_firings": [],
+          "bottom_firings": [],
+          "rollup": []
         },
         "90d": {
-          "benchmark_car_pct": 0.07,
-          "total_firings": 268,
-          "distinct_tickers": 83,
-          "tickers_with_n3": 34,
-          "hit_pct": 57.8,
-          "median_car": 1.4,
+          "benchmark_car_pct": 0.05,
+          "total_firings": 258,
+          "distinct_tickers": 81,
+          "tickers_with_n3": 33,
+          "hit_pct": 60.1,
+          "median_car": 1.7,
           "top_firings": [
             {
               "date": "2026-05-29",
@@ -19625,14 +18940,6 @@
               "latest_fire": "2026-04-20"
             },
             {
-              "ticker": "DVNO",
-              "company": "Develop North Plc",
-              "n": 9,
-              "hit_pct": 0.0,
-              "mean_car": -1.4,
-              "latest_fire": "2026-04-02"
-            },
-            {
               "ticker": "GFTU",
               "company": "Grafton Group plc",
               "n": 5,
@@ -19863,14 +19170,6 @@
               "hit_pct": 0.0,
               "mean_car": -32.8,
               "latest_fire": "2026-05-05"
-            },
-            {
-              "ticker": "CLCO",
-              "company": "CloudCoCo",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -7.2,
-              "latest_fire": "2026-04-02"
             },
             {
               "ticker": "CLI",
@@ -21490,11 +20789,11 @@
         },
         "1y": {
           "benchmark_car_pct": 0.9,
-          "total_firings": 921,
-          "distinct_tickers": 220,
+          "total_firings": 910,
+          "distinct_tickers": 219,
           "tickers_with_n3": 105,
-          "hit_pct": 43.1,
-          "median_car": -1.1,
+          "hit_pct": 43.4,
+          "median_car": -1.0,
           "top_firings": [
             {
               "date": "2026-01-06",
@@ -22221,6 +21520,14 @@
               "latest_fire": "2026-04-29"
             },
             {
+              "ticker": "MTO",
+              "company": "",
+              "n": 18,
+              "hit_pct": 33.3,
+              "mean_car": 5.2,
+              "latest_fire": "2026-04-01"
+            },
+            {
               "ticker": "RR",
               "company": "",
               "n": 24,
@@ -22267,14 +21574,6 @@
               "hit_pct": 25.0,
               "mean_car": -18.1,
               "latest_fire": "2025-10-02"
-            },
-            {
-              "ticker": "MTO",
-              "company": "",
-              "n": 27,
-              "hit_pct": 22.2,
-              "mean_car": 2.7,
-              "latest_fire": "2026-04-01"
             },
             {
               "ticker": "ASAI",
@@ -22949,14 +22248,6 @@
               "latest_fire": "2026-05-06"
             },
             {
-              "ticker": "SAAS",
-              "company": "Microlise Group plc",
-              "n": 1,
-              "hit_pct": 100.0,
-              "mean_car": 22.3,
-              "latest_fire": "2025-07-01"
-            },
-            {
               "ticker": "SML",
               "company": "Strategic Minerals Plc",
               "n": 2,
@@ -23011,14 +22302,6 @@
               "hit_pct": 50.0,
               "mean_car": 0.1,
               "latest_fire": "2025-12-12"
-            },
-            {
-              "ticker": "TND",
-              "company": "Tandem Group plc",
-              "n": 2,
-              "hit_pct": 50.0,
-              "mean_car": -0.6,
-              "latest_fire": "2025-09-29"
             },
             {
               "ticker": "TON",
@@ -23499,6 +22782,14 @@
               "hit_pct": 0.0,
               "mean_car": -21.4,
               "latest_fire": "2026-05-26"
+            },
+            {
+              "ticker": "TND",
+              "company": "Tandem Group plc",
+              "n": 1,
+              "hit_pct": 0.0,
+              "mean_car": -4.6,
+              "latest_fire": "2025-09-29"
             },
             {
               "ticker": "TRD",
@@ -26660,11 +25951,11 @@
           "outlier_flag": true
         },
         "1y": {
-          "benchmark_car_pct": 5.19,
-          "total_firings": 613,
-          "distinct_tickers": 167,
+          "benchmark_car_pct": 5.08,
+          "total_firings": 602,
+          "distinct_tickers": 166,
           "tickers_with_n3": 71,
-          "hit_pct": 37.2,
+          "hit_pct": 37.7,
           "median_car": -4.3,
           "top_firings": [
             {
@@ -27032,6 +26323,14 @@
               "latest_fire": "2026-01-09"
             },
             {
+              "ticker": "MTO",
+              "company": "",
+              "n": 12,
+              "hit_pct": 100.0,
+              "mean_car": 7.8,
+              "latest_fire": "2026-01-02"
+            },
+            {
               "ticker": "NAS",
               "company": "",
               "n": 3,
@@ -27150,14 +26449,6 @@
               "hit_pct": 60.0,
               "mean_car": 5.5,
               "latest_fire": "2026-02-09"
-            },
-            {
-              "ticker": "MTO",
-              "company": "",
-              "n": 21,
-              "hit_pct": 57.1,
-              "mean_car": 2.0,
-              "latest_fire": "2026-01-02"
             },
             {
               "ticker": "CNA",
@@ -27760,14 +27051,6 @@
               "latest_fire": "2025-12-16"
             },
             {
-              "ticker": "SAAS",
-              "company": "Microlise Group plc",
-              "n": 1,
-              "hit_pct": 100.0,
-              "mean_car": 20.1,
-              "latest_fire": "2025-07-01"
-            },
-            {
               "ticker": "SOS",
               "company": "Sosandar PLC",
               "n": 1,
@@ -28234,9 +27517,9 @@
             {
               "ticker": "TND",
               "company": "Tandem Group plc",
-              "n": 2,
+              "n": 1,
               "hit_pct": 0.0,
-              "mean_car": -13.4,
+              "mean_car": -13.8,
               "latest_fire": "2025-09-29"
             },
             {
@@ -30189,12 +29472,12 @@
           "rollup": []
         },
         "1y": {
-          "benchmark_car_pct": 10.37,
-          "total_firings": 434,
-          "distinct_tickers": 130,
+          "benchmark_car_pct": 10.35,
+          "total_firings": 423,
+          "distinct_tickers": 129,
           "tickers_with_n3": 49,
-          "hit_pct": 32.7,
-          "median_car": -8.6,
+          "hit_pct": 31.4,
+          "median_car": -9.0,
           "top_firings": [
             {
               "date": "2025-10-31",
@@ -30539,9 +29822,9 @@
             {
               "ticker": "MTO",
               "company": "",
-              "n": 15,
+              "n": 6,
               "hit_pct": 100.0,
-              "mean_car": 12.4,
+              "mean_car": 17.0,
               "latest_fire": "2025-10-01"
             },
             {
@@ -31417,14 +30700,6 @@
               "latest_fire": "2025-10-10"
             },
             {
-              "ticker": "SAAS",
-              "company": "Microlise Group plc",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -26.9,
-              "latest_fire": "2025-07-01"
-            },
-            {
               "ticker": "SUPR",
               "company": "",
               "n": 2,
@@ -31459,9 +30734,9 @@
             {
               "ticker": "TND",
               "company": "Tandem Group plc",
-              "n": 2,
+              "n": 1,
               "hit_pct": 0.0,
-              "mean_car": -20.2,
+              "mean_car": -13.9,
               "latest_fire": "2025-09-29"
             },
             {
@@ -33156,322 +32431,15 @@
           "rollup": []
         },
         "1y": {
-          "benchmark_car_pct": 18.04,
-          "total_firings": 11,
-          "distinct_tickers": 3,
-          "tickers_with_n3": 1,
-          "hit_pct": 0.0,
-          "median_car": -10.7,
-          "top_firings": [
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "MARY REILLY",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 2538,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "DEREK MAPP",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 10226,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "SALMA SHAH",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 3336,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "MARY REILLY",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 2538,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "DEREK MAPP",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 10226,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "SALMA SHAH",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 3336,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "MARY REILLY",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 2538,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "DEREK MAPP",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 10226,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "SALMA SHAH",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 3336,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "TND",
-              "company": "Tandem Group plc",
-              "director": "Simon Bragg",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "f1",
-              "value_gbp": 9500,
-              "car": -29.9,
-              "abs_return": -11.9,
-              "bench_return": 18.0
-            }
-          ],
-          "bottom_firings": [
-            {
-              "date": "2025-07-01",
-              "ticker": "SAAS",
-              "company": "Microlise Group plc",
-              "director": "Nick Wightman",
-              "role": "Chief Financial Officer",
-              "role_normalized": "CFO",
-              "role_class": "",
-              "signal_tier": "f1",
-              "value_gbp": 19994,
-              "car": -81.3,
-              "abs_return": -63.3,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "TND",
-              "company": "Tandem Group plc",
-              "director": "Simon Bragg",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "f1",
-              "value_gbp": 9500,
-              "car": -29.9,
-              "abs_return": -11.9,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "DEREK MAPP",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 10226,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "SALMA SHAH",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 3336,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "MARY REILLY",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 2538,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "DEREK MAPP",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 10226,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "SALMA SHAH",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 3336,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "MARY REILLY",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 2538,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "DEREK MAPP",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 10226,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "MTO",
-              "company": "",
-              "director": "SALMA SHAH",
-              "role": "PDMR - DIRECTOR",
-              "role_normalized": "PDMR-only",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 3336,
-              "car": -10.7,
-              "abs_return": 7.4,
-              "bench_return": 18.0
-            }
-          ],
-          "rollup": [
-            {
-              "ticker": "MTO",
-              "company": "",
-              "n": 9,
-              "hit_pct": 0.0,
-              "mean_car": -10.7,
-              "latest_fire": "2025-07-01"
-            },
-            {
-              "ticker": "SAAS",
-              "company": "Microlise Group plc",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -81.3,
-              "latest_fire": "2025-07-01"
-            },
-            {
-              "ticker": "TND",
-              "company": "Tandem Group plc",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -29.9,
-              "latest_fire": "2025-07-01"
-            }
-          ]
+          "benchmark_car_pct": null,
+          "total_firings": 0,
+          "distinct_tickers": 0,
+          "tickers_with_n3": 0,
+          "hit_pct": null,
+          "median_car": null,
+          "top_firings": [],
+          "bottom_firings": [],
+          "rollup": []
         },
         "all": {
           "benchmark_car_pct": 18.04,
@@ -34766,10 +33734,10 @@
         },
         "90d": {
           "benchmark_car_pct": 0.09,
-          "total_firings": 156,
-          "distinct_tickers": 65,
+          "total_firings": 153,
+          "distinct_tickers": 63,
           "tickers_with_n3": 13,
-          "hit_pct": 43.6,
+          "hit_pct": 43.1,
           "median_car": -0.0,
           "top_firings": [
             {
@@ -35177,14 +34145,6 @@
               "latest_fire": "2026-06-04"
             },
             {
-              "ticker": "BKG",
-              "company": "The Berkeley Group Holdings plc",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 4.0,
-              "latest_fire": "2026-04-02"
-            },
-            {
               "ticker": "BOOT",
               "company": "Henry Boot PLC",
               "n": 1,
@@ -35487,14 +34447,6 @@
               "hit_pct": 0.0,
               "mean_car": -0.9,
               "latest_fire": "2026-06-08"
-            },
-            {
-              "ticker": "ONT",
-              "company": "Oxford Nanopore Technologies plc",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -3.3,
-              "latest_fire": "2026-04-02"
             },
             {
               "ticker": "QLT",
@@ -40194,11 +39146,11 @@
           "rollup": []
         },
         "90d": {
-          "benchmark_car_pct": 0.43,
-          "total_firings": 106,
-          "distinct_tickers": 39,
+          "benchmark_car_pct": 0.45,
+          "total_firings": 103,
+          "distinct_tickers": 37,
           "tickers_with_n3": 8,
-          "hit_pct": 63.2,
+          "hit_pct": 62.1,
           "median_car": 1.8,
           "top_firings": [
             {
@@ -40550,14 +39502,6 @@
               "latest_fire": "2026-05-01"
             },
             {
-              "ticker": "BKG",
-              "company": "The Berkeley Group Holdings plc",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 4.3,
-              "latest_fire": "2026-04-02"
-            },
-            {
               "ticker": "BOOT",
               "company": "Henry Boot PLC",
               "n": 1,
@@ -40652,14 +39596,6 @@
               "hit_pct": 100.0,
               "mean_car": 3.4,
               "latest_fire": "2026-05-06"
-            },
-            {
-              "ticker": "ONT",
-              "company": "Oxford Nanopore Technologies plc",
-              "n": 1,
-              "hit_pct": 100.0,
-              "mean_car": 0.1,
-              "latest_fire": "2026-04-02"
             },
             {
               "ticker": "SAA",
@@ -51965,11 +50901,11 @@
         },
         "1y": {
           "benchmark_car_pct": -0.01,
-          "total_firings": 56,
+          "total_firings": 54,
           "distinct_tickers": 16,
           "tickers_with_n3": 8,
-          "hit_pct": 44.6,
-          "median_car": -0.3,
+          "hit_pct": 46.3,
+          "median_car": -0.1,
           "top_firings": [
             {
               "date": "2025-09-29",
@@ -52314,9 +51250,9 @@
             {
               "ticker": "ENT",
               "company": "",
-              "n": 12,
+              "n": 10,
               "hit_pct": 0.0,
-              "mean_car": -1.4,
+              "mean_car": -1.5,
               "latest_fire": "2026-04-01"
             },
             {
@@ -53570,10 +52506,10 @@
         },
         "1y": {
           "benchmark_car_pct": 1.45,
-          "total_firings": 51,
+          "total_firings": 49,
           "distinct_tickers": 15,
           "tickers_with_n3": 8,
-          "hit_pct": 31.4,
+          "hit_pct": 28.6,
           "median_car": -2.7,
           "top_firings": [
             {
@@ -53647,34 +52583,6 @@
               "bench_return": -0.2
             },
             {
-              "date": "2025-07-01",
-              "ticker": "ENT",
-              "company": "",
-              "director": "Eminence Capital, LP",
-              "role": "PCA of Ricky Chad Sandler, a Non-Executive Director of the issuer",
-              "role_normalized": "PCA",
-              "role_class": "",
-              "signal_tier": "t5",
-              "value_gbp": 14741190,
-              "car": 7.1,
-              "abs_return": 11.0,
-              "bench_return": 3.8
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "ENT",
-              "company": "",
-              "director": "Eminence Capital, LP",
-              "role": "PCA of Ricky Chad Sandler, a Non-Executive Director of the issuer",
-              "role_normalized": "PCA",
-              "role_class": "T5",
-              "signal_tier": "t5",
-              "value_gbp": 14741190,
-              "car": 7.1,
-              "abs_return": 11.0,
-              "bench_return": 3.8
-            },
-            {
               "date": "2026-04-30",
               "ticker": "RVRB",
               "company": "River Global PLC",
@@ -53715,6 +52623,34 @@
               "car": 5.7,
               "abs_return": 5.7,
               "bench_return": 0.0
+            },
+            {
+              "date": "2025-12-11",
+              "ticker": "VLX",
+              "company": "Volex plc",
+              "director": "Dave Webster",
+              "role": "Non-Executive Chair",
+              "role_normalized": "NED",
+              "role_class": "",
+              "signal_tier": "t3",
+              "value_gbp": 652677,
+              "car": 3.7,
+              "abs_return": 9.8,
+              "bench_return": 6.1
+            },
+            {
+              "date": "2025-12-11",
+              "ticker": "VLX",
+              "company": "Volex plc",
+              "director": "Dave Webster",
+              "role": "Non-Executive Chair",
+              "role_normalized": "NED",
+              "role_class": "T3",
+              "signal_tier": "t3",
+              "value_gbp": 652677,
+              "car": 3.7,
+              "abs_return": 9.8,
+              "bench_return": 6.1
             }
           ],
           "bottom_firings": [
@@ -53879,9 +52815,9 @@
             {
               "ticker": "ENT",
               "company": "",
-              "n": 12,
-              "hit_pct": 33.3,
-              "mean_car": -5.0,
+              "n": 10,
+              "hit_pct": 20.0,
+              "mean_car": -7.5,
               "latest_fire": "2026-04-01"
             },
             {
@@ -54779,11 +53715,11 @@
           ]
         },
         "1y": {
-          "benchmark_car_pct": 5.42,
-          "total_firings": 35,
+          "benchmark_car_pct": 5.22,
+          "total_firings": 33,
           "distinct_tickers": 9,
           "tickers_with_n3": 5,
-          "hit_pct": 20.0,
+          "hit_pct": 21.2,
           "median_car": -13.1,
           "top_firings": [
             {
@@ -55089,9 +54025,9 @@
             {
               "ticker": "ENT",
               "company": "",
-              "n": 10,
+              "n": 8,
               "hit_pct": 0.0,
-              "mean_car": -22.1,
+              "mean_car": -24.8,
               "latest_fire": "2026-01-02"
             },
             {
@@ -55570,11 +54506,11 @@
           "rollup": []
         },
         "1y": {
-          "benchmark_car_pct": 7.23,
-          "total_firings": 24,
+          "benchmark_car_pct": 6.7,
+          "total_firings": 22,
           "distinct_tickers": 5,
           "tickers_with_n3": 4,
-          "hit_pct": 20.8,
+          "hit_pct": 22.7,
           "median_car": -26.8,
           "top_firings": [
             {
@@ -55804,32 +54740,18 @@
               "bench_return": 5.6
             },
             {
-              "date": "2025-07-01",
-              "ticker": "ENT",
-              "company": "",
-              "director": "Eminence Capital, LP",
-              "role": "PCA of Ricky Chad Sandler, a Non-Executive Director of the issuer",
-              "role_normalized": "PCA",
+              "date": "2025-10-03",
+              "ticker": "GETB",
+              "company": "GetBusy plc",
+              "director": "Clive Rabie",
+              "role": "Non-executive director",
+              "role_normalized": "NED",
               "role_class": "",
-              "signal_tier": "t5",
-              "value_gbp": 14741190,
-              "car": -29.1,
-              "abs_return": -16.9,
-              "bench_return": 12.2
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "ENT",
-              "company": "",
-              "director": "Eminence Capital, LP",
-              "role": "PCA of Ricky Chad Sandler, a Non-Executive Director of the issuer",
-              "role_normalized": "PCA",
-              "role_class": "T5",
-              "signal_tier": "t5",
-              "value_gbp": 14741190,
-              "car": -29.1,
-              "abs_return": -16.9,
-              "bench_return": 12.2
+              "signal_tier": "t3",
+              "value_gbp": 1322394,
+              "car": -28.2,
+              "abs_return": -20.5,
+              "bench_return": 7.7
             },
             {
               "date": "2025-10-03",
@@ -55858,6 +54780,20 @@
               "car": -28.2,
               "abs_return": -20.5,
               "bench_return": 7.7
+            },
+            {
+              "date": "2025-08-08",
+              "ticker": "HIK",
+              "company": "Hikma Pharmaceuticals PLC",
+              "director": "Mazen Darwazah",
+              "role": "Executive Vice Chairman",
+              "role_normalized": "Chair (executive)",
+              "role_class": "T7",
+              "signal_tier": "t7",
+              "value_gbp": 3512000,
+              "car": -26.8,
+              "abs_return": -14.0,
+              "bench_return": 12.9
             }
           ],
           "rollup": [
@@ -55872,9 +54808,9 @@
             {
               "ticker": "ENT",
               "company": "",
-              "n": 8,
+              "n": 6,
               "hit_pct": 0.0,
-              "mean_car": -37.1,
+              "mean_car": -39.7,
               "latest_fire": "2025-12-01"
             },
             {
@@ -56297,82 +55233,15 @@
           "rollup": []
         },
         "1y": {
-          "benchmark_car_pct": 18.04,
-          "total_firings": 2,
-          "distinct_tickers": 1,
+          "benchmark_car_pct": null,
+          "total_firings": 0,
+          "distinct_tickers": 0,
           "tickers_with_n3": 0,
-          "hit_pct": 0.0,
-          "median_car": -59.1,
-          "top_firings": [
-            {
-              "date": "2025-07-01",
-              "ticker": "ENT",
-              "company": "",
-              "director": "Eminence Capital, LP",
-              "role": "PCA of Ricky Chad Sandler, a Non-Executive Director of the issuer",
-              "role_normalized": "PCA",
-              "role_class": "",
-              "signal_tier": "t5",
-              "value_gbp": 14741190,
-              "car": -59.1,
-              "abs_return": -41.1,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "ENT",
-              "company": "",
-              "director": "Eminence Capital, LP",
-              "role": "PCA of Ricky Chad Sandler, a Non-Executive Director of the issuer",
-              "role_normalized": "PCA",
-              "role_class": "T5",
-              "signal_tier": "t5",
-              "value_gbp": 14741190,
-              "car": -59.1,
-              "abs_return": -41.1,
-              "bench_return": 18.0
-            }
-          ],
-          "bottom_firings": [
-            {
-              "date": "2025-07-01",
-              "ticker": "ENT",
-              "company": "",
-              "director": "Eminence Capital, LP",
-              "role": "PCA of Ricky Chad Sandler, a Non-Executive Director of the issuer",
-              "role_normalized": "PCA",
-              "role_class": "",
-              "signal_tier": "t5",
-              "value_gbp": 14741190,
-              "car": -59.1,
-              "abs_return": -41.1,
-              "bench_return": 18.0
-            },
-            {
-              "date": "2025-07-01",
-              "ticker": "ENT",
-              "company": "",
-              "director": "Eminence Capital, LP",
-              "role": "PCA of Ricky Chad Sandler, a Non-Executive Director of the issuer",
-              "role_normalized": "PCA",
-              "role_class": "T5",
-              "signal_tier": "t5",
-              "value_gbp": 14741190,
-              "car": -59.1,
-              "abs_return": -41.1,
-              "bench_return": 18.0
-            }
-          ],
-          "rollup": [
-            {
-              "ticker": "ENT",
-              "company": "",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -59.1,
-              "latest_fire": "2025-07-01"
-            }
-          ]
+          "hit_pct": null,
+          "median_car": null,
+          "top_firings": [],
+          "bottom_firings": [],
+          "rollup": []
         },
         "all": {
           "benchmark_car_pct": 18.04,

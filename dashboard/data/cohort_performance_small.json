@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T09:33:51Z",
+  "generated_at": "2026-07-02T06:47:49Z",
   "horizon": "t30",
   "signal_groups": [
     "t1a",
@@ -6650,9 +6650,9 @@
       "label": "F1 first-time buy",
       "color_hex": "#a855f7",
       "header": {
-        "n_total_signals": 459,
-        "mean_car_t30_overall": -0.0216,
-        "hit_rate_t30_overall": 0.3669,
+        "n_total_signals": 460,
+        "mean_car_t30_overall": -0.0217,
+        "hit_rate_t30_overall": 0.366,
         "mean_car_t1_overall": -0.0191,
         "hit_rate_t1_overall": 0.2188,
         "mean_car_t90_overall": -0.0595,
@@ -7681,16 +7681,16 @@
         },
         {
           "month_iso": "2026-06",
-          "n_signals": 42,
+          "n_signals": 43,
           "mean_car_t1": -0.0266,
-          "mean_car_t30": -0.123,
+          "mean_car_t30": -0.1058,
           "mean_car_t90": null,
           "min_car_t30": -0.123,
-          "max_car_t30": -0.123,
+          "max_car_t30": -0.0886,
           "hit_rate_t30": 0.0,
-          "hit_rate_t30_rolling_6m": 0.3596,
-          "single_ticker_weight": 1.0,
-          "ma3_mean_car_t30": -0.05,
+          "hit_rate_t30_rolling_6m": 0.3575,
+          "single_ticker_weight": 0.5815,
+          "ma3_mean_car_t30": -0.0443,
           "signal_ids": [
             "0d33bd799e5a745d",
             "0e6efe17e3875112",
@@ -7722,6 +7722,7 @@
             "a9b49ddaf8ed878e",
             "ab54e1d985a5a012",
             "abc7421252f6c898",
+            "ad72cb3783962f1f",
             "b6662538f75defd1",
             "b83040fc0b68dd8f",
             "bd6aaaf667a907a3",
@@ -7747,7 +7748,7 @@
           "hit_rate_t1_rolling_6m": 0.2074,
           "single_ticker_weight_t1": 0.1197,
           "ma3_mean_car_t1": -0.0193,
-          "single_ticker_weight_t30": 1.0,
+          "single_ticker_weight_t30": 0.5815,
           "min_car_t90": null,
           "max_car_t90": null,
           "hit_rate_t90": null,
@@ -7825,10 +7826,10 @@
         },
         {
           "month_iso": "2026-06",
-          "mean_car_t30": -0.123
+          "mean_car_t30": -0.1058
         }
       ],
-      "trend_3m_vs_prior3m_t30": -0.0061
+      "trend_3m_vs_prior3m_t30": -0.007
     },
     "b1": {
       "label": "B1 lone conviction buy",
@@ -22356,7 +22357,7 @@
         ]
       },
       "2026-06": {
-        "verdict": "1 ticker (CLX) was the largest single drag on the cohort (100% of total movement, -12.3% net CAR).",
+        "verdict": "1 ticker (CLX) was the largest single drag on the cohort (58% of total movement, -12.3% net CAR).",
         "signals": [
           {
             "fingerprint": "ec4f7b7c04c61d1d",
@@ -22370,7 +22371,21 @@
             "benchmark_t30": 0.008980247005746511,
             "net_car_t30": -0.12304572318126983,
             "abs_return_ann": null,
-            "cohort_weight": 1.0
+            "cohort_weight": 0.5815
+          },
+          {
+            "fingerprint": "820bbeec42ed8aac",
+            "ticker": "CAD",
+            "director": "",
+            "role_short": "First-buy",
+            "fire_date": "2026-06-01",
+            "car_t1": 0.004499040109782637,
+            "car_t30": -0.08305436468632521,
+            "car_t90": null,
+            "benchmark_t30": 0.008980247005746511,
+            "net_car_t30": -0.08855436468632522,
+            "abs_return_ann": null,
+            "cohort_weight": 0.4185
           }
         ]
       }
