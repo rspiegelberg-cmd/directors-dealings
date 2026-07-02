@@ -601,3 +601,131 @@ def score_window(conn, as_of, days: int = 28) -> list[dict]:
     for i, d in enumerate(scored, start=1):
         d["rank_in_window"] = i
     return scored
+
+
+# ---------------------------------------------------------------------------
+# DB upsert (called from __main__ / refresh pipeline).
+# ---------------------------------------------------------------------------
+
+def _upsert_scores(conn, rows: list[dict], window_end: str) -> int:
+    """Upsert one pipeline run's conviction scores into conviction_scores.
+
+    One row per buy (fingerprint + window_end = PK). On conflict every
+    score field is overwritten so a re-run of the same window always
+    reflects the latest data.
+
+    Returns the number of rows upserted.
+    """
+    import json as _json
+
+    # Resolve the right SQL placeholder for whichever backend is active.
+    try:
+        import db as _db
+        ph = _db._ph()
+    except Exception:
+        ph = "?"  # SQLite default
+
+    scored_at = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    placeholders = ", ".join([ph] * 17)
+    upsert_sql = f"""
+        INSERT INTO conviction_scores
+          (fingerprint, window_end, scored_at, score, band,
+           f1_who, f2_buy_size, f3_company_size, f4_earnings_timing,
+           f5_past_performance, f6_sector_mult,
+           weights_used, earnings_dropped,
+           rank_in_window, surfaced, inputs_missing, sector)
+        VALUES ({placeholders})
+        ON CONFLICT (fingerprint, window_end) DO UPDATE SET
+          scored_at           = excluded.scored_at,
+          score               = excluded.score,
+          band                = excluded.band,
+          f1_who              = excluded.f1_who,
+          f2_buy_size         = excluded.f2_buy_size,
+          f3_company_size     = excluded.f3_company_size,
+          f4_earnings_timing  = excluded.f4_earnings_timing,
+          f5_past_performance = excluded.f5_past_performance,
+          f6_sector_mult      = excluded.f6_sector_mult,
+          weights_used        = excluded.weights_used,
+          earnings_dropped    = excluded.earnings_dropped,
+          rank_in_window      = excluded.rank_in_window,
+          surfaced            = excluded.surfaced,
+          inputs_missing      = excluded.inputs_missing,
+          sector              = excluded.sector
+    """
+
+    for d in rows:
+        r = d["result"]
+        subs = r.get("subscores", {})
+        wts  = r.get("weights_used", {})
+        conn.execute(upsert_sql, (
+            d["fingerprint"],
+            window_end,
+            scored_at,
+            d["score"],
+            d["band"],
+            subs.get("who"),                            # f1_who
+            subs.get("buy_size"),                       # f2_buy_size
+            subs.get("company_size"),                   # f3_company_size
+            subs.get("earnings_timing"),                # f4_earnings_timing
+            None,                                       # f5_past_performance (deprecated)
+            subs.get("sector_momentum"),                # f6_sector_mult (0-1 momentum sub-score)
+            _json.dumps(wts),                           # weights_used JSON
+            1 if r.get("earnings_dropped") else 0,      # earnings_dropped flag
+            d["rank_in_window"],                        # rank_in_window
+            1 if d["rank_in_window"] <= 10 else 0,      # surfaced (top 10)
+            _json.dumps(d.get("inputs_missing", [])),   # inputs_missing JSON
+            d.get("sector"),                            # sector from tickers_meta
+        ))
+
+    conn.commit()
+    return len(rows)
+
+
+# ---------------------------------------------------------------------------
+# CLI entry point — called by refresh_all.py as a pipeline step.
+# ---------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+
+    import db as _db
+
+    ap = argparse.ArgumentParser(
+        description="Score director conviction buys and upsert to conviction_scores."
+    )
+    ap.add_argument(
+        "--as-of",
+        default=date.today().isoformat(),
+        help="Window end date (YYYY-MM-DD). Default: today.",
+    )
+    ap.add_argument(
+        "--days",
+        type=int,
+        default=28,
+        help="Trailing window length in days. Default: 28.",
+    )
+    ns = ap.parse_args()
+
+    conn = _db.connect()
+    _db.migrate(conn)  # ensure sector column exists in SQLite
+
+    print(
+        f"[conviction_pipeline] scoring window={ns.days}d as_of={ns.as_of} …",
+        flush=True,
+    )
+    rows = score_window(conn, as_of=ns.as_of, days=ns.days)
+    print(f"[conviction_pipeline] scored {len(rows)} buys", flush=True)
+
+    if not rows:
+        print("[conviction_pipeline] no buys in window — nothing to upsert", flush=True)
+        conn.close()
+        sys.exit(0)
+
+    n = _upsert_scores(conn, rows, window_end=ns.as_of)
+    conn.close()
+    print(
+        f"[conviction_pipeline] upserted {n} rows into conviction_scores "
+        f"(window_end={ns.as_of})",
+        flush=True,
+    )

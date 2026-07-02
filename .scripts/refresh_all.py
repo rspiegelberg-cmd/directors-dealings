@@ -168,6 +168,11 @@ STEPS = [
      "eval_signals.py",          [],                 60 * 45),
     ("backtest",   "Computing signal backtests + CAR",
      "backtest.py",              [],                 60 * 45),
+    # Conviction scoring — score every BUY in the trailing 28-day window and
+    # upsert to conviction_scores. Runs AFTER backtest (all deals processed)
+    # and BEFORE export. SOFT: a transient data gap logs and continues.
+    ("conviction", "Scoring director conviction buys",
+     "conviction_pipeline.py",  [],                 60 * 5, True),
     # Forward earnings calendar — refresh BEFORE export so the upcoming-events
     # panel and the 60-day pre-results badges reflect today's dates. Both steps
     # carry a trailing True = SOFT: a transient LSE outage logs and the pipeline

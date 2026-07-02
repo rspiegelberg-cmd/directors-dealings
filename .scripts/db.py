@@ -729,7 +729,15 @@ def _apply_schema_migrations(conn: sqlite3.Connection) -> None:
             conn, "15", "16", "016_conviction_scores.sql",
             "conviction_scores",
         )
-        current = "16"  # noqa: F841
+        current = "16"
+
+    if current == "16":
+        # 2026-07-02: add sector column to conviction_scores (mirrors Postgres ALTER).
+        _run_migration_step(
+            conn, "16", "17", "017_conviction_scores_sector.sql",
+            "conviction_scores", "sector",
+        )
+        current = "17"  # noqa: F841
 
 
 def set_meta(conn, key: str, value: str) -> None:
