@@ -321,6 +321,19 @@ def run(args) -> int:
         # by rns_id so no filing is fetched twice. Each source is wrapped so the
         # archive (a soft backstop that can raise ArchiveCalibrationError) can
         # never break the primary index run.
+        #
+        # B-198 (2026-07-06): per-source counters + errors. Discovered while
+        # investigating a reported PDMR-volume collapse: the two sources were
+        # deduped and merged into a single `filings_seen` count with no way to
+        # tell, after the fact, whether the LIVE INDEX or the ARCHIVE backstop
+        # (or both) actually produced rows on a given day. `source_stats` is
+        # populated as a side effect of iterating `_discover_rows()` and is
+        # read by the caller once the generator is exhausted.
+        source_stats = {
+            "index": {"count": 0, "error": None},
+            "archive": {"count": 0, "error": None},
+        }
+
         def _discover_rows():
             seen_ids = set()
             sources = (
@@ -332,6 +345,7 @@ def run(args) -> int:
             for _name, _make in sources:
                 try:
                     for _r in _make():
+                        source_stats[_name]["count"] += 1
                         _rid = _r.get("rns_id")
                         if _rid in seen_ids:
                             continue
@@ -341,6 +355,7 @@ def run(args) -> int:
                     # B-196: log UNCONDITIONALLY (not only --verbose) so a
                     # raising advanced-search /draw endpoint is visible in the
                     # daily CI log instead of silently leaving only iter_index.
+                    source_stats[_name]["error"] = repr(_e)
                     print(f"[run_scrape] discovery source '{_name}' failed "
                           f"(continuing): {_e!r}")
                     continue
@@ -496,6 +511,26 @@ def run(args) -> int:
     )
     if pct_pending >= 30.0:
         print("WARN: pending rate >= 30%")
+
+    # B-198 (2026-07-06): single machine-parseable line so a wrapper (e.g.
+    # refresh_all.py) can pull exact numbers without regex-scraping the
+    # human-readable Summary line above. Printed UNCONDITIONALLY (like the
+    # B-196 discovery-failure line) so it survives even in non-verbose runs --
+    # this is what makes a future volume collapse diagnosable from the CI log
+    # alone instead of requiring manual archaeology through GitHub's raw logs.
+    print("SCRAPE_STATS " + json.dumps({
+        "window_start": window_start,
+        "window_end": window_end,
+        "filings_seen": filings_seen,
+        "index_count": source_stats["index"]["count"],
+        "index_error": source_stats["index"]["error"],
+        "archive_count": source_stats["archive"]["count"],
+        "archive_error": source_stats["archive"]["error"],
+        "clean_writes": clean_writes,
+        "inserts": inserts,
+        "pending_count": pending_count,
+        "excluded_at_ingest": excluded_at_ingest,
+    }))
 
     # ── Schema-change canary ─────────────────────────────────────────────────
     # If we discovered filings but extracted absolutely nothing — no clean

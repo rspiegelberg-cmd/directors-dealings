@@ -32,6 +32,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -41,6 +42,72 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 STATUS_PATH = ROOT / ".data" / "_refresh_status.json"
+
+_SCRAPE_STATS_RE = re.compile(r"^SCRAPE_STATS\s+(\{.*\})\s*$", re.MULTILINE)
+
+
+def _check_scrape_volume_anomaly(stdout: str) -> None:
+    """Warn (non-blocking) if today's scrape landed far fewer new
+    transactions than the recent daily average.
+
+    B-198 (2026-07-06): added after a real, confirmed PDMR under-collection
+    (~2/day landing vs ~22/day of real filings) went unnoticed for several
+    days because the daily-refresh workflow's own success/failure status
+    doesn't reflect discovery volume -- a scrape that finds almost nothing
+    still exits 0 as long as it doesn't crash, and its diagnostics used to
+    be captured into a status-JSON tail that nothing in CI ever reads.
+    This is a WARNING ONLY: a genuinely quiet day (bank holiday, thin news
+    day) must still complete normally, so this never touches
+    `base_state["status"]` or any step's rc -- it only prints a
+    `::warning::` GitHub Actions annotation (surfaces in the run summary)
+    so a real collapse is visible going forward without anyone having to
+    notice the dashboard looks thin.
+    """
+    try:
+        m = _SCRAPE_STATS_RE.search(stdout)
+        if not m:
+            return  # older run_scrape.py, --dry-run, or failed before stats printed
+        stats = json.loads(m.group(1))
+        inserts = int(stats.get("inserts") or 0)
+
+        if str(HERE) not in sys.path:
+            sys.path.insert(0, str(HERE))
+        import db  # noqa: PLC0415
+        conn = db.connect()
+        try:
+            rows = conn.execute(
+                "SELECT date(first_seen) AS d, COUNT(*) AS n "
+                "FROM transactions "
+                "WHERE datetime(first_seen) >= datetime('now', '-8 days') "
+                "  AND date(first_seen) < date('now') "
+                "GROUP BY d"
+            ).fetchall()
+        finally:
+            conn.close()
+        daily_counts = [r["n"] for r in rows]
+        if not daily_counts:
+            return  # no recent history yet to compare against
+        baseline = sum(daily_counts) / len(daily_counts)
+
+        # Thresholds are deliberately loose (baseline floor of 5/day, alarm
+        # only below 25% of baseline) to avoid false alarms on naturally
+        # quiet days while still catching a real collapse like 2/day vs ~22.
+        if baseline >= 5 and inserts < 0.25 * baseline:
+            index_err = stats.get("index_error")
+            archive_err = stats.get("archive_error")
+            hint = ""
+            if index_err or archive_err:
+                hint = f" (index_error={index_err!r}, archive_error={archive_err!r})"
+            print(
+                "::warning::PDMR volume looks low: "
+                f"{inserts} new transactions today vs a {baseline:.1f}/day "
+                f"trailing-week average (index_count={stats.get('index_count')}, "
+                f"archive_count={stats.get('archive_count')}, "
+                f"pending={stats.get('pending_count')}){hint}. "
+                "This does not fail the run -- check the scrape step log above."
+            )
+    except Exception as e:  # noqa: BLE001 - advisory only, never break the pipeline
+        print(f"[refresh_all] (non-fatal) volume-anomaly check failed: {e!r}")
 
 
 def _warn_if_thin_history() -> None:
@@ -355,6 +422,25 @@ def run_pipeline(*, scrape_days: int | None = None, no_llm: bool = False,
         base_state["log"].append(
             f"[{_now_iso()}] {key}: rc={proc.returncode} dur={duration}s"
         )
+
+        # B-198 (2026-07-06): the scrape step's own diagnostics (per-source
+        # discovery counts, parse/ingest outcomes, the SCRAPE_STATS line)
+        # used to be captured here and only ever written into the 2000-char
+        # tail above -- nothing printed them to the actual CI console, so a
+        # silent volume collapse was invisible in the GitHub Actions log
+        # (confirmed investigating the 2026-07-06 PDMR under-collection,
+        # which required manually pulling raw run logs to diagnose). Print
+        # this step's full stdout/stderr unconditionally -- regardless of
+        # rc -- so it's diagnosable from the Actions log alone from now on.
+        if key == "scrape":
+            print(f"[refresh_all] ---- scrape step output (rc={proc.returncode}) ----")
+            if proc.stdout:
+                print(proc.stdout)
+            if proc.stderr:
+                print("[refresh_all] scrape stderr:")
+                print(proc.stderr)
+            print("[refresh_all] ---- end scrape step output ----")
+            _check_scrape_volume_anomaly(proc.stdout or "")
 
         if proc.returncode != 0:
             if soft:

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-sha" content="463bb1c">
+<meta name="build-sha" content="e97bdd1">
 <title>Performance · Health Care</title>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 
@@ -262,7 +262,7 @@
              '" tabindex="0" role="link" aria-label="View ' + esc(ticker) +
              ' company page">' +
              '<td class="px-2 py-1.5 text-slate-700">' + esc(date) + '</td>' +
-             '<td class="px-2 py-1.5 font-mono text-slate-700">' + esc(ticker) + '</td>' +
+             '<td class="px-2 py-1.5 font-mono"><a href="' + esc(href) + '" class="text-indigo-600 hover:underline" onclick="event.stopPropagation()">' + esc(ticker) + '</a></td>' +
              '<td class="px-2 py-1.5 text-slate-700" title="' + esc(director) + '">' +
              esc(directorDisplay) + '</td>' +
              '<td class="px-2 py-1.5">' + badge + '</td>' +
@@ -353,7 +353,7 @@
              'cursor-pointer hover:bg-indigo-50' + italicCls +
              '" data-href="' + esc(href) + '" tabindex="0" role="link" ' +
              'aria-label="View ' + esc(ticker) + ' company page">' +
-             '<td class="px-3 py-2 font-mono text-slate-700">' + esc(ticker) + '</td>' +
+             '<td class="px-3 py-2 font-mono"><a href="' + esc(href) + '" class="text-indigo-600 hover:underline" onclick="event.stopPropagation()">' + esc(ticker) + '</a></td>' +
              '<td class="px-3 py-2 text-slate-700">' + esc(company) + '</td>' +
              '<td class="px-3 py-2 text-right text-slate-700">' + Math.floor(n) + '</td>' +
              '<td class="px-3 py-2 text-right">' + carCell(hitPct) + '</td>' +
@@ -471,7 +471,7 @@
 })();
 </script>
 </main>
-<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-06-25 18:55 UTC &middot; build 463bb1c</footer>
+<footer class="px-6 py-3 text-right text-[10px] text-slate-400">Generated 2026-07-01 09:33 UTC &middot; build e97bdd1</footer>
 
 <script>
 (function(){
