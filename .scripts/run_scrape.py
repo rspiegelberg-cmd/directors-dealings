@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -264,6 +265,31 @@ def run(args) -> int:
         print(f"ABORT: robots.txt fetch failed -- {e}")
         return 3
 
+    # B-199 (2026-07-17): loud, unconditional LLM-availability canary.
+    # Root-caused the 2026-07-06 PDMR under-collection report: the regex
+    # parser alone cleanly extracts only ~40% of real filings (live-tested
+    # against a 6-day Investegate sample) -- the other ~60% NEED the LLM
+    # fallback (multi-tranche prices, foreign currency, bundled multi-PDMR
+    # filings, etc). The daily-refresh.yml CI workflow never set
+    # ANTHROPIC_API_KEY on the pipeline step, so every LLM-fallback attempt
+    # in production silently raised MissingApiKeyError -> caught by the
+    # broad except below -> treated as a BLOCKING warning -> the filing
+    # routed to pending instead of the dashboard. This was invisible
+    # because pending routing looks identical to a genuine parse failure.
+    # Print this UNCONDITIONALLY (not gated on --verbose) so a future key
+    # expiry/removal is immediately visible in the CI log instead of
+    # silently degrading collection again like this did for ~3 weeks.
+    if not args.no_llm and not args.dry_run and not os.environ.get("ANTHROPIC_API_KEY"):
+        print(
+            "::error::ANTHROPIC_API_KEY is not set. LLM fallback parsing is "
+            "UNAVAILABLE this run -- roughly 60% of real PDMR filings need it "
+            "(the regex parser alone cannot handle multi-tranche prices, "
+            "foreign-currency trades, or bundled multi-PDMR filings). Every "
+            "filing that would have used the LLM fallback will be routed to "
+            "pending instead of ingested. Set the ANTHROPIC_API_KEY secret "
+            "for this workflow, or pass --no-llm if this is intentional."
+        )
+
     # B-024: db_health pattern — pre-run integrity check + backup before
     # any destructive write. Skipped in --dry-run (no DB writes happen).
     # Canonical reference: classify_issuers.py:run().
@@ -295,6 +321,9 @@ def run(args) -> int:
     pending_count = 0
     inserts = 0
     excluded_at_ingest = 0
+    llm_missing_key_count = 0  # B-199: filings blocked specifically by a
+                               # missing ANTHROPIC_API_KEY, not a genuine
+                               # LLM/parse failure -- see canary above.
     try:
         # Defensive double-layer: even on dry runs, surface which filings
         # would be excluded so Rupert can spot misclassification early.
@@ -415,6 +444,11 @@ def run(args) -> int:
                             print(f"ABORT: LLM budget exceeded -- {e}")
                             _write_pending(pending)
                             return 4
+                    if type(e).__name__ == "MissingApiKeyError":
+                        # B-199: count separately -- this is a config problem,
+                        # not a genuine per-filing LLM failure. Surfaced loud
+                        # and unconditionally, same as the startup canary.
+                        llm_missing_key_count += 1
                     if verbose:
                         print(f"  ! LLM failed {rns_id}: {e}")
                     warnings = warnings + [f"llm_error:{type(e).__name__}"]
@@ -530,7 +564,15 @@ def run(args) -> int:
         "inserts": inserts,
         "pending_count": pending_count,
         "excluded_at_ingest": excluded_at_ingest,
+        "llm_missing_key_count": llm_missing_key_count,
     }))
+    if llm_missing_key_count > 0:
+        print(
+            f"::error::{llm_missing_key_count} filing(s) this run were routed "
+            "to pending SOLELY because ANTHROPIC_API_KEY was missing (not a "
+            "genuine parse failure). This is a config problem, not a data "
+            "problem -- see the canary message near the top of this log."
+        )
 
     # ── Schema-change canary ─────────────────────────────────────────────────
     # If we discovered filings but extracted absolutely nothing — no clean

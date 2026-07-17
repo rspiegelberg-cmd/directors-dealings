@@ -53,6 +53,16 @@ jobs:
         env:
           DD_FORCE_SQLITE: "1"    # compute against the local copy, not the network
           DD_FMP_API_KEY: ${{ secrets.DD_FMP_API_KEY }}
+          # B-199 (2026-07-17): root cause of a confirmed PDMR under-collection
+          # (only ~19/117 real filings over a live 6-day sample were reaching
+          # Postgres). This secret was never set here since the 2026-06-22
+          # cloud migration, so every LLM-fallback parse attempt in run_scrape.py
+          # silently raised MissingApiKeyError and the filing was routed to
+          # pending instead of the dashboard -- the regex parser alone only
+          # cleanly handles ~40% of real filings. See run_scrape.py's startup
+          # canary for the loud in-log warning this now produces if the secret
+          # is ever missing again.
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PYTHONDONTWRITEBYTECODE: "1"
         run: python .scripts/refresh_all.py
 

@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import re
 import shutil
 import sys
@@ -172,8 +173,115 @@ class TestScrapeStatsEmission(_TempDbTestCase):
             "window_start", "window_end", "filings_seen", "index_count",
             "index_error", "archive_count", "archive_error", "clean_writes",
             "inserts", "pending_count", "excluded_at_ingest",
+            "llm_missing_key_count",
         }
         self.assertEqual(expected_keys, set(stats.keys()))
+
+
+# ---------------------------------------------------------------------------
+# 1b. B-199: missing ANTHROPIC_API_KEY canary + llm_missing_key_count
+# ---------------------------------------------------------------------------
+
+class TestMissingLlmApiKeyCanary(_TempDbTestCase):
+    """Root cause of the confirmed PDMR under-collection (2026-07-06 report,
+    re-confirmed 2026-07-17 with a live 6-day sample showing only 19/117 real
+    filings reaching Postgres): daily-refresh.yml never set ANTHROPIC_API_KEY
+    on the pipeline step, so every LLM-fallback attempt raised
+    MissingApiKeyError, silently routing the filing to pending. These tests
+    cover the loud startup canary and the per-run counter that make this
+    class of failure impossible to miss in the CI log going forward.
+    """
+
+    def _run_no_key_scenario(self, env_has_key: bool):
+        import llm_parser
+
+        index_rows = [_fake_row("100")]
+
+        def fake_iter_index(start, end, max_pages=20):
+            for r in index_rows:
+                yield r
+
+        def fake_iter_archive(start, end):
+            return
+            yield  # pragma: no cover - empty generator
+
+        fake_html_dir = self._tmp_dir / "fake_cache"
+        fake_html_dir.mkdir(exist_ok=True)
+
+        def fake_fetch_filing(rns_id, url):
+            p = fake_html_dir / f"{rns_id}.html"
+            if not p.exists():
+                p.write_text("<html><body>fake filing</body></html>", encoding="utf-8")
+            return p
+
+        args = rs.build_parser().parse_args(
+            ["--from", "2026-06-01", "--to", "2026-06-02"]
+        )
+
+        # Patch the whole environ dict (clear=True) so the key is genuinely
+        # absent rather than just overridden, but seed it with everything
+        # already present (minus the key) so unrelated stdlib/tempfile
+        # behaviour isn't disturbed.
+        env_vars = dict(os.environ)
+        if env_has_key:
+            env_vars["ANTHROPIC_API_KEY"] = "sk-fake-test-key"
+        else:
+            env_vars.pop("ANTHROPIC_API_KEY", None)
+
+        buf = io.StringIO()
+        with mock.patch.dict("os.environ", env_vars, clear=True), \
+             mock.patch.object(rs.scraper, "check_robots", return_value=None), \
+             mock.patch.object(rs.scraper, "iter_index", side_effect=fake_iter_index), \
+             mock.patch.object(rs.scraper, "iter_archive", side_effect=fake_iter_archive), \
+             mock.patch.object(rs.scraper, "fetch_filing", side_effect=fake_fetch_filing), \
+             mock.patch.object(rs.parse_pdmr, "parse_announcement",
+                               return_value=([], ["required_fields_missing"], "regex")), \
+             mock.patch.object(rs.llm_cost, "start_run", return_value="test-run-id"), \
+             mock.patch.object(rs.llm_cost, "check_budget", return_value=None), \
+             mock.patch.object(rs.llm_cost, "end_run", return_value=None), \
+             mock.patch.object(
+                 llm_parser, "parse_with_llm",
+                 side_effect=llm_parser.MissingApiKeyError(
+                     "ANTHROPIC_API_KEY not set")), \
+             mock.patch.object(rs.db_health, "check", return_value=True), \
+             mock.patch.object(rs.db_health, "backup", return_value=True), \
+             mock.patch.object(rs.db_health, "seal", return_value=None), \
+             redirect_stdout(buf):
+            # This test runs without --dry-run (the LLM-fallback branch is
+            # skipped entirely in dry-run mode), so db_health.check/backup
+            # would otherwise touch db_health.py's own hardcoded
+            # ROOT/.data/directors.db path -- a SEPARATE constant from
+            # db.DB_PATH, not covered by _TempDbTestCase's monkeypatch.
+            # Mocked out above to keep this test fully tempdir-isolated,
+            # matching this file's "never touches the real .data/directors.db"
+            # contract.
+            rc = rs.run(args)
+
+        text = buf.getvalue()
+        m = SCRAPE_STATS_RE.search(text)
+        stats = json.loads(m.group(1)) if m else None
+        return rc, text, stats
+
+    def test_missing_key_prints_startup_canary_and_counts_blocked_rows(self):
+        rc, text, stats = self._run_no_key_scenario(env_has_key=False)
+
+        self.assertEqual(rc, 0)  # non-fatal — a config warning, not a crash
+        self.assertIn("::error::ANTHROPIC_API_KEY is not set", text)
+        self.assertIsNotNone(stats, "SCRAPE_STATS line missing from output")
+        self.assertEqual(stats["llm_missing_key_count"], 1)
+        self.assertIn(
+            "filing(s) this run were routed to pending SOLELY because "
+            "ANTHROPIC_API_KEY was missing", text,
+        )
+
+    def test_key_present_suppresses_the_canary(self):
+        rc, text, stats = self._run_no_key_scenario(env_has_key=True)
+
+        self.assertNotIn("ANTHROPIC_API_KEY is not set", text)
+        # The mocked parse_with_llm still raises MissingApiKeyError in this
+        # branch (it's a fixed side_effect) -- that's fine, this test only
+        # asserts the startup canary is gated on the real env var, not that
+        # every call succeeds.
 
 
 # ---------------------------------------------------------------------------
