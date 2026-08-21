@@ -54,6 +54,7 @@ TABLE_ORDER = [
     "signals",
     "paper_trades",
     "conviction_scores",
+    "pending_filings",
 ]
 
 

@@ -251,3 +251,39 @@ CREATE TABLE IF NOT EXISTS conviction_scores (
 );
 CREATE INDEX IF NOT EXISTS idx_conviction_window   ON conviction_scores (window_end);
 CREATE INDEX IF NOT EXISTS idx_conviction_surfaced ON conviction_scores (surfaced);
+
+-- ------------------------------------------------------------ pending_filings
+-- B-204 (2026-08-21). The manual-review queue for filings the parser could not
+-- cleanly ingest. Previously lived ONLY in .scripts/_pending_review.json, which
+-- is gitignored and therefore existed only on the machine that ran the scrape --
+-- so after the 2026-06-25 move to GitHub Actions the queue was created and
+-- destroyed on a disposable runner once a day, every day. An unparsed filing is
+-- a missed signal, so this belongs in the durable store.
+--
+-- warnings / extracted hold JSON text (same convention as signals.metadata and
+-- conviction_scores.weights_used) so the payload is byte-identical on both
+-- backends and needs no shape change in run_scrape.py.
+--
+-- The scraper's upsert deliberately leaves `status` alone on conflict, so a
+-- re-scrape can never resurrect a filing a human already rejected.
+-- See .scripts/schema_migrations/018_pending_filings.sql for the full note.
+CREATE TABLE IF NOT EXISTS pending_filings (
+    rns_id        TEXT PRIMARY KEY,
+    url           TEXT,
+    headline      TEXT,
+    warnings      TEXT NOT NULL DEFAULT '[]',
+    extracted     TEXT NOT NULL DEFAULT '[]',
+    parser_source TEXT,
+    used_llm      INTEGER NOT NULL DEFAULT 0,
+    status        TEXT NOT NULL DEFAULT 'pending'
+                  CHECK (status IN ('pending', 'resolved', 'rejected')),
+    resolution    TEXT,
+    resolved_by   TEXT,
+    resolved_at   TEXT,
+    first_seen    TEXT NOT NULL,
+    last_seen     TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_pending_filings_status
+    ON pending_filings (status);
+CREATE INDEX IF NOT EXISTS idx_pending_filings_first_seen
+    ON pending_filings (first_seen);

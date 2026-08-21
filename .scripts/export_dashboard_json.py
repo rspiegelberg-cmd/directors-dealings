@@ -4275,6 +4275,62 @@ def _rns_id_from_url(url: str) -> str:
     return tail if (tail.isdigit() and 5 <= len(tail) <= 12) else ""
 
 
+def _load_pending_items_db() -> dict:
+    """Load the pending-review queue from the `pending_filings` table (B-204).
+
+    Returns the same dict-of-items shape `_load_pending_items` produces from
+    _pending_review.json, so nothing downstream changes.
+
+    Before migration 018 the queue lived only in that gitignored file, which
+    meant the CI runner built it and threw it away once a day -- the review
+    surface on the site had nothing to show. The table is now the source of
+    truth; the file remains a local mirror and is used as the fallback below.
+
+    Rows a human has already dispositioned (status 'resolved'/'rejected') are
+    excluded by the WHERE clause, which makes _load_resolved_rns_ids's file
+    manifests redundant for DB-backed runs -- they are kept as a safety net for
+    the local file path.
+
+    Never raises: returns {} so the caller falls back to the JSON mirror.
+    """
+    try:
+        conn = db.connect()
+    except Exception:  # noqa: BLE001
+        return {}
+    try:
+        rows = conn.execute(
+            "SELECT rns_id, url, headline, warnings, extracted, "
+            "       parser_source, used_llm "
+            "FROM pending_filings WHERE status = 'pending'"
+        ).fetchall()
+    except Exception:  # noqa: BLE001
+        return {}
+    finally:
+        try:
+            conn.close()
+        except Exception:  # noqa: BLE001
+            pass
+
+    def _j(raw, default):
+        try:
+            v = json.loads(raw) if raw else default
+        except (TypeError, ValueError):
+            return default
+        return v if isinstance(v, type(default)) else default
+
+    out: dict = {}
+    for r in rows:
+        out[str(r["rns_id"])] = {
+            "url":           r["url"] or "",
+            "headline":      r["headline"] or "",
+            "warnings":      _j(r["warnings"], []),
+            "extracted":     _j(r["extracted"], []),
+            "parser_source": r["parser_source"] or "",
+            "used_llm":      bool(r["used_llm"]),
+        }
+    return out
+
+
 def _load_resolved_rns_ids(data_dir: Path | None = None) -> set[str]:
     """Return the union of rejected and manually-added RNS IDs.
 
@@ -4329,7 +4385,16 @@ def build_pending_review_export(
     pending_path = pending_path or DEFAULT_PENDING_PATH
     scrape_cache_dir = scrape_cache_dir or (DEFAULT_PENDING_PATH.parent / "_scrape_cache")
 
-    items_raw = _load_pending_items(pending_path)
+    # B-204: the table is the source of truth; the JSON mirror is the fallback
+    # for local dev and for any run where the DB is unreachable.
+    #
+    # Only consult the DB when reading the DEFAULT queue. A caller that names an
+    # explicit pending_path means "use this file" -- tests build fixture files
+    # and would otherwise silently read whatever is in the ambient DB instead.
+    if pending_path == DEFAULT_PENDING_PATH:
+        items_raw = _load_pending_items_db() or _load_pending_items(pending_path)
+    else:
+        items_raw = _load_pending_items(pending_path)
 
     # Sprint 25 Phase 3/4: exclude items already resolved via apply_edits.py.
     resolved_ids = _load_resolved_rns_ids()

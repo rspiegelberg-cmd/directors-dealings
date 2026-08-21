@@ -52,6 +52,7 @@ TABLE_ORDER = [
     "signals",
     "paper_trades",
     "conviction_scores",
+    "pending_filings",
 ]
 
 # Tables whose `id` is a Postgres IDENTITY column needing a sequence reset.

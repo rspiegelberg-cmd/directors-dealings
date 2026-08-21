@@ -737,7 +737,19 @@ def _apply_schema_migrations(conn: sqlite3.Connection) -> None:
             conn, "16", "17", "017_conviction_scores_sector.sql",
             "conviction_scores", "sector",
         )
-        current = "17"  # noqa: F841
+        current = "17"
+
+    if current == "17":
+        # B-204 (2026-08-21): persist the manual-review queue. It lived only in
+        # the gitignored .scripts/_pending_review.json, so the CI runner threw
+        # it away after every daily scrape. Table-existence check on
+        # pending_filings; the migration file creates the table + indexes
+        # idempotently.
+        _run_create_table_migration_step(
+            conn, "17", "18", "018_pending_filings.sql",
+            "pending_filings",
+        )
+        current = "18"  # noqa: F841
 
 
 def set_meta(conn, key: str, value: str) -> None:

@@ -215,7 +215,150 @@ def _upsert_transaction(conn, row: dict, parser_source: str, *, verbose: bool = 
     return db.upsert_transaction(conn, row, parser_source, verbose=verbose)
 
 
+# ── Pending-review queue persistence (B-204) ─────────────────────────────────
+# The queue used to live ONLY in .scripts/_pending_review.json, which is
+# gitignored, so after the 2026-06-25 move to GitHub Actions it was created on a
+# disposable runner and destroyed with it once a day, every day. An unparsed
+# filing is a missed signal, so the durable copy now lives in the
+# `pending_filings` table (migration 018) alongside everything else.
+#
+# The JSON file is STILL written, unchanged, as a local mirror: server.py and
+# the local review tool read it directly and are deliberately left untouched.
+# The DB is the source of truth; the file is a convenience.
+
+
+def _pending_ph() -> str:
+    """SQL placeholder for the active backend (see db._ph)."""
+    try:
+        return db._ph()
+    except Exception:  # noqa: BLE001
+        return "?"
+
+
+def _write_pending_db(items: dict) -> None:
+    """Upsert the queue into `pending_filings` and prune rows no longer pending.
+
+    Deliberately does NOT touch `status` on conflict: a filing a human has
+    already rejected must never be resurrected by a later re-scrape.
+
+    Pruning is limited to status='pending' rows, so resolved/rejected history
+    survives. Deletes are chunked to stay well inside SQLite's bound-parameter
+    limit even if the backlog grows into the thousands.
+
+    Never raises: a DB hiccup here must not lose a completed scrape. The JSON
+    mirror is written regardless by the caller.
+    """
+    ph = _pending_ph()
+    now = db.iso_now()
+    try:
+        conn = db.connect()
+    except Exception as e:  # noqa: BLE001
+        print(f"[scrape] (non-fatal) pending_filings: cannot open DB: {e!r}")
+        return
+    try:
+        for rns_id, rec in items.items():
+            if not isinstance(rec, dict):
+                continue
+            conn.execute(
+                f"""INSERT INTO pending_filings
+                        (rns_id, url, headline, warnings, extracted,
+                         parser_source, used_llm, first_seen, last_seen)
+                    VALUES ({ph}, {ph}, {ph}, {ph}, {ph}, {ph}, {ph}, {ph}, {ph})
+                    ON CONFLICT (rns_id) DO UPDATE SET
+                        url           = excluded.url,
+                        headline      = excluded.headline,
+                        warnings      = excluded.warnings,
+                        extracted     = excluded.extracted,
+                        parser_source = excluded.parser_source,
+                        used_llm      = excluded.used_llm,
+                        last_seen     = excluded.last_seen""",
+                (
+                    str(rns_id),
+                    rec.get("url") or "",
+                    rec.get("headline") or "",
+                    json.dumps(rec.get("warnings") or []),
+                    json.dumps(rec.get("extracted") or []),
+                    rec.get("parser_source") or "",
+                    1 if rec.get("used_llm") else 0,
+                    now,
+                    now,
+                ),
+            )
+
+        keep = {str(k) for k in items}
+        existing = {
+            str(r["rns_id"])
+            for r in conn.execute(
+                "SELECT rns_id FROM pending_filings WHERE status = 'pending'"
+            ).fetchall()
+        }
+        stale = sorted(existing - keep)
+        for i in range(0, len(stale), 400):
+            chunk = stale[i:i + 400]
+            marks = ", ".join([ph] * len(chunk))
+            conn.execute(
+                "DELETE FROM pending_filings "
+                f"WHERE status = 'pending' AND rns_id IN ({marks})",
+                chunk,
+            )
+        conn.commit()
+        print(f"[scrape] pending_filings: {len(keep)} pending, "
+              f"{len(stale)} cleared.")
+    except Exception as e:  # noqa: BLE001
+        print(f"[scrape] (non-fatal) pending_filings write failed: {e!r}")
+    finally:
+        try:
+            conn.close()
+        except Exception:  # noqa: BLE001
+            pass
+
+
+def _load_pending_db() -> dict:
+    """Read the status='pending' queue back out of `pending_filings`.
+
+    Returns {} (not an error) on any failure so a DB problem degrades to the
+    old file-only behaviour rather than aborting the scrape.
+    """
+    try:
+        conn = db.connect()
+    except Exception:  # noqa: BLE001
+        return {}
+    try:
+        rows = conn.execute(
+            "SELECT rns_id, url, headline, warnings, extracted, "
+            "       parser_source, used_llm "
+            "FROM pending_filings WHERE status = 'pending'"
+        ).fetchall()
+    except Exception as e:  # noqa: BLE001
+        print(f"[scrape] (non-fatal) pending_filings read failed: {e!r}")
+        return {}
+    finally:
+        try:
+            conn.close()
+        except Exception:  # noqa: BLE001
+            pass
+
+    out: dict = {}
+    for r in rows:
+        def _j(raw, default):
+            try:
+                v = json.loads(raw) if raw else default
+            except (TypeError, ValueError):
+                return default
+            return v if isinstance(v, type(default)) else default
+        out[str(r["rns_id"])] = {
+            "url":           r["url"] or "",
+            "headline":      r["headline"] or "",
+            "warnings":      _j(r["warnings"], []),
+            "extracted":     _j(r["extracted"], []),
+            "parser_source": r["parser_source"] or "",
+            "used_llm":      bool(r["used_llm"]),
+        }
+    return out
+
+
 def _write_pending(items: dict) -> None:
+    _write_pending_db(items)
     payload = {
         "generated_at": db.iso_now(),
         "count": len(items),
@@ -227,13 +370,26 @@ def _write_pending(items: dict) -> None:
 
 
 def _load_pending() -> dict:
+    """Load the queue: DB first, with the local JSON mirror filling any gaps.
+
+    Merging rather than choosing means the first run after this change quietly
+    imports whatever backlog is sitting in a developer's local
+    _pending_review.json into the table -- no separate backfill script needed.
+    On a CI runner the file simply does not exist and the DB stands alone.
+    """
+    items = _load_pending_db()
+
+    file_items: dict = {}
     if PENDING_PATH.exists():
         try:
             data = json.loads(PENDING_PATH.read_text(encoding="utf-8"))
-            return data.get("items") or {}
+            file_items = data.get("items") or {}
         except json.JSONDecodeError:
-            return {}
-    return {}
+            file_items = {}
+
+    for rns_id, rec in file_items.items():
+        items.setdefault(str(rns_id), rec)
+    return items
 
 
 def run(args) -> int:
