@@ -227,6 +227,15 @@ STEPS = [
     # can segment the newly classified companies in the same pipeline run.
     ("smallcap",   "Applying small/large cap classification (GBP 500m)",
      "classify_small_cap.py",    ["--threshold", "500000000"], 60 * 2),
+    # B-200 (2026-08-21): FCA short-interest ingest was never wired into the
+    # daily job, so `short_positions` froze at 2026-06-09 while the front
+    # page's short-interest column kept rendering it as current. SOFT: the
+    # FCA workbook URL is a third-party download and must never be able to
+    # block the price/signal core. --no-figi keeps the daily run off the
+    # OpenFIGI API (quota); run it by hand without the flag to resolve any
+    # newly-unmapped ISINs.
+    ("shorts",     "Ingesting FCA short interest",
+     "backfill_short_interest.py", ["--no-figi"],  60 * 15, True),
     # Timeouts widened for the cloud (Postgres-over-network): the signal
     # engine + backtest fire many small queries, each with network latency,
     # so they run far slower than against local SQLite. 15min was too tight
@@ -235,6 +244,16 @@ STEPS = [
      "eval_signals.py",          [],                 60 * 45),
     ("backtest",   "Computing signal backtests + CAR",
      "backtest.py",              [],                 60 * 45),
+    # B-201 (2026-08-21): close_paper_trades.py was never wired into the daily
+    # job, so the paper book stopped marking out on 2026-06-04: 338 'linear'
+    # trades sat `open` past their horizon and the entire 'log' book had zero
+    # closed trades. It upgrades planned->open once an entry price exists and
+    # closes any open trade whose 21-trading-day horizon has passed, so it must
+    # run AFTER eval_signals/backtest (which create the trades) and BEFORE
+    # export (which publishes the book). SOFT: a price gap must not block the
+    # dashboard build.
+    ("close_paper", "Marking out matured paper trades",
+     "close_paper_trades.py",    ["--horizon", "21"], 60 * 10, True),
     # Conviction scoring — score every BUY in the trailing 28-day window and
     # upsert to conviction_scores. Runs AFTER backtest (all deals processed)
     # and BEFORE export. SOFT: a transient data gap logs and continues.

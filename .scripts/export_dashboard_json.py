@@ -4576,3 +4576,31 @@ def run(out_dir=DEFAULT_OUT_DIR,
     summary["n_large_rows"] = len(_large_rows)
 
     return summary
+
+
+def main(argv=None):
+    p = argparse.ArgumentParser(description="Export dashboard JSON.")
+    p.add_argument("--dry-run",      action="store_true")
+    p.add_argument("--no-timestamp", action="store_true",
+                   help="Omit generated_at -- for round-trip diff tests.")
+    p.add_argument("--out-dir", default=str(DEFAULT_OUT_DIR), type=str)
+    p.add_argument("--csv-path", default=str(DEFAULT_CSV_PATH), type=str)
+    p.add_argument("--pending-path", default=str(DEFAULT_PENDING_PATH),
+                   type=str,
+                   help="Path to _pending_review.json for diagnostics panel.")
+    p.add_argument("--verbose", action="store_true")
+    args = p.parse_args(argv)
+    summary = run(
+        out_dir=Path(args.out_dir),
+        csv_path=Path(args.csv_path),
+        dry_run=args.dry_run,
+        emit_timestamp=not args.no_timestamp,
+        verbose=args.verbose,
+        pending_path=Path(args.pending_path),
+    )
+    print(json.dumps(summary, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

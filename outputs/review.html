@@ -40,6 +40,21 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
+<!-- B-202: the published (Vercel) copy of this page has no /api/* backend and no
+     /review-data/*.json, because both are served by server.py on Rupert's PC.
+     Without this notice the page just span forever / showed "no items match",
+     which read as "Review is broken". Shown only when the probe below fails. -->
+<div id="local-only-banner" class="hidden bg-amber-50 border-b-2 border-amber-300 px-6 py-3 text-sm text-amber-900">
+  <strong>This editor only runs on your own PC.</strong>
+  It needs the local server (<code class="px-1 bg-amber-100 rounded">server.py</code>) to read the
+  pending queue and write your edits back to the database — the published site is static files only,
+  so nothing here can load or save.
+  <br>
+  <span class="text-amber-800">To use it: double-click <code class="px-1 bg-amber-100 rounded">start.bat</code>
+  in <code class="px-1 bg-amber-100 rounded">C:\Dev\DirectorsDealings</code>, then open
+  <code class="px-1 bg-amber-100 rounded">http://localhost:8000/review.html</code>.</span>
+</div>
+
 <!-- ── Header ──────────────────────────────────────────────────────────────── -->
 <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-3 sticky top-0 z-30 flex-shrink-0">
   <a href="/" class="text-slate-500 hover:text-indigo-600 text-sm">← Dashboard</a>
@@ -1269,7 +1284,28 @@ async function handleUrlParams() {
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+// B-202: is server.py actually behind this page? On the published static site
+// every /api/* path 404s, so probe once and tell the user plainly instead of
+// leaving the list spinning.
+async function localServerAvailable() {
+  try {
+    const r = await fetch("/api/apply-status", { cache: "no-store" });
+    return r.ok;
+  } catch { return false; }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
+  if (!await localServerAvailable()) {
+    document.getElementById("local-only-banner").classList.remove("hidden");
+    const loading = document.getElementById("list-loading");
+    if (loading) {
+      loading.classList.remove("hidden");
+      loading.textContent = "Not available here — open this page from the local server (see the banner above).";
+    }
+    document.getElementById("header-pending-count").textContent = "offline";
+    return;   // nothing below can succeed without the backend
+  }
+
   // Resume progress display if apply_edits was already running
   try {
     const r = await fetch("/api/apply-status");
