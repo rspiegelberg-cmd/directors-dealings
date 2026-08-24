@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23T06:34:02Z",
+  "generated_at": "2026-08-24T06:47:40Z",
   "schema_version": "1.0",
   "buckets": {
     "100k-500k": {
@@ -10821,12 +10821,12 @@
       "scope_note": "T1 + T2 buys only",
       "t1": {
         "30d": {
-          "benchmark_car_pct": 0.2,
-          "total_firings": 44,
+          "benchmark_car_pct": 0.23,
+          "total_firings": 40,
           "distinct_tickers": 25,
-          "tickers_with_n3": 5,
-          "hit_pct": 63.6,
-          "median_car": 0.3,
+          "tickers_with_n3": 3,
+          "hit_pct": 60.0,
+          "median_car": 0.2,
           "top_firings": [
             {
               "date": "2026-07-28",
@@ -10913,34 +10913,6 @@
               "bench_return": -0.9
             },
             {
-              "date": "2026-07-24",
-              "ticker": "TEAM",
-              "company": "TEAM plc",
-              "director": "John Cusins",
-              "role": "Independent Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "s1",
-              "value_gbp": 5000,
-              "car": 2.5,
-              "abs_return": 2.6,
-              "bench_return": 0.1
-            },
-            {
-              "date": "2026-07-24",
-              "ticker": "TEAM",
-              "company": "TEAM plc",
-              "director": "John Cusins",
-              "role": "Independent Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "s1",
-              "value_gbp": 5000,
-              "car": 2.5,
-              "abs_return": 2.6,
-              "bench_return": 0.1
-            },
-            {
               "date": "2026-08-12",
               "ticker": "WTB",
               "company": "WHITBREAD PLC",
@@ -10967,6 +10939,34 @@
               "car": 1.6,
               "abs_return": 1.9,
               "bench_return": 0.4
+            },
+            {
+              "date": "2026-07-31",
+              "ticker": "STJ",
+              "company": "St. James's Place plc",
+              "director": "Evelyn Bourke",
+              "role": "PDMR/Non Executive Director",
+              "role_normalized": "NED",
+              "role_class": "",
+              "signal_tier": "t3",
+              "value_gbp": 24991,
+              "car": 1.5,
+              "abs_return": 1.7,
+              "bench_return": 0.3
+            },
+            {
+              "date": "2026-07-31",
+              "ticker": "STJ",
+              "company": "St. James's Place plc",
+              "director": "Evelyn Bourke",
+              "role": "PDMR/Non Executive Director",
+              "role_normalized": "NED",
+              "role_class": "T3",
+              "signal_tier": "t3",
+              "value_gbp": 24991,
+              "car": 1.5,
+              "abs_return": 1.7,
+              "bench_return": 0.3
             }
           ],
           "bottom_firings": [
@@ -11113,28 +11113,12 @@
           ],
           "rollup": [
             {
-              "ticker": "BOOT",
-              "company": "Henry Boot PLC",
-              "n": 4,
-              "hit_pct": 100.0,
-              "mean_car": 0.4,
-              "latest_fire": "2026-08-11"
-            },
-            {
               "ticker": "PCIP",
               "company": "PCI-PAL PLC",
               "n": 3,
               "hit_pct": 100.0,
               "mean_car": 1.1,
               "latest_fire": "2026-08-05"
-            },
-            {
-              "ticker": "TEAM",
-              "company": "TEAM plc",
-              "n": 4,
-              "hit_pct": 75.0,
-              "mean_car": 0.8,
-              "latest_fire": "2026-07-29"
             },
             {
               "ticker": "NXQ",
@@ -11159,6 +11143,14 @@
               "hit_pct": 100.0,
               "mean_car": 0.2,
               "latest_fire": "2026-08-10"
+            },
+            {
+              "ticker": "BOOT",
+              "company": "Henry Boot PLC",
+              "n": 2,
+              "hit_pct": 100.0,
+              "mean_car": 0.2,
+              "latest_fire": "2026-08-11"
             },
             {
               "ticker": "EGT",
@@ -11247,6 +11239,14 @@
               "hit_pct": 100.0,
               "mean_car": 0.2,
               "latest_fire": "2026-08-17"
+            },
+            {
+              "ticker": "TEAM",
+              "company": "TEAM plc",
+              "n": 2,
+              "hit_pct": 50.0,
+              "mean_car": -0.8,
+              "latest_fire": "2026-07-29"
             },
             {
               "ticker": "CCC",
@@ -34878,11 +34878,11 @@
       "scope_note": "T1 + T2 buys only",
       "t1": {
         "30d": {
-          "benchmark_car_pct": 0.14,
-          "total_firings": 34,
+          "benchmark_car_pct": 0.13,
+          "total_firings": 33,
           "distinct_tickers": 17,
           "tickers_with_n3": 4,
-          "hit_pct": 38.2,
+          "hit_pct": 39.4,
           "median_car": -0.5,
           "top_firings": [
             {
@@ -35252,9 +35252,9 @@
             {
               "ticker": "HERC",
               "company": "Hercules plc",
-              "n": 2,
+              "n": 1,
               "hit_pct": 0.0,
-              "mean_car": -2.3,
+              "mean_car": -4.5,
               "latest_fire": "2026-07-28"
             },
             {
