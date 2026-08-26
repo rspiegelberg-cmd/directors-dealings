@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-08-25T06:40:46Z",
-  "total": 88,
+  "generated_at": "2026-08-26T06:42:55Z",
+  "total": 108,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 34
+      "count": 41
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 7
+      "count": 9
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 13
+      "count": 18
     },
     {
       "id": "corporate_actions",
@@ -30,7 +30,7 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 31
+      "count": 36
     },
     {
       "id": "data_quirks",
@@ -42,10 +42,214 @@
       "id": "other",
       "name": "Other",
       "recoverable": "unknown",
-      "count": 3
+      "count": 4
     }
   ],
   "items": [
+    {
+      "rns_id": "9739545",
+      "url": "https://www.investegate.co.uk/announcement/rns/jpmorgan-asia-growth-income--jagi/director-pdmr-shareholding/9739545",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_classify_type",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9739107",
+      "url": "https://www.investegate.co.uk/announcement/rns/centrica--cna/director-pdmr-shareholding/9739107",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "51881d8ffc88ad55",
+          "date": "2026-08-25",
+          "ticker": "CNA",
+          "company": "",
+          "director": "Frank Mastiaux",
+          "role": "Non-Executive Director",
+          "type": "BUY",
+          "shares": 1448,
+          "price": 1.5519,
+          "value": 2247.15,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/centrica--cna/director-pdmr-shareholding/9739107",
+          "announced_at": "2026-08-25T11:30:08Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "635561d7ef23c438",
+          "date": "2026-08-25",
+          "ticker": "CNA",
+          "company": "",
+          "director": "Sue Whalley",
+          "role": "Non-Executive Director",
+          "type": "BUY",
+          "shares": 629,
+          "price": 1.5519,
+          "value": 976.15,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/centrica--cna/director-pdmr-shareholding/9739107",
+          "announced_at": "2026-08-25T11:30:08Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 2,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9739005",
+      "url": "https://www.investegate.co.uk/announcement/rns/videndum--vid/director-pdmr-shareholding/9739005",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "b1a908d808728663",
+          "date": "2026-08-24",
+          "ticker": "VID",
+          "company": "",
+          "director": "Position",
+          "role": "1.   Chief Executive Officer, PDMR",
+          "type": "BUY",
+          "shares": 37500,
+          "price": 2.2410319999999997,
+          "value": 84038.7,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/videndum--vid/director-pdmr-shareholding/9739005",
+          "announced_at": "2026-08-25T11:07:06Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9738760",
+      "url": "https://www.investegate.co.uk/announcement/rns/pz-cussons--pzc/director-pdmr-shareholding/9738760",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "could_not_extract_company"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "f7fa1e5eecb6ff79",
+          "date": "2026-08-24",
+          "ticker": "PZC",
+          "company": "",
+          "director": "David Tyler",
+          "role": "Non-Executive Chair",
+          "type": "BUY",
+          "shares": 2602,
+          "price": 1.046,
+          "value": 2721.69,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/pz-cussons--pzc/director-pdmr-shareholding/9738760",
+          "announced_at": "2026-08-25T09:58:06Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "279e41062b6fe3cf",
+          "date": "2026-08-24",
+          "ticker": "PZC",
+          "company": "",
+          "director": "Vivek Ahuja",
+          "role": "Non-Executive Director",
+          "type": "BUY",
+          "shares": 2508,
+          "price": 1.046,
+          "value": 2623.37,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/pz-cussons--pzc/director-pdmr-shareholding/9738760",
+          "announced_at": "2026-08-25T09:58:06Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "30b2f3abd163243e",
+          "date": "2026-08-24",
+          "ticker": "PZC",
+          "company": "",
+          "director": "Kirsty Bashforth",
+          "role": "Non-Executive Director",
+          "type": "BUY",
+          "shares": 2508,
+          "price": 1.046,
+          "value": 2623.37,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/pz-cussons--pzc/director-pdmr-shareholding/9738760",
+          "announced_at": "2026-08-25T09:58:06Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 5,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9738513",
+      "url": "https://www.investegate.co.uk/announcement/rns/crimson-tide--tide/director-pdmr-shareholding-/9738513",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "ffb5b002fe2d1bf7",
+          "date": "2026-08-24",
+          "ticker": "TIDE",
+          "company": "Crimson Tide plc",
+          "director": "James Joyce",
+          "role": "Non-Executive Director",
+          "type": "BUY",
+          "shares": 9999,
+          "price": 0.8745,
+          "value": 8744.13,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/crimson-tide--tide/director-pdmr-shareholding-/9738513",
+          "announced_at": "2026-08-25T07:48:06Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": 11435
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9737580",
       "url": "https://www.investegate.co.uk/announcement/prn/sunbelt-rentals-holdings-inc---sunb/transactions-by-directors-and-persons-dischar-/9737580",
@@ -997,6 +1201,128 @@
       "used_llm": false
     },
     {
+      "rns_id": "9739912",
+      "url": "https://www.investegate.co.uk/announcement/rns/altitude-group--alt/grant-of-options-and-pdmr-dealing/9739912",
+      "headline": "Grant of Options and PDMR Dealing",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "affdca138679fe24",
+          "date": "2026-07-03",
+          "ticker": "ALT",
+          "company": "",
+          "director": "Richard Sowerby",
+          "role": "Chief Financial Officer",
+          "type": "GRANT",
+          "shares": 300000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/altitude-group--alt/grant-of-options-and-pdmr-dealing/9739912",
+          "announced_at": "2026-08-26T07:01:13Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "0eb5a726e38c5887",
+          "date": "2026-06-30",
+          "ticker": "ALT",
+          "company": "",
+          "director": "Max Roberts",
+          "role": "Independent Non-Executive Director",
+          "type": "GRANT",
+          "shares": 1000000,
+          "price": 0.225,
+          "value": 225000.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/altitude-group--alt/grant-of-options-and-pdmr-dealing/9739912",
+          "announced_at": "2026-08-26T07:01:13Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 2,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9739654",
+      "url": "https://www.investegate.co.uk/announcement/rns/hsbc-holdings--hsba/notification-of-transactions-by-pdmrs/9739654",
+      "headline": "Notification of transactions by PDMRs",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_classify_type",
+        "multiple_distinct_prices",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9739637",
+      "url": "https://www.investegate.co.uk/announcement/rns/barratt-redrow--btrw/director-pdmr-shareholding/9739637",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_separate_price_volume",
+        "zero_shares_non_grant",
+        "zero_price_non_grant",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9739316",
+      "url": "https://www.investegate.co.uk/announcement/rns/cmc-markets--cmcx/director-pdmr-shareholding/9739316",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "zero_price_non_grant",
+        "multiple_distinct_prices",
+        "zero_shares_non_grant",
+        "zero_price_non_grant",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9738670",
+      "url": "https://www.investegate.co.uk/announcement/rns/tungsten-west--tun/grant-of-awards-under-long-term-incentive-plan/9738670",
+      "headline": "Grant of Awards under Long Term Incentive Plan",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_classify_type",
+        "could_not_separate_price_volume"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9737201",
       "url": "https://www.investegate.co.uk/announcement/rns/luceco--luce/director-pdmr-shareholding/9737201",
       "headline": "Director/PDMR Shareholding",
@@ -1344,6 +1670,39 @@
       "used_llm": false
     },
     {
+      "rns_id": "9738749",
+      "url": "https://www.investegate.co.uk/announcement/rns/cranswick--cwk/director-pdmr-shareholding/9738749",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "other",
+      "warnings": [
+        "zero_price_non_grant",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "32f34605f56eac10",
+          "date": "2026-08-21",
+          "ticker": "CWK",
+          "company": "Cranswick plc",
+          "director": "Christopher Aldersley",
+          "role": "Director",
+          "type": "SIP",
+          "shares": 3,
+          "price": 53.5,
+          "value": 160.5,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/cranswick--cwk/director-pdmr-shareholding/9738749",
+          "announced_at": "2026-08-25T09:47:07Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9736683",
       "url": "https://www.investegate.co.uk/announcement/rns/picton-property-income-ltd--pctn/director-pdmr-shareholding/9736683",
       "headline": "Director/PDMR Shareholding",
@@ -1421,6 +1780,37 @@
       ],
       "extracted_count": 1,
       "has_cache": false,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9739764",
+      "url": "https://www.investegate.co.uk/announcement/rns/public-policy-holding-company-inc-di-reg-s-cat3---pphc/pdmr-dealings-/9739764",
+      "headline": "PDMR Dealings",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "could_not_extract_company",
+        "foreign_currency",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9739440",
+      "url": "https://www.investegate.co.uk/announcement/rns/thungela-resources-limited-npv-di---tga/dealings-in-securities/9739440",
+      "headline": "Dealings in Securities",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1533,6 +1923,123 @@
       "extracted": [],
       "extracted_count": 0,
       "has_cache": false,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9739915",
+      "url": "https://www.investegate.co.uk/announcement/rns/chesnara--csn/director-pdmr-shareholding/9739915",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9739753",
+      "url": "https://www.investegate.co.uk/announcement/rns/s-u--sus/director-pdmr-shareholding/9739753",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9739363",
+      "url": "https://www.investegate.co.uk/announcement/rns/bhp-group-limited-npv-di---bhp/pdmr-shareholding/9739363",
+      "headline": "PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9738924",
+      "url": "https://www.investegate.co.uk/announcement/rns/golden-prospect-precious-metals-ltd---gpm/director-pdmr-shareholding/9738924",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9738923",
+      "url": "https://www.investegate.co.uk/announcement/rns/premier-foods--pfd/director-pdmr-shareholding/9738923",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9738761",
+      "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9738761",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9738755",
+      "url": "https://www.investegate.co.uk/announcement/rns/pennon-group--pnn/director-pdmr-shareholding/9738755",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
     },
