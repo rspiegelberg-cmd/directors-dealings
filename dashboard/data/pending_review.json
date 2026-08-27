@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-08-26T06:42:55Z",
-  "total": 108,
+  "generated_at": "2026-08-27T16:45:33Z",
+  "total": 135,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 41
+      "count": 52
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 9
+      "count": 12
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 18
+      "count": 20
     },
     {
       "id": "corporate_actions",
@@ -30,7 +30,7 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 36
+      "count": 46
     },
     {
       "id": "data_quirks",
@@ -42,10 +42,328 @@
       "id": "other",
       "name": "Other",
       "recoverable": "unknown",
-      "count": 4
+      "count": 5
     }
   ],
   "items": [
+    {
+      "rns_id": "9744243",
+      "url": "https://www.investegate.co.uk/announcement/rns/ajax-resources--ajax/directors-dealings-and-holdings-result-of-agm-/9744243",
+      "headline": "Directors&#039; Dealings and Holdings &amp; Result of AGM",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_parse_tx_date",
+        "zero_shares_non_grant",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9744031",
+      "url": "https://www.investegate.co.uk/announcement/rns/caledonia-investments--cldn/director-pdmr-shareholding/9744031",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "b9e6e769d5032df5",
+          "date": "2026-08-27",
+          "ticker": "CLDN",
+          "company": "",
+          "director": "Mathew Simon Dexter Masters",
+          "role": "Executive Director/Chief Executive Officer",
+          "type": "SIP",
+          "shares": 38,
+          "price": 3.9419999999999997,
+          "value": 149.8,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/caledonia-investments--cldn/director-pdmr-shareholding/9744031",
+          "announced_at": "2026-08-27T14:51:06Z",
+          "buy_strictness": "MIXED",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9743756",
+      "url": "https://www.investegate.co.uk/announcement/rns/gcm-resources--gcm/director-pdmr-shareholding/9743756",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "9cf26ace45464019",
+          "date": "2026-08-27",
+          "ticker": "GCM",
+          "company": "",
+          "director": "Keith Fulton",
+          "role": "Finance Director",
+          "type": "SELL",
+          "shares": 144368,
+          "price": 0.17254999999999998,
+          "value": 24910.7,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/gcm-resources--gcm/director-pdmr-shareholding/9743756",
+          "announced_at": "2026-08-27T11:56:06Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": 2000000
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9742158",
+      "url": "https://www.investegate.co.uk/announcement/rns/ultimate-products--ultp/ebt-share-sale-and-director-pdmr-shareholding/9742158",
+      "headline": "EBT Share Sale and Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "b3dca8c79aa058bf",
+          "date": "2026-08-26",
+          "ticker": "ULTP",
+          "company": "",
+          "director": "Chris Dent",
+          "role": "Chief Financial Officer",
+          "type": "SELL",
+          "shares": 9750,
+          "price": 0.5315,
+          "value": 5182.12,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/ultimate-products--ultp/ebt-share-sale-and-director-pdmr-shareholding/9742158",
+          "announced_at": "2026-08-27T07:01:20Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9742150",
+      "url": "https://www.investegate.co.uk/announcement/rns/tracsis--trcs/award-of-options-/9742150",
+      "headline": "Award of Options",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_classify_type",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9741924",
+      "url": "https://www.investegate.co.uk/announcement/rns/bloomsbury-publishing--bmy/director-pdmr-shareholdings/9741924",
+      "headline": "Director/PDMR Shareholdings",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "3bb4bc5761df0522",
+          "date": "2026-08-26",
+          "ticker": "BMY",
+          "company": "",
+          "director": "Nigel Newton",
+          "role": "Chief Executive",
+          "type": "GRANT",
+          "shares": 130319,
+          "price": 6.56,
+          "value": 854892.64,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/bloomsbury-publishing--bmy/director-pdmr-shareholdings/9741924",
+          "announced_at": "2026-08-26T16:09:06Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "f909238f15e427cd",
+          "date": "2026-08-26",
+          "ticker": "BMY",
+          "company": "",
+          "director": "Keith Underwood",
+          "role": "Chief Financial & Operating Officer",
+          "type": "GRANT",
+          "shares": 91463,
+          "price": 6.56,
+          "value": 599997.28,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/bloomsbury-publishing--bmy/director-pdmr-shareholdings/9741924",
+          "announced_at": "2026-08-26T16:09:06Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "59ecb81879951c48",
+          "date": "2026-08-26",
+          "ticker": "BMY",
+          "company": "",
+          "director": "Jenny Ridout",
+          "role": "Global Managing Director, Academic & Professional Division",
+          "type": "GRANT",
+          "shares": 68597,
+          "price": 6.56,
+          "value": 449996.32,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/bloomsbury-publishing--bmy/director-pdmr-shareholdings/9741924",
+          "announced_at": "2026-08-26T16:09:06Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 3,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9741752",
+      "url": "https://www.investegate.co.uk/announcement/rns/morgan-sindall-group--mgns/director-pdmr-shareholding/9741752",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_classify_type",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9741751",
+      "url": "https://www.investegate.co.uk/announcement/rns/morgan-sindall-group--mgns/director-pdmr-shareholding/9741751",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_classify_type",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9741714",
+      "url": "https://www.investegate.co.uk/announcement/rns/british-american-tobacco--bats/director-pdmr-shareholding/9741714",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "b681044b9ef57596",
+          "date": "2026-08-25",
+          "ticker": "BATS",
+          "company": "",
+          "director": "Tadeu Marroco",
+          "role": "Chief Executive",
+          "type": "BUY",
+          "shares": 250,
+          "price": 42.890887105,
+          "value": 10722.72,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/british-american-tobacco--bats/director-pdmr-shareholding/9741714",
+          "announced_at": "2026-08-26T14:15:07Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "65dff97847d49514",
+          "date": "2026-08-25",
+          "ticker": "BATS",
+          "company": "",
+          "director": "Luciana Franco Do Amaral",
+          "role": null,
+          "type": "BUY",
+          "shares": 250,
+          "price": 42.890887105,
+          "value": 10722.72,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/british-american-tobacco--bats/director-pdmr-shareholding/9741714",
+          "announced_at": "2026-08-26T14:15:07Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 2,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9741703",
+      "url": "https://www.investegate.co.uk/announcement/rns/petrotal-corporation-npv-di---ptal/director-dealing/9741703",
+      "headline": "Director Dealing",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "796b26f032725f94",
+          "date": "2026-08-26",
+          "ticker": "PTAL",
+          "company": "",
+          "director": "Gavin Wilson",
+          "role": "Non-Executive Director",
+          "type": "BUY",
+          "shares": 199000,
+          "price": 0.278,
+          "value": 55322.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/petrotal-corporation-npv-di---ptal/director-dealing/9741703",
+          "announced_at": "2026-08-26T14:10:07Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9739545",
       "url": "https://www.investegate.co.uk/announcement/rns/jpmorgan-asia-growth-income--jagi/director-pdmr-shareholding/9739545",
@@ -1201,6 +1519,59 @@
       "used_llm": false
     },
     {
+      "rns_id": "9744201",
+      "url": "https://www.investegate.co.uk/announcement/rns/pphe-hotel-group-ltd--pph/grant-and-exercise-of-evp-annual-bonus-plan-awards/9744201",
+      "headline": "Grant and exercise of EVP Annual Bonus Plan awards",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_separate_price_volume",
+        "could_not_classify_type",
+        "could_not_extract_company"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "a3d0eccb8754d562",
+          "date": "2026-08-27",
+          "ticker": "PPH",
+          "company": "",
+          "director": "Greg Hegarty",
+          "role": "Co-Chief Executive Officer",
+          "type": "GRANT",
+          "shares": 12000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/pphe-hotel-group-ltd--pph/grant-and-exercise-of-evp-annual-bonus-plan-awards/9744201",
+          "announced_at": "2026-08-27T16:57:07Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9743166",
+      "url": "https://www.investegate.co.uk/announcement/prn/keller-group--klr/director-pdmr-shareholding/9743166",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_separate_price_volume",
+        "zero_shares_non_grant",
+        "zero_price_non_grant",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9739912",
       "url": "https://www.investegate.co.uk/announcement/rns/altitude-group--alt/grant-of-options-and-pdmr-dealing/9739912",
       "headline": "Grant of Options and PDMR Dealing",
@@ -1670,6 +2041,21 @@
       "used_llm": false
     },
     {
+      "rns_id": "9741546",
+      "url": "https://www.investegate.co.uk/announcement/rns/liontrust-asset-management--lio/director-pdmr-shareholding/9741546",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "other",
+      "warnings": [
+        "zero_price_non_grant",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9738749",
       "url": "https://www.investegate.co.uk/announcement/rns/cranswick--cwk/director-pdmr-shareholding/9738749",
       "headline": "Director/PDMR Shareholding",
@@ -1780,6 +2166,56 @@
       ],
       "extracted_count": 1,
       "has_cache": false,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9742155",
+      "url": "https://www.investegate.co.uk/announcement/rns/trekor-metals-limited--tko/director-pdmr-shareholding/9742155",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9741900",
+      "url": "https://www.investegate.co.uk/announcement/rns/gsk--gsk/director-pdmr-shareholding/9741900",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "could_not_separate_price_volume",
+        "zero_shares_non_grant",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9741215",
+      "url": "https://www.investegate.co.uk/announcement/rns/tharisa-di---ths/director-pdmr-shareholding/9741215",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "could_not_parse_tx_date",
+        "foreign_currency",
+        "could_not_separate_price_volume",
+        "zero_shares_non_grant",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1923,6 +2359,191 @@
       "extracted": [],
       "extracted_count": 0,
       "has_cache": false,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9743377",
+      "url": "https://www.investegate.co.uk/announcement/rns/pinewood-technologies-group--pine/notification-and-public-disclosure-of-transactions/9743377",
+      "headline": "Notification and public disclosure of transactions",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9743243",
+      "url": "https://www.investegate.co.uk/announcement/rns/cropper-james---crpr/grant-of-awards-under-long-term-incentive-plan-/9743243",
+      "headline": "Grant of Awards under Long-Term Incentive Plan",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9742151",
+      "url": "https://www.investegate.co.uk/announcement/rns/plus500-ltd-di---plus/director-pdmr-dealing-and-total-voting-rights/9742151",
+      "headline": "Director/PDMR Dealing and Total Voting Rights",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9741947",
+      "url": "https://www.investegate.co.uk/announcement/rns/cropper-james---crpr/new-employee-benefit-trust-and-pdmr-dealing/9741947",
+      "headline": "New Employee Benefit Trust and PDMR Dealing",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9741675",
+      "url": "https://www.investegate.co.uk/announcement/rns/b-m-european-value-retail-s-a-di---bme/director-pdmr-shareholding/9741675",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9741507",
+      "url": "https://www.investegate.co.uk/announcement/rns/savills--svs/director-pdmr-shareholding/9741507",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9740943",
+      "url": "https://www.investegate.co.uk/announcement/gnw/paypoint--pay/paypoint-plc-director-pdmr-shareholding/9740943",
+      "headline": "PayPoint plc : Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "zero_shares_non_grant",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9740935",
+      "url": "https://www.investegate.co.uk/announcement/rns/tritax-big-box-reit--bbox/pdmr-subscription-for-ordinary-shares/9740935",
+      "headline": "PDMR subscription for ordinary shares",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9740924",
+      "url": "https://www.investegate.co.uk/announcement/rns/rockfire-resources--rock/grant-of-options/9740924",
+      "headline": "Grant of Options",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "multiple_distinct_prices",
+        "required_fields_missing",
+        "llm_error:LLMParserError"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9740923",
+      "url": "https://www.investegate.co.uk/announcement/rns/sirius-real-estate-ltd---sre/director-pdmr-shareholding/9740923",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_parse_tx_date",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "multiple_distinct_prices",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9740866",
+      "url": "https://www.investegate.co.uk/announcement/prn/artemis-uk-future-leaders-plc--afl/purchase-of-shares-by-the-portfolio-manager/9740866",
+      "headline": "Purchase of shares by the portfolio manager",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_parse_tx_date",
+        "could_not_extract_company",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
     },
