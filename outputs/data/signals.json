@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T10:29:41Z",
+  "generated_at": "2026-08-28T11:13:14Z",
   "schema_version": "1.1",
   "horizon_aggregates": {
     "t1": {
@@ -3901,7 +3901,7 @@
       44
     ]
   },
-  "paper_pnl_open": 1007.31,
+  "paper_pnl_open": 1011.31,
   "paper_trades_open": 96,
   "paper_trades_closed": 3299,
   "cohorts": {
@@ -6842,38 +6842,38 @@
     }
   },
   "pending_diagnostics": {
-    "total": 140,
-    "generated_at": "2026-08-28T10:29:38Z",
+    "total": 455,
+    "generated_at": "2026-08-28T11:13:10Z",
     "categories": [
       {
         "id": "bundled_multi_pdmr",
         "name": "Bundled multi-PDMR",
-        "count": 53,
-        "pct": 37.9,
+        "count": 171,
+        "pct": 37.6,
         "recoverable": "no",
         "description": "Filing names multiple directors in one announcement -- D-STRICT refuses to split"
       },
       {
         "id": "could_not_classify",
         "name": "Could not classify / extract",
-        "count": 48,
-        "pct": 34.3,
+        "count": 150,
+        "pct": 33.0,
         "recoverable": "manual",
         "description": "Parser could not extract ticker / company / type / required fields -- case-by-case review"
       },
       {
         "id": "multi_tranche",
         "name": "Multi-tranche / multi-transaction",
-        "count": 21,
-        "pct": 15.0,
+        "count": 81,
+        "pct": 17.8,
         "recoverable": "v2-fanout",
         "description": "Filing reports two or more distinct prices or transactions for the same PDMR -- needs row fan-out"
       },
       {
         "id": "foreign_currency",
         "name": "Foreign currency",
-        "count": 13,
-        "pct": 9.3,
+        "count": 33,
+        "pct": 7.3,
         "recoverable": "v2-fx",
         "description": "Non-GBP filing -- needs FX rate fetcher"
       },
@@ -6896,8 +6896,8 @@
       {
         "id": "other",
         "name": "Other",
-        "count": 5,
-        "pct": 3.6,
+        "count": 20,
+        "pct": 4.4,
         "recoverable": "unknown",
         "description": "Uncategorised -- review warnings text"
       }
@@ -15786,14 +15786,14 @@
         "fired_at": "2026-05-28",
         "entry_date": "2026-05-28",
         "entry_close": 0.061,
-        "current_date": "2026-08-27",
-        "current_close": 0.0565,
+        "current_date": "2026-08-28",
+        "current_close": 0.0553,
         "close_t1": 0.0625,
         "close_t21": 0.065,
         "close_t90": null,
         "notional_gbp": 500.0,
         "hold_days": 92,
-        "mtm_pct": -7.38,
+        "mtm_pct": -9.43,
         "status": "CLOSED",
         "market_cap_gbp": 6460000.0
       },
@@ -25486,14 +25486,14 @@
         "fired_at": "2026-02-06",
         "entry_date": "2026-02-06",
         "entry_close": 0.785,
-        "current_date": "2026-08-27",
-        "current_close": 0.785,
+        "current_date": "2026-08-28",
+        "current_close": 0.792,
         "close_t1": 0.78,
         "close_t21": 0.79,
         "close_t90": 0.775,
         "notional_gbp": 500.0,
         "hold_days": 203,
-        "mtm_pct": 0.0,
+        "mtm_pct": 0.89,
         "status": "CLOSED",
         "market_cap_gbp": 10100000.0
       },
@@ -25666,14 +25666,14 @@
         "fired_at": "2026-02-05",
         "entry_date": "2026-02-05",
         "entry_close": 0.765,
-        "current_date": "2026-08-27",
-        "current_close": 0.785,
+        "current_date": "2026-08-28",
+        "current_close": 0.792,
         "close_t1": 0.785,
         "close_t21": 0.815,
         "close_t90": 0.7744,
         "notional_gbp": 500.0,
         "hold_days": 204,
-        "mtm_pct": 2.61,
+        "mtm_pct": 3.53,
         "status": "CLOSED",
         "market_cap_gbp": 10100000.0
       },
@@ -31366,14 +31366,14 @@
         "fired_at": "2025-10-16",
         "entry_date": "2025-10-16",
         "entry_close": 0.0021,
-        "current_date": "2026-08-27",
+        "current_date": "2026-08-28",
         "current_close": 0.0019,
         "close_t1": 0.0021,
         "close_t21": 0.0021,
         "close_t90": 0.0022,
         "notional_gbp": 500.0,
         "hold_days": 316,
-        "mtm_pct": -9.52,
+        "mtm_pct": -7.14,
         "status": "CLOSED",
         "market_cap_gbp": 4840000.0
       },
@@ -44006,14 +44006,14 @@
         "fired_at": "2026-07-31",
         "entry_date": "2026-07-31",
         "entry_close": 0.75,
-        "current_date": "2026-08-27",
-        "current_close": 0.71,
+        "current_date": "2026-08-28",
+        "current_close": 0.713,
         "close_t1": 0.75,
         "close_t21": null,
         "close_t90": null,
         "notional_gbp": 500.0,
         "hold_days": 28,
-        "mtm_pct": -5.33,
+        "mtm_pct": -4.93,
         "status": "OPEN",
         "market_cap_gbp": 28030000.0
       },
@@ -44202,7 +44202,7 @@
       "open_count": 60,
       "closed_count": 1555,
       "open_notional_gbp": 34909.0,
-      "open_mtm_pct_mean": 2.79,
+      "open_mtm_pct_mean": 2.8,
       "open_winners": 36,
       "open_losers": 21
     }
@@ -46867,7 +46867,7 @@
       },
       {
         "date": "2026-08-28",
-        "strategy_value_gbp": 16013024.0,
+        "strategy_value_gbp": 16013064.0,
         "ftse_value_gbp": 16018773.0
       }
     ],
@@ -46875,9 +46875,9 @@
       "as_of": "2026-08-28",
       "n_positions": 1588,
       "capital_deployed_gbp": 15880000.0,
-      "strategy_value_gbp": 16013024.0,
+      "strategy_value_gbp": 16013064.0,
       "ftse_value_gbp": 16018773.0,
-      "excess_gbp": -5748.0,
+      "excess_gbp": -5709.0,
       "excess_pct": -0.04,
       "strategy_trend_30d_pct": 0.0,
       "ftse_trend_30d_pct": -0.0,
@@ -65187,7 +65187,7 @@
             0.1,
             0.12,
             0.23,
-            0.24
+            0.23
           ],
           "b1_lone_conviction_buy": [
             0.0,
