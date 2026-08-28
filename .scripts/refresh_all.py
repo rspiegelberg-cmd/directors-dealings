@@ -378,6 +378,12 @@ def run_pipeline(*, scrape_days: int | None = None, no_llm: bool = False,
             args = ["--days", str(effective_scrape_days)]
             if no_llm:
                 args.append("--no-llm")
+            # B-207: the 30-minute scrape budget fits the ~3-day daily window.
+            # A catch-up run (--scrape-days 30 after an outage) re-fetches and
+            # re-parses weeks of filings and will otherwise be killed mid-way.
+            # Roughly 6 minutes of headroom per day of history, capped at 3h.
+            if effective_scrape_days > 10:
+                timeout = max(timeout, 60 * min(180, effective_scrape_days * 6))
 
         _set(key, label)
 

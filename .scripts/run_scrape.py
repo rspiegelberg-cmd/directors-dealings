@@ -477,6 +477,8 @@ def run(args) -> int:
     pending_count = 0
     inserts = 0
     excluded_at_ingest = 0
+    llm_error_count = 0        # B-207: ANY failing LLM fallback call
+    llm_error_messages: dict[str, int] = {}  # message -> count
     llm_missing_key_count = 0  # B-199: filings blocked specifically by a
                                # missing ANTHROPIC_API_KEY, not a genuine
                                # LLM/parse failure -- see canary above.
@@ -605,9 +607,22 @@ def run(args) -> int:
                         # not a genuine per-filing LLM failure. Surfaced loud
                         # and unconditionally, same as the startup canary.
                         llm_missing_key_count += 1
+                    # B-207 (2026-08-28): count EVERY failing LLM call and keep
+                    # the actual message. Previously only the exception CLASS
+                    # was recorded ("llm_error:LLMParserError"), and the real
+                    # text was printed only under --verbose, which CI never
+                    # passes -- so when the Anthropic account ran out of credit
+                    # on 2026-08-02 the API's own explanation ("Your credit
+                    # balance is too low to access the Anthropic API") was
+                    # thrown away on every one of thousands of calls. The
+                    # pipeline stayed green for 26 days while ~60% of filings
+                    # silently fell into the pending queue.
+                    llm_error_count += 1
+                    _msg = f"{type(e).__name__}: {e}"[:300]
+                    llm_error_messages[_msg] = llm_error_messages.get(_msg, 0) + 1
                     if verbose:
                         print(f"  ! LLM failed {rns_id}: {e}")
-                    warnings = warnings + [f"llm_error:{type(e).__name__}"]
+                    warnings = warnings + [f"llm_error:{type(e).__name__}:{str(e)[:200]}"]
 
             # Phase 1 (2026-06-02): per-ROW ingest gate. Ingest any row whose
             # own required fields are complete and whose attached warnings are
@@ -699,8 +714,6 @@ def run(args) -> int:
         f"inserts={inserts}, pending={pending_count} ({pct_pending:.1f}%), "
         f"excluded_at_ingest={excluded_at_ingest}"
     )
-    if pct_pending >= 30.0:
-        print("WARN: pending rate >= 30%")
 
     # B-198 (2026-07-06): single machine-parseable line so a wrapper (e.g.
     # refresh_all.py) can pull exact numbers without regex-scraping the
@@ -721,7 +734,39 @@ def run(args) -> int:
         "pending_count": pending_count,
         "excluded_at_ingest": excluded_at_ingest,
         "llm_missing_key_count": llm_missing_key_count,
+        "llm_error_count": llm_error_count,
+        "llm_top_error": (max(llm_error_messages.items(), key=lambda kv: kv[1])[0]
+                          if llm_error_messages else None),
     }))
+
+    # B-207: the LLM fallback handles roughly 60% of real filings. If it is
+    # failing at scale the run is NOT healthy, however green the tick looks --
+    # so say so as a GitHub Actions ::error:: annotation, quoting the API's own
+    # words. This is the alarm that was missing between 2026-08-02 and
+    # 2026-08-28: an expired key, a spent credit balance, a retired model or a
+    # network block all land here and all now name themselves on the run page.
+    if llm_error_count > 0:
+        _top, _n = max(llm_error_messages.items(), key=lambda kv: kv[1])
+        _share = (llm_error_count / max(filings_seen, 1)) * 100.0
+        _level = "error" if _share >= 20.0 else "warning"
+        print(
+            f"::{_level}::LLM fallback failed on {llm_error_count} filing(s) "
+            f"this run ({_share:.0f}% of filings seen). Most common failure "
+            f"({_n}x): {_top}. The regex parser alone handles only ~40% of "
+            "real filings, so the rest are sitting in the pending queue, not "
+            "on the dashboard."
+        )
+
+    if pct_pending >= 30.0:
+        # Previously a bare print nobody ever read. Now an annotation on the
+        # run page: a third of discovered filings not reaching the dashboard
+        # is the single clearest symptom of a broken collection pipeline.
+        print(
+            f"::error::{pct_pending:.0f}% of filings seen this run went to the "
+            f"pending queue ({pending_count} of {filings_seen}) instead of the "
+            "dashboard. Anything above ~30% means collection is degraded."
+        )
+
     if llm_missing_key_count > 0:
         print(
             f"::error::{llm_missing_key_count} filing(s) this run were routed "

@@ -16,7 +16,16 @@ name: Daily refresh — Directors Dealings
 on:
   schedule:
     - cron: "0 6 * * *"          # 06:00 UTC daily (after the London RNS day)
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      scrape_days:
+        description: >-
+          Days of RNS history to re-scrape. Leave BLANK for the normal
+          auto-detected window. Set a number (e.g. 30) to catch up after an
+          outage -- filings already ingested are skipped, so this only fills
+          gaps. Large values take much longer and cost LLM credits.
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -28,7 +37,9 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 30           # local compute finishes in minutes; 30 = margin
+    # 30 min is ample for the daily window. A manual catch-up run
+    # (scrape_days set) re-fetches weeks of filings and needs far longer.
+    timeout-minutes: ${{ inputs.scrape_days && 240 || 30 }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -64,7 +75,19 @@ jobs:
           # is ever missing again.
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PYTHONDONTWRITEBYTECODE: "1"
-        run: python .scripts/refresh_all.py
+          # Passed via env, never interpolated straight into the shell:
+          # workflow_dispatch inputs are attacker-controllable in the general
+          # case and `run: ... ${{ inputs.x }}` is a script-injection hole.
+          # The case statement below rejects anything non-numeric.
+          DD_SCRAPE_DAYS: ${{ inputs.scrape_days }}
+        run: |
+          ARGS=""
+          case "$DD_SCRAPE_DAYS" in
+            ''|*[!0-9]*) echo "scrape window: auto-detected" ;;
+            *) ARGS="--scrape-days $DD_SCRAPE_DAYS"
+               echo "scrape window: $DD_SCRAPE_DAYS days (manual catch-up)" ;;
+          esac
+          python .scripts/refresh_all.py $ARGS
 
       - name: Upload results -> Supabase
         if: steps.pipeline.outcome == 'success'

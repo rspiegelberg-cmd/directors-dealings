@@ -46,7 +46,22 @@ except ImportError:  # pragma: no cover
 ROOT = Path(__file__).resolve().parent.parent
 ENV_PATH = ROOT / ".env"
 API_URL = "https://api.anthropic.com/v1/messages"
-DEFAULT_MODEL = "claude-sonnet-4-6"
+# B-208 (2026-08-28): default to Haiku. This job is mechanical extraction --
+# read one short RNS filing (~2,100 input tokens, measured) and return JSON --
+# not reasoning, so the cheapest capable model is the right one. Haiku 4.5 is
+# $1/$5 per Mtok against Sonnet's $2/$10, roughly halving the run cost.
+#
+# Overridable without a code change: set DD_LLM_MODEL to pin a different model
+# (e.g. back to a Sonnet) if extraction quality on the hard filings -- bundled
+# multi-PDMR, multi-tranche prices, foreign currency -- turns out to need it.
+DEFAULT_MODEL = os.environ.get("DD_LLM_MODEL") or "claude-haiku-4-5-20251001"
+
+# If the cheap model returns nothing usable, retry that ONE filing on a stronger
+# model before giving up and routing it to the pending queue. Missing a real
+# director buy costs far more than a fraction of a penny, so the escalation is
+# the point of the exercise -- cheap by default, accurate when it matters.
+# Set DD_LLM_ESCALATION_MODEL="" to disable.
+ESCALATION_MODEL = os.environ.get("DD_LLM_ESCALATION_MODEL", "claude-sonnet-5")
 MAX_TOKENS = 1024
 
 
@@ -337,26 +352,42 @@ def parse_with_llm(
     body = html_to_text(html)
     prompt = _build_prompt(body, url, rns_id, announced_at)
 
-    raw = _post_messages(api_key, prompt, model)
+    def _attempt(use_model: str) -> tuple:
+        """One model call -> (extracted, warnings). Raises on transport errors."""
+        raw = _post_messages(api_key, prompt, use_model)
 
-    # Record cost.
-    usage = raw.get("usage") or {}
-    in_tok = int(usage.get("input_tokens", 0))
-    out_tok = int(usage.get("output_tokens", 0))
-    if llm_cost is not None and (in_tok or out_tok):
-        try:
-            llm_cost.record_call(in_tok, out_tok, model, run_id=run_id)
-        except Exception:
-            pass  # ledger failure shouldn't break parsing
+        # Record cost.
+        usage = raw.get("usage") or {}
+        in_tok = int(usage.get("input_tokens", 0))
+        out_tok = int(usage.get("output_tokens", 0))
+        if llm_cost is not None and (in_tok or out_tok):
+            try:
+                llm_cost.record_call(in_tok, out_tok, use_model, run_id=run_id)
+            except Exception:
+                pass  # ledger failure shouldn't break parsing
 
-    # Extract text content.
-    content_text = ""
-    for block in raw.get("content") or []:
-        if isinstance(block, dict) and block.get("type") == "text":
-            content_text += block.get("text", "")
+        # Extract text content.
+        content_text = ""
+        for block in raw.get("content") or []:
+            if isinstance(block, dict) and block.get("type") == "text":
+                content_text += block.get("text", "")
 
-    obj = _extract_json_object(content_text)
-    if obj is None:
-        return [], [f"llm_unparseable_response:{content_text[:120]!r}"]
+        obj = _extract_json_object(content_text)
+        if obj is None:
+            return [], [f"llm_unparseable_response:{content_text[:120]!r}"]
+        return _validate_and_normalise(obj, url, announced_at)
 
-    return _validate_and_normalise(obj, url, announced_at)
+    extracted, warnings = _attempt(model)
+
+    # B-208: escalate a barren result to the stronger model, once. Deliberately
+    # NOT retried on a transport failure -- an expired key, a spent credit
+    # balance or a network block will fail identically on the second model and
+    # would only double the noise and the latency.
+    if (not extracted
+            and ESCALATION_MODEL
+            and ESCALATION_MODEL != model):
+        esc_extracted, esc_warnings = _attempt(ESCALATION_MODEL)
+        if esc_extracted:
+            return esc_extracted, esc_warnings + [f"llm_escalated_to:{ESCALATION_MODEL}"]
+
+    return extracted, warnings

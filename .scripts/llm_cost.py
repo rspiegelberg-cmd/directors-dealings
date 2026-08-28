@@ -30,9 +30,19 @@ LEDGER_PATH = ROOT / ".scripts" / "_llm_cost.json"
 
 
 # Public Anthropic Sonnet pricing as of build time.
+# Verified against platform.claude.com/docs/en/about-claude/pricing, 2026-08-28.
+# The old table listed only claude-sonnet-4-6 at $3/$15 and defaulted everything
+# else to the same, so any other model was silently mis-costed -- and the
+# --llm-budget-usd guard is only as honest as this table.
 PRICE_TABLE = {
-    "claude-sonnet-4-6": {"in_per_mtok": 3.00, "out_per_mtok": 15.00},
-    "default":          {"in_per_mtok": 3.00, "out_per_mtok": 15.00},
+    "claude-haiku-4-5-20251001": {"in_per_mtok": 1.00, "out_per_mtok":  5.00},
+    "claude-haiku-4-5":          {"in_per_mtok": 1.00, "out_per_mtok":  5.00},
+    "claude-sonnet-5":           {"in_per_mtok": 2.00, "out_per_mtok": 10.00},
+    "claude-opus-5":             {"in_per_mtok": 5.00, "out_per_mtok": 25.00},
+    "claude-sonnet-4-6":         {"in_per_mtok": 3.00, "out_per_mtok": 15.00},
+    # Unknown//future model: cost at the most expensive rate we know, so an
+    # unrecognised model can never quietly under-report spend to the guard.
+    "default":                   {"in_per_mtok": 5.00, "out_per_mtok": 25.00},
 }
 
 

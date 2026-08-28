@@ -174,6 +174,13 @@ class TestScrapeStatsEmission(_TempDbTestCase):
             "index_error", "archive_count", "archive_error", "clean_writes",
             "inserts", "pending_count", "excluded_at_ingest",
             "llm_missing_key_count",
+            # B-207 (2026-08-28): every failing LLM fallback call is now
+            # counted, and the most common failure message is carried out with
+            # it. Added after the Anthropic credit balance ran out on
+            # 2026-08-02 and ~60% of filings quietly went to pending for 26
+            # days while the run stayed green -- the API's own explanation was
+            # being discarded on every call.
+            "llm_error_count", "llm_top_error",
         }
         self.assertEqual(expected_keys, set(stats.keys()))
 
