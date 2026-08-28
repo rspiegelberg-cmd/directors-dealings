@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-08-28T12:58:26Z",
-  "total": 184,
+  "generated_at": "2026-08-28T17:59:56Z",
+  "total": 185,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 97
+      "count": 99
     },
     {
       "id": "foreign_currency",
@@ -30,7 +30,7 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 21
+      "count": 20
     },
     {
       "id": "data_quirks",
@@ -46,22 +46,6 @@
     }
   ],
   "items": [
-    {
-      "rns_id": "9744243",
-      "url": "https://www.investegate.co.uk/announcement/rns/ajax-resources--ajax/directors-dealings-and-holdings-result-of-agm-/9744243",
-      "headline": "Directors&#039; Dealings and Holdings &amp; Result of AGM",
-      "bucket": "could_not_classify",
-      "warnings": [
-        "could_not_parse_tx_date",
-        "zero_shares_non_grant",
-        "required_fields_missing"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
     {
       "rns_id": "9742150",
       "url": "https://www.investegate.co.uk/announcement/rns/tracsis--trcs/award-of-options-/9742150",
@@ -1572,8 +1556,7 @@
       "headline": "Notification of Dealing Form: Matthew Daley",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "transaction_on_XASX_not_LSE"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -1620,7 +1603,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "Transaction also includes EXERCISE component (25,000 options at C$2.58)"
+        "transaction involves both exercise (C$2.58) and sale (C$13.00); reporting sale price only"
       ],
       "extracted": [
         {
@@ -1651,18 +1634,18 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in USD ($51.7800 per ADS)",
-        "fractional shares (9.221 ADS)"
+        "fractional shares (9.221 ADS)",
+        "American Depositary Shares on NYSE; notional acquisition within savings plan"
       ],
       "extracted": [
         {
-          "fingerprint": "f487e63653fabe40",
+          "fingerprint": "62ee36e4dd77f0b6",
           "date": "2026-08-24",
           "ticker": "GSK",
           "company": "GSK plc",
           "director": "Maya Martinez-Davis",
-          "role": "President, US",
-          "type": "BUY",
+          "role": "President, US operations",
+          "type": "GRANT",
           "shares": 9,
           "price": 0.0,
           "value": 0.0,
@@ -1683,7 +1666,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction on JSE not LSE"
+        "transaction on JSE, not LSE"
       ],
       "extracted": [
         {
@@ -1729,7 +1712,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in ZAR (R117.91 per share, R3,098,556.89 total)"
+        "price and value in ZAR (R117.91 per share, R3,098,556.89 total)"
       ],
       "extracted": [
         {
@@ -1745,7 +1728,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/thungela-resources-limited-npv-di---tga/dealings-in-securities/9739440",
-          "announced_at": "2026-08-25"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2686,6 +2669,22 @@
       "used_llm": true
     },
     {
+      "rns_id": "9746289",
+      "url": "https://www.investegate.co.uk/announcement/rns/british-land-company--blnd/director-pdmr-shareholding/9746289",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9745867",
       "url": "https://www.investegate.co.uk/announcement/rns/empresaria-group--emr/company-ltip-awards/9745867",
       "headline": "Company LTIP Awards",
@@ -2780,6 +2779,20 @@
       "used_llm": false
     },
     {
+      "rns_id": "9740935",
+      "url": "https://www.investegate.co.uk/announcement/rns/tritax-big-box-reit--bbox/pdmr-subscription-for-ordinary-shares/9740935",
+      "headline": "PDMR subscription for ordinary shares",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9740924",
       "url": "https://www.investegate.co.uk/announcement/rns/rockfire-resources--rock/grant-of-options/9740924",
       "headline": "Grant of Options",
@@ -2796,14 +2809,12 @@
       "used_llm": false
     },
     {
-      "rns_id": "9739915",
-      "url": "https://www.investegate.co.uk/announcement/rns/chesnara--csn/director-pdmr-shareholding/9739915",
+      "rns_id": "9739753",
+      "url": "https://www.investegate.co.uk/announcement/rns/s-u--sus/director-pdmr-shareholding/9739753",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "could_not_extract_PDMR_name",
-        "could_not_classify_type",
-        "required_fields_missing"
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
       ],
       "extracted": [],
       "extracted_count": 0,
