@@ -618,7 +618,17 @@ def run(args) -> int:
                     # pipeline stayed green for 26 days while ~60% of filings
                     # silently fell into the pending queue.
                     llm_error_count += 1
-                    _msg = f"{type(e).__name__}: {e}"[:300]
+                    # Normalise the volatile parts before using the message as
+                    # a grouping key. Anthropic returns a unique request_id in
+                    # every error body, so keying on the raw text made each of
+                    # 455 identical failures look like its own distinct error
+                    # and the annotation reported "Most common failure (1x)" --
+                    # technically true, completely useless. Observed live on
+                    # run #115, 2026-08-28.
+                    _raw = f"{type(e).__name__}: {e}"
+                    _msg = _re.sub(r'"request_id"\s*:\s*"[^"]*"',
+                                   '"request_id":"..."', _raw)
+                    _msg = _re.sub(r'\breq_[A-Za-z0-9]{6,}', 'req_...', _msg)[:300]
                     llm_error_messages[_msg] = llm_error_messages.get(_msg, 0) + 1
                     if verbose:
                         print(f"  ! LLM failed {rns_id}: {e}")
@@ -747,14 +757,15 @@ def run(args) -> int:
     # network block all land here and all now name themselves on the run page.
     if llm_error_count > 0:
         _top, _n = max(llm_error_messages.items(), key=lambda kv: kv[1])
+        _kinds = len(llm_error_messages)
         _share = (llm_error_count / max(filings_seen, 1)) * 100.0
         _level = "error" if _share >= 20.0 else "warning"
         print(
             f"::{_level}::LLM fallback failed on {llm_error_count} filing(s) "
-            f"this run ({_share:.0f}% of filings seen). Most common failure "
-            f"({_n}x): {_top}. The regex parser alone handles only ~40% of "
-            "real filings, so the rest are sitting in the pending queue, not "
-            "on the dashboard."
+            f"this run ({_share:.0f}% of filings seen), across {_kinds} "
+            f"distinct error(s). Most common ({_n}x): {_top}. The regex parser "
+            "alone handles only ~40% of real filings, so the rest are sitting "
+            "in the pending queue, not on the dashboard."
         )
 
     if pct_pending >= 30.0:
