@@ -191,7 +191,6 @@ def _post_messages(
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 return json.loads(resp.read().decode("utf-8", errors="replace"))
         except urllib.error.HTTPError as e:
-            # Auth/quota/server-side errors won't recover on retry.
             # Capture response body for diagnosis (Anthropic includes a JSON
             # error message that explains why the request was rejected).
             err_body = ""
@@ -199,6 +198,18 @@ def _post_messages(
                 err_body = e.read().decode("utf-8", errors="replace")[:400]
             except Exception:
                 pass
+
+            # B-209: 429 (rate limited) and 529 (overloaded) are TRANSIENT and
+            # do recover on retry -- the old comment claiming HTTP errors "won't
+            # recover" lumped them in with 400/401 and threw the filing away.
+            # Run #117 lost one filing to a bare 529. Everything else (auth,
+            # credit balance, bad model) is permanent and still fails fast:
+            # retrying those just doubles the noise and the latency.
+            if e.code in (429, 529) and attempt == 0:
+                last_transient = e
+                time.sleep(5.0)
+                continue
+
             raise LLMParserError(
                 f"Anthropic API HTTP {e.code} {e.reason}: {err_body}"
             ) from e

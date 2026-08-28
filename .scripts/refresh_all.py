@@ -240,6 +240,28 @@ STEPS = [
     # engine + backtest fire many small queries, each with network latency,
     # so they run far slower than against local SQLite. 15min was too tight
     # and tripped run #2. Generous caps; actual runtime is ~10-20min.
+    # B-209 (2026-08-28): price-unit reconciliation. This is NOT new code --
+    # backfill_price_units.py + the pure price_reconcile module have existed
+    # since B-060, are unit-tested, idempotent and reversible, and eval_signals
+    # already refuses to fire on rows they flag (see its price_audit filter).
+    # The script was simply never wired into the pipeline: it was marked "Zone B
+    # -- Rupert runs this from PowerShell", which stopped being a workable plan
+    # the day the pipeline moved into GitHub Actions.
+    #
+    # The cost of it not running, measured on the 2026-08-28 catch-up: a GBP
+    # 11k director buy stored as GBP 999,900 and a GBP 4.3k buy stored as GBP
+    # 432,000, both AIM small caps quoted in pence. The conviction engine ranks
+    # on buy SIZE, so those land at the TOP of the signal list. Wrong data that
+    # looks confident is worse than no data.
+    #
+    # Must run AFTER prices (it disambiguates against the market close) and
+    # BEFORE signals (which is what it protects).
+    #
+    # HARD step, deliberately. It touches no network and no third party, so it
+    # has no legitimate transient failure mode -- if this breaks, something real
+    # is wrong and publishing unvalidated prices is the worse outcome.
+    ("price_units", "Reconciling price units (pence vs pounds)",
+     "backfill_price_units.py",  ["--confirm"],      60 * 15),
     ("signals",    "Recomputing signal firings",
      "eval_signals.py",          [],                 60 * 45),
     ("backtest",   "Computing signal backtests + CAR",
