@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-27T17:09:41Z",
+  "generated_at": "2026-08-28T10:29:40Z",
   "schema_version": "1.0",
   "buckets": {
     "100k-500k": {
@@ -7,12 +7,12 @@
       "scope_note": "T1 + T2 buys only",
       "t1": {
         "30d": {
-          "benchmark_car_pct": 0.14,
-          "total_firings": 21,
+          "benchmark_car_pct": 0.17,
+          "total_firings": 24,
           "distinct_tickers": 9,
           "tickers_with_n3": 3,
-          "hit_pct": 81.0,
-          "median_car": 0.7,
+          "hit_pct": 70.8,
+          "median_car": 0.4,
           "top_firings": [
             {
               "date": "2026-08-24",
@@ -157,6 +157,48 @@
           ],
           "bottom_firings": [
             {
+              "date": "2026-08-25",
+              "ticker": "WIZZ",
+              "company": "Wizz Air Holdings Plc",
+              "director": "Stephen Johnson",
+              "role": "Non-Executive Director",
+              "role_normalized": "NED",
+              "role_class": "",
+              "signal_tier": "t3",
+              "value_gbp": 158706,
+              "car": -1.8,
+              "abs_return": -1.6,
+              "bench_return": 0.2
+            },
+            {
+              "date": "2026-08-25",
+              "ticker": "WIZZ",
+              "company": "Wizz Air Holdings Plc",
+              "director": "Stephen Johnson",
+              "role": "Non-Executive Director",
+              "role_normalized": "NED",
+              "role_class": "",
+              "signal_tier": "t3",
+              "value_gbp": 158706,
+              "car": -1.8,
+              "abs_return": -1.6,
+              "bench_return": 0.2
+            },
+            {
+              "date": "2026-08-25",
+              "ticker": "WIZZ",
+              "company": "Wizz Air Holdings Plc",
+              "director": "Stephen Johnson",
+              "role": "Non-Executive Director",
+              "role_normalized": "NED",
+              "role_class": "T3",
+              "signal_tier": "t3",
+              "value_gbp": 158706,
+              "car": -1.8,
+              "abs_return": -1.6,
+              "bench_return": 0.2
+            },
+            {
               "date": "2026-07-31",
               "ticker": "MAB1",
               "company": "Mortgage Advice Bureau (Holdings) plc",
@@ -253,48 +295,6 @@
               "car": 0.1,
               "abs_return": 0.8,
               "bench_return": 0.7
-            },
-            {
-              "date": "2026-08-17",
-              "ticker": "HILS",
-              "company": "Hill & Smith PLC",
-              "director": "Nick Anderson",
-              "role": "Chair",
-              "role_normalized": "Chair (executive)",
-              "role_class": "",
-              "signal_tier": "t0",
-              "value_gbp": 120374,
-              "car": 0.2,
-              "abs_return": 0.3,
-              "bench_return": 0.1
-            },
-            {
-              "date": "2026-08-17",
-              "ticker": "HILS",
-              "company": "Hill & Smith PLC",
-              "director": "Nick Anderson",
-              "role": "Chair",
-              "role_normalized": "Chair (executive)",
-              "role_class": "T7",
-              "signal_tier": "t0",
-              "value_gbp": 120374,
-              "car": 0.2,
-              "abs_return": 0.3,
-              "bench_return": 0.1
-            },
-            {
-              "date": "2026-08-11",
-              "ticker": "HIK",
-              "company": "Hikma Pharmaceuticals PLC",
-              "director": "Tobias Hestler",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 123600,
-              "car": 0.7,
-              "abs_return": 0.3,
-              "bench_return": -0.4
             }
           ],
           "rollup": [
@@ -317,10 +317,10 @@
             {
               "ticker": "WIZZ",
               "company": "Wizz Air Holdings Plc",
-              "n": 3,
-              "hit_pct": 100.0,
-              "mean_car": 4.1,
-              "latest_fire": "2026-08-24"
+              "n": 6,
+              "hit_pct": 50.0,
+              "mean_car": 1.1,
+              "latest_fire": "2026-08-25"
             },
             {
               "ticker": "HIK",
@@ -374,11 +374,11 @@
         },
         "90d": {
           "benchmark_car_pct": 0.14,
-          "total_firings": 87,
+          "total_firings": 90,
           "distinct_tickers": 29,
           "tickers_with_n3": 11,
-          "hit_pct": 59.8,
-          "median_car": 0.3,
+          "hit_pct": 57.8,
+          "median_car": 0.2,
           "top_firings": [
             {
               "date": "2026-07-22",
@@ -697,14 +697,6 @@
               "latest_fire": "2026-06-17"
             },
             {
-              "ticker": "WIZZ",
-              "company": "Wizz Air Holdings Plc",
-              "n": 3,
-              "hit_pct": 100.0,
-              "mean_car": 4.1,
-              "latest_fire": "2026-08-24"
-            },
-            {
               "ticker": "GNC",
               "company": "Greencore Group plc",
               "n": 14,
@@ -735,6 +727,14 @@
               "hit_pct": 50.0,
               "mean_car": -0.2,
               "latest_fire": "2026-08-17"
+            },
+            {
+              "ticker": "WIZZ",
+              "company": "Wizz Air Holdings Plc",
+              "n": 6,
+              "hit_pct": 50.0,
+              "mean_car": 1.1,
+              "latest_fire": "2026-08-25"
             },
             {
               "ticker": "PANR",
@@ -900,10 +900,10 @@
         },
         "6m": {
           "benchmark_car_pct": -0.37,
-          "total_firings": 194,
-          "distinct_tickers": 52,
+          "total_firings": 195,
+          "distinct_tickers": 51,
           "tickers_with_n3": 22,
-          "hit_pct": 57.7,
+          "hit_pct": 57.4,
           "median_car": 0.1,
           "top_firings": [
             {
@@ -1271,14 +1271,6 @@
               "latest_fire": "2026-06-17"
             },
             {
-              "ticker": "WIZZ",
-              "company": "Wizz Air Holdings Plc",
-              "n": 3,
-              "hit_pct": 100.0,
-              "mean_car": 4.1,
-              "latest_fire": "2026-08-24"
-            },
-            {
               "ticker": "WPP",
               "company": "WPP plc",
               "n": 3,
@@ -1333,6 +1325,14 @@
               "hit_pct": 50.0,
               "mean_car": -0.2,
               "latest_fire": "2026-08-17"
+            },
+            {
+              "ticker": "WIZZ",
+              "company": "Wizz Air Holdings Plc",
+              "n": 6,
+              "hit_pct": 50.0,
+              "mean_car": 1.1,
+              "latest_fire": "2026-08-25"
             },
             {
               "ticker": "BA",
@@ -1591,14 +1591,6 @@
               "latest_fire": "2026-06-30"
             },
             {
-              "ticker": "UTG",
-              "company": "The Unite Group plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -0.2,
-              "latest_fire": "2026-02-25"
-            },
-            {
               "ticker": "VCP",
               "company": "Victoria plc",
               "n": 2,
@@ -1609,11 +1601,11 @@
           ]
         },
         "1y": {
-          "benchmark_car_pct": -0.15,
-          "total_firings": 301,
-          "distinct_tickers": 82,
+          "benchmark_car_pct": -0.14,
+          "total_firings": 300,
+          "distinct_tickers": 81,
           "tickers_with_n3": 42,
-          "hit_pct": 55.8,
+          "hit_pct": 55.3,
           "median_car": 0.1,
           "top_firings": [
             {
@@ -2037,28 +2029,12 @@
               "latest_fire": "2026-06-17"
             },
             {
-              "ticker": "WIZZ",
-              "company": "Wizz Air Holdings Plc",
-              "n": 3,
-              "hit_pct": 100.0,
-              "mean_car": 4.1,
-              "latest_fire": "2026-08-24"
-            },
-            {
               "ticker": "WPP",
               "company": "WPP plc",
               "n": 3,
               "hit_pct": 100.0,
               "mean_car": 1.0,
               "latest_fire": "2026-05-21"
-            },
-            {
-              "ticker": "HAS",
-              "company": "Hays plc",
-              "n": 7,
-              "hit_pct": 71.4,
-              "mean_car": 0.5,
-              "latest_fire": "2026-05-14"
             },
             {
               "ticker": "MAB1",
@@ -2091,6 +2067,14 @@
               "hit_pct": 64.3,
               "mean_car": 0.1,
               "latest_fire": "2026-06-10"
+            },
+            {
+              "ticker": "HAS",
+              "company": "Hays plc",
+              "n": 5,
+              "hit_pct": 60.0,
+              "mean_car": 0.0,
+              "latest_fire": "2026-05-14"
             },
             {
               "ticker": "SOHO",
@@ -2131,6 +2115,14 @@
               "hit_pct": 50.0,
               "mean_car": 0.2,
               "latest_fire": "2026-01-29"
+            },
+            {
+              "ticker": "WIZZ",
+              "company": "Wizz Air Holdings Plc",
+              "n": 6,
+              "hit_pct": 50.0,
+              "mean_car": 1.1,
+              "latest_fire": "2026-08-25"
             },
             {
               "ticker": "WTB",
@@ -2405,14 +2397,6 @@
               "latest_fire": "2025-11-10"
             },
             {
-              "ticker": "AO",
-              "company": "",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -0.8,
-              "latest_fire": "2025-08-27"
-            },
-            {
               "ticker": "ARS",
               "company": "Asiamet Resources Limited",
               "n": 2,
@@ -2560,10 +2544,10 @@
         },
         "all": {
           "benchmark_car_pct": 0.06,
-          "total_firings": 407,
+          "total_firings": 410,
           "distinct_tickers": 105,
           "tickers_with_n3": 58,
-          "hit_pct": 54.5,
+          "hit_pct": 54.1,
           "median_car": 0.1,
           "top_firings": [
             {
@@ -3011,14 +2995,6 @@
               "latest_fire": "2025-08-06"
             },
             {
-              "ticker": "WIZZ",
-              "company": "Wizz Air Holdings Plc",
-              "n": 3,
-              "hit_pct": 100.0,
-              "mean_car": 4.1,
-              "latest_fire": "2026-08-24"
-            },
-            {
               "ticker": "WPP",
               "company": "WPP plc",
               "n": 3,
@@ -3145,6 +3121,14 @@
               "hit_pct": 50.0,
               "mean_car": -0.3,
               "latest_fire": "2026-06-19"
+            },
+            {
+              "ticker": "WIZZ",
+              "company": "Wizz Air Holdings Plc",
+              "n": 6,
+              "hit_pct": 50.0,
+              "mean_car": 1.1,
+              "latest_fire": "2026-08-25"
             },
             {
               "ticker": "WTB",
@@ -3707,11 +3691,11 @@
         },
         "90d": {
           "benchmark_car_pct": 1.62,
-          "total_firings": 57,
-          "distinct_tickers": 19,
+          "total_firings": 59,
+          "distinct_tickers": 20,
           "tickers_with_n3": 6,
-          "hit_pct": 47.4,
-          "median_car": -0.3,
+          "hit_pct": 45.8,
+          "median_car": -1.3,
           "top_firings": [
             {
               "date": "2026-06-17",
@@ -4142,6 +4126,14 @@
               "latest_fire": "2026-06-10"
             },
             {
+              "ticker": "TEAM",
+              "company": "TEAM plc",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -1.9,
+              "latest_fire": "2026-07-23"
+            },
+            {
               "ticker": "TTG",
               "company": "TT Electronics plc",
               "n": 2,
@@ -4152,7 +4144,7 @@
           ]
         },
         "6m": {
-          "benchmark_car_pct": 0.9,
+          "benchmark_car_pct": 1.04,
           "total_firings": 164,
           "distinct_tickers": 43,
           "tickers_with_n3": 16,
@@ -4772,29 +4764,29 @@
               "latest_fire": "2026-06-10"
             },
             {
+              "ticker": "TEAM",
+              "company": "TEAM plc",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -1.9,
+              "latest_fire": "2026-07-23"
+            },
+            {
               "ticker": "TTG",
               "company": "TT Electronics plc",
               "n": 2,
               "hit_pct": 0.0,
               "mean_car": -1.3,
               "latest_fire": "2026-06-09"
-            },
-            {
-              "ticker": "UTG",
-              "company": "The Unite Group plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -2.2,
-              "latest_fire": "2026-02-25"
             }
           ]
         },
         "1y": {
           "benchmark_car_pct": 1.62,
-          "total_firings": 271,
+          "total_firings": 269,
           "distinct_tickers": 74,
           "tickers_with_n3": 38,
-          "hit_pct": 46.5,
+          "hit_pct": 46.1,
           "median_car": -0.7,
           "top_firings": [
             {
@@ -5202,6 +5194,14 @@
               "latest_fire": "2026-06-10"
             },
             {
+              "ticker": "HAS",
+              "company": "Hays plc",
+              "n": 5,
+              "hit_pct": 60.0,
+              "mean_car": 4.0,
+              "latest_fire": "2026-05-14"
+            },
+            {
               "ticker": "BCG",
               "company": "Baltic Classifieds Group PLC",
               "n": 6,
@@ -5240,14 +5240,6 @@
               "hit_pct": 50.0,
               "mean_car": -3.9,
               "latest_fire": "2026-01-29"
-            },
-            {
-              "ticker": "HAS",
-              "company": "Hays plc",
-              "n": 7,
-              "hit_pct": 42.9,
-              "mean_car": 0.2,
-              "latest_fire": "2026-05-14"
             },
             {
               "ticker": "MAB1",
@@ -5400,14 +5392,6 @@
               "hit_pct": 100.0,
               "mean_car": 9.2,
               "latest_fire": "2026-03-27"
-            },
-            {
-              "ticker": "AO",
-              "company": "",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 13.7,
-              "latest_fire": "2025-08-27"
             },
             {
               "ticker": "ARS",
@@ -5642,6 +5626,14 @@
               "latest_fire": "2026-06-10"
             },
             {
+              "ticker": "TEAM",
+              "company": "TEAM plc",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -1.9,
+              "latest_fire": "2026-07-23"
+            },
+            {
               "ticker": "TTG",
               "company": "TT Electronics plc",
               "n": 2,
@@ -5677,10 +5669,10 @@
         },
         "all": {
           "benchmark_car_pct": 1.62,
-          "total_firings": 377,
-          "distinct_tickers": 98,
+          "total_firings": 379,
+          "distinct_tickers": 99,
           "tickers_with_n3": 54,
-          "hit_pct": 48.8,
+          "hit_pct": 48.5,
           "median_car": -0.3,
           "top_firings": [
             {
@@ -6720,6 +6712,14 @@
               "latest_fire": "2025-07-01"
             },
             {
+              "ticker": "TEAM",
+              "company": "TEAM plc",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -1.9,
+              "latest_fire": "2026-07-23"
+            },
+            {
               "ticker": "TTG",
               "company": "TT Electronics plc",
               "n": 2,
@@ -6779,10 +6779,10 @@
         },
         "6m": {
           "benchmark_car_pct": 5.59,
-          "total_firings": 105,
-          "distinct_tickers": 25,
+          "total_firings": 103,
+          "distinct_tickers": 24,
           "tickers_with_n3": 9,
-          "hit_pct": 67.6,
+          "hit_pct": 67.0,
           "median_car": 2.4,
           "top_firings": [
             {
@@ -7230,14 +7230,6 @@
               "latest_fire": "2026-03-24"
             },
             {
-              "ticker": "UTG",
-              "company": "The Unite Group plc",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 6.8,
-              "latest_fire": "2026-02-25"
-            },
-            {
               "ticker": "BATS",
               "company": "",
               "n": 1,
@@ -7272,11 +7264,11 @@
           ]
         },
         "1y": {
-          "benchmark_car_pct": 5.62,
-          "total_firings": 212,
-          "distinct_tickers": 58,
+          "benchmark_car_pct": 5.64,
+          "total_firings": 208,
+          "distinct_tickers": 57,
           "tickers_with_n3": 29,
-          "hit_pct": 50.9,
+          "hit_pct": 51.0,
           "median_car": 1.0,
           "top_firings": [
             {
@@ -7660,6 +7652,14 @@
               "latest_fire": "2026-03-23"
             },
             {
+              "ticker": "HAS",
+              "company": "Hays plc",
+              "n": 5,
+              "hit_pct": 60.0,
+              "mean_car": 72.0,
+              "latest_fire": "2026-05-14"
+            },
+            {
               "ticker": "HIK",
               "company": "Hikma Pharmaceuticals PLC",
               "n": 4,
@@ -7674,14 +7674,6 @@
               "hit_pct": 50.0,
               "mean_car": 5.8,
               "latest_fire": "2026-04-29"
-            },
-            {
-              "ticker": "HAS",
-              "company": "Hays plc",
-              "n": 7,
-              "hit_pct": 42.9,
-              "mean_car": 48.7,
-              "latest_fire": "2026-05-14"
             },
             {
               "ticker": "BA",
@@ -7802,14 +7794,6 @@
               "hit_pct": 100.0,
               "mean_car": 29.1,
               "latest_fire": "2026-03-27"
-            },
-            {
-              "ticker": "AO",
-              "company": "",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 11.8,
-              "latest_fire": "2025-08-27"
             },
             {
               "ticker": "ARS",
@@ -9015,11 +8999,11 @@
           "rollup": []
         },
         "1y": {
-          "benchmark_car_pct": 6.43,
-          "total_firings": 102,
-          "distinct_tickers": 35,
+          "benchmark_car_pct": 6.19,
+          "total_firings": 98,
+          "distinct_tickers": 33,
           "tickers_with_n3": 18,
-          "hit_pct": 37.3,
+          "hit_pct": 38.8,
           "median_car": -9.4,
           "top_firings": [
             {
@@ -9193,34 +9177,6 @@
               "bench_return": 12.4
             },
             {
-              "date": "2025-08-27",
-              "ticker": "HAS",
-              "company": "Hays plc",
-              "director": "Mark Dearnley",
-              "role": "Chief Digital & Technology Officer, PDMR",
-              "role_normalized": "Other Chief",
-              "role_class": "",
-              "signal_tier": "t0",
-              "value_gbp": 250032,
-              "car": -45.6,
-              "abs_return": -29.4,
-              "bench_return": 16.2
-            },
-            {
-              "date": "2025-08-27",
-              "ticker": "HAS",
-              "company": "Hays plc",
-              "director": "Mark Dearnley",
-              "role": "Chief Digital & Technology Officer, PDMR",
-              "role_normalized": "Other Chief",
-              "role_class": "T2",
-              "signal_tier": "t0",
-              "value_gbp": 250032,
-              "car": -45.6,
-              "abs_return": -29.4,
-              "bench_return": 16.2
-            },
-            {
               "date": "2025-12-24",
               "ticker": "SMWH",
               "company": "WH Smith PLC",
@@ -9275,6 +9231,20 @@
               "car": -41.7,
               "abs_return": -34.8,
               "bench_return": 7.0
+            },
+            {
+              "date": "2025-11-18",
+              "ticker": "LORD",
+              "company": "Lords Group Trading plc",
+              "director": "Shanker Patel",
+              "role": "Chief Executive Officer",
+              "role_normalized": "CEO",
+              "role_class": "",
+              "signal_tier": "t0",
+              "value_gbp": 294280,
+              "car": -39.9,
+              "abs_return": -30.0,
+              "bench_return": 9.9
             },
             {
               "date": "2025-11-18",
@@ -9303,6 +9273,20 @@
               "car": -39.9,
               "abs_return": -30.0,
               "bench_return": 9.9
+            },
+            {
+              "date": "2025-09-22",
+              "ticker": "WIL",
+              "company": "WILMINGTON PLC",
+              "director": "Gordon Hurst",
+              "role": "NON-EXECUTIVE DIRECTOR",
+              "role_normalized": "NED",
+              "role_class": "T3",
+              "signal_tier": "t3",
+              "value_gbp": 104625,
+              "car": -34.3,
+              "abs_return": -28.2,
+              "bench_return": 6.1
             }
           ],
           "rollup": [
@@ -9491,14 +9475,6 @@
               "latest_fire": "2025-11-10"
             },
             {
-              "ticker": "AO",
-              "company": "",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -2.7,
-              "latest_fire": "2025-08-27"
-            },
-            {
               "ticker": "ARS",
               "company": "Asiamet Resources Limited",
               "n": 2,
@@ -9537,14 +9513,6 @@
               "hit_pct": 0.0,
               "mean_car": -13.4,
               "latest_fire": "2025-10-17"
-            },
-            {
-              "ticker": "HAS",
-              "company": "Hays plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -45.6,
-              "latest_fire": "2025-08-27"
             },
             {
               "ticker": "HIK",
@@ -10989,27 +10957,13 @@
       "scope_note": "T1 + T2 buys only",
       "t1": {
         "30d": {
-          "benchmark_car_pct": 0.2,
-          "total_firings": 39,
-          "distinct_tickers": 24,
-          "tickers_with_n3": 3,
-          "hit_pct": 61.5,
+          "benchmark_car_pct": 0.28,
+          "total_firings": 34,
+          "distinct_tickers": 22,
+          "tickers_with_n3": 1,
+          "hit_pct": 61.8,
           "median_car": 0.2,
           "top_firings": [
-            {
-              "date": "2026-07-28",
-              "ticker": "DPP",
-              "company": "DP Poland plc",
-              "director": "Amc V Leonardo Sarl",
-              "role": "",
-              "role_normalized": "Other / unclassified",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 20970,
-              "car": 15.2,
-              "abs_return": 15.4,
-              "bench_return": 0.2
-            },
             {
               "date": "2026-08-03",
               "ticker": "KMK",
@@ -11135,6 +11089,20 @@
               "car": 1.5,
               "abs_return": 1.7,
               "bench_return": 0.3
+            },
+            {
+              "date": "2026-08-05",
+              "ticker": "PCIP",
+              "company": "PCI-PAL PLC",
+              "director": "Carolyn Rand",
+              "role": "Non-Executive Director",
+              "role_normalized": "NED",
+              "role_class": "",
+              "signal_tier": "s1",
+              "value_gbp": 5001,
+              "car": 1.5,
+              "abs_return": 1.3,
+              "bench_return": -0.2
             }
           ],
           "bottom_firings": [
@@ -11165,20 +11133,6 @@
               "car": -4.7,
               "abs_return": -4.4,
               "bench_return": 0.3
-            },
-            {
-              "date": "2026-07-28",
-              "ticker": "TEAM",
-              "company": "TEAM plc",
-              "director": "John Beverley",
-              "role": "Executive Director",
-              "role_normalized": "Executive Director",
-              "role_class": "",
-              "signal_tier": "s1",
-              "value_gbp": 1550,
-              "car": -3.3,
-              "abs_return": -3.1,
-              "bench_return": 0.2
             },
             {
               "date": "2026-08-11",
@@ -11265,18 +11219,32 @@
               "bench_return": 0.3
             },
             {
-              "date": "2026-07-28",
-              "ticker": "NXQ",
-              "company": "Nexteq plc",
-              "director": "Deborah Wilkinson",
-              "role": "Non-Executive Chair of Audit and Risk Committee",
+              "date": "2026-07-29",
+              "ticker": "INCH",
+              "company": "Inchcape plc",
+              "director": "Tracy Clarke",
+              "role": "Non-Executive Director",
               "role_normalized": "NED",
               "role_class": "",
-              "signal_tier": "f1",
-              "value_gbp": 5393,
-              "car": -1.1,
-              "abs_return": -0.9,
-              "bench_return": 0.2
+              "signal_tier": "t3",
+              "value_gbp": 24806,
+              "car": -0.9,
+              "abs_return": -0.5,
+              "bench_return": 0.4
+            },
+            {
+              "date": "2026-07-29",
+              "ticker": "INCH",
+              "company": "Inchcape plc",
+              "director": "Tracy Clarke",
+              "role": "Non-Executive Director",
+              "role_normalized": "NED",
+              "role_class": "T3",
+              "signal_tier": "t3",
+              "value_gbp": 24806,
+              "car": -0.9,
+              "abs_return": -0.5,
+              "bench_return": 0.4
             }
           ],
           "rollup": [
@@ -11287,22 +11255,6 @@
               "hit_pct": 100.0,
               "mean_car": 1.1,
               "latest_fire": "2026-08-05"
-            },
-            {
-              "ticker": "NXQ",
-              "company": "Nexteq plc",
-              "n": 3,
-              "hit_pct": 66.7,
-              "mean_car": 0.5,
-              "latest_fire": "2026-07-31"
-            },
-            {
-              "ticker": "DPP",
-              "company": "DP Poland plc",
-              "n": 3,
-              "hit_pct": 33.3,
-              "mean_car": 3.0,
-              "latest_fire": "2026-08-06"
             },
             {
               "ticker": "AIEA",
@@ -11361,20 +11313,20 @@
               "latest_fire": "2026-07-31"
             },
             {
+              "ticker": "NXQ",
+              "company": "Nexteq plc",
+              "n": 2,
+              "hit_pct": 100.0,
+              "mean_car": 1.3,
+              "latest_fire": "2026-07-31"
+            },
+            {
               "ticker": "PLUS",
               "company": "Plus500 Ltd",
               "n": 2,
               "hit_pct": 100.0,
               "mean_car": 5.5,
               "latest_fire": "2026-08-13"
-            },
-            {
-              "ticker": "SDG",
-              "company": "Sanderson Design Group PLC",
-              "n": 1,
-              "hit_pct": 100.0,
-              "mean_car": 1.0,
-              "latest_fire": "2026-07-28"
             },
             {
               "ticker": "STJ",
@@ -11385,12 +11337,12 @@
               "latest_fire": "2026-07-31"
             },
             {
-              "ticker": "UU",
-              "company": "United Utilities Group PLC",
+              "ticker": "TEAM",
+              "company": "TEAM plc",
               "n": 1,
               "hit_pct": 100.0,
-              "mean_car": 0.4,
-              "latest_fire": "2026-07-28"
+              "mean_car": 1.6,
+              "latest_fire": "2026-07-29"
             },
             {
               "ticker": "WTB",
@@ -11409,20 +11361,20 @@
               "latest_fire": "2026-08-17"
             },
             {
-              "ticker": "TEAM",
-              "company": "TEAM plc",
-              "n": 2,
-              "hit_pct": 50.0,
-              "mean_car": -0.8,
-              "latest_fire": "2026-07-29"
-            },
-            {
               "ticker": "COBR",
               "company": "",
               "n": 2,
               "hit_pct": 0.0,
               "mean_car": -4.7,
               "latest_fire": "2026-07-31"
+            },
+            {
+              "ticker": "DPP",
+              "company": "DP Poland plc",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -3.1,
+              "latest_fire": "2026-08-06"
             },
             {
               "ticker": "HTG",
@@ -11475,12 +11427,12 @@
           ]
         },
         "90d": {
-          "benchmark_car_pct": 0.14,
-          "total_firings": 169,
-          "distinct_tickers": 85,
-          "tickers_with_n3": 16,
-          "hit_pct": 56.2,
-          "median_car": 0.2,
+          "benchmark_car_pct": 0.13,
+          "total_firings": 162,
+          "distinct_tickers": 83,
+          "tickers_with_n3": 14,
+          "hit_pct": 57.4,
+          "median_car": 0.3,
           "top_firings": [
             {
               "date": "2026-07-28",
@@ -11871,28 +11823,12 @@
               "latest_fire": "2026-08-03"
             },
             {
-              "ticker": "EMAN",
-              "company": "Everyman Media Group plc",
-              "n": 3,
-              "hit_pct": 0.0,
-              "mean_car": -2.3,
-              "latest_fire": "2026-06-02"
-            },
-            {
               "ticker": "TEP",
               "company": "Telecom Plus PLC",
               "n": 3,
               "hit_pct": 0.0,
               "mean_car": -1.8,
               "latest_fire": "2026-07-20"
-            },
-            {
-              "ticker": "ULTP",
-              "company": "Ultimate Products plc",
-              "n": 3,
-              "hit_pct": 0.0,
-              "mean_car": -1.4,
-              "latest_fire": "2026-05-29"
             },
             {
               "ticker": "AIEA",
@@ -12037,14 +11973,6 @@
               "hit_pct": 100.0,
               "mean_car": 3.0,
               "latest_fire": "2026-06-30"
-            },
-            {
-              "ticker": "NIOX",
-              "company": "",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 1.4,
-              "latest_fire": "2026-05-29"
             },
             {
               "ticker": "ONWD",
@@ -12263,6 +12191,14 @@
               "latest_fire": "2026-06-15"
             },
             {
+              "ticker": "EMAN",
+              "company": "Everyman Media Group plc",
+              "n": 1,
+              "hit_pct": 0.0,
+              "mean_car": -2.4,
+              "latest_fire": "2026-06-02"
+            },
+            {
               "ticker": "EWG",
               "company": "W.A.G payment solutions plc",
               "n": 2,
@@ -12450,10 +12386,10 @@
         },
         "6m": {
           "benchmark_car_pct": -0.09,
-          "total_firings": 509,
+          "total_firings": 506,
           "distinct_tickers": 170,
-          "tickers_with_n3": 60,
-          "hit_pct": 58.5,
+          "tickers_with_n3": 59,
+          "hit_pct": 58.3,
           "median_car": 0.2,
           "top_firings": [
             {
@@ -12891,14 +12827,6 @@
               "hit_pct": 81.8,
               "mean_car": 2.2,
               "latest_fire": "2026-04-14"
-            },
-            {
-              "ticker": "CNA",
-              "company": "",
-              "n": 5,
-              "hit_pct": 80.0,
-              "mean_car": 0.5,
-              "latest_fire": "2026-04-27"
             },
             {
               "ticker": "RAT",
@@ -13683,6 +13611,14 @@
               "hit_pct": 100.0,
               "mean_car": 0.2,
               "latest_fire": "2026-08-17"
+            },
+            {
+              "ticker": "CNA",
+              "company": "",
+              "n": 2,
+              "hit_pct": 50.0,
+              "mean_car": -0.5,
+              "latest_fire": "2026-04-27"
             },
             {
               "ticker": "TAM",
@@ -19080,11 +19016,11 @@
           "rollup": []
         },
         "90d": {
-          "benchmark_car_pct": 1.87,
-          "total_firings": 121,
-          "distinct_tickers": 58,
-          "tickers_with_n3": 10,
-          "hit_pct": 52.9,
+          "benchmark_car_pct": 2.14,
+          "total_firings": 115,
+          "distinct_tickers": 57,
+          "tickers_with_n3": 8,
+          "hit_pct": 53.9,
           "median_car": 1.8,
           "top_firings": [
             {
@@ -19372,14 +19308,6 @@
           ],
           "rollup": [
             {
-              "ticker": "EMAN",
-              "company": "Everyman Media Group plc",
-              "n": 3,
-              "hit_pct": 100.0,
-              "mean_car": 31.0,
-              "latest_fire": "2026-06-02"
-            },
-            {
               "ticker": "HERC",
               "company": "Hercules plc",
               "n": 8,
@@ -19436,14 +19364,6 @@
               "latest_fire": "2026-07-20"
             },
             {
-              "ticker": "ULTP",
-              "company": "Ultimate Products plc",
-              "n": 3,
-              "hit_pct": 0.0,
-              "mean_car": -2.6,
-              "latest_fire": "2026-05-29"
-            },
-            {
               "ticker": "UTL",
               "company": "UIL LIMITED",
               "n": 8,
@@ -19490,6 +19410,14 @@
               "hit_pct": 100.0,
               "mean_car": 2.1,
               "latest_fire": "2026-06-15"
+            },
+            {
+              "ticker": "EMAN",
+              "company": "Everyman Media Group plc",
+              "n": 1,
+              "hit_pct": 100.0,
+              "mean_car": 32.3,
+              "latest_fire": "2026-06-02"
             },
             {
               "ticker": "GBG",
@@ -19748,14 +19676,6 @@
               "latest_fire": "2026-06-30"
             },
             {
-              "ticker": "NIOX",
-              "company": "",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -3.5,
-              "latest_fire": "2026-05-29"
-            },
-            {
               "ticker": "OMG",
               "company": "Oxford Metrics plc",
               "n": 2,
@@ -19828,6 +19748,14 @@
               "latest_fire": "2026-07-17"
             },
             {
+              "ticker": "WINE",
+              "company": "Naked Wines plc",
+              "n": 1,
+              "hit_pct": 0.0,
+              "mean_car": -6.6,
+              "latest_fire": "2026-07-23"
+            },
+            {
               "ticker": "XPS",
               "company": "XPS Pensions Group plc",
               "n": 2,
@@ -19838,12 +19766,12 @@
           ]
         },
         "6m": {
-          "benchmark_car_pct": 0.84,
-          "total_firings": 461,
+          "benchmark_car_pct": 0.85,
+          "total_firings": 459,
           "distinct_tickers": 146,
           "tickers_with_n3": 54,
-          "hit_pct": 52.5,
-          "median_car": 0.6,
+          "hit_pct": 52.1,
+          "median_car": 0.5,
           "top_firings": [
             {
               "date": "2026-07-01",
@@ -20274,14 +20202,6 @@
               "latest_fire": "2026-04-30"
             },
             {
-              "ticker": "CNA",
-              "company": "",
-              "n": 5,
-              "hit_pct": 80.0,
-              "mean_car": 4.6,
-              "latest_fire": "2026-04-27"
-            },
-            {
               "ticker": "ECEL",
               "company": "Eurocell plc",
               "n": 5,
@@ -20562,6 +20482,14 @@
               "latest_fire": "2026-05-29"
             },
             {
+              "ticker": "WINE",
+              "company": "Naked Wines plc",
+              "n": 3,
+              "hit_pct": 0.0,
+              "mean_car": -3.1,
+              "latest_fire": "2026-07-23"
+            },
+            {
               "ticker": "AEO",
               "company": "Aeorema Communications plc",
               "n": 2,
@@ -20840,6 +20768,14 @@
               "hit_pct": 100.0,
               "mean_car": 13.8,
               "latest_fire": "2026-07-17"
+            },
+            {
+              "ticker": "CNA",
+              "company": "",
+              "n": 2,
+              "hit_pct": 50.0,
+              "mean_car": -5.9,
+              "latest_fire": "2026-04-27"
             },
             {
               "ticker": "TAM",
@@ -21282,14 +21218,6 @@
               "latest_fire": "2026-03-04"
             },
             {
-              "ticker": "WINE",
-              "company": "Naked Wines plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -1.4,
-              "latest_fire": "2026-03-05"
-            },
-            {
               "ticker": "XPS",
               "company": "XPS Pensions Group plc",
               "n": 2,
@@ -21301,10 +21229,10 @@
         },
         "1y": {
           "benchmark_car_pct": 1.45,
-          "total_firings": 846,
+          "total_firings": 847,
           "distinct_tickers": 231,
           "tickers_with_n3": 100,
-          "hit_pct": 46.1,
+          "hit_pct": 46.0,
           "median_car": -0.6,
           "top_firings": [
             {
@@ -22378,10 +22306,10 @@
             {
               "ticker": "WINE",
               "company": "Naked Wines plc",
-              "n": 5,
+              "n": 6,
               "hit_pct": 0.0,
-              "mean_car": -1.4,
-              "latest_fire": "2026-03-05"
+              "mean_car": -2.2,
+              "latest_fire": "2026-07-23"
             },
             {
               "ticker": "WTB",
@@ -23443,7 +23371,7 @@
         },
         "all": {
           "benchmark_car_pct": 1.39,
-          "total_firings": 1195,
+          "total_firings": 1196,
           "distinct_tickers": 276,
           "tickers_with_n3": 133,
           "hit_pct": 48.0,
@@ -24784,10 +24712,10 @@
             {
               "ticker": "WINE",
               "company": "Naked Wines plc",
-              "n": 6,
+              "n": 7,
               "hit_pct": 0.0,
-              "mean_car": -3.8,
-              "latest_fire": "2026-03-05"
+              "mean_car": -4.2,
+              "latest_fire": "2026-07-23"
             },
             {
               "ticker": "WTB",
@@ -25968,12 +25896,12 @@
           "rollup": []
         },
         "6m": {
-          "benchmark_car_pct": 4.08,
-          "total_firings": 302,
-          "distinct_tickers": 93,
-          "tickers_with_n3": 43,
-          "hit_pct": 55.6,
-          "median_car": 2.0,
+          "benchmark_car_pct": 4.0,
+          "total_firings": 308,
+          "distinct_tickers": 95,
+          "tickers_with_n3": 42,
+          "hit_pct": 55.8,
+          "median_car": 2.6,
           "top_firings": [
             {
               "date": "2026-05-14",
@@ -26270,10 +26198,10 @@
             {
               "ticker": "AUTO",
               "company": "Autotrader",
-              "n": 6,
+              "n": 9,
               "hit_pct": 100.0,
-              "mean_car": 11.7,
-              "latest_fire": "2026-05-21"
+              "mean_car": 13.6,
+              "latest_fire": "2026-05-26"
             },
             {
               "ticker": "BKG",
@@ -26478,10 +26406,10 @@
             {
               "ticker": "BATS",
               "company": "",
-              "n": 5,
+              "n": 8,
               "hit_pct": 0.0,
-              "mean_car": -5.8,
-              "latest_fire": "2026-05-08"
+              "mean_car": -9.4,
+              "latest_fire": "2026-05-26"
             },
             {
               "ticker": "BBOX",
@@ -26498,14 +26426,6 @@
               "hit_pct": 0.0,
               "mean_car": -5.5,
               "latest_fire": "2026-04-14"
-            },
-            {
-              "ticker": "CNA",
-              "company": "",
-              "n": 5,
-              "hit_pct": 0.0,
-              "mean_car": -10.7,
-              "latest_fire": "2026-04-27"
             },
             {
               "ticker": "DVNO",
@@ -26796,6 +26716,14 @@
               "latest_fire": "2026-03-30"
             },
             {
+              "ticker": "TLW",
+              "company": "Tullow Oil",
+              "n": 1,
+              "hit_pct": 100.0,
+              "mean_car": 26.0,
+              "latest_fire": "2026-05-26"
+            },
+            {
               "ticker": "TST",
               "company": "Touchstar Plc",
               "n": 1,
@@ -26866,6 +26794,14 @@
               "hit_pct": 0.0,
               "mean_car": -20.7,
               "latest_fire": "2026-04-02"
+            },
+            {
+              "ticker": "CNA",
+              "company": "",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -24.7,
+              "latest_fire": "2026-04-27"
             },
             {
               "ticker": "CNS",
@@ -26948,6 +26884,14 @@
               "latest_fire": "2026-05-01"
             },
             {
+              "ticker": "MER",
+              "company": "Mears Group PLC",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -1.6,
+              "latest_fire": "2026-05-26"
+            },
+            {
               "ticker": "NAR",
               "company": ", emission allowance market participation, auction platform, auctioneer or auction monitor",
               "n": 1,
@@ -27007,8 +26951,8 @@
         },
         "1y": {
           "benchmark_car_pct": 4.36,
-          "total_firings": 687,
-          "distinct_tickers": 185,
+          "total_firings": 696,
+          "distinct_tickers": 187,
           "tickers_with_n3": 89,
           "hit_pct": 46.6,
           "median_car": -1.2,
@@ -27316,10 +27260,10 @@
             {
               "ticker": "AUTO",
               "company": "Autotrader",
-              "n": 6,
+              "n": 9,
               "hit_pct": 100.0,
-              "mean_car": 11.7,
-              "latest_fire": "2026-05-21"
+              "mean_car": 13.6,
+              "latest_fire": "2026-05-26"
             },
             {
               "ticker": "BKG",
@@ -27602,14 +27546,6 @@
               "latest_fire": "2026-04-15"
             },
             {
-              "ticker": "BATS",
-              "company": "",
-              "n": 20,
-              "hit_pct": 55.0,
-              "mean_car": 5.5,
-              "latest_fire": "2026-05-08"
-            },
-            {
               "ticker": "AEO",
               "company": ", emission allowance market participant, auction platform, auctioneer or auction monitor",
               "n": 4,
@@ -27624,6 +27560,14 @@
               "hit_pct": 50.0,
               "mean_car": 31.4,
               "latest_fire": "2026-04-23"
+            },
+            {
+              "ticker": "BATS",
+              "company": "",
+              "n": 23,
+              "hit_pct": 47.8,
+              "mean_car": 2.8,
+              "latest_fire": "2026-05-26"
             },
             {
               "ticker": "RR",
@@ -28298,6 +28242,14 @@
               "latest_fire": "2026-03-30"
             },
             {
+              "ticker": "TLW",
+              "company": "Tullow Oil",
+              "n": 1,
+              "hit_pct": 100.0,
+              "mean_car": 26.0,
+              "latest_fire": "2026-05-26"
+            },
+            {
               "ticker": "TST",
               "company": "Touchstar Plc",
               "n": 1,
@@ -28602,6 +28554,14 @@
               "latest_fire": "2026-05-01"
             },
             {
+              "ticker": "MER",
+              "company": "Mears Group PLC",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -1.6,
+              "latest_fire": "2026-05-26"
+            },
+            {
               "ticker": "NAR",
               "company": ", emission allowance market participation, auction platform, auctioneer or auction monitor",
               "n": 1,
@@ -28782,9 +28742,9 @@
         },
         "all": {
           "benchmark_car_pct": 4.97,
-          "total_firings": 1034,
-          "distinct_tickers": 232,
-          "tickers_with_n3": 121,
+          "total_firings": 1043,
+          "distinct_tickers": 233,
+          "tickers_with_n3": 122,
           "hit_pct": 44.9,
           "median_car": -2.3,
           "top_firings": [
@@ -29091,10 +29051,10 @@
             {
               "ticker": "AUTO",
               "company": "Autotrader",
-              "n": 6,
+              "n": 9,
               "hit_pct": 100.0,
-              "mean_car": 11.7,
-              "latest_fire": "2026-05-21"
+              "mean_car": 13.6,
+              "latest_fire": "2026-05-26"
             },
             {
               "ticker": "BARC",
@@ -29449,14 +29409,6 @@
               "latest_fire": "2026-02-09"
             },
             {
-              "ticker": "BATS",
-              "company": "",
-              "n": 40,
-              "hit_pct": 52.5,
-              "mean_car": 8.6,
-              "latest_fire": "2026-05-08"
-            },
-            {
               "ticker": "AEO",
               "company": ", emission allowance market participant, auction platform, auctioneer or auction monitor",
               "n": 4,
@@ -29471,6 +29423,14 @@
               "hit_pct": 50.0,
               "mean_car": 31.4,
               "latest_fire": "2026-04-23"
+            },
+            {
+              "ticker": "BATS",
+              "company": "",
+              "n": 43,
+              "hit_pct": 48.8,
+              "mean_car": 6.9,
+              "latest_fire": "2026-05-26"
             },
             {
               "ticker": "MTO",
@@ -29839,6 +29799,14 @@
               "hit_pct": 0.0,
               "mean_car": -8.3,
               "latest_fire": "2025-09-25"
+            },
+            {
+              "ticker": "MER",
+              "company": "Mears Group PLC",
+              "n": 3,
+              "hit_pct": 0.0,
+              "mean_car": -5.7,
+              "latest_fire": "2026-05-26"
             },
             {
               "ticker": "NG",
@@ -30377,6 +30345,14 @@
               "latest_fire": "2025-06-03"
             },
             {
+              "ticker": "TLW",
+              "company": "Tullow Oil",
+              "n": 1,
+              "hit_pct": 100.0,
+              "mean_car": 26.0,
+              "latest_fire": "2026-05-26"
+            },
+            {
               "ticker": "TST",
               "company": "Touchstar Plc",
               "n": 1,
@@ -30745,14 +30721,6 @@
               "latest_fire": "2025-07-30"
             },
             {
-              "ticker": "MER",
-              "company": "Mears Group PLC",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -13.9,
-              "latest_fire": "2025-08-07"
-            },
-            {
               "ticker": "NAR",
               "company": ", emission allowance market participation, auction platform, auctioneer or auction monitor",
               "n": 1,
@@ -30968,10 +30936,10 @@
         },
         "1y": {
           "benchmark_car_pct": 6.43,
-          "total_firings": 370,
-          "distinct_tickers": 126,
+          "total_firings": 372,
+          "distinct_tickers": 127,
           "tickers_with_n3": 47,
-          "hit_pct": 38.6,
+          "hit_pct": 39.0,
           "median_car": -6.0,
           "top_firings": [
             {
@@ -31763,6 +31731,14 @@
               "latest_fire": "2025-12-03"
             },
             {
+              "ticker": "MSI",
+              "company": "",
+              "n": 2,
+              "hit_pct": 100.0,
+              "mean_car": 32.4,
+              "latest_fire": "2026-02-20"
+            },
+            {
               "ticker": "NWF",
               "company": "NW F Group plc",
               "n": 2,
@@ -32270,10 +32246,10 @@
         },
         "all": {
           "benchmark_car_pct": 9.75,
-          "total_firings": 715,
-          "distinct_tickers": 184,
+          "total_firings": 717,
+          "distinct_tickers": 185,
           "tickers_with_n3": 83,
-          "hit_pct": 40.3,
+          "hit_pct": 40.4,
           "median_car": -5.3,
           "top_firings": [
             {
@@ -33417,6 +33393,14 @@
               "latest_fire": "2025-12-03"
             },
             {
+              "ticker": "MSI",
+              "company": "",
+              "n": 2,
+              "hit_pct": 100.0,
+              "mean_car": 32.4,
+              "latest_fire": "2026-02-20"
+            },
+            {
               "ticker": "NBB",
               "company": "Norman Broadbent PLC",
               "n": 1,
@@ -34082,11 +34066,11 @@
         },
         "all": {
           "benchmark_car_pct": 18.04,
-          "total_firings": 336,
-          "distinct_tickers": 91,
+          "total_firings": 340,
+          "distinct_tickers": 92,
           "tickers_with_n3": 39,
-          "hit_pct": 37.2,
-          "median_car": -9.0,
+          "hit_pct": 37.9,
+          "median_car": -8.8,
           "top_firings": [
             {
               "date": "2025-05-09",
@@ -34493,6 +34477,14 @@
               "latest_fire": "2025-08-15"
             },
             {
+              "ticker": "HAS",
+              "company": "Hays plc",
+              "n": 6,
+              "hit_pct": 33.3,
+              "mean_car": -33.5,
+              "latest_fire": "2025-08-22"
+            },
+            {
               "ticker": "BOWL",
               "company": "Hollywood Bowl Group plc",
               "n": 7,
@@ -34555,14 +34547,6 @@
               "hit_pct": 0.0,
               "mean_car": -43.5,
               "latest_fire": "2025-06-18"
-            },
-            {
-              "ticker": "HAS",
-              "company": "Hays plc",
-              "n": 4,
-              "hit_pct": 0.0,
-              "mean_car": -53.2,
-              "latest_fire": "2025-08-21"
             },
             {
               "ticker": "IHP",
@@ -34691,6 +34675,14 @@
               "hit_pct": 100.0,
               "mean_car": 49.3,
               "latest_fire": "2025-08-14"
+            },
+            {
+              "ticker": "COST",
+              "company": "COSTAIN GROUP PLC",
+              "n": 2,
+              "hit_pct": 100.0,
+              "mean_car": 61.6,
+              "latest_fire": "2025-08-22"
             },
             {
               "ticker": "CRPR",
@@ -35112,10 +35104,10 @@
         "30d": {
           "benchmark_car_pct": 0.11,
           "total_firings": 31,
-          "distinct_tickers": 17,
-          "tickers_with_n3": 4,
-          "hit_pct": 51.6,
-          "median_car": 0.1,
+          "distinct_tickers": 16,
+          "tickers_with_n3": 5,
+          "hit_pct": 61.3,
+          "median_car": 0.2,
           "top_firings": [
             {
               "date": "2026-08-10",
@@ -35260,20 +35252,6 @@
           ],
           "bottom_firings": [
             {
-              "date": "2026-07-28",
-              "ticker": "HERC",
-              "company": "Hercules plc",
-              "director": "Brusk Korkmaz",
-              "role": "Chief Executive Officer",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "s1",
-              "value_gbp": 25625,
-              "car": -4.5,
-              "abs_return": -4.3,
-              "bench_return": 0.2
-            },
-            {
               "date": "2026-08-14",
               "ticker": "HILS",
               "company": "Hill & Smith PLC",
@@ -35300,34 +35278,6 @@
               "car": -3.6,
               "abs_return": -3.5,
               "bench_return": 0.1
-            },
-            {
-              "date": "2026-07-28",
-              "ticker": "MOTR",
-              "company": "Motorpoint Group Plc",
-              "director": "Keith Mansfield",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "t3",
-              "value_gbp": 53909,
-              "car": -3.4,
-              "abs_return": -3.2,
-              "bench_return": 0.2
-            },
-            {
-              "date": "2026-07-28",
-              "ticker": "MOTR",
-              "company": "Motorpoint Group Plc",
-              "director": "Keith Mansfield",
-              "role": "Non-Executive Director",
-              "role_normalized": "NED",
-              "role_class": "T3",
-              "signal_tier": "t3",
-              "value_gbp": 53909,
-              "car": -3.4,
-              "abs_return": -3.2,
-              "bench_return": 0.2
             },
             {
               "date": "2026-08-03",
@@ -35398,6 +35348,48 @@
               "car": -0.7,
               "abs_return": -0.6,
               "bench_return": 0.1
+            },
+            {
+              "date": "2026-08-04",
+              "ticker": "FRAN",
+              "company": "Franchise Brands plc",
+              "director": "Neil Miller",
+              "role": "Director and Chief Financial Officer",
+              "role_normalized": "CFO",
+              "role_class": "",
+              "signal_tier": "f1",
+              "value_gbp": 50838,
+              "car": -0.6,
+              "abs_return": -0.5,
+              "bench_return": 0.1
+            },
+            {
+              "date": "2026-07-30",
+              "ticker": "SHC",
+              "company": "Shaftesbury Capital PLC",
+              "director": "Rachel Kentleton",
+              "role": "Non-executive Director",
+              "role_normalized": "NED",
+              "role_class": "",
+              "signal_tier": "t3",
+              "value_gbp": 25565,
+              "car": -0.5,
+              "abs_return": -1.4,
+              "bench_return": -0.9
+            },
+            {
+              "date": "2026-07-30",
+              "ticker": "SHC",
+              "company": "Shaftesbury Capital PLC",
+              "director": "Rachel Kentleton",
+              "role": "Non-executive Director",
+              "role_normalized": "NED",
+              "role_class": "T3",
+              "signal_tier": "t3",
+              "value_gbp": 25565,
+              "car": -0.5,
+              "abs_return": -1.4,
+              "bench_return": -0.9
             }
           ],
           "rollup": [
@@ -35408,6 +35400,14 @@
               "hit_pct": 100.0,
               "mean_car": 1.1,
               "latest_fire": "2026-08-04"
+            },
+            {
+              "ticker": "HTG",
+              "company": "Hunting PLC",
+              "n": 3,
+              "hit_pct": 100.0,
+              "mean_car": 0.9,
+              "latest_fire": "2026-08-26"
             },
             {
               "ticker": "IGG",
@@ -35482,28 +35482,12 @@
               "latest_fire": "2026-08-12"
             },
             {
-              "ticker": "HERC",
-              "company": "Hercules plc",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -4.5,
-              "latest_fire": "2026-07-28"
-            },
-            {
               "ticker": "HILS",
               "company": "Hill & Smith PLC",
               "n": 2,
               "hit_pct": 0.0,
               "mean_car": -3.6,
               "latest_fire": "2026-08-14"
-            },
-            {
-              "ticker": "MOTR",
-              "company": "Motorpoint Group Plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -3.4,
-              "latest_fire": "2026-07-28"
             },
             {
               "ticker": "PZC",
@@ -35541,11 +35525,11 @@
         },
         "90d": {
           "benchmark_car_pct": 0.14,
-          "total_firings": 122,
+          "total_firings": 119,
           "distinct_tickers": 55,
           "tickers_with_n3": 16,
-          "hit_pct": 53.3,
-          "median_car": 0.1,
+          "hit_pct": 57.1,
+          "median_car": 0.3,
           "top_firings": [
             {
               "date": "2026-06-08",
@@ -35856,6 +35840,14 @@
               "latest_fire": "2026-07-20"
             },
             {
+              "ticker": "HTG",
+              "company": "Hunting PLC",
+              "n": 3,
+              "hit_pct": 100.0,
+              "mean_car": 0.9,
+              "latest_fire": "2026-08-26"
+            },
+            {
               "ticker": "IGG",
               "company": "IG Group Holdings plc",
               "n": 3,
@@ -35926,14 +35918,6 @@
               "hit_pct": 60.0,
               "mean_car": 1.3,
               "latest_fire": "2026-06-16"
-            },
-            {
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "n": 6,
-              "hit_pct": 0.0,
-              "mean_car": -1.6,
-              "latest_fire": "2026-05-29"
             },
             {
               "ticker": "MTO",
@@ -36274,11 +36258,11 @@
           ]
         },
         "6m": {
-          "benchmark_car_pct": 0.1,
-          "total_firings": 330,
-          "distinct_tickers": 120,
-          "tickers_with_n3": 37,
-          "hit_pct": 47.0,
+          "benchmark_car_pct": 0.11,
+          "total_firings": 333,
+          "distinct_tickers": 121,
+          "tickers_with_n3": 38,
+          "hit_pct": 47.4,
           "median_car": -0.0,
           "top_firings": [
             {
@@ -36612,6 +36596,14 @@
               "hit_pct": 100.0,
               "mean_car": 1.0,
               "latest_fire": "2026-03-02"
+            },
+            {
+              "ticker": "HTG",
+              "company": "Hunting PLC",
+              "n": 3,
+              "hit_pct": 100.0,
+              "mean_car": 0.9,
+              "latest_fire": "2026-08-26"
             },
             {
               "ticker": "IGG",
@@ -37529,10 +37521,10 @@
         },
         "1y": {
           "benchmark_car_pct": 0.09,
-          "total_firings": 560,
+          "total_firings": 563,
           "distinct_tickers": 170,
           "tickers_with_n3": 72,
-          "hit_pct": 47.0,
+          "hit_pct": 47.2,
           "median_car": -0.1,
           "top_firings": [
             {
@@ -38164,6 +38156,14 @@
               "latest_fire": "2026-03-27"
             },
             {
+              "ticker": "HTG",
+              "company": "Hunting PLC",
+              "n": 9,
+              "hit_pct": 33.3,
+              "mean_car": -1.9,
+              "latest_fire": "2026-08-26"
+            },
+            {
               "ticker": "NXT",
               "company": "NEXT plc",
               "n": 6,
@@ -38274,14 +38274,6 @@
               "hit_pct": 0.0,
               "mean_car": -2.2,
               "latest_fire": "2026-05-29"
-            },
-            {
-              "ticker": "HTG",
-              "company": "Hunting PLC",
-              "n": 6,
-              "hit_pct": 0.0,
-              "mean_car": -3.3,
-              "latest_fire": "2025-12-15"
             },
             {
               "ticker": "MER",
@@ -39183,10 +39175,10 @@
         },
         "all": {
           "benchmark_car_pct": 0.09,
-          "total_firings": 772,
+          "total_firings": 775,
           "distinct_tickers": 203,
           "tickers_with_n3": 96,
-          "hit_pct": 48.6,
+          "hit_pct": 48.8,
           "median_car": -0.0,
           "top_firings": [
             {
@@ -39930,6 +39922,14 @@
               "latest_fire": "2026-03-27"
             },
             {
+              "ticker": "HTG",
+              "company": "Hunting PLC",
+              "n": 9,
+              "hit_pct": 33.3,
+              "mean_car": -1.9,
+              "latest_fire": "2026-08-26"
+            },
+            {
               "ticker": "NXT",
               "company": "NEXT plc",
               "n": 6,
@@ -40112,14 +40112,6 @@
               "hit_pct": 0.0,
               "mean_car": -2.2,
               "latest_fire": "2026-05-29"
-            },
-            {
-              "ticker": "HTG",
-              "company": "Hunting PLC",
-              "n": 6,
-              "hit_pct": 0.0,
-              "mean_car": -3.3,
-              "latest_fire": "2025-12-15"
             },
             {
               "ticker": "INCH",
@@ -41113,12 +41105,12 @@
           "rollup": []
         },
         "90d": {
-          "benchmark_car_pct": 1.72,
-          "total_firings": 81,
+          "benchmark_car_pct": 1.85,
+          "total_firings": 79,
           "distinct_tickers": 39,
           "tickers_with_n3": 10,
-          "hit_pct": 43.2,
-          "median_car": -0.9,
+          "hit_pct": 36.7,
+          "median_car": -1.3,
           "top_firings": [
             {
               "date": "2026-06-09",
@@ -41421,20 +41413,20 @@
               "latest_fire": "2026-06-02"
             },
             {
-              "ticker": "GNC",
-              "company": "Greencore Group plc",
-              "n": 6,
-              "hit_pct": 100.0,
-              "mean_car": 1.2,
-              "latest_fire": "2026-05-29"
-            },
-            {
               "ticker": "TLW",
               "company": "Tullow Oil plc",
               "n": 3,
               "hit_pct": 100.0,
               "mean_car": 7.5,
               "latest_fire": "2026-06-15"
+            },
+            {
+              "ticker": "HERC",
+              "company": "Hercules plc",
+              "n": 4,
+              "hit_pct": 50.0,
+              "mean_car": 7.2,
+              "latest_fire": "2026-07-23"
             },
             {
               "ticker": "FVA",
@@ -41523,14 +41515,6 @@
               "hit_pct": 100.0,
               "mean_car": 3.7,
               "latest_fire": "2026-06-05"
-            },
-            {
-              "ticker": "HERC",
-              "company": "Hercules plc",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 16.0,
-              "latest_fire": "2026-07-20"
             },
             {
               "ticker": "LINV",
@@ -41645,6 +41629,14 @@
               "latest_fire": "2026-06-19"
             },
             {
+              "ticker": "GTLY",
+              "company": "Gateley (Holdings) Plc",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -4.4,
+              "latest_fire": "2026-07-23"
+            },
+            {
               "ticker": "N91",
               "company": "Ninety One plc",
               "n": 2,
@@ -41719,12 +41711,12 @@
           ]
         },
         "6m": {
-          "benchmark_car_pct": 1.6,
-          "total_firings": 288,
-          "distinct_tickers": 105,
-          "tickers_with_n3": 29,
-          "hit_pct": 47.9,
-          "median_car": -0.4,
+          "benchmark_car_pct": 1.62,
+          "total_firings": 292,
+          "distinct_tickers": 106,
+          "tickers_with_n3": 30,
+          "hit_pct": 47.3,
+          "median_car": -0.6,
           "top_firings": [
             {
               "date": "2026-06-09",
@@ -42107,6 +42099,14 @@
               "latest_fire": "2026-06-26"
             },
             {
+              "ticker": "HERC",
+              "company": "Hercules plc",
+              "n": 4,
+              "hit_pct": 50.0,
+              "mean_car": 7.2,
+              "latest_fire": "2026-07-23"
+            },
+            {
               "ticker": "NXT",
               "company": "",
               "n": 4,
@@ -42369,14 +42369,6 @@
               "hit_pct": 100.0,
               "mean_car": 3.7,
               "latest_fire": "2026-06-05"
-            },
-            {
-              "ticker": "HERC",
-              "company": "Hercules plc",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 16.0,
-              "latest_fire": "2026-07-20"
             },
             {
               "ticker": "HIK",
@@ -42723,6 +42715,14 @@
               "latest_fire": "2026-06-19"
             },
             {
+              "ticker": "GTLY",
+              "company": "Gateley (Holdings) Plc",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -4.4,
+              "latest_fire": "2026-07-23"
+            },
+            {
               "ticker": "IMI",
               "company": "IMI plc",
               "n": 2,
@@ -42853,11 +42853,11 @@
           ]
         },
         "1y": {
-          "benchmark_car_pct": 2.07,
-          "total_firings": 518,
-          "distinct_tickers": 160,
-          "tickers_with_n3": 67,
-          "hit_pct": 46.3,
+          "benchmark_car_pct": 1.93,
+          "total_firings": 522,
+          "distinct_tickers": 161,
+          "tickers_with_n3": 68,
+          "hit_pct": 46.0,
           "median_car": -0.8,
           "top_firings": [
             {
@@ -43351,6 +43351,14 @@
               "hit_pct": 66.7,
               "mean_car": 0.2,
               "latest_fire": "2025-12-08"
+            },
+            {
+              "ticker": "HERC",
+              "company": "Hercules plc",
+              "n": 4,
+              "hit_pct": 50.0,
+              "mean_car": 7.2,
+              "latest_fire": "2026-07-23"
             },
             {
               "ticker": "HTG",
@@ -43857,14 +43865,6 @@
               "latest_fire": "2026-06-05"
             },
             {
-              "ticker": "HERC",
-              "company": "Hercules plc",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 16.0,
-              "latest_fire": "2026-07-20"
-            },
-            {
               "ticker": "HIK",
               "company": "Hikma Pharmaceuticals PLC",
               "n": 2,
@@ -44225,6 +44225,14 @@
               "latest_fire": "2025-12-18"
             },
             {
+              "ticker": "GTLY",
+              "company": "Gateley (Holdings) Plc",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -4.4,
+              "latest_fire": "2026-07-23"
+            },
+            {
               "ticker": "HSX",
               "company": "",
               "n": 1,
@@ -44427,11 +44435,11 @@
           ]
         },
         "all": {
-          "benchmark_car_pct": 1.72,
-          "total_firings": 730,
-          "distinct_tickers": 193,
-          "tickers_with_n3": 91,
-          "hit_pct": 45.1,
+          "benchmark_car_pct": 1.76,
+          "total_firings": 734,
+          "distinct_tickers": 194,
+          "tickers_with_n3": 92,
+          "hit_pct": 44.8,
           "median_car": -0.9,
           "top_firings": [
             {
@@ -44989,6 +44997,14 @@
               "hit_pct": 57.1,
               "mean_car": 3.7,
               "latest_fire": "2025-12-12"
+            },
+            {
+              "ticker": "HERC",
+              "company": "Hercules plc",
+              "n": 4,
+              "hit_pct": 50.0,
+              "mean_car": 7.2,
+              "latest_fire": "2026-07-23"
             },
             {
               "ticker": "HTG",
@@ -45639,14 +45655,6 @@
               "latest_fire": "2025-05-01"
             },
             {
-              "ticker": "HERC",
-              "company": "Hercules plc",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 16.0,
-              "latest_fire": "2026-07-20"
-            },
-            {
               "ticker": "HSP",
               "company": "Hargreaves Services plc",
               "n": 1,
@@ -46039,6 +46047,14 @@
               "latest_fire": "2025-12-18"
             },
             {
+              "ticker": "GTLY",
+              "company": "Gateley (Holdings) Plc",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -4.4,
+              "latest_fire": "2026-07-23"
+            },
+            {
               "ticker": "HAS",
               "company": "",
               "n": 2,
@@ -46290,11 +46306,11 @@
         },
         "6m": {
           "benchmark_car_pct": 4.3,
-          "total_firings": 191,
-          "distinct_tickers": 71,
+          "total_firings": 199,
+          "distinct_tickers": 72,
           "tickers_with_n3": 19,
-          "hit_pct": 51.8,
-          "median_car": 0.4,
+          "hit_pct": 53.8,
+          "median_car": 2.0,
           "top_firings": [
             {
               "date": "2026-05-21",
@@ -46583,10 +46599,10 @@
             {
               "ticker": "AUTO",
               "company": "Autotrader",
-              "n": 8,
+              "n": 14,
               "hit_pct": 100.0,
-              "mean_car": 11.7,
-              "latest_fire": "2026-05-21"
+              "mean_car": 14.2,
+              "latest_fire": "2026-05-26"
             },
             {
               "ticker": "DNLM",
@@ -46877,6 +46893,14 @@
               "latest_fire": "2026-03-30"
             },
             {
+              "ticker": "MAB",
+              "company": "Mitchells & Butlers plc",
+              "n": 2,
+              "hit_pct": 100.0,
+              "mean_car": 14.2,
+              "latest_fire": "2026-05-26"
+            },
+            {
               "ticker": "MGAM",
               "company": "Morgan Advanced Materials Plc",
               "n": 1,
@@ -47151,12 +47175,12 @@
           ]
         },
         "1y": {
-          "benchmark_car_pct": 5.0,
-          "total_firings": 421,
-          "distinct_tickers": 131,
+          "benchmark_car_pct": 4.97,
+          "total_firings": 429,
+          "distinct_tickers": 132,
           "tickers_with_n3": 55,
-          "hit_pct": 45.1,
-          "median_car": -1.5,
+          "hit_pct": 46.2,
+          "median_car": -1.3,
           "top_firings": [
             {
               "date": "2025-12-16",
@@ -47445,10 +47469,10 @@
             {
               "ticker": "AUTO",
               "company": "Autotrader",
-              "n": 8,
+              "n": 14,
               "hit_pct": 100.0,
-              "mean_car": 11.7,
-              "latest_fire": "2026-05-21"
+              "mean_car": 14.2,
+              "latest_fire": "2026-05-26"
             },
             {
               "ticker": "DNLM",
@@ -48051,6 +48075,14 @@
               "latest_fire": "2026-04-29"
             },
             {
+              "ticker": "MAB",
+              "company": "Mitchells & Butlers plc",
+              "n": 2,
+              "hit_pct": 100.0,
+              "mean_car": 14.2,
+              "latest_fire": "2026-05-26"
+            },
+            {
               "ticker": "ONT",
               "company": "Oxford Nanopore Technologies plc",
               "n": 1,
@@ -48493,11 +48525,11 @@
           ]
         },
         "all": {
-          "benchmark_car_pct": 5.34,
-          "total_firings": 633,
-          "distinct_tickers": 165,
+          "benchmark_car_pct": 5.29,
+          "total_firings": 641,
+          "distinct_tickers": 166,
           "tickers_with_n3": 83,
-          "hit_pct": 44.9,
+          "hit_pct": 45.6,
           "median_car": -1.5,
           "top_firings": [
             {
@@ -48795,10 +48827,10 @@
             {
               "ticker": "AUTO",
               "company": "Autotrader",
-              "n": 8,
+              "n": 14,
               "hit_pct": 100.0,
-              "mean_car": 11.7,
-              "latest_fire": "2026-05-21"
+              "mean_car": 14.2,
+              "latest_fire": "2026-05-26"
             },
             {
               "ticker": "BARC",
@@ -49625,6 +49657,14 @@
               "latest_fire": "2026-04-29"
             },
             {
+              "ticker": "MAB",
+              "company": "Mitchells & Butlers plc",
+              "n": 2,
+              "hit_pct": 100.0,
+              "mean_car": 14.2,
+              "latest_fire": "2026-05-26"
+            },
+            {
               "ticker": "ONT",
               "company": "Oxford Nanopore Technologies plc",
               "n": 1,
@@ -50142,11 +50182,11 @@
           "rollup": []
         },
         "1y": {
-          "benchmark_car_pct": 6.87,
-          "total_firings": 212,
-          "distinct_tickers": 78,
-          "tickers_with_n3": 30,
-          "hit_pct": 39.6,
+          "benchmark_car_pct": 6.7,
+          "total_firings": 221,
+          "distinct_tickers": 80,
+          "tickers_with_n3": 33,
+          "hit_pct": 40.7,
           "median_car": -5.3,
           "top_firings": [
             {
@@ -50466,6 +50506,22 @@
               "latest_fire": "2025-10-07"
             },
             {
+              "ticker": "MSI",
+              "company": "",
+              "n": 3,
+              "hit_pct": 100.0,
+              "mean_car": 32.4,
+              "latest_fire": "2026-02-20"
+            },
+            {
+              "ticker": "MTO",
+              "company": "",
+              "n": 3,
+              "hit_pct": 100.0,
+              "mean_car": 14.2,
+              "latest_fire": "2026-02-20"
+            },
+            {
               "ticker": "TBTG",
               "company": "",
               "n": 8,
@@ -50600,6 +50656,14 @@
               "hit_pct": 0.0,
               "mean_car": -20.6,
               "latest_fire": "2025-12-19"
+            },
+            {
+              "ticker": "GSK",
+              "company": "GSK plc",
+              "n": 5,
+              "hit_pct": 0.0,
+              "mean_car": -15.5,
+              "latest_fire": "2026-02-20"
             },
             {
               "ticker": "MER",
@@ -50890,14 +50954,6 @@
               "latest_fire": "2025-12-18"
             },
             {
-              "ticker": "GSK",
-              "company": "GSK plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -15.8,
-              "latest_fire": "2026-02-06"
-            },
-            {
               "ticker": "INCH",
               "company": "Inchcape plc",
               "n": 1,
@@ -51060,11 +51116,11 @@
           ]
         },
         "all": {
-          "benchmark_car_pct": 10.24,
-          "total_firings": 422,
-          "distinct_tickers": 115,
-          "tickers_with_n3": 61,
-          "hit_pct": 36.0,
+          "benchmark_car_pct": 9.87,
+          "total_firings": 431,
+          "distinct_tickers": 116,
+          "tickers_with_n3": 63,
+          "hit_pct": 36.7,
           "median_car": -5.5,
           "top_firings": [
             {
@@ -51400,12 +51456,20 @@
               "latest_fire": "2025-10-07"
             },
             {
-              "ticker": "MTO",
+              "ticker": "MSI",
               "company": "",
               "n": 3,
               "hit_pct": 100.0,
-              "mean_car": 6.7,
-              "latest_fire": "2025-08-06"
+              "mean_car": 32.4,
+              "latest_fire": "2026-02-20"
+            },
+            {
+              "ticker": "MTO",
+              "company": "",
+              "n": 6,
+              "hit_pct": 100.0,
+              "mean_car": 10.4,
+              "latest_fire": "2026-02-20"
             },
             {
               "ticker": "OXB",
@@ -51702,6 +51766,14 @@
               "hit_pct": 0.0,
               "mean_car": -20.6,
               "latest_fire": "2025-12-19"
+            },
+            {
+              "ticker": "GSK",
+              "company": "GSK plc",
+              "n": 5,
+              "hit_pct": 0.0,
+              "mean_car": -15.5,
+              "latest_fire": "2026-02-20"
             },
             {
               "ticker": "HIK",
@@ -52064,14 +52136,6 @@
               "latest_fire": "2025-12-18"
             },
             {
-              "ticker": "GSK",
-              "company": "GSK plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -15.8,
-              "latest_fire": "2026-02-06"
-            },
-            {
               "ticker": "HAS",
               "company": "",
               "n": 2,
@@ -52321,11 +52385,11 @@
         },
         "all": {
           "benchmark_car_pct": 18.03,
-          "total_firings": 203,
-          "distinct_tickers": 56,
-          "tickers_with_n3": 29,
-          "hit_pct": 40.4,
-          "median_car": -6.8,
+          "total_firings": 206,
+          "distinct_tickers": 57,
+          "tickers_with_n3": 30,
+          "hit_pct": 39.8,
+          "median_car": -7.0,
           "top_firings": [
             {
               "date": "2025-05-09",
@@ -52786,6 +52850,14 @@
               "hit_pct": 0.0,
               "mean_car": -25.7,
               "latest_fire": "2025-08-19"
+            },
+            {
+              "ticker": "HIK",
+              "company": "Hikma Pharmaceuticals PLC",
+              "n": 3,
+              "hit_pct": 0.0,
+              "mean_car": -26.2,
+              "latest_fire": "2025-08-22"
             },
             {
               "ticker": "HLN",
@@ -53275,12 +53347,12 @@
           ]
         },
         "90d": {
-          "benchmark_car_pct": 0.22,
-          "total_firings": 22,
-          "distinct_tickers": 9,
-          "tickers_with_n3": 3,
-          "hit_pct": 40.9,
-          "median_car": -0.5,
+          "benchmark_car_pct": 0.14,
+          "total_firings": 19,
+          "distinct_tickers": 8,
+          "tickers_with_n3": 2,
+          "hit_pct": 31.6,
+          "median_car": -0.9,
           "top_firings": [
             {
               "date": "2026-07-10",
@@ -53367,48 +53439,6 @@
               "bench_return": 1.2
             },
             {
-              "date": "2026-05-29",
-              "ticker": "PSN",
-              "company": "Persimmon Plc",
-              "director": "Dean Finch",
-              "role": "Group Chief Executive",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t1a",
-              "value_gbp": 671442,
-              "car": 1.2,
-              "abs_return": 1.6,
-              "bench_return": 0.4
-            },
-            {
-              "date": "2026-05-29",
-              "ticker": "PSN",
-              "company": "Persimmon Plc",
-              "director": "Dean Finch",
-              "role": "Group Chief Executive",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t1a",
-              "value_gbp": 671442,
-              "car": 1.2,
-              "abs_return": 1.6,
-              "bench_return": 0.4
-            },
-            {
-              "date": "2026-05-29",
-              "ticker": "PSN",
-              "company": "Persimmon Plc",
-              "director": "Dean Finch",
-              "role": "Group Chief Executive",
-              "role_normalized": "CEO",
-              "role_class": "T1a",
-              "signal_tier": "t1a",
-              "value_gbp": 671442,
-              "car": 1.2,
-              "abs_return": 1.6,
-              "bench_return": 0.4
-            },
-            {
               "date": "2026-08-04",
               "ticker": "GAW",
               "company": "Games Workshop Group PLC",
@@ -53420,6 +53450,48 @@
               "value_gbp": 4744631,
               "car": -0.1,
               "abs_return": 0.0,
+              "bench_return": 0.1
+            },
+            {
+              "date": "2026-08-04",
+              "ticker": "GAW",
+              "company": "Games Workshop Group PLC",
+              "director": "Kevin Rountree",
+              "role": "Chief Executive Officer",
+              "role_normalized": "CEO",
+              "role_class": "T1a",
+              "signal_tier": "t1a",
+              "value_gbp": 4744631,
+              "car": -0.1,
+              "abs_return": 0.0,
+              "bench_return": 0.1
+            },
+            {
+              "date": "2026-08-14",
+              "ticker": "VNET",
+              "company": "Vianet Group PLC",
+              "director": "James Dickson",
+              "role": "Chairman",
+              "role_normalized": "Chair (executive)",
+              "role_class": "",
+              "signal_tier": "t7",
+              "value_gbp": 3323000,
+              "car": -0.9,
+              "abs_return": -0.8,
+              "bench_return": 0.1
+            },
+            {
+              "date": "2026-08-14",
+              "ticker": "VNET",
+              "company": "Vianet Group PLC",
+              "director": "James Dickson",
+              "role": "Chairman",
+              "role_normalized": "Chair (executive)",
+              "role_class": "T7",
+              "signal_tier": "t7",
+              "value_gbp": 3323000,
+              "car": -0.9,
+              "abs_return": -0.8,
               "bench_return": 0.1
             }
           ],
@@ -53573,14 +53645,6 @@
               "hit_pct": 100.0,
               "mean_car": 1.6,
               "latest_fire": "2026-07-23"
-            },
-            {
-              "ticker": "PSN",
-              "company": "Persimmon Plc",
-              "n": 3,
-              "hit_pct": 100.0,
-              "mean_car": 1.2,
-              "latest_fire": "2026-05-29"
             },
             {
               "ticker": "IGR",
@@ -55056,13 +55120,69 @@
           "rollup": []
         },
         "90d": {
-          "benchmark_car_pct": 2.17,
-          "total_firings": 12,
+          "benchmark_car_pct": 1.85,
+          "total_firings": 13,
           "distinct_tickers": 5,
           "tickers_with_n3": 2,
-          "hit_pct": 16.7,
-          "median_car": -1.9,
+          "hit_pct": 46.2,
+          "median_car": -1.7,
           "top_firings": [
+            {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "LESLIE VAN DE WALLE AND Domitille marie Renée van de walle",
+              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
+              "role_normalized": "PCA",
+              "role_class": "",
+              "signal_tier": "t5",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
+            {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "Leslie Van de Walle",
+              "role": "Non-Executive Chair",
+              "role_normalized": "NED",
+              "role_class": "",
+              "signal_tier": "t3",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
+            {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "Leslie Van de Walle",
+              "role": "Non-Executive Chair",
+              "role_normalized": "NED",
+              "role_class": "T3",
+              "signal_tier": "t3",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
+            {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "LESLIE VAN DE WALLE AND Domitille marie Renée van de walle",
+              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
+              "role_normalized": "PCA",
+              "role_class": "T5",
+              "signal_tier": "t5",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
             {
               "date": "2026-07-21",
               "ticker": "SUP",
@@ -55145,62 +55265,6 @@
               "value_gbp": 14645523,
               "car": -1.9,
               "abs_return": -0.3,
-              "bench_return": 1.5
-            },
-            {
-              "date": "2026-06-17",
-              "ticker": "IGR",
-              "company": "IG Design Group plc",
-              "director": "Anders Hedlund",
-              "role": "Founder and Non-Executive Director",
-              "role_normalized": "Founder",
-              "role_class": "T1a",
-              "signal_tier": "t0",
-              "value_gbp": 14645523,
-              "car": -1.9,
-              "abs_return": -0.3,
-              "bench_return": 1.5
-            },
-            {
-              "date": "2026-05-29",
-              "ticker": "PSN",
-              "company": "Persimmon Plc",
-              "director": "Dean Finch",
-              "role": "Group Chief Executive",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t1a",
-              "value_gbp": 671442,
-              "car": -2.8,
-              "abs_return": -1.3,
-              "bench_return": 1.5
-            },
-            {
-              "date": "2026-05-29",
-              "ticker": "PSN",
-              "company": "Persimmon Plc",
-              "director": "Dean Finch",
-              "role": "Group Chief Executive",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t1a",
-              "value_gbp": 671442,
-              "car": -2.8,
-              "abs_return": -1.3,
-              "bench_return": 1.5
-            },
-            {
-              "date": "2026-05-29",
-              "ticker": "PSN",
-              "company": "Persimmon Plc",
-              "director": "Dean Finch",
-              "role": "Group Chief Executive",
-              "role_normalized": "CEO",
-              "role_class": "T1a",
-              "signal_tier": "t1a",
-              "value_gbp": 671442,
-              "car": -2.8,
-              "abs_return": -1.3,
               "bench_return": 1.5
             }
           ],
@@ -55234,48 +55298,6 @@
               "bench_return": 2.9
             },
             {
-              "date": "2026-05-29",
-              "ticker": "PSN",
-              "company": "Persimmon Plc",
-              "director": "Dean Finch",
-              "role": "Group Chief Executive",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t1a",
-              "value_gbp": 671442,
-              "car": -2.8,
-              "abs_return": -1.3,
-              "bench_return": 1.5
-            },
-            {
-              "date": "2026-05-29",
-              "ticker": "PSN",
-              "company": "Persimmon Plc",
-              "director": "Dean Finch",
-              "role": "Group Chief Executive",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t1a",
-              "value_gbp": 671442,
-              "car": -2.8,
-              "abs_return": -1.3,
-              "bench_return": 1.5
-            },
-            {
-              "date": "2026-05-29",
-              "ticker": "PSN",
-              "company": "Persimmon Plc",
-              "director": "Dean Finch",
-              "role": "Group Chief Executive",
-              "role_normalized": "CEO",
-              "role_class": "T1a",
-              "signal_tier": "t1a",
-              "value_gbp": 671442,
-              "car": -2.8,
-              "abs_return": -1.3,
-              "bench_return": 1.5
-            },
-            {
               "date": "2026-06-17",
               "ticker": "IGR",
               "company": "IG Design Group plc",
@@ -55344,9 +55366,59 @@
               "car": -1.7,
               "abs_return": 2.0,
               "bench_return": 3.8
+            },
+            {
+              "date": "2026-07-21",
+              "ticker": "SUP",
+              "company": "Supreme plc",
+              "director": "Sandy Chadha",
+              "role": "Chief Executive Officer",
+              "role_normalized": "CEO",
+              "role_class": "",
+              "signal_tier": "t1a",
+              "value_gbp": 659055,
+              "car": 4.4,
+              "abs_return": 7.2,
+              "bench_return": 2.8
+            },
+            {
+              "date": "2026-07-21",
+              "ticker": "SUP",
+              "company": "Supreme plc",
+              "director": "Sandy Chadha",
+              "role": "Chief Executive Officer",
+              "role_normalized": "CEO",
+              "role_class": "T1a",
+              "signal_tier": "t1a",
+              "value_gbp": 659055,
+              "car": 4.4,
+              "abs_return": 7.2,
+              "bench_return": 2.8
+            },
+            {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "LESLIE VAN DE WALLE AND Domitille marie Renée van de walle",
+              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
+              "role_normalized": "PCA",
+              "role_class": "T5",
+              "signal_tier": "t5",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
             }
           ],
           "rollup": [
+            {
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "n": 4,
+              "hit_pct": 100.0,
+              "mean_car": 9.5,
+              "latest_fire": "2026-07-23"
+            },
             {
               "ticker": "IGR",
               "company": "IG Design Group plc",
@@ -55354,14 +55426,6 @@
               "hit_pct": 0.0,
               "mean_car": -1.9,
               "latest_fire": "2026-06-17"
-            },
-            {
-              "ticker": "PSN",
-              "company": "Persimmon Plc",
-              "n": 3,
-              "hit_pct": 0.0,
-              "mean_car": -2.8,
-              "latest_fire": "2026-05-29"
             },
             {
               "ticker": "SUP",
@@ -55390,12 +55454,12 @@
           ]
         },
         "6m": {
-          "benchmark_car_pct": 1.45,
-          "total_firings": 34,
-          "distinct_tickers": 14,
-          "tickers_with_n3": 4,
-          "hit_pct": 35.3,
-          "median_car": -2.2,
+          "benchmark_car_pct": 1.52,
+          "total_firings": 38,
+          "distinct_tickers": 15,
+          "tickers_with_n3": 5,
+          "hit_pct": 42.1,
+          "median_car": -1.9,
           "top_firings": [
             {
               "date": "2026-03-05",
@@ -55468,6 +55532,62 @@
               "bench_return": -0.2
             },
             {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "LESLIE VAN DE WALLE AND Domitille marie Renée van de walle",
+              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
+              "role_normalized": "PCA",
+              "role_class": "",
+              "signal_tier": "t5",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
+            {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "Leslie Van de Walle",
+              "role": "Non-Executive Chair",
+              "role_normalized": "NED",
+              "role_class": "",
+              "signal_tier": "t3",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
+            {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "Leslie Van de Walle",
+              "role": "Non-Executive Chair",
+              "role_normalized": "NED",
+              "role_class": "T3",
+              "signal_tier": "t3",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
+            {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "LESLIE VAN DE WALLE AND Domitille marie Renée van de walle",
+              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
+              "role_normalized": "PCA",
+              "role_class": "T5",
+              "signal_tier": "t5",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
+            {
               "date": "2026-04-30",
               "ticker": "RVRB",
               "company": "River Global PLC",
@@ -55480,62 +55600,6 @@
               "car": 5.7,
               "abs_return": 5.7,
               "bench_return": 0.0
-            },
-            {
-              "date": "2026-04-30",
-              "ticker": "RVRB",
-              "company": "River Global PLC",
-              "director": "Christopher Mills",
-              "role": "PDMR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 986000,
-              "car": 5.7,
-              "abs_return": 5.7,
-              "bench_return": 0.0
-            },
-            {
-              "date": "2026-04-30",
-              "ticker": "RVRB",
-              "company": "River Global PLC",
-              "director": "Christopher Mills",
-              "role": "PDMR",
-              "role_normalized": "PDMR-only",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 986000,
-              "car": 5.7,
-              "abs_return": 5.7,
-              "bench_return": 0.0
-            },
-            {
-              "date": "2026-07-21",
-              "ticker": "SUP",
-              "company": "Supreme plc",
-              "director": "Sandy Chadha",
-              "role": "Chief Executive Officer",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t1a",
-              "value_gbp": 659055,
-              "car": 4.4,
-              "abs_return": 7.2,
-              "bench_return": 2.8
-            },
-            {
-              "date": "2026-07-21",
-              "ticker": "SUP",
-              "company": "Supreme plc",
-              "director": "Sandy Chadha",
-              "role": "Chief Executive Officer",
-              "role_normalized": "CEO",
-              "role_class": "T1a",
-              "signal_tier": "t1a",
-              "value_gbp": 659055,
-              "car": 4.4,
-              "abs_return": 7.2,
-              "bench_return": 2.8
             }
           ],
           "bottom_firings": [
@@ -55681,6 +55745,14 @@
             }
           ],
           "rollup": [
+            {
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "n": 4,
+              "hit_pct": 100.0,
+              "mean_car": 9.5,
+              "latest_fire": "2026-07-23"
+            },
             {
               "ticker": "RVRB",
               "company": "River Global PLC",
@@ -55796,11 +55868,11 @@
           ]
         },
         "1y": {
-          "benchmark_car_pct": 2.12,
-          "total_firings": 55,
-          "distinct_tickers": 18,
-          "tickers_with_n3": 8,
-          "hit_pct": 29.1,
+          "benchmark_car_pct": 1.85,
+          "total_firings": 59,
+          "distinct_tickers": 19,
+          "tickers_with_n3": 9,
+          "hit_pct": 33.9,
           "median_car": -1.9,
           "top_firings": [
             {
@@ -55874,6 +55946,62 @@
               "bench_return": -0.2
             },
             {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "LESLIE VAN DE WALLE AND Domitille marie Renée van de walle",
+              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
+              "role_normalized": "PCA",
+              "role_class": "",
+              "signal_tier": "t5",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
+            {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "Leslie Van de Walle",
+              "role": "Non-Executive Chair",
+              "role_normalized": "NED",
+              "role_class": "",
+              "signal_tier": "t3",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
+            {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "Leslie Van de Walle",
+              "role": "Non-Executive Chair",
+              "role_normalized": "NED",
+              "role_class": "T3",
+              "signal_tier": "t3",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
+            {
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "LESLIE VAN DE WALLE AND Domitille marie Renée van de walle",
+              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
+              "role_normalized": "PCA",
+              "role_class": "T5",
+              "signal_tier": "t5",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
+            },
+            {
               "date": "2026-04-30",
               "ticker": "RVRB",
               "company": "River Global PLC",
@@ -55886,62 +56014,6 @@
               "car": 5.7,
               "abs_return": 5.7,
               "bench_return": 0.0
-            },
-            {
-              "date": "2026-04-30",
-              "ticker": "RVRB",
-              "company": "River Global PLC",
-              "director": "Christopher Mills",
-              "role": "PDMR",
-              "role_normalized": "PDMR-only",
-              "role_class": "",
-              "signal_tier": "t4",
-              "value_gbp": 986000,
-              "car": 5.7,
-              "abs_return": 5.7,
-              "bench_return": 0.0
-            },
-            {
-              "date": "2026-04-30",
-              "ticker": "RVRB",
-              "company": "River Global PLC",
-              "director": "Christopher Mills",
-              "role": "PDMR",
-              "role_normalized": "PDMR-only",
-              "role_class": "T4",
-              "signal_tier": "t4",
-              "value_gbp": 986000,
-              "car": 5.7,
-              "abs_return": 5.7,
-              "bench_return": 0.0
-            },
-            {
-              "date": "2026-07-21",
-              "ticker": "SUP",
-              "company": "Supreme plc",
-              "director": "Sandy Chadha",
-              "role": "Chief Executive Officer",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t1a",
-              "value_gbp": 659055,
-              "car": 4.4,
-              "abs_return": 7.2,
-              "bench_return": 2.8
-            },
-            {
-              "date": "2026-07-21",
-              "ticker": "SUP",
-              "company": "Supreme plc",
-              "director": "Sandy Chadha",
-              "role": "Chief Executive Officer",
-              "role_normalized": "CEO",
-              "role_class": "T1a",
-              "signal_tier": "t1a",
-              "value_gbp": 659055,
-              "car": 4.4,
-              "abs_return": 7.2,
-              "bench_return": 2.8
             }
           ],
           "bottom_firings": [
@@ -56087,6 +56159,14 @@
             }
           ],
           "rollup": [
+            {
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "n": 4,
+              "hit_pct": 100.0,
+              "mean_car": 9.5,
+              "latest_fire": "2026-07-23"
+            },
             {
               "ticker": "RVRB",
               "company": "River Global PLC",
@@ -56234,12 +56314,12 @@
           ]
         },
         "all": {
-          "benchmark_car_pct": 2.46,
-          "total_firings": 73,
-          "distinct_tickers": 21,
-          "tickers_with_n3": 9,
-          "hit_pct": 32.9,
-          "median_car": -1.9,
+          "benchmark_car_pct": 2.12,
+          "total_firings": 77,
+          "distinct_tickers": 22,
+          "tickers_with_n3": 10,
+          "hit_pct": 36.4,
+          "median_car": -1.7,
           "top_firings": [
             {
               "date": "2026-03-05",
@@ -56340,46 +56420,46 @@
               "bench_return": -0.2
             },
             {
-              "date": "2025-05-01",
-              "ticker": "ENT",
-              "company": "",
-              "director": "Eminence Capital, LP",
-              "role": "PCA of Ricky Chad Sandler, a Non-Executive Director of the issuer",
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "LESLIE VAN DE WALLE AND Domitille marie Renée van de walle",
+              "role": "NON-EXECUTIVE CHAIR AND PERSON CLOSELY ASSOCIATED",
               "role_normalized": "PCA",
               "role_class": "",
               "signal_tier": "t5",
-              "value_gbp": 10593724,
-              "car": 9.0,
-              "abs_return": 11.7,
-              "bench_return": 2.7
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
             },
             {
-              "date": "2025-05-01",
-              "ticker": "ENT",
-              "company": "",
-              "director": "Eminence Capital, LP",
-              "role": "PCA of Ricky Chad Sandler, a Non-Executive Director of the issuer",
-              "role_normalized": "PCA",
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "Leslie Van de Walle",
+              "role": "Non-Executive Chair",
+              "role_normalized": "NED",
               "role_class": "",
-              "signal_tier": "t5",
-              "value_gbp": 1482746,
-              "car": 9.0,
-              "abs_return": 11.7,
-              "bench_return": 2.7
+              "signal_tier": "t3",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
             },
             {
-              "date": "2025-05-01",
-              "ticker": "ENT",
-              "company": "",
-              "director": "Eminence Capital, LP",
-              "role": "PCA of Ricky Chad Sandler, a Non-Executive Director of the issuer",
-              "role_normalized": "PCA",
-              "role_class": "T5",
-              "signal_tier": "t5",
-              "value_gbp": 10593724,
-              "car": 9.0,
-              "abs_return": 11.7,
-              "bench_return": 2.7
+              "date": "2026-07-23",
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "director": "Leslie Van de Walle",
+              "role": "Non-Executive Chair",
+              "role_normalized": "NED",
+              "role_class": "T3",
+              "signal_tier": "t3",
+              "value_gbp": 833000,
+              "car": 9.5,
+              "abs_return": 11.3,
+              "bench_return": 1.9
             }
           ],
           "bottom_firings": [
@@ -56525,6 +56605,14 @@
             }
           ],
           "rollup": [
+            {
+              "ticker": "GNC",
+              "company": "Greencore Group plc",
+              "n": 4,
+              "hit_pct": 100.0,
+              "mean_car": 9.5,
+              "latest_fire": "2026-07-23"
+            },
             {
               "ticker": "RVRB",
               "company": "River Global PLC",
