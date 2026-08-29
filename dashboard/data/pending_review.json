@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-28T17:59:56Z",
-  "total": 185,
+  "generated_at": "2026-08-29T12:11:26Z",
+  "total": 186,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
@@ -18,7 +18,7 @@
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 18
+      "count": 19
     },
     {
       "id": "corporate_actions",
@@ -126,7 +126,7 @@
         }
       ],
       "extracted_count": 2,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -805,6 +805,42 @@
       "used_llm": true
     },
     {
+      "rns_id": "9744201",
+      "url": "https://www.investegate.co.uk/announcement/rns/pphe-hotel-group-ltd--pph/grant-and-exercise-of-evp-annual-bonus-plan-awards/9744201",
+      "headline": "Grant and exercise of EVP Annual Bonus Plan awards",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_separate_price_volume",
+        "could_not_classify_type",
+        "could_not_extract_company"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "a3d0eccb8754d562",
+          "date": "2026-08-27",
+          "ticker": "PPH",
+          "company": "",
+          "director": "Greg Hegarty",
+          "role": "Co-Chief Executive Officer",
+          "type": "GRANT",
+          "shares": 12000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/pphe-hotel-group-ltd--pph/grant-and-exercise-of-evp-annual-bonus-plan-awards/9744201",
+          "announced_at": "2026-08-27T16:57:07Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9739912",
       "url": "https://www.investegate.co.uk/announcement/rns/altitude-group--alt/grant-of-options-and-pdmr-dealing/9739912",
       "headline": "Grant of Options and PDMR Dealing",
@@ -867,7 +903,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1556,7 +1592,8 @@
       "headline": "Notification of Dealing Form: Matthew Daley",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "Transaction in AUD on XASX (ASX), not LSE"
       ],
       "extracted": [
         {
@@ -1603,7 +1640,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction involves both exercise (C$2.58) and sale (C$13.00); reporting sale price only"
+        "exercise_and_sale_in_same_transaction"
       ],
       "extracted": [
         {
@@ -1634,18 +1671,18 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "fractional shares (9.221 ADS)",
-        "American Depositary Shares on NYSE; notional acquisition within savings plan"
+        "fractional_shares_rounded",
+        "notional_ADS_in_supplemental_savings_plan"
       ],
       "extracted": [
         {
-          "fingerprint": "62ee36e4dd77f0b6",
+          "fingerprint": "f487e63653fabe40",
           "date": "2026-08-24",
           "ticker": "GSK",
           "company": "GSK plc",
           "director": "Maya Martinez-Davis",
-          "role": "President, US operations",
-          "type": "GRANT",
+          "role": "President, US",
+          "type": "BUY",
           "shares": 9,
           "price": 0.0,
           "value": 0.0,
@@ -1665,8 +1702,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "transaction on JSE, not LSE"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -1682,7 +1718,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/tharisa-di---ths/director-pdmr-shareholding/9741215",
-          "announced_at": "2026-08-26"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -1701,7 +1737,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1732,7 +1768,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2779,12 +2815,14 @@
       "used_llm": false
     },
     {
-      "rns_id": "9740935",
-      "url": "https://www.investegate.co.uk/announcement/rns/tritax-big-box-reit--bbox/pdmr-subscription-for-ordinary-shares/9740935",
-      "headline": "PDMR subscription for ordinary shares",
+      "rns_id": "9740924",
+      "url": "https://www.investegate.co.uk/announcement/rns/rockfire-resources--rock/grant-of-options/9740924",
+      "headline": "Grant of Options",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
+        "could_not_extract_PDMR_name",
+        "multiple_distinct_prices",
+        "required_fields_missing"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -2793,13 +2831,13 @@
       "used_llm": false
     },
     {
-      "rns_id": "9740924",
-      "url": "https://www.investegate.co.uk/announcement/rns/rockfire-resources--rock/grant-of-options/9740924",
-      "headline": "Grant of Options",
+      "rns_id": "9739915",
+      "url": "https://www.investegate.co.uk/announcement/rns/chesnara--csn/director-pdmr-shareholding/9739915",
+      "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "could_not_extract_PDMR_name",
-        "multiple_distinct_prices",
+        "could_not_classify_type",
         "required_fields_missing"
       ],
       "extracted": [],
@@ -2818,7 +2856,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2832,7 +2870,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2850,7 +2888,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
