@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-08-30T08:30:26Z",
-  "total": 183,
+  "generated_at": "2026-08-30T11:06:52Z",
+  "total": 184,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 96
+      "count": 98
     },
     {
       "id": "foreign_currency",
@@ -42,18 +42,18 @@
       "id": "other",
       "name": "Other",
       "recoverable": "unknown",
-      "count": 8
+      "count": 7
     }
   ],
   "items": [
     {
-      "rns_id": "9744243",
-      "url": "https://www.investegate.co.uk/announcement/rns/ajax-resources--ajax/directors-dealings-and-holdings-result-of-agm-/9744243",
-      "headline": "Directors&#039; Dealings and Holdings &amp; Result of AGM",
+      "rns_id": "9742150",
+      "url": "https://www.investegate.co.uk/announcement/rns/tracsis--trcs/award-of-options-/9742150",
+      "headline": "Award of Options",
       "bucket": "could_not_classify",
       "warnings": [
-        "could_not_parse_tx_date",
-        "zero_shares_non_grant",
+        "could_not_extract_company",
+        "could_not_classify_type",
         "required_fields_missing"
       ],
       "extracted": [],
@@ -63,12 +63,11 @@
       "used_llm": false
     },
     {
-      "rns_id": "9742150",
-      "url": "https://www.investegate.co.uk/announcement/rns/tracsis--trcs/award-of-options-/9742150",
-      "headline": "Award of Options",
+      "rns_id": "9741752",
+      "url": "https://www.investegate.co.uk/announcement/rns/morgan-sindall-group--mgns/director-pdmr-shareholding/9741752",
+      "headline": "Director/PDMR Shareholding",
       "bucket": "could_not_classify",
       "warnings": [
-        "could_not_extract_company",
         "could_not_classify_type",
         "required_fields_missing"
       ],
@@ -1403,38 +1402,6 @@
       "used_llm": false
     },
     {
-      "rns_id": "9741752",
-      "url": "https://www.investegate.co.uk/announcement/rns/morgan-sindall-group--mgns/director-pdmr-shareholding/9741752",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "other",
-      "warnings": [
-        "transfer_between_accounts_no_price",
-        "no_change_in_shareholding",
-        "llm_escalated_to:claude-sonnet-5"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "c97bf2c68e8af892",
-          "date": "2026-08-26",
-          "ticker": "MGNS",
-          "company": "Morgan Sindall Group plc",
-          "director": "Rosalind Morgan",
-          "role": "Person closely associated with John Morgan, Chief Executive",
-          "type": "BUY",
-          "shares": 3004,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/morgan-sindall-group--mgns/director-pdmr-shareholding/9741752",
-          "announced_at": ""
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "llm",
-      "used_llm": true
-    },
-    {
       "rns_id": "9736683",
       "url": "https://www.investegate.co.uk/announcement/rns/picton-property-income-ltd--pctn/director-pdmr-shareholding/9736683",
       "headline": "Director/PDMR Shareholding",
@@ -1589,7 +1556,8 @@
       "headline": "Notification of Dealing Form: Matthew Daley",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "transaction on XASX (Australian exchange), not LSE"
       ],
       "extracted": [
         {
@@ -1636,7 +1604,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction includes exercise of options (C$2.58) followed by sale (C$13.00 / £6.89); extraction captures the sale only"
+        "bundled_transaction_exercise_and_sell"
       ],
       "extracted": [
         {
@@ -1667,17 +1635,18 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "ADS transaction on NYSE; price in USD ($51.78), shares rounded from 9.221"
+        "ADS (American Depositary Shares) - not direct share acquisition",
+        "price in USD ($51.78), conversion to GBP not provided"
       ],
       "extracted": [
         {
-          "fingerprint": "f487e63653fabe40",
+          "fingerprint": "c70b562b028b1174",
           "date": "2026-08-24",
           "ticker": "GSK",
           "company": "GSK plc",
           "director": "Maya Martinez-Davis",
           "role": "President, US",
-          "type": "BUY",
+          "type": "EXERCISE",
           "shares": 9,
           "price": 0.0,
           "value": 0.0,
@@ -1697,8 +1666,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "transaction on JSE not LSE"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -2788,6 +2756,38 @@
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9740924",
+      "url": "https://www.investegate.co.uk/announcement/rns/rockfire-resources--rock/grant-of-options/9740924",
+      "headline": "Grant of Options",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "multiple_distinct_prices",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9739915",
+      "url": "https://www.investegate.co.uk/announcement/rns/chesnara--csn/director-pdmr-shareholding/9739915",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "required_fields_missing"
       ],
       "extracted": [],
       "extracted_count": 0,
