@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-30T11:06:52Z",
-  "total": 184,
+  "generated_at": "2026-08-31T12:20:32Z",
+  "total": 183,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
@@ -18,7 +18,7 @@
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 18
+      "count": 17
     },
     {
       "id": "corporate_actions",
@@ -805,57 +805,6 @@
       "used_llm": true
     },
     {
-      "rns_id": "9739912",
-      "url": "https://www.investegate.co.uk/announcement/rns/altitude-group--alt/grant-of-options-and-pdmr-dealing/9739912",
-      "headline": "Grant of Options and PDMR Dealing",
-      "bucket": "multi_tranche",
-      "warnings": [
-        "could_not_separate_price_volume",
-        "could_not_extract_company",
-        "could_not_extract_company"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "affdca138679fe24",
-          "date": "2026-07-03",
-          "ticker": "ALT",
-          "company": "",
-          "director": "Richard Sowerby",
-          "role": "Chief Financial Officer",
-          "type": "GRANT",
-          "shares": 300000,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/altitude-group--alt/grant-of-options-and-pdmr-dealing/9739912",
-          "announced_at": "2026-08-26T07:01:13Z",
-          "buy_strictness": "NON_BUY_ONLY",
-          "resulting_shares": null
-        },
-        {
-          "fingerprint": "0eb5a726e38c5887",
-          "date": "2026-06-30",
-          "ticker": "ALT",
-          "company": "",
-          "director": "Max Roberts",
-          "role": "Independent Non-Executive Director",
-          "type": "GRANT",
-          "shares": 1000000,
-          "price": 0.225,
-          "value": 225000.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/altitude-group--alt/grant-of-options-and-pdmr-dealing/9739912",
-          "announced_at": "2026-08-26T07:01:13Z",
-          "buy_strictness": "NON_BUY_ONLY",
-          "resulting_shares": null
-        }
-      ],
-      "extracted_count": 2,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9739654",
       "url": "https://www.investegate.co.uk/announcement/rns/hsbc-holdings--hsba/notification-of-transactions-by-pdmrs/9739654",
       "headline": "Notification of transactions by PDMRs",
@@ -1556,8 +1505,7 @@
       "headline": "Notification of Dealing Form: Matthew Daley",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "transaction on XASX (Australian exchange), not LSE"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -1573,7 +1521,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/south32-limited-di---s32/notification-of-dealing-form-matthew-daley/9745637",
-          "announced_at": "2026-08-28"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -1604,7 +1552,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "bundled_transaction_exercise_and_sell"
+        "exercise_of_options_also_reported_at_CAD_2.58_per_share"
       ],
       "extracted": [
         {
@@ -1635,18 +1583,17 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "ADS (American Depositary Shares) - not direct share acquisition",
-        "price in USD ($51.78), conversion to GBP not provided"
+        "notional ADS acquisition within executive supplemental savings plan (treatment as grant assumed)"
       ],
       "extracted": [
         {
-          "fingerprint": "c70b562b028b1174",
+          "fingerprint": "62ee36e4dd77f0b6",
           "date": "2026-08-24",
           "ticker": "GSK",
           "company": "GSK plc",
           "director": "Maya Martinez-Davis",
           "role": "President, US",
-          "type": "EXERCISE",
+          "type": "GRANT",
           "shares": 9,
           "price": 0.0,
           "value": 0.0,
@@ -2685,21 +2632,6 @@
       "used_llm": false
     },
     {
-      "rns_id": "9745867",
-      "url": "https://www.investegate.co.uk/announcement/rns/empresaria-group--emr/company-ltip-awards/9745867",
-      "headline": "Company LTIP Awards",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "could_not_extract_PDMR_name",
-        "required_fields_missing"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9743377",
       "url": "https://www.investegate.co.uk/announcement/rns/pinewood-technologies-group--pine/notification-and-public-disclosure-of-transactions/9743377",
       "headline": "Notification and public disclosure of transactions",
@@ -2750,9 +2682,38 @@
       "used_llm": false
     },
     {
+      "rns_id": "9741675",
+      "url": "https://www.investegate.co.uk/announcement/rns/b-m-european-value-retail-s-a-di---bme/director-pdmr-shareholding/9741675",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9741507",
       "url": "https://www.investegate.co.uk/announcement/rns/savills--svs/director-pdmr-shareholding/9741507",
       "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9740935",
+      "url": "https://www.investegate.co.uk/announcement/rns/tritax-big-box-reit--bbox/pdmr-subscription-for-ordinary-shares/9740935",
+      "headline": "PDMR subscription for ordinary shares",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
@@ -2771,22 +2732,6 @@
       "warnings": [
         "could_not_extract_PDMR_name",
         "multiple_distinct_prices",
-        "required_fields_missing"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9739915",
-      "url": "https://www.investegate.co.uk/announcement/rns/chesnara--csn/director-pdmr-shareholding/9739915",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "could_not_extract_PDMR_name",
-        "could_not_classify_type",
         "required_fields_missing"
       ],
       "extracted": [],
