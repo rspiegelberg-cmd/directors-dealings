@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-09-02T10:25:48Z",
-  "total": 195,
+  "generated_at": "2026-09-03T10:35:17Z",
+  "total": 202,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 108
+      "count": 110
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 40
+      "count": 43
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 17
+      "count": 19
     },
     {
       "id": "corporate_actions",
@@ -58,7 +58,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -74,7 +74,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -806,6 +806,39 @@
       "used_llm": true
     },
     {
+      "rns_id": "9754163",
+      "url": "https://www.investegate.co.uk/announcement/rns/dfi-retail-group-holdings-limited-jersey-reg---dfij/director-pdmr-shareholding/9754163",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_classify_type",
+        "could_not_separate_price_volume",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9752226",
+      "url": "https://www.investegate.co.uk/announcement/rns/howden-joinery-group--hwdn/sip-pdmr-notification/9752226",
+      "headline": "SIP PDMR Notification",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_separate_price_volume",
+        "zero_shares_non_grant",
+        "zero_price_non_grant"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9739654",
       "url": "https://www.investegate.co.uk/announcement/rns/hsbc-holdings--hsba/notification-of-transactions-by-pdmrs/9739654",
       "headline": "Notification of transactions by PDMRs",
@@ -1380,7 +1413,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -1534,13 +1567,106 @@
       "used_llm": false
     },
     {
+      "rns_id": "9754084",
+      "url": "https://www.investegate.co.uk/announcement/rns/ming-yang-smart-energy-group-limited--myse/pdmr-notification/9754084",
+      "headline": "PDMR Notification",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "transaction on Shanghai Stock Exchange, not LSE",
+        "GDR listed on LSE but underlying shares traded in CNY on SSE"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "2c07f0e4ba32d982",
+          "date": "2026-09-03",
+          "ticker": "MYSE",
+          "company": "Ming Yang Smart Energy Group Limited",
+          "director": "Wang Chengkui",
+          "role": "Vice President and Board Secretary",
+          "type": "BUY",
+          "shares": 108000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/ming-yang-smart-energy-group-limited--myse/pdmr-notification/9754084",
+          "announced_at": "2026-09-03"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9752893",
+      "url": "https://www.investegate.co.uk/announcement/rns/petrotal-corporation-npv-di---ptal/director-dealing-/9752893",
+      "headline": "Director Dealing",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "Average price in CAD C$0.51541/share; transaction prices range C$0.5124-C$0.5300"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "91844d18cef51d39",
+          "date": "2026-09-01",
+          "ticker": "PTAL",
+          "company": "PetroTal Corp",
+          "director": "Manuel Pablo Zuniga-Pflucker",
+          "role": "President and Chief Executive Officer",
+          "type": "SELL",
+          "shares": 2200000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/petrotal-corporation-npv-di---ptal/director-dealing-/9752893",
+          "announced_at": "2026-09-03"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9752696",
+      "url": "https://www.investegate.co.uk/announcement/rns/bunzl--bnzl/director-pdmr-shareholding/9752696",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "821ffcdbbe8cce94",
+          "date": "2026-09-02",
+          "ticker": "BNZL",
+          "company": "Bunzl plc",
+          "director": "James McCool",
+          "role": "Chief Executive Officer, North America",
+          "type": "BUY",
+          "shares": 39,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/bunzl--bnzl/director-pdmr-shareholding/9752696",
+          "announced_at": "2026-09-02"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9750101",
       "url": "https://www.investegate.co.uk/announcement/rns/national-grid--ng./director-pdmr-shareholding/9750101",
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "American Depositary Shares traded on NYSE, not LSE"
+        "American Depositary Shares traded on NYSE in USD"
       ],
       "extracted": [
         {
@@ -1590,7 +1716,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -1606,7 +1732,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1637,7 +1763,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -1670,7 +1796,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -1701,7 +1827,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2684,6 +2810,56 @@
       "used_llm": true
     },
     {
+      "rns_id": "9754221",
+      "url": "https://www.investegate.co.uk/announcement/rns/thungela-resources-limited-npv-di---tga/dealings-in-securities-/9754221",
+      "headline": "DEALINGS IN SECURITIES",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_parse_tx_date",
+        "could_not_extract_company",
+        "could_not_extract_PDMR_name",
+        "foreign_currency",
+        "multiple_distinct_prices"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9754169",
+      "url": "https://www.investegate.co.uk/announcement/rns/cropper-james---crpr/grant-of-awards-under-deferred-bonus-share-plan/9754169",
+      "headline": "Grant of Awards under Deferred Bonus Share Plan",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9752371",
+      "url": "https://www.investegate.co.uk/announcement/rns/bloomsbury-publishing--bmy/director-pdmr-shareholding/9752371",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9751220",
       "url": "https://www.investegate.co.uk/announcement/rns/greatland-gold--ggp/director-pdmr-shareholding/9751220",
       "headline": "Director/PDMR Shareholding",
@@ -2711,40 +2887,6 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9750115",
-      "url": "https://www.investegate.co.uk/announcement/rns/helios-underwriting--huw/director-pdmr-shareholding-correction-/9750115",
-      "headline": "Director/PDMR Shareholding - Correction",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "could_not_classify_type",
-        "could_not_extract_PDMR_name",
-        "required_fields_missing"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "6c358ee712c52bb3",
-          "date": "2026-07-10",
-          "ticker": "HUW",
-          "company": "Helios Underwriting Plc",
-          "director": "Nigel Hanbury",
-          "role": "Director",
-          "type": "BUY",
-          "shares": 197792,
-          "price": 2.141,
-          "value": 423472.67,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/helios-underwriting--huw/director-pdmr-shareholding-correction-/9750115",
-          "announced_at": "2026-09-01T15:54:06Z",
-          "buy_strictness": "MIXED",
-          "resulting_shares": null
-        }
-      ],
-      "extracted_count": 1,
       "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
@@ -2857,7 +2999,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2875,7 +3017,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2889,7 +3031,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2907,7 +3049,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2922,7 +3064,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2936,7 +3078,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2950,7 +3092,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2966,7 +3108,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2982,7 +3124,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
