@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-09-03T10:35:17Z",
-  "total": 202,
+  "generated_at": "2026-09-04T10:25:38Z",
+  "total": 210,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 110
+      "count": 114
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 43
+      "count": 44
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 19
+      "count": 21
     },
     {
       "id": "corporate_actions",
@@ -36,7 +36,7 @@
       "id": "data_quirks",
       "name": "Zero-share / data quirks",
       "recoverable": "manual",
-      "count": 1
+      "count": 2
     },
     {
       "id": "other",
@@ -776,6 +776,36 @@
       "used_llm": true
     },
     {
+      "rns_id": "9754513",
+      "url": "https://www.investegate.co.uk/announcement/rns/hammerson--hmso/director-pdmr-shareholding/9754513",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "data_quirks",
+      "warnings": [
+        "nil consideration transfer to spouse"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "c62f2b76f1b480bd",
+          "date": "2026-09-03",
+          "ticker": "HMSO",
+          "company": "Hammerson plc",
+          "director": "Rob Wilkinson",
+          "role": "Chief Executive and Executive Director",
+          "type": "SELL",
+          "shares": 28169,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/hammerson--hmso/director-pdmr-shareholding/9754513",
+          "announced_at": "2026-09-03"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9707052",
       "url": "https://www.investegate.co.uk/announcement/rns/cmc-markets--cmcx/director-pdmr-shareholding/9707052",
       "headline": "Director/PDMR Shareholding",
@@ -804,6 +834,92 @@
       "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
+    },
+    {
+      "rns_id": "9755162",
+      "url": "https://www.investegate.co.uk/announcement/rns/southern-energy-corp-npv-di---souc/-restricted-share-award-grant-/9755162",
+      "headline": "RESTRICTED SHARE AWARD GRANT",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_separate_price_volume",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9755156",
+      "url": "https://www.investegate.co.uk/announcement/rns/solid-state--soli/pdmr-dealings-treasury-transfer-tvr/9755156",
+      "headline": "PDMR Dealings, Treasury Transfer &amp; TVR",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_separate_price_volume"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "ce5b616c6e66e482",
+          "date": "2026-07-28",
+          "ticker": "SOLI",
+          "company": "",
+          "director": "John Macmichael",
+          "role": "Chief Executive Officer",
+          "type": "GRANT",
+          "shares": 250,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/solid-state--soli/pdmr-dealings-treasury-transfer-tvr/9755156",
+          "announced_at": "2026-09-04T07:01:19Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "e17c6138b9346de0",
+          "date": "2026-07-28",
+          "ticker": "SOLI",
+          "company": "",
+          "director": "Peter James",
+          "role": "Chief Financial Officer",
+          "type": "GRANT",
+          "shares": 250,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/solid-state--soli/pdmr-dealings-treasury-transfer-tvr/9755156",
+          "announced_at": "2026-09-04T07:01:19Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "c3077dc88e07ae88",
+          "date": "2026-07-28",
+          "ticker": "SOLI",
+          "company": "",
+          "director": "Matthew Richards",
+          "role": "Chief Relationship Officer",
+          "type": "GRANT",
+          "shares": 250,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/solid-state--soli/pdmr-dealings-treasury-transfer-tvr/9755156",
+          "announced_at": "2026-09-04T07:01:19Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 7,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
     },
     {
       "rns_id": "9754163",
@@ -1567,14 +1683,44 @@
       "used_llm": false
     },
     {
+      "rns_id": "9754918",
+      "url": "https://www.investegate.co.uk/announcement/rns/aseana-properties-ltd---aspl/director-pdmr-shareholding/9754918",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "766eb0145a7131e0",
+          "date": "2026-09-03",
+          "ticker": "ASPL",
+          "company": "Aseana Properties Limited",
+          "director": "Leong Kheng Cheong",
+          "role": "Chief Executive Officer",
+          "type": "BUY",
+          "shares": 9000000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/aseana-properties-ltd---aspl/director-pdmr-shareholding/9754918",
+          "announced_at": "2026-09-03"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9754084",
       "url": "https://www.investegate.co.uk/announcement/rns/ming-yang-smart-energy-group-limited--myse/pdmr-notification/9754084",
       "headline": "PDMR Notification",
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction on Shanghai Stock Exchange, not LSE",
-        "GDR listed on LSE but underlying shares traded in CNY on SSE"
+        "transaction on Shanghai Stock Exchange (not LSE)",
+        "shares are A shares (not GDRs)"
       ],
       "extracted": [
         {
@@ -1605,7 +1751,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "Average price in CAD C$0.51541/share; transaction prices range C$0.5124-C$0.5300"
+        "price in Canadian dollars (C$0.51541/share), converted to GBP unknown"
       ],
       "extracted": [
         {
@@ -2810,6 +2956,70 @@
       "used_llm": true
     },
     {
+      "rns_id": "9754951",
+      "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9754951",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "could_not_extract_PDMR_name",
+        "multiple_distinct_prices"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9754610",
+      "url": "https://www.investegate.co.uk/announcement/rns/eurocell--ecel/director-pdmr-shareholding/9754610",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9754548",
+      "url": "https://www.investegate.co.uk/announcement/gnw/sydbank-a-s-sydbank-ord-shs--0mge/transactions-with-shares-in-al-sydbank-by-man-/9754548",
+      "headline": "Transactions with shares in AL Sydbank by man...",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_parse_tx_date",
+        "could_not_extract_company",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "could_not_separate_price_volume"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9754543",
+      "url": "https://www.investegate.co.uk/announcement/rns/british-american-tobacco--bats/director-pdmr-shareholding/9754543",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9754221",
       "url": "https://www.investegate.co.uk/announcement/rns/thungela-resources-limited-npv-di---tga/dealings-in-securities-/9754221",
       "headline": "DEALINGS IN SECURITIES",
@@ -2952,16 +3162,16 @@
       "used_llm": false
     },
     {
-      "rns_id": "9747220",
-      "url": "https://www.investegate.co.uk/announcement/rns/genedrive--gdr/director-pdmr-notification/9747220",
-      "headline": "Director/PDMR Notification",
+      "rns_id": "9748650",
+      "url": "https://www.investegate.co.uk/announcement/rns/staffline-group--staf/director-pdmr-shareholding/9748650",
+      "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "could_not_extract_PDMR_name",
-        "zero_price_non_grant",
+        "could_not_extract_company",
+        "required_fields_missing",
         "could_not_extract_PDMR_name",
-        "multiple_distinct_prices",
-        "zero_shares_non_grant"
+        "required_fields_missing"
       ],
       "extracted": [],
       "extracted_count": 0,
