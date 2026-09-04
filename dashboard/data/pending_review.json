@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-09-04T10:25:38Z",
-  "total": 210,
+  "generated_at": "2026-09-04T14:53:43Z",
+  "total": 214,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 114
+      "count": 116
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 44
+      "count": 45
     },
     {
       "id": "multi_tranche",
@@ -30,22 +30,39 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 20
+      "count": 21
     },
     {
       "id": "data_quirks",
       "name": "Zero-share / data quirks",
       "recoverable": "manual",
-      "count": 2
+      "count": 1
     },
     {
       "id": "other",
       "name": "Other",
       "recoverable": "unknown",
-      "count": 8
+      "count": 9
     }
   ],
   "items": [
+    {
+      "rns_id": "9752267",
+      "url": "https://www.investegate.co.uk/announcement/rns/british-american-tobacco--bats/director-pdmr-shareholding/9752267",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_classify_type",
+        "required_fields_missing",
+        "could_not_classify_type",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9744243",
       "url": "https://www.investegate.co.uk/announcement/rns/ajax-resources--ajax/directors-dealings-and-holdings-result-of-agm-/9744243",
@@ -776,36 +793,6 @@
       "used_llm": true
     },
     {
-      "rns_id": "9754513",
-      "url": "https://www.investegate.co.uk/announcement/rns/hammerson--hmso/director-pdmr-shareholding/9754513",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "data_quirks",
-      "warnings": [
-        "nil consideration transfer to spouse"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "c62f2b76f1b480bd",
-          "date": "2026-09-03",
-          "ticker": "HMSO",
-          "company": "Hammerson plc",
-          "director": "Rob Wilkinson",
-          "role": "Chief Executive and Executive Director",
-          "type": "SELL",
-          "shares": 28169,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/hammerson--hmso/director-pdmr-shareholding/9754513",
-          "announced_at": "2026-09-03"
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "llm",
-      "used_llm": true
-    },
-    {
       "rns_id": "9707052",
       "url": "https://www.investegate.co.uk/announcement/rns/cmc-markets--cmcx/director-pdmr-shareholding/9707052",
       "headline": "Director/PDMR Shareholding",
@@ -1501,6 +1488,36 @@
       "used_llm": false
     },
     {
+      "rns_id": "9754513",
+      "url": "https://www.investegate.co.uk/announcement/rns/hammerson--hmso/director-pdmr-shareholding/9754513",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "other",
+      "warnings": [
+        "nil_consideration_transfer_to_spouse"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "c62f2b76f1b480bd",
+          "date": "2026-09-03",
+          "ticker": "HMSO",
+          "company": "Hammerson plc",
+          "director": "Rob Wilkinson",
+          "role": "Chief Executive and Executive Director",
+          "type": "SELL",
+          "shares": 28169,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/hammerson--hmso/director-pdmr-shareholding/9754513",
+          "announced_at": "2026-09-03"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9741752",
       "url": "https://www.investegate.co.uk/announcement/rns/morgan-sindall-group--mgns/director-pdmr-shareholding/9741752",
       "headline": "Director/PDMR Shareholding",
@@ -1688,7 +1705,8 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "price in USD (US$0.07 per share, approximately US$630,000 total)"
       ],
       "extracted": [
         {
@@ -1719,8 +1737,8 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction on Shanghai Stock Exchange (not LSE)",
-        "shares are A shares (not GDRs)"
+        "Shanghai Stock Exchange transaction (not LSE)",
+        "price in CNY not GBP"
       ],
       "extracted": [
         {
@@ -1751,7 +1769,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "price in Canadian dollars (C$0.51541/share), converted to GBP unknown"
+        "price in CAD (C$0.51541), converted value not calculated"
       ],
       "extracted": [
         {
@@ -1812,7 +1830,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "American Depositary Shares traded on NYSE in USD"
+        "transaction in USD on NYSE; American Depositary Shares, not direct LSE listing"
       ],
       "extracted": [
         {
@@ -1828,7 +1846,38 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/national-grid--ng./director-pdmr-shareholding/9750101",
-          "announced_at": "2026-09-01"
+          "announced_at": ""
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9749993",
+      "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9749993",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "llm_escalated_to:claude-sonnet-5"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "87142ba458c80a54",
+          "date": "2026-08-28",
+          "ticker": "N91",
+          "company": "Ninety One plc",
+          "director": "Forty Two Point Two (PCA of Hendrik du Toit and Kim McFarland)",
+          "role": "Person closely associated with Directors",
+          "type": "BUY",
+          "shares": 2234202,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9749993",
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2956,6 +3005,68 @@
       "used_llm": true
     },
     {
+      "rns_id": "9757299",
+      "url": "https://www.investegate.co.uk/announcement/rns/hays--has/director-pdmr-shareholding/9757299",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9756951",
+      "url": "https://www.investegate.co.uk/announcement/rns/natwest-group--nwg/director-pdmr-shareholding/9756951",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9756856",
+      "url": "https://www.investegate.co.uk/announcement/rns/latham-james---lthm/pdmr-dealings-/9756856",
+      "headline": "PDMR Dealings",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9756647",
+      "url": "https://www.investegate.co.uk/announcement/rns/record--rec/director-pdmr-shareholding/9756647",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9754951",
       "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9754951",
       "headline": "Director/PDMR Shareholding",
@@ -3056,20 +3167,6 @@
       "used_llm": false
     },
     {
-      "rns_id": "9752371",
-      "url": "https://www.investegate.co.uk/announcement/rns/bloomsbury-publishing--bmy/director-pdmr-shareholding/9752371",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9751220",
       "url": "https://www.investegate.co.uk/announcement/rns/greatland-gold--ggp/director-pdmr-shareholding/9751220",
       "headline": "Director/PDMR Shareholding",
@@ -3102,44 +3199,12 @@
       "used_llm": false
     },
     {
-      "rns_id": "9750033",
-      "url": "https://www.investegate.co.uk/announcement/rns/severfield--sfr/severfield-plc-director-pdmr-shareholding/9750033",
-      "headline": "Severfield PLC - Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9749994",
       "url": "https://www.investegate.co.uk/announcement/rns/tesco--tsco/director-pdmr-shareholding/9749994",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9749993",
-      "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9749993",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "could_not_extract_PDMR_name",
-        "could_not_extract_company",
-        "zero_price_non_grant",
-        "could_not_extract_PDMR_name",
-        "foreign_currency"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -3172,6 +3237,24 @@
         "required_fields_missing",
         "could_not_extract_PDMR_name",
         "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9747220",
+      "url": "https://www.investegate.co.uk/announcement/rns/genedrive--gdr/director-pdmr-notification/9747220",
+      "headline": "Director/PDMR Notification",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "zero_price_non_grant",
+        "could_not_extract_PDMR_name",
+        "multiple_distinct_prices",
+        "zero_shares_non_grant"
       ],
       "extracted": [],
       "extracted_count": 0,
