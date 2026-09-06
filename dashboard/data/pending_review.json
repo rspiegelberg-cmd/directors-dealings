@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-05T09:54:55Z",
-  "total": 214,
+  "generated_at": "2026-09-06T10:11:01Z",
+  "total": 215,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
@@ -30,7 +30,7 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 22
+      "count": 23
     },
     {
       "id": "data_quirks",
@@ -46,6 +46,42 @@
     }
   ],
   "items": [
+    {
+      "rns_id": "9757399",
+      "url": "https://www.investegate.co.uk/announcement/rns/ondo-insurtech--ondo/director-pdmr-shareholding/9757399",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "volume_only_contained_dates",
+        "could_not_extract_company",
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "23974163fe740d2e",
+          "date": "2026-09-01",
+          "ticker": "ONDO",
+          "company": "",
+          "director": "Craig Foster",
+          "role": "Chief Executive Officer and PDMR",
+          "type": "SIP",
+          "shares": 2308,
+          "price": 0.065,
+          "value": 150.02,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/ondo-insurtech--ondo/director-pdmr-shareholding/9757399",
+          "announced_at": "2026-09-04T17:35:06Z",
+          "buy_strictness": "MIXED",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9757359",
       "url": "https://www.investegate.co.uk/announcement/prn/sunbelt-rentals-holdings-inc---sunb/transactions-by-directors-and-persons-dischar-/9757359",
@@ -868,7 +904,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "data_quirks",
       "warnings": [
-        "Transfer to spouse at nil consideration - not a market transaction"
+        "transfer to spouse at nil consideration"
       ],
       "extracted": [
         {
@@ -1807,7 +1843,7 @@
       "warnings": [
         "foreign_currency",
         "transaction on Shanghai Stock Exchange, not LSE",
-        "shares are A shares traded in CNY, not GDRs on LSE"
+        "shares are A shares on Chinese exchange, not GDRs"
       ],
       "extracted": [
         {
@@ -1823,7 +1859,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/ming-yang-smart-energy-group-limited--myse/pdmr-notification/9754084",
-          "announced_at": "2026-09-03"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -1838,7 +1874,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction_in_canadian_dollars_C$0.51541_per_share"
+        "transaction_date_range_August_31_to_September_1_2026_averaged_at_C$0.51541_per_share"
       ],
       "extracted": [
         {
@@ -1854,7 +1890,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/petrotal-corporation-npv-di---ptal/director-dealing-/9752893",
-          "announced_at": "2026-09-03"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -1868,7 +1904,8 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "price in USD ($33.16001 per share), converted to GBP not performed"
       ],
       "extracted": [
         {
@@ -1884,7 +1921,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/bunzl--bnzl/director-pdmr-shareholding/9752696",
-          "announced_at": "2026-09-02"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -1899,7 +1936,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in USD on NYSE; American Depositary Shares; conversion to GBP not provided"
+        "American Depositary Shares traded on NYSE in USD"
       ],
       "extracted": [
         {
@@ -1934,12 +1971,12 @@
       ],
       "extracted": [
         {
-          "fingerprint": "84074e488153dde9",
+          "fingerprint": "87142ba458c80a54",
           "date": "2026-08-28",
           "ticker": "N91",
-          "company": "Ninety One plc",
-          "director": "Forty Two Point Two (associated with Hendrik du Toit and Kim McFarland)",
-          "role": "Persons closely associated with Directors",
+          "company": "Ninety One plc / Ninety One Limited",
+          "director": "Forty Two Point Two (PCA of Hendrik du Toit and Kim McFarland)",
+          "role": "Persons Closely Associated with Directors",
           "type": "BUY",
           "shares": 2234202,
           "price": 0.0,
@@ -3254,20 +3291,6 @@
       "used_llm": false
     },
     {
-      "rns_id": "9750414",
-      "url": "https://www.investegate.co.uk/announcement/rns/audioboom-group--boom/award-of-rsus-and-grant-of-options/9750414",
-      "headline": "Award of RSUs and Grant of Options",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9749994",
       "url": "https://www.investegate.co.uk/announcement/rns/tesco--tsco/director-pdmr-shareholding/9749994",
       "headline": "Director/PDMR Shareholding",
@@ -3288,6 +3311,24 @@
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9748650",
+      "url": "https://www.investegate.co.uk/announcement/rns/staffline-group--staf/director-pdmr-shareholding/9748650",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
       ],
       "extracted": [],
       "extracted_count": 0,
