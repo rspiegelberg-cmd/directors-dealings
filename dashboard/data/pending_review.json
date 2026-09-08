@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-07T11:14:56Z",
-  "total": 216,
+  "generated_at": "2026-09-08T08:14:08Z",
+  "total": 219,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 118
+      "count": 122
     },
     {
       "id": "foreign_currency",
@@ -30,7 +30,7 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 22
+      "count": 21
     },
     {
       "id": "data_quirks",
@@ -46,42 +46,6 @@
     }
   ],
   "items": [
-    {
-      "rns_id": "9757399",
-      "url": "https://www.investegate.co.uk/announcement/rns/ondo-insurtech--ondo/director-pdmr-shareholding/9757399",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "could_not_classify",
-      "warnings": [
-        "could_not_extract_company",
-        "volume_only_contained_dates",
-        "could_not_extract_company",
-        "zero_shares_non_grant",
-        "required_fields_missing"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "23974163fe740d2e",
-          "date": "2026-09-01",
-          "ticker": "ONDO",
-          "company": "",
-          "director": "Craig Foster",
-          "role": "Chief Executive Officer and PDMR",
-          "type": "SIP",
-          "shares": 2308,
-          "price": 0.065,
-          "value": 150.02,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/ondo-insurtech--ondo/director-pdmr-shareholding/9757399",
-          "announced_at": "2026-09-04T17:35:06Z",
-          "buy_strictness": "MIXED",
-          "resulting_shares": null
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
     {
       "rns_id": "9757359",
       "url": "https://www.investegate.co.uk/announcement/prn/sunbelt-rentals-holdings-inc---sunb/transactions-by-directors-and-persons-dischar-/9757359",
@@ -1794,7 +1758,8 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "Transaction price in US dollars (US$0.07 per share); conversion to GBP not provided"
       ],
       "extracted": [
         {
@@ -1826,7 +1791,7 @@
       "warnings": [
         "foreign_currency",
         "transaction on Shanghai Stock Exchange, not LSE",
-        "A shares, not GDR"
+        "price in CNY (9.365 per share); conversion to GBP not provided"
       ],
       "extracted": [
         {
@@ -1857,7 +1822,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "price in Canadian dollars (C$0.51541/share)"
+        "Price in CAD (C$0.51541/share); converted value not calculated"
       ],
       "extracted": [
         {
@@ -1917,8 +1882,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "transaction in USD on NYSE, not LSE"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -3062,16 +3026,61 @@
       "used_llm": true
     },
     {
-      "rns_id": "9758783",
-      "url": "https://www.investegate.co.uk/announcement/rns/helical--hlcl/director-pdmr-shareholding/9758783",
+      "rns_id": "9759695",
+      "url": "https://www.investegate.co.uk/announcement/rns/diageo--dge/director-pdmr-shareholding/9759695",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "could_not_parse_tx_date",
-        "could_not_extract_company",
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9759396",
+      "url": "https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9759396",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
         "could_not_extract_PDMR_name",
-        "could_not_classify_type",
-        "required_fields_missing"
+        "multiple_distinct_prices",
+        "zero_shares_non_grant",
+        "zero_price_non_grant"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9759275",
+      "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9759275",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "could_not_extract_PDMR_name",
+        "multiple_distinct_prices"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9759146",
+      "url": "https://www.investegate.co.uk/announcement/rns/rathbones-group--rat/director-pdmr-shareholding/9759146",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -3263,6 +3272,20 @@
       "rns_id": "9750414",
       "url": "https://www.investegate.co.uk/announcement/rns/audioboom-group--boom/award-of-rsus-and-grant-of-options/9750414",
       "headline": "Award of RSUs and Grant of Options",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9750033",
+      "url": "https://www.investegate.co.uk/announcement/rns/severfield--sfr/severfield-plc-director-pdmr-shareholding/9750033",
+      "headline": "Severfield PLC - Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
