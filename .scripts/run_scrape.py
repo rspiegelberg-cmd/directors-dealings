@@ -21,7 +21,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import date as _date_cls, datetime, timedelta, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -168,6 +168,65 @@ def _row_is_ingestable(row: dict, warnings: list) -> bool:
         if price == 0.0 or value == 0.0:
             return False
     return True
+
+
+# ── B-210 date guard ────────────────────────────────────────────────────────
+# Mirrors, exactly, the four date invariants that .scripts/audit_dates.py
+# checks AFTER the fact (I1 format, I2 not future-dated, I3 <= announced+7d,
+# I4 >= announced-3y). Enforcing them at INGEST means a row the audit would
+# later reject can never reach `transactions` in the first place.
+#
+# Why this exists (2026-09-07): Blencowe Resources RNS 9756998, announced
+# 2026-09-04, stated its own transaction date as 2026-09-09 -- a future date,
+# in the issuer's own filing. The parser read it correctly; there was no bug.
+# But that one row (of 7,403) failed invariant I2, which failed the audit,
+# which failed refresh_all, which meant daily-refresh.yml skipped the Supabase
+# upload -- every day, behind a green tick, from 5 Sep until it was found by
+# hand on 7 Sep. Three days of filings collected and thrown away because one
+# AIM company mistyped a date.
+#
+# Bad dates are a data problem, so they belong in the pending queue where a
+# human can see and fix them -- not in a gate that silently stops the product.
+_ISO_DATE_RE = _re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+# Same thresholds as audit_dates.py. Keep the two in step: if one moves, the
+# other must move with it, or rows will be ingested that the audit rejects.
+_MAX_DAYS_AFTER_ANNOUNCEMENT = 7      # audit I3
+_MAX_DAYS_BEFORE_ANNOUNCEMENT = 1095  # audit I4 (3 years)
+
+
+def _date_rejection_reason(row: dict) -> str | None:
+    """Return a short reason string if this row's date is unusable, else None.
+
+    Deliberately conservative: when the filing date is missing or unparseable
+    we only apply the checks that do not need it, rather than guessing.
+    """
+    raw = (row.get("date") or "").strip()
+    if not _ISO_DATE_RE.match(raw):
+        return "non_iso_date_format"
+    try:
+        d = _date_cls.fromisoformat(raw)
+    except ValueError:
+        return "non_iso_date_format"
+
+    # I2: not in the future. One day of slack absorbs timezone edges between
+    # a London filing and a UTC runner -- the same slack the audit allows.
+    today = datetime.now(timezone.utc).date()
+    if (d - today).days > 1:
+        return f"future_dated:{raw}"
+
+    announced_raw = (row.get("announced_at") or "")[:10]
+    try:
+        announced = _date_cls.fromisoformat(announced_raw)
+    except ValueError:
+        return None  # no usable filing date -> I3/I4 cannot be judged
+
+    gap = (d - announced).days
+    if gap > _MAX_DAYS_AFTER_ANNOUNCEMENT:
+        return f"date_after_announced:+{gap}d"
+    if gap < -_MAX_DAYS_BEFORE_ANNOUNCEMENT:
+        return f"date_too_old:{gap}d"
+    return None
 
 
 def _load_excluded_tickers(conn) -> set:
@@ -477,6 +536,7 @@ def run(args) -> int:
     pending_count = 0
     inserts = 0
     excluded_at_ingest = 0
+    date_rejects = 0           # B-210: rows pended for an unusable date
     llm_error_count = 0        # B-207: ANY failing LLM fallback call
     llm_error_messages: dict[str, int] = {}  # message -> count
     llm_missing_key_count = 0  # B-199: filings blocked specifically by a
@@ -640,7 +700,23 @@ def run(args) -> int:
             if extracted:
                 kept = []           # ingestable, not excluded → insert
                 pending_rows = []   # blocked rows → route filing to pending
+                date_warnings = []  # B-210: reasons this filing had bad dates
                 for ex in extracted:
+                    # B-210: date guard runs FIRST and is kept separate from
+                    # `warnings`, so a bad date on one row cannot change the
+                    # blocking-warning verdict for the other rows in the same
+                    # filing. See _date_rejection_reason above.
+                    date_reason = _date_rejection_reason(ex)
+                    if date_reason:
+                        date_rejects += 1
+                        marker = f"bad_transaction_date:{date_reason}"
+                        if marker not in date_warnings:
+                            date_warnings.append(marker)
+                        if verbose or args.dry_run:
+                            print(f"  DATE-REJECT {rns_id}: "
+                                  f"{ex.get('ticker')} {date_reason}")
+                        pending_rows.append(ex)
+                        continue
                     if not _row_is_ingestable(ex, warnings):
                         pending_rows.append(ex)
                         continue
@@ -681,7 +757,7 @@ def run(args) -> int:
                     pending[rns_id] = {
                         "url": url,
                         "headline": row.get("headline"),
-                        "warnings": warnings,
+                        "warnings": warnings + date_warnings,
                         "extracted": pending_rows,
                         "parser_source": source,
                         "used_llm": used_llm,
@@ -743,6 +819,7 @@ def run(args) -> int:
         "inserts": inserts,
         "pending_count": pending_count,
         "excluded_at_ingest": excluded_at_ingest,
+        "date_rejects": date_rejects,
         "llm_missing_key_count": llm_missing_key_count,
         "llm_error_count": llm_error_count,
         "llm_top_error": (max(llm_error_messages.items(), key=lambda kv: kv[1])[0]
@@ -776,6 +853,17 @@ def run(args) -> int:
             f"::error::{pct_pending:.0f}% of filings seen this run went to the "
             f"pending queue ({pending_count} of {filings_seen}) instead of the "
             "dashboard. Anything above ~30% means collection is degraded."
+        )
+
+    # B-210: bad dates are now pended rather than ingested, so they no longer
+    # stop the pipeline. That makes them easy to ignore -- say so out loud.
+    if date_rejects > 0:
+        print(
+            f"::warning::{date_rejects} row(s) were routed to pending because "
+            "their transaction date is unusable (non-ISO, dated in the future, "
+            "or too far from the announcement date). These are usually errors "
+            "in the issuer's own filing. They are visible in the pending queue "
+            "with a bad_transaction_date warning; the run is NOT blocked."
         )
 
     if llm_missing_key_count > 0:

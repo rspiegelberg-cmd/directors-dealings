@@ -130,7 +130,20 @@ jobs:
             fi
           fi
 
-      - name: Surface pipeline failure (so a skipped upload is never silent)
+      # B-210 (2026-09-07): this step used to print a ::warning:: and stop.
+      # A warning does NOT turn the job red, and the commit step above always
+      # runs, so a run that collected filings and then discarded them looked
+      # identical to a healthy one: green tick, fresh commit, dashboard pages
+      # updated. The live site reads Supabase directly, so it silently froze
+      # for three days (5-7 Sep) before anyone noticed by eye.
+      #
+      # A skipped upload means the day's data was thrown away. That is a
+      # failed run and must look like one -- red in the Actions list, and an
+      # email from GitHub's default "workflow run failed" notification. The
+      # dashboard commit has already happened by this point, so failing here
+      # costs nothing but honesty.
+      - name: Fail the run if the Supabase upload was skipped
         if: steps.pipeline.outcome != 'success'
         run: |
-          echo "::warning::refresh_all did not exit clean (outcome=${{ steps.pipeline.outcome }}); upload to Supabase was SKIPPED to avoid pushing a bad state. Review the pipeline log."
+          echo "::error::UPLOAD SKIPPED -- no new data reached Supabase. refresh_all exited non-clean (outcome=${{ steps.pipeline.outcome }}), so the 'Upload results -> Supabase' step did not run and this run's filings were discarded. The live site is now stale and will STAY stale until this is fixed: the scrape window is derived from the newest transaction in Supabase, so every further run re-collects the same days and discards them again. Review the pipeline step log above, fix the cause, then re-run this workflow."
+          exit 1

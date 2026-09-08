@@ -525,15 +525,69 @@ def run_pipeline(*, scrape_days: int | None = None, no_llm: bool = False,
             f"{k} ({v.get('bad', 0)} bad)"
             for k, v in summary.items() if not v.get("pass", False)
         ]
-        base_state["status"] = "error"
-        base_state["error"] = (
-            "Date integrity audit failed: " + ", ".join(failing) +
-            ". See .data/_date_audit_report.json and the dashboard "
-            "Data Quality panel."
+
+        # ── B-210: the gate is PROPORTIONAL ──────────────────────────────
+        # This gate used to fail the entire pipeline whenever ANY invariant
+        # reported a single bad row -- and because daily-refresh.yml runs the
+        # Supabase upload only `if steps.pipeline.outcome == 'success'`, a
+        # failed pipeline meant the day's collected filings were silently
+        # thrown away.
+        #
+        # On 2026-09-05 that is exactly what happened. Blencowe Resources
+        # (RNS 9756998, announced 4 Sep) stated a transaction date of 9 Sep --
+        # an error in the issuer's own filing. One bad row out of 7,403 failed
+        # invariant I2, so nothing reached Supabase on 5, 6 or 7 September.
+        # The workflow showed a green tick throughout, because the static
+        # dashboard files kept being rebuilt and committed regardless.
+        #
+        # Two changes together fix that class of failure:
+        #   1. run_scrape.py now refuses to ingest a row whose date breaks
+        #      these same invariants (it goes to the pending queue instead),
+        #      so new bad rows cannot appear here at all.
+        #   2. This gate now blocks only on corruption at SCALE. A handful of
+        #      legacy bad rows is a data-quality warning -- loud, visible on
+        #      the dashboard's Data Quality panel, and worth fixing -- but it
+        #      is never a reason to discard a whole day of good filings.
+        #
+        # Both thresholds must be met to block: a proportion (so a big table
+        # isn't tripped by a rounding error) and an absolute floor (so a small
+        # table isn't tripped by a single row).
+        AUDIT_BLOCK_SHARE = 0.01   # >=1% of the rows that invariant checked
+        AUDIT_BLOCK_MIN_ROWS = 5   # ...and at least this many bad rows
+
+        systemic = []
+        for name, inv in summary.items():
+            if inv.get("pass", False):
+                continue
+            bad = int(inv.get("bad", 0) or 0)
+            checked = bad + int(inv.get("ok", 0) or 0)
+            share = bad / checked if checked else 1.0
+            if bad >= AUDIT_BLOCK_MIN_ROWS and share >= AUDIT_BLOCK_SHARE:
+                systemic.append(f"{name} ({bad} bad, {share:.1%} of rows)")
+
+        if systemic:
+            base_state["status"] = "error"
+            base_state["error"] = (
+                "Date integrity audit failed at scale: " + ", ".join(systemic) +
+                ". See .data/_date_audit_report.json and the dashboard "
+                "Data Quality panel."
+            )
+            base_state["finished_at"] = _now_iso()
+            write_status(base_state)
+            return base_state
+
+        # Below the blocking threshold: proceed with the upload, but make the
+        # bad rows impossible to miss on the run page.
+        print(
+            "::warning::Date integrity audit reported bad rows: "
+            + ", ".join(failing) +
+            ". This is below the blocking threshold "
+            f"(>={AUDIT_BLOCK_MIN_ROWS} rows AND >={AUDIT_BLOCK_SHARE:.0%} of "
+            "rows checked), so the run continues and the upload proceeds -- "
+            "one bad row must never cost a day of filings. The offending rows "
+            "are listed in .data/_date_audit_report.json and on the "
+            "dashboard's Data Quality panel; fix them there."
         )
-        base_state["finished_at"] = _now_iso()
-        write_status(base_state)
-        return base_state
 
     base_state["status"] = "done"
     base_state["step"] = None
