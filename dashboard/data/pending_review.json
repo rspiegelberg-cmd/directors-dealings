@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-09-08T10:21:25Z",
-  "total": 221,
+  "generated_at": "2026-09-09T10:36:13Z",
+  "total": 225,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 124
+      "count": 127
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 44
+      "count": 45
     },
     {
       "id": "multi_tranche",
@@ -1753,6 +1753,36 @@
       "used_llm": false
     },
     {
+      "rns_id": "9761643",
+      "url": "https://www.investegate.co.uk/announcement/rns/banco-santander-s-a---bnc/director-pdmr-shareholding-replacement/9761643",
+      "headline": "Director/PDMR Shareholding - Replacement",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "ef55f9f4d41819f7",
+          "date": "2026-08-10",
+          "ticker": "BNC",
+          "company": "Banco Santander S.A.",
+          "director": "Gina Diez Barroso",
+          "role": "Director",
+          "type": "BUY",
+          "shares": 6494,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/banco-santander-s-a---bnc/director-pdmr-shareholding-replacement/9761643",
+          "announced_at": "2026-09-08"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9754918",
       "url": "https://www.investegate.co.uk/announcement/rns/aseana-properties-ltd---aspl/director-pdmr-shareholding/9754918",
       "headline": "Director/PDMR Shareholding",
@@ -3024,6 +3054,56 @@
       "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
+    },
+    {
+      "rns_id": "9761851",
+      "url": "https://www.investegate.co.uk/announcement/rns/spirax-group-plc--spx/director-pdmr-shareholding/9761851",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9761765",
+      "url": "https://www.investegate.co.uk/announcement/rns/gran-tierra-energy-inc-cdi---gte/director-pdmr-shareholding/9761765",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "could_not_separate_price_volume",
+        "zero_shares_non_grant"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9761681",
+      "url": "https://www.investegate.co.uk/announcement/rns/barclays--barc/director-pdmr-shareholding/9761681",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
     },
     {
       "rns_id": "9760884",
