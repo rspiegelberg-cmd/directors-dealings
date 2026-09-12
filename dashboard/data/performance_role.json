@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T10:28:20Z",
+  "generated_at": "2026-09-12T10:03:02Z",
   "schema_version": "1.0",
   "roles": {
     "t1a": {
@@ -7,11 +7,11 @@
       "t1": {
         "30d": {
           "benchmark_car_pct": 0.22,
-          "total_firings": 26,
-          "distinct_tickers": 14,
+          "total_firings": 25,
+          "distinct_tickers": 13,
           "tickers_with_n3": 2,
-          "hit_pct": 80.8,
-          "median_car": 0.8,
+          "hit_pct": 84.0,
+          "median_car": 0.9,
           "top_firings": [
             {
               "date": "2026-08-28",
@@ -184,20 +184,6 @@
               "bench_return": -0.1
             },
             {
-              "date": "2026-08-12",
-              "ticker": "STEM",
-              "company": "SThree plc",
-              "director": "Timo Lehne",
-              "role": "Director and Chief Executive Officer",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "f1",
-              "value_gbp": 59070,
-              "car": -1.2,
-              "abs_return": -1.5,
-              "bench_return": -0.4
-            },
-            {
               "date": "2026-08-26",
               "ticker": "BATS",
               "company": "British American Tobacco p.l.c.",
@@ -238,6 +224,20 @@
               "car": 0.1,
               "abs_return": 0.4,
               "bench_return": 0.2
+            },
+            {
+              "date": "2026-08-17",
+              "ticker": "SRE",
+              "company": "Sirius Real Estate Limited",
+              "director": "Andrew Coombs",
+              "role": "Chief Executive Officer",
+              "role_normalized": "CEO",
+              "role_class": "",
+              "signal_tier": "t0",
+              "value_gbp": 239875,
+              "car": 0.2,
+              "abs_return": 0.4,
+              "bench_return": 0.1
             },
             {
               "date": "2026-08-17",
@@ -400,14 +400,6 @@
               "hit_pct": 0.0,
               "mean_car": -0.1,
               "latest_fire": "2026-09-09"
-            },
-            {
-              "ticker": "STEM",
-              "company": "SThree plc",
-              "n": 1,
-              "hit_pct": 0.0,
-              "mean_car": -1.2,
-              "latest_fire": "2026-08-12"
             }
           ]
         },
@@ -1002,11 +994,11 @@
           ]
         },
         "6m": {
-          "benchmark_car_pct": -0.09,
-          "total_firings": 169,
+          "benchmark_car_pct": -0.1,
+          "total_firings": 166,
           "distinct_tickers": 77,
-          "tickers_with_n3": 16,
-          "hit_pct": 55.6,
+          "tickers_with_n3": 15,
+          "hit_pct": 56.6,
           "median_car": 0.2,
           "top_firings": [
             {
@@ -1152,48 +1144,6 @@
           ],
           "bottom_firings": [
             {
-              "date": "2026-03-12",
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "director": "Greg Fitzgerald",
-              "role": "Executive Chair and CEO",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t0",
-              "value_gbp": 893303,
-              "car": -6.3,
-              "abs_return": -5.8,
-              "bench_return": 0.5
-            },
-            {
-              "date": "2026-03-12",
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "director": "Greg Fitzgerald",
-              "role": "Executive Chair and CEO",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t0",
-              "value_gbp": 893303,
-              "car": -6.3,
-              "abs_return": -5.8,
-              "bench_return": 0.5
-            },
-            {
-              "date": "2026-03-12",
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "director": "Greg Fitzgerald",
-              "role": "Executive Chair and CEO",
-              "role_normalized": "CEO",
-              "role_class": "T1a",
-              "signal_tier": "t0",
-              "value_gbp": 893303,
-              "car": -6.3,
-              "abs_return": -5.8,
-              "bench_return": 0.5
-            },
-            {
               "date": "2026-05-26",
               "ticker": "HWG",
               "company": "Harworth Group plc",
@@ -1290,6 +1240,48 @@
               "car": -4.0,
               "abs_return": -3.3,
               "bench_return": 0.6
+            },
+            {
+              "date": "2026-06-17",
+              "ticker": "IGR",
+              "company": "IG Design Group plc",
+              "director": "Anders Hedlund",
+              "role": "Founder and Non-Executive Director",
+              "role_normalized": "Founder",
+              "role_class": "",
+              "signal_tier": "t0",
+              "value_gbp": 14645523,
+              "car": -3.6,
+              "abs_return": -4.2,
+              "bench_return": -0.5
+            },
+            {
+              "date": "2026-06-17",
+              "ticker": "IGR",
+              "company": "IG Design Group plc",
+              "director": "Anders Hedlund",
+              "role": "Founder and Non-Executive Director",
+              "role_normalized": "Founder",
+              "role_class": "",
+              "signal_tier": "t0",
+              "value_gbp": 14645523,
+              "car": -3.6,
+              "abs_return": -4.2,
+              "bench_return": -0.5
+            },
+            {
+              "date": "2026-06-17",
+              "ticker": "IGR",
+              "company": "IG Design Group plc",
+              "director": "Anders Hedlund",
+              "role": "Founder and Non-Executive Director",
+              "role_normalized": "Founder",
+              "role_class": "T1a",
+              "signal_tier": "t0",
+              "value_gbp": 14645523,
+              "car": -3.6,
+              "abs_return": -4.2,
+              "bench_return": -0.5
             }
           ],
           "rollup": [
@@ -1319,7 +1311,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 3,
               "hit_pct": 100.0,
               "mean_car": 0.9,
@@ -1364,14 +1356,6 @@
               "hit_pct": 77.8,
               "mean_car": 1.6,
               "latest_fire": "2026-08-26"
-            },
-            {
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "n": 5,
-              "hit_pct": 40.0,
-              "mean_car": -3.0,
-              "latest_fire": "2026-07-15"
             },
             {
               "ticker": "IGR",
@@ -1678,6 +1662,14 @@
               "latest_fire": "2026-08-24"
             },
             {
+              "ticker": "VTY",
+              "company": "Vistry Group PLC",
+              "n": 2,
+              "hit_pct": 100.0,
+              "mean_car": 1.9,
+              "latest_fire": "2026-07-15"
+            },
+            {
               "ticker": "YNGA",
               "company": "",
               "n": 1,
@@ -1913,10 +1905,10 @@
         },
         "1y": {
           "benchmark_car_pct": -0.01,
-          "total_firings": 290,
+          "total_firings": 289,
           "distinct_tickers": 127,
           "tickers_with_n3": 30,
-          "hit_pct": 51.0,
+          "hit_pct": 50.9,
           "median_car": 0.1,
           "top_firings": [
             {
@@ -2276,20 +2268,20 @@
               "latest_fire": "2025-12-04"
             },
             {
-              "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
-              "n": 10,
-              "hit_pct": 70.0,
-              "mean_car": 0.4,
-              "latest_fire": "2026-03-23"
-            },
-            {
               "ticker": "CAR",
               "company": "Carclo plc",
               "n": 3,
               "hit_pct": 66.7,
               "mean_car": -0.6,
               "latest_fire": "2025-11-25"
+            },
+            {
+              "ticker": "LLOY",
+              "company": "",
+              "n": 9,
+              "hit_pct": 66.7,
+              "mean_car": 0.2,
+              "latest_fire": "2026-03-23"
             },
             {
               "ticker": "TMG",
@@ -3667,7 +3659,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 15,
               "hit_pct": 46.7,
               "mean_car": 0.0,
@@ -5207,12 +5199,12 @@
           ]
         },
         "6m": {
-          "benchmark_car_pct": 1.37,
-          "total_firings": 132,
+          "benchmark_car_pct": 1.18,
+          "total_firings": 129,
           "distinct_tickers": 59,
-          "tickers_with_n3": 13,
-          "hit_pct": 49.2,
-          "median_car": -0.3,
+          "tickers_with_n3": 12,
+          "hit_pct": 50.4,
+          "median_car": 0.0,
           "top_firings": [
             {
               "date": "2026-07-28",
@@ -5399,48 +5391,6 @@
               "bench_return": 0.5
             },
             {
-              "date": "2026-03-12",
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "director": "Greg Fitzgerald",
-              "role": "Executive Chair and CEO",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t0",
-              "value_gbp": 893303,
-              "car": -18.9,
-              "abs_return": -16.0,
-              "bench_return": 2.9
-            },
-            {
-              "date": "2026-03-12",
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "director": "Greg Fitzgerald",
-              "role": "Executive Chair and CEO",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t0",
-              "value_gbp": 893303,
-              "car": -18.9,
-              "abs_return": -16.0,
-              "bench_return": 2.9
-            },
-            {
-              "date": "2026-03-12",
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "director": "Greg Fitzgerald",
-              "role": "Executive Chair and CEO",
-              "role_normalized": "CEO",
-              "role_class": "T1a",
-              "signal_tier": "t0",
-              "value_gbp": 893303,
-              "car": -18.9,
-              "abs_return": -16.0,
-              "bench_return": 2.9
-            },
-            {
               "date": "2026-05-13",
               "ticker": "PRU",
               "company": "",
@@ -5495,6 +5445,48 @@
               "car": -12.3,
               "abs_return": -13.3,
               "bench_return": -1.0
+            },
+            {
+              "date": "2026-04-24",
+              "ticker": "RWA",
+              "company": "Robert Walters plc",
+              "director": "Toby Fowlston",
+              "role": "Chief Executive Officer",
+              "role_normalized": "CEO",
+              "role_class": "",
+              "signal_tier": "f1",
+              "value_gbp": 9870,
+              "car": -11.5,
+              "abs_return": -10.2,
+              "bench_return": 1.3
+            },
+            {
+              "date": "2026-07-28",
+              "ticker": "HERC",
+              "company": "Hercules plc",
+              "director": "Brusk Korkmaz",
+              "role": "Chief Executive Officer",
+              "role_normalized": "CEO",
+              "role_class": "",
+              "signal_tier": "s1",
+              "value_gbp": 25625,
+              "car": -10.6,
+              "abs_return": -11.7,
+              "bench_return": -1.1
+            },
+            {
+              "date": "2026-04-29",
+              "ticker": "KZG",
+              "company": "Kazera Global plc",
+              "director": "Richard Jennings",
+              "role": "Interim Chief Executive Officer",
+              "role_normalized": "CEO",
+              "role_class": "",
+              "signal_tier": "f1",
+              "value_gbp": 65000,
+              "car": -8.7,
+              "abs_return": -8.3,
+              "bench_return": 0.4
             }
           ],
           "rollup": [
@@ -5524,7 +5516,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 3,
               "hit_pct": 100.0,
               "mean_car": 0.5,
@@ -5593,14 +5585,6 @@
               "hit_pct": 0.0,
               "mean_car": -6.6,
               "latest_fire": "2026-04-30"
-            },
-            {
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "n": 5,
-              "hit_pct": 0.0,
-              "mean_car": -12.6,
-              "latest_fire": "2026-07-15"
             },
             {
               "ticker": "AUTO",
@@ -5969,15 +5953,23 @@
               "hit_pct": 0.0,
               "mean_car": -26.5,
               "latest_fire": "2026-06-08"
+            },
+            {
+              "ticker": "VTY",
+              "company": "Vistry Group PLC",
+              "n": 2,
+              "hit_pct": 0.0,
+              "mean_car": -3.2,
+              "latest_fire": "2026-07-15"
             }
           ]
         },
         "1y": {
           "benchmark_car_pct": 1.9,
-          "total_firings": 253,
+          "total_firings": 252,
           "distinct_tickers": 109,
           "tickers_with_n3": 27,
-          "hit_pct": 49.0,
+          "hit_pct": 49.2,
           "median_car": -0.1,
           "top_firings": [
             {
@@ -6354,10 +6346,10 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
-              "n": 10,
-              "hit_pct": 60.0,
-              "mean_car": 0.9,
+              "company": "",
+              "n": 9,
+              "hit_pct": 66.7,
+              "mean_car": 1.1,
               "latest_fire": "2026-03-23"
             },
             {
@@ -7584,7 +7576,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 15,
               "hit_pct": 40.0,
               "mean_car": -0.1,
@@ -8570,10 +8562,10 @@
         },
         "6m": {
           "benchmark_car_pct": 4.3,
-          "total_firings": 102,
-          "distinct_tickers": 45,
-          "tickers_with_n3": 12,
-          "hit_pct": 55.9,
+          "total_firings": 99,
+          "distinct_tickers": 44,
+          "tickers_with_n3": 11,
+          "hit_pct": 57.6,
           "median_car": 2.4,
           "top_firings": [
             {
@@ -8719,48 +8711,6 @@
           ],
           "bottom_firings": [
             {
-              "date": "2026-03-12",
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "director": "Greg Fitzgerald",
-              "role": "Executive Chair and CEO",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t0",
-              "value_gbp": 893303,
-              "car": -49.0,
-              "abs_return": -46.3,
-              "bench_return": 2.7
-            },
-            {
-              "date": "2026-03-12",
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "director": "Greg Fitzgerald",
-              "role": "Executive Chair and CEO",
-              "role_normalized": "CEO",
-              "role_class": "",
-              "signal_tier": "t0",
-              "value_gbp": 893303,
-              "car": -49.0,
-              "abs_return": -46.3,
-              "bench_return": 2.7
-            },
-            {
-              "date": "2026-03-12",
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "director": "Greg Fitzgerald",
-              "role": "Executive Chair and CEO",
-              "role_normalized": "CEO",
-              "role_class": "T1a",
-              "signal_tier": "t0",
-              "value_gbp": 893303,
-              "car": -49.0,
-              "abs_return": -46.3,
-              "bench_return": 2.7
-            },
-            {
               "date": "2026-05-11",
               "ticker": "HOC",
               "company": "Hochschild Mining PLC",
@@ -8815,6 +8765,48 @@
               "car": -26.6,
               "abs_return": -23.6,
               "bench_return": 2.9
+            },
+            {
+              "date": "2026-03-24",
+              "ticker": "BA",
+              "company": "BAE Systems plc",
+              "director": "Charles Woodburn",
+              "role": "Group Chief Executive Officer",
+              "role_normalized": "CEO",
+              "role_class": "",
+              "signal_tier": "t0",
+              "value_gbp": 518532,
+              "car": -22.1,
+              "abs_return": -17.8,
+              "bench_return": 4.3
+            },
+            {
+              "date": "2026-03-24",
+              "ticker": "BA",
+              "company": "BAE Systems plc",
+              "director": "Thomas Arseneault",
+              "role": "President & Chief Executive Officer of BAE Systems, Inc.",
+              "role_normalized": "CEO",
+              "role_class": "",
+              "signal_tier": "t0",
+              "value_gbp": 364787,
+              "car": -22.1,
+              "abs_return": -17.8,
+              "bench_return": 4.3
+            },
+            {
+              "date": "2026-03-24",
+              "ticker": "BA",
+              "company": "BAE Systems plc",
+              "director": "Charles Woodburn",
+              "role": "Group Chief Executive Officer",
+              "role_normalized": "CEO",
+              "role_class": "",
+              "signal_tier": "t0",
+              "value_gbp": 518532,
+              "car": -22.1,
+              "abs_return": -17.8,
+              "bench_return": 4.3
             },
             {
               "date": "2026-03-24",
@@ -8886,7 +8878,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 3,
               "hit_pct": 100.0,
               "mean_car": 11.2,
@@ -8947,14 +8939,6 @@
               "hit_pct": 0.0,
               "mean_car": -10.9,
               "latest_fire": "2026-05-13"
-            },
-            {
-              "ticker": "VTY",
-              "company": "Vistry Group PLC",
-              "n": 3,
-              "hit_pct": 0.0,
-              "mean_car": -49.0,
-              "latest_fire": "2026-03-12"
             },
             {
               "ticker": "AUTO",
@@ -9224,10 +9208,10 @@
         },
         "1y": {
           "benchmark_car_pct": 4.74,
-          "total_firings": 223,
+          "total_firings": 222,
           "distinct_tickers": 95,
           "tickers_with_n3": 26,
-          "hit_pct": 44.8,
+          "hit_pct": 44.6,
           "median_car": -3.7,
           "top_firings": [
             {
@@ -9579,14 +9563,6 @@
               "latest_fire": "2026-04-30"
             },
             {
-              "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
-              "n": 10,
-              "hit_pct": 70.0,
-              "mean_car": 7.0,
-              "latest_fire": "2026-03-23"
-            },
-            {
               "ticker": "ECEL",
               "company": "Eurocell plc",
               "n": 3,
@@ -9601,6 +9577,14 @@
               "hit_pct": 66.7,
               "mean_car": 1.9,
               "latest_fire": "2026-03-20"
+            },
+            {
+              "ticker": "LLOY",
+              "company": "",
+              "n": 9,
+              "hit_pct": 66.7,
+              "mean_car": 6.5,
+              "latest_fire": "2026-03-23"
             },
             {
               "ticker": "PRV",
@@ -10643,7 +10627,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 15,
               "hit_pct": 80.0,
               "mean_car": 5.3,
@@ -11616,12 +11600,12 @@
           "rollup": []
         },
         "1y": {
-          "benchmark_car_pct": 5.99,
-          "total_firings": 114,
+          "benchmark_car_pct": 5.86,
+          "total_firings": 113,
           "distinct_tickers": 56,
           "tickers_with_n3": 14,
-          "hit_pct": 41.2,
-          "median_car": -7.0,
+          "hit_pct": 40.7,
+          "median_car": -7.5,
           "top_firings": [
             {
               "date": "2026-01-06",
@@ -11933,10 +11917,10 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
-              "n": 7,
+              "company": "",
+              "n": 6,
               "hit_pct": 100.0,
-              "mean_car": 6.5,
+              "mean_car": 6.7,
               "latest_fire": "2025-12-22"
             },
             {
@@ -12675,7 +12659,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 12,
               "hit_pct": 100.0,
               "mean_car": 8.9,
@@ -13719,7 +13703,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 5,
               "hit_pct": 100.0,
               "mean_car": 21.8,
@@ -15127,7 +15111,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 3,
               "hit_pct": 100.0,
               "mean_car": 0.9,
@@ -15797,7 +15781,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 9,
               "hit_pct": 66.7,
               "mean_car": 0.2,
@@ -16795,7 +16779,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 13,
               "hit_pct": 46.2,
               "mean_car": 0.0,
@@ -18252,7 +18236,7 @@
           "rollup": [
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 3,
               "hit_pct": 100.0,
               "mean_car": 0.5,
@@ -18874,7 +18858,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 9,
               "hit_pct": 66.7,
               "mean_car": 1.1,
@@ -19816,7 +19800,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 13,
               "hit_pct": 46.2,
               "mean_car": 0.1,
@@ -20870,7 +20854,7 @@
           "rollup": [
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 3,
               "hit_pct": 100.0,
               "mean_car": 11.2,
@@ -21396,7 +21380,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 9,
               "hit_pct": 66.7,
               "mean_car": 6.5,
@@ -22202,7 +22186,7 @@
             },
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 13,
               "hit_pct": 76.9,
               "mean_car": 5.2,
@@ -23243,7 +23227,7 @@
           "rollup": [
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 6,
               "hit_pct": 100.0,
               "mean_car": 6.7,
@@ -23881,7 +23865,7 @@
           "rollup": [
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 10,
               "hit_pct": 100.0,
               "mean_car": 9.8,
@@ -24805,7 +24789,7 @@
           "rollup": [
             {
               "ticker": "LLOY",
-              "company": "Lloyds Banking Group plc",
+              "company": "",
               "n": 4,
               "hit_pct": 100.0,
               "mean_car": 24.8,
@@ -33591,10 +33575,10 @@
       "t1": {
         "30d": {
           "benchmark_car_pct": 0.2,
-          "total_firings": 77,
-          "distinct_tickers": 33,
+          "total_firings": 71,
+          "distinct_tickers": 30,
           "tickers_with_n3": 10,
-          "hit_pct": 36.4,
+          "hit_pct": 36.6,
           "median_car": -0.3,
           "top_firings": [
             {
@@ -33640,20 +33624,6 @@
               "bench_return": 0.2
             },
             {
-              "date": "2026-08-12",
-              "ticker": "NICL",
-              "company": "Nichols plc",
-              "director": "Elizabeth McMeikan",
-              "role": "Non-Executive Chair",
-              "role_normalized": "NED",
-              "role_class": "",
-              "signal_tier": "f1",
-              "value_gbp": 4977,
-              "car": 3.0,
-              "abs_return": 2.7,
-              "bench_return": -0.4
-            },
-            {
               "date": "2026-08-17",
               "ticker": "WEIR",
               "company": "Weir PLC",
@@ -33724,18 +33694,32 @@
               "bench_return": -0.5
             },
             {
-              "date": "2026-08-12",
-              "ticker": "WTB",
-              "company": "WHITBREAD PLC",
-              "director": "Shelley Roberts",
-              "role": "PDMR, INDEPENDENT NON-EXECUTIVE DIRECTOR",
+              "date": "2026-09-03",
+              "ticker": "ECEL",
+              "company": "Eurocell plc",
+              "director": "Derek Mapp",
+              "role": "PDMR (Non-executive Director and Chair of the Board)",
               "role_normalized": "NED",
               "role_class": "T3",
               "signal_tier": "t3",
-              "value_gbp": 11911,
-              "car": 1.7,
-              "abs_return": 1.3,
+              "value_gbp": 19891,
+              "car": 1.3,
+              "abs_return": 1.0,
               "bench_return": -0.4
+            },
+            {
+              "date": "2026-08-20",
+              "ticker": "KRM",
+              "company": "KRM22 plc",
+              "director": "Garry Jones",
+              "role": "Non-Executive Chairman",
+              "role_normalized": "NED",
+              "role_class": "",
+              "signal_tier": "t3",
+              "value_gbp": 24917,
+              "car": 1.0,
+              "abs_return": 1.7,
+              "bench_return": 0.7
             }
           ],
           "bottom_firings": [
@@ -33948,9 +33932,9 @@
             {
               "ticker": "SRE",
               "company": "Sirius Real Estate Limited",
-              "n": 5,
+              "n": 3,
               "hit_pct": 0.0,
-              "mean_car": -2.0,
+              "mean_car": -1.9,
               "latest_fire": "2026-09-07"
             },
             {
@@ -33994,14 +33978,6 @@
               "latest_fire": "2026-09-09"
             },
             {
-              "ticker": "NICL",
-              "company": "Nichols plc",
-              "n": 1,
-              "hit_pct": 100.0,
-              "mean_car": 3.0,
-              "latest_fire": "2026-08-12"
-            },
-            {
               "ticker": "ROSE",
               "company": "Rosebank Industries plc",
               "n": 2,
@@ -34016,14 +33992,6 @@
               "hit_pct": 100.0,
               "mean_car": 0.7,
               "latest_fire": "2026-08-24"
-            },
-            {
-              "ticker": "WTB",
-              "company": "WHITBREAD PLC",
-              "n": 1,
-              "hit_pct": 100.0,
-              "mean_car": 1.7,
-              "latest_fire": "2026-08-12"
             },
             {
               "ticker": "AC8",
@@ -34088,14 +34056,6 @@
               "hit_pct": 0.0,
               "mean_car": -3.3,
               "latest_fire": "2026-08-27"
-            },
-            {
-              "ticker": "GEN",
-              "company": "Genuit Group plc",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -0.3,
-              "latest_fire": "2026-08-12"
             },
             {
               "ticker": "IFRX",
@@ -67692,10 +67652,10 @@
       "t1": {
         "30d": {
           "benchmark_car_pct": 0.14,
-          "total_firings": 10,
-          "distinct_tickers": 6,
+          "total_firings": 9,
+          "distinct_tickers": 5,
           "tickers_with_n3": 1,
-          "hit_pct": 70.0,
+          "hit_pct": 66.7,
           "median_car": 0.2,
           "top_firings": [
             {
@@ -67725,20 +67685,6 @@
               "car": 0.4,
               "abs_return": 0.5,
               "bench_return": 0.1
-            },
-            {
-              "date": "2026-08-12",
-              "ticker": "DOM",
-              "company": "Domino's Pizza Group plc",
-              "director": "Ian Bull",
-              "role": "Chair",
-              "role_normalized": "Chair (executive)",
-              "role_class": "T7",
-              "signal_tier": "t7",
-              "value_gbp": 31495,
-              "car": 0.2,
-              "abs_return": -0.2,
-              "bench_return": -0.4
             },
             {
               "date": "2026-08-17",
@@ -67883,20 +67829,6 @@
               "bench_return": 0.7
             },
             {
-              "date": "2026-08-12",
-              "ticker": "DOM",
-              "company": "Domino's Pizza Group plc",
-              "director": "Ian Bull",
-              "role": "Chair",
-              "role_normalized": "Chair (executive)",
-              "role_class": "T7",
-              "signal_tier": "t7",
-              "value_gbp": 31495,
-              "car": 0.2,
-              "abs_return": -0.2,
-              "bench_return": -0.4
-            },
-            {
               "date": "2026-08-17",
               "ticker": "ZTF",
               "company": "Zotefoams plc",
@@ -67989,14 +67921,6 @@
               "hit_pct": 100.0,
               "mean_car": 0.2,
               "latest_fire": "2026-08-17"
-            },
-            {
-              "ticker": "DOM",
-              "company": "Domino's Pizza Group plc",
-              "n": 1,
-              "hit_pct": 100.0,
-              "mean_car": 0.2,
-              "latest_fire": "2026-08-12"
             },
             {
               "ticker": "TSCO",
@@ -69053,11 +68977,11 @@
           ]
         },
         "1y": {
-          "benchmark_car_pct": 0.03,
-          "total_firings": 156,
-          "distinct_tickers": 60,
+          "benchmark_car_pct": 0.06,
+          "total_firings": 154,
+          "distinct_tickers": 59,
           "tickers_with_n3": 20,
-          "hit_pct": 46.2,
+          "hit_pct": 45.5,
           "median_car": -0.1,
           "top_firings": [
             {
@@ -69503,14 +69427,6 @@
               "hit_pct": 0.0,
               "mean_car": -3.0,
               "latest_fire": "2026-08-03"
-            },
-            {
-              "ticker": "ALT",
-              "company": ", emission allowance market participation, auction platform, auctioneer or auction monitor",
-              "n": 2,
-              "hit_pct": 100.0,
-              "mean_car": 1.9,
-              "latest_fire": "2025-09-11"
             },
             {
               "ticker": "ASC",
@@ -71611,11 +71527,11 @@
         },
         "1y": {
           "benchmark_car_pct": 1.43,
-          "total_firings": 145,
-          "distinct_tickers": 56,
+          "total_firings": 143,
+          "distinct_tickers": 55,
           "tickers_with_n3": 18,
-          "hit_pct": 49.7,
-          "median_car": -0.0,
+          "hit_pct": 50.3,
+          "median_car": 0.4,
           "top_firings": [
             {
               "date": "2026-04-01",
@@ -72172,14 +72088,6 @@
               "hit_pct": 50.0,
               "mean_car": 3.0,
               "latest_fire": "2026-03-24"
-            },
-            {
-              "ticker": "ALT",
-              "company": ", emission allowance market participation, auction platform, auctioneer or auction monitor",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -3.6,
-              "latest_fire": "2025-09-11"
             },
             {
               "ticker": "ASAI",
@@ -73717,11 +73625,11 @@
         },
         "1y": {
           "benchmark_car_pct": 4.84,
-          "total_firings": 129,
-          "distinct_tickers": 50,
+          "total_firings": 127,
+          "distinct_tickers": 49,
           "tickers_with_n3": 14,
-          "hit_pct": 55.0,
-          "median_car": 1.0,
+          "hit_pct": 55.9,
+          "median_car": 1.1,
           "top_firings": [
             {
               "date": "2026-05-28",
@@ -73936,34 +73844,6 @@
               "bench_return": 4.7
             },
             {
-              "date": "2025-09-11",
-              "ticker": "ALT",
-              "company": ", emission allowance market participation, auction platform, auctioneer or auction monitor",
-              "director": "Alexander Brennan",
-              "role": "Executive Chairman",
-              "role_normalized": "Chair (executive)",
-              "role_class": "",
-              "signal_tier": "s1",
-              "value_gbp": 15000,
-              "car": -25.9,
-              "abs_return": -22.2,
-              "bench_return": 3.7
-            },
-            {
-              "date": "2025-09-11",
-              "ticker": "ALT",
-              "company": ", emission allowance market participation, auction platform, auctioneer or auction monitor",
-              "director": "Alexander Brennan",
-              "role": "Executive Chairman",
-              "role_normalized": "Chair (executive)",
-              "role_class": "",
-              "signal_tier": "s1",
-              "value_gbp": 15000,
-              "car": -25.9,
-              "abs_return": -22.2,
-              "bench_return": 3.7
-            },
-            {
               "date": "2026-04-27",
               "ticker": "SMWH",
               "company": "WH Smith PLC",
@@ -74004,6 +73884,34 @@
               "car": -23.0,
               "abs_return": -18.2,
               "bench_return": 4.8
+            },
+            {
+              "date": "2026-04-20",
+              "ticker": "VTY",
+              "company": "Vistry Group PLC",
+              "director": "Rob Woodward",
+              "role": "Chair",
+              "role_normalized": "Chair (executive)",
+              "role_class": "",
+              "signal_tier": "t7",
+              "value_gbp": 64666,
+              "car": -21.3,
+              "abs_return": -20.8,
+              "bench_return": 0.5
+            },
+            {
+              "date": "2026-04-20",
+              "ticker": "VTY",
+              "company": "Vistry Group PLC",
+              "director": "Rob Woodward",
+              "role": "Chair",
+              "role_normalized": "Chair (executive)",
+              "role_class": "T7",
+              "signal_tier": "t7",
+              "value_gbp": 64666,
+              "car": -21.3,
+              "abs_return": -20.8,
+              "bench_return": 0.5
             }
           ],
           "rollup": [
@@ -74310,14 +74218,6 @@
               "hit_pct": 50.0,
               "mean_car": 10.4,
               "latest_fire": "2026-03-24"
-            },
-            {
-              "ticker": "ALT",
-              "company": ", emission allowance market participation, auction platform, auctioneer or auction monitor",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -25.9,
-              "latest_fire": "2025-09-11"
             },
             {
               "ticker": "BIRD",
@@ -75211,11 +75111,11 @@
           "rollup": []
         },
         "1y": {
-          "benchmark_car_pct": 4.98,
-          "total_firings": 56,
-          "distinct_tickers": 25,
+          "benchmark_car_pct": 4.86,
+          "total_firings": 54,
+          "distinct_tickers": 24,
           "tickers_with_n3": 7,
-          "hit_pct": 46.4,
+          "hit_pct": 48.1,
           "median_car": -4.9,
           "top_firings": [
             {
@@ -75445,32 +75345,32 @@
               "bench_return": 10.8
             },
             {
-              "date": "2025-09-11",
-              "ticker": "ALT",
-              "company": ", emission allowance market participation, auction platform, auctioneer or auction monitor",
-              "director": "Alexander Brennan",
-              "role": "Executive Chairman",
+              "date": "2025-11-18",
+              "ticker": "GEN",
+              "company": "Genuit Group plc",
+              "director": "Kevin Boyd",
+              "role": "Chair/Director and PDMR",
               "role_normalized": "Chair (executive)",
               "role_class": "",
-              "signal_tier": "s1",
-              "value_gbp": 15000,
-              "car": -24.8,
-              "abs_return": -14.8,
-              "bench_return": 10.0
+              "signal_tier": "t0",
+              "value_gbp": 62349,
+              "car": -24.6,
+              "abs_return": -14.7,
+              "bench_return": 9.9
             },
             {
-              "date": "2025-09-11",
-              "ticker": "ALT",
-              "company": ", emission allowance market participation, auction platform, auctioneer or auction monitor",
-              "director": "Alexander Brennan",
-              "role": "Executive Chairman",
+              "date": "2025-11-18",
+              "ticker": "GEN",
+              "company": "Genuit Group plc",
+              "director": "Kevin Boyd",
+              "role": "Chair/Director and PDMR",
               "role_normalized": "Chair (executive)",
               "role_class": "",
-              "signal_tier": "s1",
-              "value_gbp": 15000,
-              "car": -24.8,
-              "abs_return": -14.8,
-              "bench_return": 10.0
+              "signal_tier": "t0",
+              "value_gbp": 62349,
+              "car": -24.6,
+              "abs_return": -14.7,
+              "bench_return": 9.9
             },
             {
               "date": "2025-11-18",
@@ -75637,14 +75537,6 @@
               "hit_pct": 100.0,
               "mean_car": 25.6,
               "latest_fire": "2026-02-11"
-            },
-            {
-              "ticker": "ALT",
-              "company": ", emission allowance market participation, auction platform, auctioneer or auction monitor",
-              "n": 2,
-              "hit_pct": 0.0,
-              "mean_car": -24.8,
-              "latest_fire": "2025-09-11"
             },
             {
               "ticker": "CPX",
