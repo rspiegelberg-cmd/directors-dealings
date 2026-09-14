@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-09-13T11:04:38Z",
-  "total": 243,
+  "generated_at": "2026-09-14T11:31:34Z",
+  "total": 252,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 136
+      "count": 140
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 51
+      "count": 53
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 21
+      "count": 22
     },
     {
       "id": "corporate_actions",
@@ -30,7 +30,7 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 24
+      "count": 25
     },
     {
       "id": "data_quirks",
@@ -42,7 +42,7 @@
       "id": "other",
       "name": "Other",
       "recoverable": "unknown",
-      "count": 8
+      "count": 9
     }
   ],
   "items": [
@@ -57,6 +57,41 @@
       ],
       "extracted": [],
       "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9768861",
+      "url": "https://www.investegate.co.uk/announcement/rns/barclays--barc/director-pdmr-shareholding/9768861",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_classify_type",
+        "could_not_extract_company",
+        "required_fields_missing"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "d1e4a9797cd4ce06",
+          "date": "2026-09-11",
+          "ticker": "BARC",
+          "company": "",
+          "director": "Craig Bright",
+          "role": null,
+          "type": "SELL",
+          "shares": 3000,
+          "price": 4.937,
+          "value": 14811.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/barclays--barc/director-pdmr-shareholding/9768861",
+          "announced_at": "2026-09-11T16:50:08Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
       "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
@@ -1006,6 +1041,75 @@
       "used_llm": true
     },
     {
+      "rns_id": "9767559",
+      "url": "https://www.investegate.co.uk/announcement/rns/tatton-asset-management--tam/exercise-of-options-and-pdmr-dealings/9767559",
+      "headline": "Exercise of Options and PDMR Dealings",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "could_not_extract_company"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "2ec3de8020aef872",
+          "date": "2026-09-10",
+          "ticker": "TAM",
+          "company": "",
+          "director": "Paul Edwards",
+          "role": "PDMR, Chief Financial Officer",
+          "type": "EXERCISE",
+          "shares": 20000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/tatton-asset-management--tam/exercise-of-options-and-pdmr-dealings/9767559",
+          "announced_at": "2026-09-11T07:55:07Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "eb5ec9042053b44a",
+          "date": "2026-09-10",
+          "ticker": "TAM",
+          "company": "",
+          "director": "Paul Edwards",
+          "role": "PDMR, Chief Financial Officer",
+          "type": "SELL",
+          "shares": 20000,
+          "price": 6.65,
+          "value": 133000.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/tatton-asset-management--tam/exercise-of-options-and-pdmr-dealings/9767559",
+          "announced_at": "2026-09-11T07:55:07Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "98fc93b4b174f41e",
+          "date": "2026-09-10",
+          "ticker": "TAM",
+          "company": "",
+          "director": "Lothar Mental",
+          "role": "PDMR, Chief Investment Officer",
+          "type": "EXERCISE",
+          "shares": 12150,
+          "price": 1.89,
+          "value": 22963.5,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/tatton-asset-management--tam/exercise-of-options-and-pdmr-dealings/9767559",
+          "announced_at": "2026-09-11T07:55:07Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 3,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9755162",
       "url": "https://www.investegate.co.uk/announcement/rns/southern-energy-corp-npv-di---souc/-restricted-share-award-grant-/9755162",
       "headline": "RESTRICTED SHARE AWARD GRANT",
@@ -1671,6 +1775,20 @@
       "used_llm": false
     },
     {
+      "rns_id": "9768377",
+      "url": "https://www.investegate.co.uk/announcement/rns/qinetiq-group--qq./director-pdmr-shareholding/9768377",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "other",
+      "warnings": [
+        "zero_price_non_grant"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9741752",
       "url": "https://www.investegate.co.uk/announcement/rns/morgan-sindall-group--mgns/director-pdmr-shareholding/9741752",
       "headline": "Director/PDMR Shareholding",
@@ -1853,6 +1971,69 @@
       "used_llm": false
     },
     {
+      "rns_id": "9770368",
+      "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9770368",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "transaction on Singapore Exchange, not LSE"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "e7b8047ddbbb20e2",
+          "date": "2026-09-10",
+          "ticker": "JAR",
+          "company": "Jardine Matheson Holdings Limited",
+          "director": "Raymond CO",
+          "role": "Chief People and Culture Officer",
+          "type": "BUY",
+          "shares": 2300,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9770368",
+          "announced_at": "2026-09-14"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9770220",
+      "url": "https://www.investegate.co.uk/announcement/rns/bhp-group-limited-npv-di---bhp/director-pdmr-shareholding/9770220",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "bundled transaction (direct and via trust)",
+        "transaction on ASX not LSE"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "f9cd3a3e19be7a07",
+          "date": "2026-09-11",
+          "ticker": "BHP",
+          "company": "BHP Group Limited",
+          "director": "Mark Vassella",
+          "role": "Non-executive Director",
+          "type": "BUY",
+          "shares": 2675,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/bhp-group-limited-npv-di---bhp/director-pdmr-shareholding/9770220",
+          "announced_at": "2026-09-14"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9767772",
       "url": "https://www.investegate.co.uk/announcement/rns/china-pacific-insurance-group-co-ltd--cpic/pdmr-shareholding/9767772",
       "headline": "PDMR Shareholding",
@@ -1875,7 +2056,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/china-pacific-insurance-group-co-ltd--cpic/pdmr-shareholding/9767772",
-          "announced_at": "2026-09-11"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -1890,8 +2071,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in USD at average $3.875 per ADS; 340 ADS = 17,000 ordinary shares (50 per ADS)",
-        "multi-date transaction (8-9 September 2026)"
+        "ADS transaction (340 ADS = 17,000 ordinary shares at 50 shares per ADS); price in USD ($3.875 average); converted to GBP equivalent not provided in filing"
       ],
       "extracted": [
         {
@@ -1907,7 +2087,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/renalytix-reg-s---renx/ceo-share-purchase/9766690",
-          "announced_at": "2026-09-11"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -1922,8 +2102,9 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "fractional_shares_rounded",
-        "llm_escalated_to:claude-sonnet-5"
+        "transaction in USD ($48.5400 per share)",
+        "American Depositary Shares (ADS) not ordinary shares",
+        "fractional shares"
       ],
       "extracted": [
         {
@@ -1939,7 +2120,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/gsk--gsk/director-pdmr-shareholding/9766387",
-          "announced_at": "2026-09-10"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -1953,30 +2134,14 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "price in US dollars (US$59 per share)"
+        "could_not_extract_company",
+        "foreign_currency"
       ],
-      "extracted": [
-        {
-          "fingerprint": "18d87206ebe7791d",
-          "date": "2026-09-08",
-          "ticker": "JAR",
-          "company": "Jardine Matheson Holdings Limited",
-          "director": "Tim Wise",
-          "role": "Director",
-          "type": "BUY",
-          "shares": 2250,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9765646",
-          "announced_at": ""
-        }
-      ],
-      "extracted_count": 1,
+      "extracted": [],
+      "extracted_count": 0,
       "has_cache": true,
-      "parser_source": "llm",
-      "used_llm": true
+      "parser_source": "regex",
+      "used_llm": false
     },
     {
       "rns_id": "9764351",
@@ -1984,8 +2149,7 @@
       "headline": "Director Dealing",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "price in USD 3.49 per share; conversion to GBP not provided"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -3372,6 +3536,20 @@
       "used_llm": false
     },
     {
+      "rns_id": "9768484",
+      "url": "https://www.investegate.co.uk/announcement/rns/bp--bp./director-pdmr-shareholding/9768484",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9768355",
       "url": "https://www.investegate.co.uk/announcement/rns/bt-group--bt.a/director-pdmr-shareholding/9768355",
       "headline": "Director/PDMR Shareholding",
@@ -3417,9 +3595,37 @@
       "used_llm": false
     },
     {
+      "rns_id": "9768002",
+      "url": "https://www.investegate.co.uk/announcement/rns/meridian-mining-plc--mno/meridian-announces-pdmr-transactions/9768002",
+      "headline": "Meridian Announces PDMR Transactions",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9767728",
       "url": "https://www.investegate.co.uk/announcement/rns/eco-animal-health-group--eah/share-awards-to-executive-directors-/9767728",
       "headline": "Share Awards to Executive Directors",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9766488",
+      "url": "https://www.investegate.co.uk/announcement/rns/johnson-matthey--jmat/director-pdmr-shareholding/9766488",
+      "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
@@ -3463,15 +3669,13 @@
       "used_llm": false
     },
     {
-      "rns_id": "9764057",
-      "url": "https://www.investegate.co.uk/announcement/rns/senior--snr/director-pdmr-shareholding/9764057",
+      "rns_id": "9765636",
+      "url": "https://www.investegate.co.uk/announcement/rns/cls-holdings--cli/director-pdmr-shareholding/9765636",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "could_not_parse_tx_date",
-        "could_not_extract_company",
         "could_not_extract_PDMR_name",
-        "could_not_classify_type",
+        "zero_shares_non_grant",
         "required_fields_missing"
       ],
       "extracted": [],
@@ -3498,8 +3702,26 @@
       "used_llm": false
     },
     {
-      "rns_id": "9764004",
-      "url": "https://www.investegate.co.uk/announcement/rns/gsk--gsk/director-pdmr-shareholding/9764004",
+      "rns_id": "9763841",
+      "url": "https://www.investegate.co.uk/announcement/rns/staffline-group--staf/director-pdmr-shareholding/9763841",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9763591",
+      "url": "https://www.investegate.co.uk/announcement/rns/softcat--sct/director-pdmr-shareholding/9763591",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
