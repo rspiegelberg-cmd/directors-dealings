@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-09-15T13:05:06Z",
-  "total": 261,
+  "generated_at": "2026-09-16T10:44:56Z",
+  "total": 266,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 145
+      "count": 148
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 55
+      "count": 56
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 25
+      "count": 24
     },
     {
       "id": "corporate_actions",
@@ -30,7 +30,7 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 25
+      "count": 27
     },
     {
       "id": "data_quirks",
@@ -46,6 +46,55 @@
     }
   ],
   "items": [
+    {
+      "rns_id": "9775102",
+      "url": "https://www.investegate.co.uk/announcement/rns/react-group--reat/director-pdmr-shareholding/9775102",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_extract_company",
+        "required_fields_missing"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "a9a945fd711fda21",
+          "date": "2026-09-14",
+          "ticker": "REAT",
+          "company": "REACT Group PLC",
+          "director": "Mark Braund",
+          "role": "Partnership Shares Awarded",
+          "type": "SIP",
+          "shares": 1074,
+          "price": 0.418,
+          "value": 448.93,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/react-group--reat/director-pdmr-shareholding/9775102",
+          "announced_at": "2026-09-16T09:47:07Z",
+          "buy_strictness": "MIXED",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9773809",
+      "url": "https://www.investegate.co.uk/announcement/rns/cohort--chrt/director-pdmr-shareholding-replacement-/9773809",
+      "headline": "Director/PDMR Shareholding (Replacement)",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_classify_type",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9768913",
       "url": "https://www.investegate.co.uk/announcement/bzw/totalenergies-se--tte/director-pdmr-shareholding/9768913",
@@ -1110,21 +1159,6 @@
       "used_llm": false
     },
     {
-      "rns_id": "9769113",
-      "url": "https://www.investegate.co.uk/announcement/rns/zotefoams--ztf/grant-of-options-under-saye-plan-pdmr-notice/9769113",
-      "headline": "Grant of Options under SAYE Plan &amp; PDMR Notice",
-      "bucket": "multi_tranche",
-      "warnings": [
-        "multiple_distinct_prices",
-        "required_fields_missing"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9764050",
       "url": "https://www.investegate.co.uk/announcement/rns/taylor-wimpey--tw./director-pdmr-shareholding/9764050",
       "headline": "Director/PDMR Shareholding",
@@ -2002,13 +2036,44 @@
       "used_llm": false
     },
     {
+      "rns_id": "9775262",
+      "url": "https://www.investegate.co.uk/announcement/rns/renalytix-reg-s---renx/additional-ceo-share-purchase/9775262",
+      "headline": "Additional CEO Share Purchase",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "llm_escalated_to:claude-sonnet-5"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "466765420ed97e04",
+          "date": "2026-09-16",
+          "ticker": "RENX",
+          "company": "Renalytix plc",
+          "director": "James McCullough",
+          "role": "Chief Executive Officer",
+          "type": "BUY",
+          "shares": 25000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/renalytix-reg-s---renx/additional-ceo-share-purchase/9775262",
+          "announced_at": "2026-09-16"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9771597",
       "url": "https://www.investegate.co.uk/announcement/rns/trekor-metals-limited--tko/director-pdmr-shareholding/9771597",
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "converted from CAD 10.80 per share to GBP 5.74 per share"
+        "original price in CAD (C$10.80), converted to GBP (£5.74) as stated in announcement"
       ],
       "extracted": [
         {
@@ -2069,7 +2134,8 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "transaction on Singapore Exchange, not LSE"
       ],
       "extracted": [
         {
@@ -2100,7 +2166,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction on ASX not LSE"
+        "transaction on ASX (Australian Securities Exchange), not LSE"
       ],
       "extracted": [
         {
@@ -3613,6 +3679,55 @@
       "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
+    },
+    {
+      "rns_id": "9775263",
+      "url": "https://www.investegate.co.uk/announcement/rns/staffline-group--staf/director-pdmr-shareholding/9775263",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9773460",
+      "url": "https://www.investegate.co.uk/announcement/rns/johnson-matthey--jmat/director-pdmr-shareholding/9773460",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9773450",
+      "url": "https://www.investegate.co.uk/announcement/rns/bankers-inv-trust--bnkr/director-pdmr-shareholding/9773450",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
     },
     {
       "rns_id": "9773374",
