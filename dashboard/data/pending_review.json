@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-09-17T10:54:42Z",
-  "total": 279,
+  "generated_at": "2026-09-18T10:32:13Z",
+  "total": 287,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 158
+      "count": 161
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 57
+      "count": 61
     },
     {
       "id": "multi_tranche",
@@ -36,7 +36,7 @@
       "id": "data_quirks",
       "name": "Zero-share / data quirks",
       "recoverable": "manual",
-      "count": 2
+      "count": 3
     },
     {
       "id": "other",
@@ -1100,6 +1100,36 @@
       "used_llm": true
     },
     {
+      "rns_id": "9778153",
+      "url": "https://www.investegate.co.uk/announcement/gnw/paypoint--pay/paypoint-plc-director-pdmr-shareholding/9778153",
+      "headline": "PayPoint plc : Director/PDMR Shareholding",
+      "bucket": "data_quirks",
+      "warnings": [
+        "nil consideration transfer to person closely associated"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "250eecaca99db704",
+          "date": "2026-09-09",
+          "ticker": "PAY",
+          "company": "PayPoint plc",
+          "director": "Rob Harding",
+          "role": "Chief Financial Officer",
+          "type": "SELL",
+          "shares": 21284,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/gnw/paypoint--pay/paypoint-plc-director-pdmr-shareholding/9778153",
+          "announced_at": "2026-09-17"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9754513",
       "url": "https://www.investegate.co.uk/announcement/rns/hammerson--hmso/director-pdmr-shareholding/9754513",
       "headline": "Director/PDMR Shareholding",
@@ -2158,13 +2188,90 @@
       "used_llm": false
     },
     {
+      "rns_id": "9779849",
+      "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9779849",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "6802c448420811e7",
+          "date": "2026-09-16",
+          "ticker": "JAR",
+          "company": "Jardine Matheson Holdings Limited",
+          "director": "Raymond CO",
+          "role": "Chief People and Culture Officer",
+          "type": "BUY",
+          "shares": 1200,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9779849",
+          "announced_at": "2026-09-18"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9778538",
+      "url": "https://www.investegate.co.uk/announcement/rns/tmt-investments--tmt/director-dealing/9778538",
+      "headline": "Director Dealing",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "cd35716b1baca65f",
+          "date": "2026-09-16",
+          "ticker": "TMT",
+          "company": "TMT Investments Plc",
+          "director": "Alexander Selegenev",
+          "role": "Executive Director",
+          "type": "BUY",
+          "shares": 13000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/tmt-investments--tmt/director-dealing/9778538",
+          "announced_at": "2026-09-18"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9778282",
+      "url": "https://www.investegate.co.uk/announcement/rns/international-paper-company--ipc/director-pdmr-shareholding/9778282",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "foreign_currency"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9777496",
       "url": "https://www.investegate.co.uk/announcement/prn/pan-african-resources--paf/director-pdmr-shareholding/9777496",
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in ZAR on JSE; price in ZAR cents (2,679-2,700); cannot convert reliably to GBP"
+        "transaction_conducted_on_JSE_not_LSE",
+        "price_in_ZAR_cents_per_share_converted_to_GBP_not_possible_without_exchange_rate"
       ],
       "extracted": [
         {
@@ -2195,14 +2302,14 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in Rio Tinto Limited (Australian entity), not Rio Tinto plc"
+        "transaction in Rio Tinto Limited (Australian entity), not Rio Tinto PLC"
       ],
       "extracted": [
         {
           "fingerprint": "e09a184f03b052ce",
           "date": "2026-09-17",
           "ticker": "RIO",
-          "company": "Rio Tinto plc",
+          "company": "Rio Tinto PLC",
           "director": "Ben Wyatt",
           "role": "PDMR",
           "type": "BUY",
@@ -2257,7 +2364,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "price converted from CAD to GBP at stated rate"
+        "price converted from CAD 10.80 to GBP 5.74"
       ],
       "extracted": [
         {
@@ -2273,7 +2380,7 @@
           "value": 114800.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/trekor-metals-limited--tko/director-pdmr-shareholding/9771597",
-          "announced_at": "2026-09-15"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2288,8 +2395,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in USD on NYSE, not LSE",
-        "instrument is ADRs not ordinary shares"
+        "transaction in USD on NYSE, not LSE; price $153.85 per ADR; ADRs are not direct shares"
       ],
       "extracted": [
         {
@@ -2305,7 +2411,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/intercontinental-hotels-group--ihg/director-pdmr-shareholding/9771242",
-          "announced_at": "2026-09-14"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2335,6 +2441,37 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9770368",
+          "announced_at": ""
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9770220",
+      "url": "https://www.investegate.co.uk/announcement/rns/bhp-group-limited-npv-di---bhp/director-pdmr-shareholding/9770220",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "transaction on ASX (Australian Securities Exchange), not LSE"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "f9cd3a3e19be7a07",
+          "date": "2026-09-11",
+          "ticker": "BHP",
+          "company": "BHP Group Limited",
+          "director": "Mark Vassella",
+          "role": "Non-executive Director",
+          "type": "BUY",
+          "shares": 2675,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/bhp-group-limited-npv-di---bhp/director-pdmr-shareholding/9770220",
           "announced_at": ""
         }
       ],
@@ -3834,6 +3971,69 @@
       "used_llm": true
     },
     {
+      "rns_id": "9778408",
+      "url": "https://www.investegate.co.uk/announcement/rns/ashmore-group--ashm/director-pdmr-shareholding/9778408",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9778078",
+      "url": "https://www.investegate.co.uk/announcement/rns/computacenter--ccc/director-pdmr-shareholding/9778078",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled_multi_PDMR",
+        "transfer for nil consideration between related charitable trusts"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "0843854ffa5d23f7",
+          "date": "2026-09-17",
+          "ticker": "CCC",
+          "company": "Computacenter plc",
+          "director": "Philip Hulme",
+          "role": "Non-Executive Director",
+          "type": "SELL",
+          "shares": 730000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/computacenter--ccc/director-pdmr-shareholding/9778078",
+          "announced_at": "2026-09-17"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9778076",
+      "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9778076",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "could_not_extract_PDMR_name",
+        "could_not_separate_price_volume"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9777537",
       "url": "https://www.investegate.co.uk/announcement/rns/genus--gns/director-pdmr-shareholding/9777537",
       "headline": "Director/PDMR Shareholding",
@@ -4007,6 +4207,20 @@
       "used_llm": false
     },
     {
+      "rns_id": "9773460",
+      "url": "https://www.investegate.co.uk/announcement/rns/johnson-matthey--jmat/director-pdmr-shareholding/9773460",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9773450",
       "url": "https://www.investegate.co.uk/announcement/rns/bankers-inv-trust--bnkr/director-pdmr-shareholding/9773450",
       "headline": "Director/PDMR Shareholding",
@@ -4120,37 +4334,6 @@
       "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
-    },
-    {
-      "rns_id": "9770220",
-      "url": "https://www.investegate.co.uk/announcement/rns/bhp-group-limited-npv-di---bhp/director-pdmr-shareholding/9770220",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "foreign_currency",
-        "bundled_multi_PDMR"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "f9cd3a3e19be7a07",
-          "date": "2026-09-11",
-          "ticker": "BHP",
-          "company": "BHP Group Limited",
-          "director": "Mark Vassella",
-          "role": "Non-executive Director",
-          "type": "BUY",
-          "shares": 2675,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/bhp-group-limited-npv-di---bhp/director-pdmr-shareholding/9770220",
-          "announced_at": ""
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "llm",
-      "used_llm": true
     },
     {
       "rns_id": "9768927",
