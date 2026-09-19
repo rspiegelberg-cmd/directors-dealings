@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-09-18T10:32:13Z",
-  "total": 287,
+  "generated_at": "2026-09-19T10:12:57Z",
+  "total": 294,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 161
+      "count": 164
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 61
+      "count": 62
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 25
+      "count": 26
     },
     {
       "id": "corporate_actions",
@@ -30,13 +30,13 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 28
+      "count": 31
     },
     {
       "id": "data_quirks",
       "name": "Zero-share / data quirks",
       "recoverable": "manual",
-      "count": 3
+      "count": 2
     },
     {
       "id": "other",
@@ -46,6 +46,51 @@
     }
   ],
   "items": [
+    {
+      "rns_id": "9780547",
+      "url": "https://www.investegate.co.uk/announcement/rns/diageo--dge/director-pdmr-shareholding/9780547",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9780511",
+      "url": "https://www.investegate.co.uk/announcement/rns/cavendish-financial--cav/director-dealing/9780511",
+      "headline": "Director Dealing",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9780295",
+      "url": "https://www.investegate.co.uk/announcement/rns/coca-cola-hbc-ag-cdi---cch/director-pdmr-shareholding/9780295",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9775989",
       "url": "https://www.investegate.co.uk/announcement/rns/diageo--dge/director-pdmr-shareholding/9775989",
@@ -161,7 +206,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1100,36 +1145,6 @@
       "used_llm": true
     },
     {
-      "rns_id": "9778153",
-      "url": "https://www.investegate.co.uk/announcement/gnw/paypoint--pay/paypoint-plc-director-pdmr-shareholding/9778153",
-      "headline": "PayPoint plc : Director/PDMR Shareholding",
-      "bucket": "data_quirks",
-      "warnings": [
-        "nil consideration transfer to person closely associated"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "250eecaca99db704",
-          "date": "2026-09-09",
-          "ticker": "PAY",
-          "company": "PayPoint plc",
-          "director": "Rob Harding",
-          "role": "Chief Financial Officer",
-          "type": "SELL",
-          "shares": 21284,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/gnw/paypoint--pay/paypoint-plc-director-pdmr-shareholding/9778153",
-          "announced_at": "2026-09-17"
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "llm",
-      "used_llm": true
-    },
-    {
       "rns_id": "9754513",
       "url": "https://www.investegate.co.uk/announcement/rns/hammerson--hmso/director-pdmr-shareholding/9754513",
       "headline": "Director/PDMR Shareholding",
@@ -1188,6 +1203,21 @@
       "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
+    },
+    {
+      "rns_id": "9778315",
+      "url": "https://www.investegate.co.uk/announcement/rns/cohort--chrt/grant-of-share-options-under-the-sharesave-scheme/9778315",
+      "headline": "Grant of Share Options under the Sharesave Scheme",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "multiple_distinct_prices",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
     },
     {
       "rns_id": "9775984",
@@ -1290,7 +1320,7 @@
         }
       ],
       "extracted_count": 2,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1306,7 +1336,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2188,6 +2218,37 @@
       "used_llm": false
     },
     {
+      "rns_id": "9780499",
+      "url": "https://www.investegate.co.uk/announcement/rns/banco-santander-s-a---bnc/director-pdmr-shareholding/9780499",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "llm_escalated_to:claude-sonnet-5"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "4c4c06cfeadc7c67",
+          "date": "2026-09-16",
+          "ticker": "BNC",
+          "company": "Banco Santander, S.A.",
+          "director": "Jose Maria Linares Perou",
+          "role": "Group Senior Executive Vice-President",
+          "type": "SELL",
+          "shares": 600000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/banco-santander-s-a---bnc/director-pdmr-shareholding/9780499",
+          "announced_at": "2026-09-18"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9779849",
       "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9779849",
       "headline": "Director/PDMR Shareholding",
@@ -2270,8 +2331,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction_conducted_on_JSE_not_LSE",
-        "price_in_ZAR_cents_per_share_converted_to_GBP_not_possible_without_exchange_rate"
+        "transaction_in_ZAR_on_JSE_not_LSE"
       ],
       "extracted": [
         {
@@ -2337,8 +2397,8 @@
       ],
       "extracted": [
         {
-          "fingerprint": "6b0abb8365ac0b50",
-          "date": "2026-09-16",
+          "fingerprint": "5bf732fba4c18d02",
+          "date": "2026-09-15",
           "ticker": "RENX",
           "company": "Renalytix plc",
           "director": "James McCullough",
@@ -2384,7 +2444,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2415,7 +2475,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2445,7 +2505,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2476,7 +2536,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3971,6 +4031,50 @@
       "used_llm": true
     },
     {
+      "rns_id": "9780589",
+      "url": "https://www.investegate.co.uk/announcement/rns/barclays--barc/director-pdmr-shareholding/9780589",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9780518",
+      "url": "https://www.investegate.co.uk/announcement/rns/ncc-group--ncc/director-pdmr-shareholding/9780518",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9778546",
+      "url": "https://www.investegate.co.uk/announcement/rns/trustpilot-group--trst/director-pdmr-shareholding/9778546",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9778408",
       "url": "https://www.investegate.co.uk/announcement/rns/ashmore-group--ashm/director-pdmr-shareholding/9778408",
       "headline": "Director/PDMR Shareholding",
@@ -3991,15 +4095,15 @@
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled_multi_PDMR",
-        "transfer for nil consideration between related charitable trusts"
+        "transfer for nil consideration between charitable trusts; trustee capacity transaction"
       ],
       "extracted": [
         {
-          "fingerprint": "0843854ffa5d23f7",
+          "fingerprint": "4f83f3d5d8bf29aa",
           "date": "2026-09-17",
           "ticker": "CCC",
           "company": "Computacenter plc",
-          "director": "Philip Hulme",
+          "director": "Philip William Hulme",
           "role": "Non-Executive Director",
           "type": "SELL",
           "shares": 730000,
@@ -4216,7 +4320,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -4233,7 +4337,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -4251,7 +4355,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -4267,7 +4371,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -4285,7 +4389,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -4299,7 +4403,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -4317,7 +4421,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -4331,7 +4435,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
