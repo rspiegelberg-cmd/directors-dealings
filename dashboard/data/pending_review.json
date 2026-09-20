@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-19T10:12:57Z",
-  "total": 294,
+  "generated_at": "2026-09-20T10:33:06Z",
+  "total": 293,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
@@ -18,7 +18,7 @@
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 26
+      "count": 25
     },
     {
       "id": "corporate_actions",
@@ -1205,21 +1205,6 @@
       "used_llm": true
     },
     {
-      "rns_id": "9778315",
-      "url": "https://www.investegate.co.uk/announcement/rns/cohort--chrt/grant-of-share-options-under-the-sharesave-scheme/9778315",
-      "headline": "Grant of Share Options under the Sharesave Scheme",
-      "bucket": "multi_tranche",
-      "warnings": [
-        "multiple_distinct_prices",
-        "required_fields_missing"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9775984",
       "url": "https://www.investegate.co.uk/announcement/rns/diageo--dge/director-pdmr-shareholding/9775984",
       "headline": "Director/PDMR Shareholding",
@@ -2231,7 +2216,7 @@
           "fingerprint": "4c4c06cfeadc7c67",
           "date": "2026-09-16",
           "ticker": "BNC",
-          "company": "Banco Santander, S.A.",
+          "company": "Banco Santander S.A.",
           "director": "Jose Maria Linares Perou",
           "role": "Group Senior Executive Vice-President",
           "type": "SELL",
@@ -2331,7 +2316,8 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction_in_ZAR_on_JSE_not_LSE"
+        "transaction_on_JSE_not_LSE",
+        "price_in_ZAR_cents_not_GBP"
       ],
       "extracted": [
         {
@@ -2347,7 +2333,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/prn/pan-african-resources--paf/director-pdmr-shareholding/9777496",
-          "announced_at": "2026-09-17"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2362,7 +2348,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in Rio Tinto Limited (Australian entity), not Rio Tinto PLC"
+        "transaction in Rio Tinto Limited (Australian entity), not Rio Tinto PLC (LSE listing)"
       ],
       "extracted": [
         {
@@ -2378,7 +2364,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/rio-tinto--rio/director-pdmr-shareholding/9777427",
-          "announced_at": "2026-09-17"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2393,23 +2379,24 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
+        "shares_represent_ordinary_shares_underlying_500_ADS_at_50_ordinary_shares_each",
         "llm_escalated_to:claude-sonnet-5"
       ],
       "extracted": [
         {
-          "fingerprint": "5bf732fba4c18d02",
-          "date": "2026-09-15",
+          "fingerprint": "466765420ed97e04",
+          "date": "2026-09-16",
           "ticker": "RENX",
           "company": "Renalytix plc",
           "director": "James McCullough",
           "role": "Chief Executive Officer",
           "type": "BUY",
-          "shares": 500,
+          "shares": 25000,
           "price": 0.0,
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/renalytix-reg-s---renx/additional-ceo-share-purchase/9775262",
-          "announced_at": "2026-09-16"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -4047,6 +4034,20 @@
       "used_llm": false
     },
     {
+      "rns_id": "9780519",
+      "url": "https://www.investegate.co.uk/announcement/rns/pz-cussons--pzc/director-pdmr-shareholding/9780519",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9780518",
       "url": "https://www.investegate.co.uk/announcement/rns/ncc-group--ncc/director-pdmr-shareholding/9780518",
       "headline": "Director/PDMR Shareholding",
@@ -4087,37 +4088,6 @@
       "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
-    },
-    {
-      "rns_id": "9778078",
-      "url": "https://www.investegate.co.uk/announcement/rns/computacenter--ccc/director-pdmr-shareholding/9778078",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled_multi_PDMR",
-        "transfer for nil consideration between charitable trusts; trustee capacity transaction"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "4f83f3d5d8bf29aa",
-          "date": "2026-09-17",
-          "ticker": "CCC",
-          "company": "Computacenter plc",
-          "director": "Philip William Hulme",
-          "role": "Non-Executive Director",
-          "type": "SELL",
-          "shares": 730000,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/computacenter--ccc/director-pdmr-shareholding/9778078",
-          "announced_at": "2026-09-17"
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "llm",
-      "used_llm": true
     },
     {
       "rns_id": "9778076",
