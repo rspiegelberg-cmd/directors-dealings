@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-20T10:33:06Z",
-  "total": 293,
+  "generated_at": "2026-09-21T11:39:31Z",
+  "total": 296,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
@@ -12,13 +12,13 @@
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 62
+      "count": 63
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 25
+      "count": 26
     },
     {
       "id": "corporate_actions",
@@ -36,7 +36,7 @@
       "id": "data_quirks",
       "name": "Zero-share / data quirks",
       "recoverable": "manual",
-      "count": 2
+      "count": 3
     },
     {
       "id": "other",
@@ -1145,6 +1145,36 @@
       "used_llm": true
     },
     {
+      "rns_id": "9778153",
+      "url": "https://www.investegate.co.uk/announcement/gnw/paypoint--pay/paypoint-plc-director-pdmr-shareholding/9778153",
+      "headline": "PayPoint plc : Director/PDMR Shareholding",
+      "bucket": "data_quirks",
+      "warnings": [
+        "transfer at nil consideration to person closely associated"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "b8a9b62e10d2d797",
+          "date": "2026-09-09",
+          "ticker": "PAY",
+          "company": "PayPoint plc",
+          "director": "Robert Harding",
+          "role": "Chief Financial Officer",
+          "type": "SELL",
+          "shares": 21284,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/gnw/paypoint--pay/paypoint-plc-director-pdmr-shareholding/9778153",
+          "announced_at": ""
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9754513",
       "url": "https://www.investegate.co.uk/announcement/rns/hammerson--hmso/director-pdmr-shareholding/9754513",
       "headline": "Director/PDMR Shareholding",
@@ -1203,6 +1233,22 @@
       "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
+    },
+    {
+      "rns_id": "9778417",
+      "url": "https://www.investegate.co.uk/announcement/rns/cerillion--cer/pdmr-shareholding-/9778417",
+      "headline": "PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_separate_price_volume",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
     },
     {
       "rns_id": "9775984",
@@ -2203,6 +2249,38 @@
       "used_llm": false
     },
     {
+      "rns_id": "9782058",
+      "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9782058",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "transaction_by_trustee_not_director_directly",
+        "multiple_directors_listed"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "ef562a2f36c3fd3d",
+          "date": "2026-09-17",
+          "ticker": "JAR",
+          "company": "Jardine Matheson Holdings Limited",
+          "director": "Ben Keswick and Adam Keswick",
+          "role": "Directors",
+          "type": "SELL",
+          "shares": 29061,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9782058",
+          "announced_at": "2026-09-21"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9780499",
       "url": "https://www.investegate.co.uk/announcement/rns/banco-santander-s-a---bnc/director-pdmr-shareholding/9780499",
       "headline": "Director/PDMR Shareholding",
@@ -2216,7 +2294,7 @@
           "fingerprint": "4c4c06cfeadc7c67",
           "date": "2026-09-16",
           "ticker": "BNC",
-          "company": "Banco Santander S.A.",
+          "company": "Banco Santander, S.A.",
           "director": "Jose Maria Linares Perou",
           "role": "Group Senior Executive Vice-President",
           "type": "SELL",
@@ -2255,7 +2333,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9779849",
-          "announced_at": "2026-09-18"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2273,8 +2351,8 @@
       ],
       "extracted": [
         {
-          "fingerprint": "cd35716b1baca65f",
-          "date": "2026-09-16",
+          "fingerprint": "98abd7f8f857c16c",
+          "date": "2026-09-17",
           "ticker": "TMT",
           "company": "TMT Investments Plc",
           "director": "Alexander Selegenev",
@@ -2285,7 +2363,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/tmt-investments--tmt/director-dealing/9778538",
-          "announced_at": "2026-09-18"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2316,8 +2394,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction_on_JSE_not_LSE",
-        "price_in_ZAR_cents_not_GBP"
+        "transaction_on_JSE_in_ZAR_not_LSE"
       ],
       "extracted": [
         {
@@ -2348,7 +2425,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in Rio Tinto Limited (Australian entity), not Rio Tinto PLC (LSE listing)"
+        "transaction in Rio Tinto Limited (Australian entity), not Rio Tinto plc"
       ],
       "extracted": [
         {
@@ -2379,19 +2456,19 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "shares_represent_ordinary_shares_underlying_500_ADS_at_50_ordinary_shares_each",
+        "shares_represent_ADS_not_ordinary_shares",
         "llm_escalated_to:claude-sonnet-5"
       ],
       "extracted": [
         {
-          "fingerprint": "466765420ed97e04",
+          "fingerprint": "6b0abb8365ac0b50",
           "date": "2026-09-16",
           "ticker": "RENX",
           "company": "Renalytix plc",
           "director": "James McCullough",
           "role": "Chief Executive Officer",
           "type": "BUY",
-          "shares": 25000,
+          "shares": 500,
           "price": 0.0,
           "value": 0.0,
           "context": null,
@@ -4076,18 +4153,35 @@
       "used_llm": false
     },
     {
-      "rns_id": "9778408",
-      "url": "https://www.investegate.co.uk/announcement/rns/ashmore-group--ashm/director-pdmr-shareholding/9778408",
+      "rns_id": "9778078",
+      "url": "https://www.investegate.co.uk/announcement/rns/computacenter--ccc/director-pdmr-shareholding/9778078",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
+        "nil consideration transfer between charitable trusts",
+        "bundled_multi_PDMR - filing contains notifications for both The Hadley Projects Fund and The Hadley Trust as separate entities"
       ],
-      "extracted": [],
-      "extracted_count": 0,
+      "extracted": [
+        {
+          "fingerprint": "4f83f3d5d8bf29aa",
+          "date": "2026-09-17",
+          "ticker": "CCC",
+          "company": "Computacenter plc",
+          "director": "Philip William Hulme",
+          "role": "Non-Executive Director",
+          "type": "SELL",
+          "shares": 730000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/computacenter--ccc/director-pdmr-shareholding/9778078",
+          "announced_at": ""
+        }
+      ],
+      "extracted_count": 1,
       "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
+      "parser_source": "llm",
+      "used_llm": true
     },
     {
       "rns_id": "9778076",
