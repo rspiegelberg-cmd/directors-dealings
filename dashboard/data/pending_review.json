@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-21T11:39:31Z",
-  "total": 296,
+  "generated_at": "2026-09-22T10:50:59Z",
+  "total": 303,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 164
+      "count": 169
     },
     {
       "id": "foreign_currency",
@@ -30,13 +30,13 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 31
+      "count": 32
     },
     {
       "id": "data_quirks",
       "name": "Zero-share / data quirks",
       "recoverable": "manual",
-      "count": 3
+      "count": 4
     },
     {
       "id": "other",
@@ -46,6 +46,23 @@
     }
   ],
   "items": [
+    {
+      "rns_id": "9783248",
+      "url": "https://www.investegate.co.uk/announcement/rns/volex--vlx/director-pdmr-shareholding/9783248",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_classify_type",
+        "required_fields_missing",
+        "could_not_classify_type",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9780547",
       "url": "https://www.investegate.co.uk/announcement/rns/diageo--dge/director-pdmr-shareholding/9780547",
@@ -1150,7 +1167,7 @@
       "headline": "PayPoint plc : Director/PDMR Shareholding",
       "bucket": "data_quirks",
       "warnings": [
-        "transfer at nil consideration to person closely associated"
+        "transfer to closely associated person at nil consideration"
       ],
       "extracted": [
         {
@@ -1166,6 +1183,36 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/gnw/paypoint--pay/paypoint-plc-director-pdmr-shareholding/9778153",
+          "announced_at": ""
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9778078",
+      "url": "https://www.investegate.co.uk/announcement/rns/computacenter--ccc/director-pdmr-shareholding/9778078",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "data_quirks",
+      "warnings": [
+        "Transfer for nil consideration between charitable trusts; not a market transaction"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "4f83f3d5d8bf29aa",
+          "date": "2026-09-17",
+          "ticker": "CCC",
+          "company": "Computacenter plc",
+          "director": "Philip William Hulme",
+          "role": "Non-Executive Director",
+          "type": "SELL",
+          "shares": 730000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/computacenter--ccc/director-pdmr-shareholding/9778078",
           "announced_at": ""
         }
       ],
@@ -1235,17 +1282,37 @@
       "used_llm": true
     },
     {
-      "rns_id": "9778417",
-      "url": "https://www.investegate.co.uk/announcement/rns/cerillion--cer/pdmr-shareholding-/9778417",
-      "headline": "PDMR Shareholding",
+      "rns_id": "9782961",
+      "url": "https://www.investegate.co.uk/announcement/rns/centrica--cna/director-pdmr-shareholding/9782961",
+      "headline": "Director/PDMR Shareholding",
       "bucket": "multi_tranche",
       "warnings": [
-        "could_not_classify_type",
-        "could_not_separate_price_volume",
-        "required_fields_missing"
+        "could_not_extract_company",
+        "multiple_distinct_prices",
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "multiple_distinct_prices"
       ],
-      "extracted": [],
-      "extracted_count": 0,
+      "extracted": [
+        {
+          "fingerprint": "5684388ae198ff19",
+          "date": "2026-09-21",
+          "ticker": "CNA",
+          "company": "",
+          "director": "Russell O'Brien",
+          "role": "Executive Director",
+          "type": "BUY",
+          "shares": 67394,
+          "price": 1.4838,
+          "value": 99999.22,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/centrica--cna/director-pdmr-shareholding/9782961",
+          "announced_at": "2026-09-21T16:00:08Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
       "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
@@ -2255,8 +2322,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction_by_trustee_not_director_directly",
-        "multiple_directors_listed"
+        "transaction by trustee on behalf of multiple directors (bundled)"
       ],
       "extracted": [
         {
@@ -2294,7 +2360,7 @@
           "fingerprint": "4c4c06cfeadc7c67",
           "date": "2026-09-16",
           "ticker": "BNC",
-          "company": "Banco Santander, S.A.",
+          "company": "Banco Santander S.A.",
           "director": "Jose Maria Linares Perou",
           "role": "Group Senior Executive Vice-President",
           "type": "SELL",
@@ -2303,7 +2369,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/banco-santander-s-a---bnc/director-pdmr-shareholding/9780499",
-          "announced_at": "2026-09-18"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2317,7 +2383,9 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "Transaction on Singapore Exchange, not LSE",
+        "Price in USD (US$57.523 per share), not GBP"
       ],
       "extracted": [
         {
@@ -2347,12 +2415,13 @@
       "headline": "Director Dealing",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "transaction_span_multiple_dates_16_and_17_September_2026"
       ],
       "extracted": [
         {
-          "fingerprint": "98abd7f8f857c16c",
-          "date": "2026-09-17",
+          "fingerprint": "cd35716b1baca65f",
+          "date": "2026-09-16",
           "ticker": "TMT",
           "company": "TMT Investments Plc",
           "director": "Alexander Selegenev",
@@ -2394,7 +2463,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction_on_JSE_in_ZAR_not_LSE"
+        "transaction in ZAR on JSE, not GBP on LSE"
       ],
       "extracted": [
         {
@@ -2425,7 +2494,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in Rio Tinto Limited (Australian entity), not Rio Tinto plc"
+        "transaction in Rio Tinto Limited (AUD 165.884 per share), not Rio Tinto PLC"
       ],
       "extracted": [
         {
@@ -2456,7 +2525,6 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "shares_represent_ADS_not_ordinary_shares",
         "llm_escalated_to:claude-sonnet-5"
       ],
       "extracted": [
@@ -4095,6 +4163,100 @@
       "used_llm": true
     },
     {
+      "rns_id": "9784482",
+      "url": "https://www.investegate.co.uk/announcement/rns/hikma-pharmaceuticals--hik/director-pdmr-shareholding/9784482",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9783242",
+      "url": "https://www.investegate.co.uk/announcement/rns/airea--aiea/pdmr-dealings/9783242",
+      "headline": "PDMR Dealings",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9783025",
+      "url": "https://www.investegate.co.uk/announcement/rns/gran-tierra-energy-inc-cdi---gte/director-pdmr-shareholding/9783025",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "could_not_separate_price_volume",
+        "zero_shares_non_grant"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9782991",
+      "url": "https://www.investegate.co.uk/announcement/rns/sse--sse/director-pdmr-shareholding/9782991",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9782654",
+      "url": "https://www.investegate.co.uk/announcement/rns/journeo--jneo/option-exercise-issue-of-equity-pdmr-dealings/9782654",
+      "headline": "Option Exercise, Issue of Equity &amp; PDMR Dealings",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9782640",
+      "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9782640",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "could_not_extract_PDMR_name",
+        "zero_shares_non_grant"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9780589",
       "url": "https://www.investegate.co.uk/announcement/rns/barclays--barc/director-pdmr-shareholding/9780589",
       "headline": "Director/PDMR Shareholding",
@@ -4139,8 +4301,8 @@
       "used_llm": false
     },
     {
-      "rns_id": "9778546",
-      "url": "https://www.investegate.co.uk/announcement/rns/trustpilot-group--trst/director-pdmr-shareholding/9778546",
+      "rns_id": "9778408",
+      "url": "https://www.investegate.co.uk/announcement/rns/ashmore-group--ashm/director-pdmr-shareholding/9778408",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
@@ -4151,37 +4313,6 @@
       "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
-    },
-    {
-      "rns_id": "9778078",
-      "url": "https://www.investegate.co.uk/announcement/rns/computacenter--ccc/director-pdmr-shareholding/9778078",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "nil consideration transfer between charitable trusts",
-        "bundled_multi_PDMR - filing contains notifications for both The Hadley Projects Fund and The Hadley Trust as separate entities"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "4f83f3d5d8bf29aa",
-          "date": "2026-09-17",
-          "ticker": "CCC",
-          "company": "Computacenter plc",
-          "director": "Philip William Hulme",
-          "role": "Non-Executive Director",
-          "type": "SELL",
-          "shares": 730000,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/computacenter--ccc/director-pdmr-shareholding/9778078",
-          "announced_at": ""
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "llm",
-      "used_llm": true
     },
     {
       "rns_id": "9778076",
