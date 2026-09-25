@@ -1,30 +1,30 @@
 {
-  "generated_at": "2026-09-24T11:03:41Z",
-  "total": 326,
+  "generated_at": "2026-09-25T11:09:37Z",
+  "total": 335,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 183
+      "count": 185
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 70
+      "count": 75
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 28
+      "count": 29
     },
     {
       "id": "corporate_actions",
       "name": "Corporate actions",
       "recoverable": "manual",
-      "count": 1
+      "count": 2
     },
     {
       "id": "could_not_classify",
@@ -1150,6 +1150,38 @@
       "used_llm": false
     },
     {
+      "rns_id": "9787718",
+      "url": "https://www.investegate.co.uk/announcement/rns/xaar--xar/two-grants-of-options-in-2019-and-2020/9787718",
+      "headline": "Two grants of options in 2019 and 2020",
+      "bucket": "corporate_actions",
+      "warnings": [
+        "multiple_transactions_in_filing: also includes a grant of 75,000 shares dated 2020-04-29",
+        "llm_escalated_to:claude-sonnet-5",
+        "bad_transaction_date:date_too_old:-2703d"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "876096b87846af64",
+          "date": "2019-04-30",
+          "ticker": "XAR",
+          "company": "Xaar plc",
+          "director": "Graham Tweedale",
+          "role": "Chief Operating Officer - PDMR",
+          "type": "GRANT",
+          "shares": 20000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/xaar--xar/two-grants-of-options-in-2019-and-2020/9787718",
+          "announced_at": "2026-09-23"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9730788",
       "url": "https://www.investegate.co.uk/announcement/rns/team-internet-group-plc--tig/director-pdmr-shareholding/9730788",
       "headline": "Director/PDMR Shareholding",
@@ -1436,6 +1468,59 @@
         }
       ],
       "extracted_count": 6,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9785033",
+      "url": "https://www.investegate.co.uk/announcement/rns/north-atlantic-smaller-companies-inv-trust--nas/director-pdmr-shareholding/9785033",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "multiple_distinct_prices",
+        "could_not_extract_company",
+        "zero_price_non_grant"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "ede1391fefc4a510",
+          "date": "2026-09-21",
+          "ticker": "NAS",
+          "company": "",
+          "director": "Miss A M Moncreiffe",
+          "role": null,
+          "type": "BUY",
+          "shares": 2407,
+          "price": 4.153896,
+          "value": 9998.43,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/north-atlantic-smaller-companies-inv-trust--nas/director-pdmr-shareholding/9785033",
+          "announced_at": "2026-09-22T13:00:07Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "b47c7e2741419184",
+          "date": "2026-09-21",
+          "ticker": "NAS",
+          "company": "",
+          "director": "Mr O Moncreiffe",
+          "role": null,
+          "type": "BUY",
+          "shares": 2429,
+          "price": 4.091948,
+          "value": 9939.34,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/north-atlantic-smaller-companies-inv-trust--nas/director-pdmr-shareholding/9785033",
+          "announced_at": "2026-09-22T13:00:07Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 2,
       "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
@@ -2475,12 +2560,208 @@
       "used_llm": false
     },
     {
+      "rns_id": "9791735",
+      "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9791735",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "adf3ac0aa7cc7ac1",
+          "date": "2026-09-24",
+          "ticker": "JAR",
+          "company": "Jardine Matheson Holdings Limited",
+          "director": "Lincoln Pan",
+          "role": "Director",
+          "type": "BUY",
+          "shares": 3500,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9791735",
+          "announced_at": "2026-09-25"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9791602",
+      "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9791602",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "multiple_transactions_aggregated",
+        "llm_escalated_to:claude-sonnet-5"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "dfb781a1bc7fa050",
+          "date": "2026-09-22",
+          "ticker": "SIHL",
+          "company": "Symphony International Holdings Limited",
+          "director": "Anil Thadani",
+          "role": "Director",
+          "type": "BUY",
+          "shares": 2350000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9791602",
+          "announced_at": "2026-09-25"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9790291",
+      "url": "https://www.investegate.co.uk/announcement/rns/trekor-metals-limited--tko/director-pdmr-shareholding/9790291",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "transaction includes exercise of options at C$2.38 and sale at C$13.00 CAD, converted to GBP at approximately £6.95/share"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "ab6812daec0e3a67",
+          "date": "2026-09-22",
+          "ticker": "TKO",
+          "company": "Trekor Metals Limited",
+          "director": "Bryce Hamming",
+          "role": "Executive",
+          "type": "SELL",
+          "shares": 50000,
+          "price": 6.95,
+          "value": 347500.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/trekor-metals-limited--tko/director-pdmr-shareholding/9790291",
+          "announced_at": "2026-09-25"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9790063",
+      "url": "https://www.investegate.co.uk/announcement/rns/barclays--barc/director-pdmr-shareholding/9790063",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "foreign_currency"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "608f6081bf4f8fe5",
+          "date": "2026-09-22",
+          "ticker": "BARC",
+          "company": "",
+          "director": "Anna Cross",
+          "role": "Group Finance Director",
+          "type": "SIP",
+          "shares": 91,
+          "price": 4.73,
+          "value": 430.43,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/barclays--barc/director-pdmr-shareholding/9790063",
+          "announced_at": "2026-09-24T16:35:07Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "4a5fc84a20d1f9c6",
+          "date": "2026-09-22",
+          "ticker": "BARC",
+          "company": "",
+          "director": "Craig Bright",
+          "role": null,
+          "type": "SIP",
+          "shares": 93,
+          "price": 4.73,
+          "value": 439.89,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/barclays--barc/director-pdmr-shareholding/9790063",
+          "announced_at": "2026-09-24T16:35:07Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "99c56b70e6bc137c",
+          "date": "2026-09-22",
+          "ticker": "BARC",
+          "company": "",
+          "director": "Matthew Fitzwater",
+          "role": "Group Chief Compliance Officer",
+          "type": "SIP",
+          "shares": 52,
+          "price": 4.73,
+          "value": 245.96,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/barclays--barc/director-pdmr-shareholding/9790063",
+          "announced_at": "2026-09-24T16:35:07Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 6,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9789986",
+      "url": "https://www.investegate.co.uk/announcement/rns/gsk--gsk/director-pdmr-shareholding/9789986",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "transaction in USD ($50.7200 per ADS) on NYSE, not GBP on LSE",
+        "notional ADSs acquired within Executive Supplemental Savings Plan"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "29138748d4c14e2b",
+          "date": "2026-09-22",
+          "ticker": "GSK",
+          "company": "GSK plc",
+          "director": "Maya Martinez-Davis",
+          "role": "President, US",
+          "type": "BUY",
+          "shares": 9,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/gsk--gsk/director-pdmr-shareholding/9789986",
+          "announced_at": "2026-09-24"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9789233",
       "url": "https://www.investegate.co.uk/announcement/rns/unilever--ulvr/director-pdmr-shareholding/9789233",
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "transaction in EUR on Euronext Amsterdam, not LSE"
       ],
       "extracted": [
         {
@@ -2545,7 +2826,8 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "ADRs traded on NYSE in USD; price $15.9905 per ADR, total $11,085.39"
+        "transaction in USD on NYSE; price $15.9905 per ADR, total $11,085.39",
+        "fractional shares: 693.248 ADRs"
       ],
       "extracted": [
         {
@@ -2738,7 +3020,8 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction via trust entity rather than direct PDMR holding"
+        "transaction executed through trust entity (HSBC International Trustee Limited) rather than directly by named directors",
+        "price in USD: US$57.0242645 per share; value in USD: US$1,657,182.15"
       ],
       "extracted": [
         {
@@ -4579,6 +4862,62 @@
       "used_llm": true
     },
     {
+      "rns_id": "9790043",
+      "url": "https://www.investegate.co.uk/announcement/rns/origin-enterprises-cdi---ogn/director-pdmr-shareholding/9790043",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9790021",
+      "url": "https://www.investegate.co.uk/announcement/rns/babcock-international-group--bab/director-pdmr-shareholding/9790021",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9789793",
+      "url": "https://www.investegate.co.uk/announcement/rns/st-james-s-place--stj/director-pdmr-shareholding/9789793",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9789722",
+      "url": "https://www.investegate.co.uk/announcement/rns/sabre-insurance-group--sbre/director-pdmr-shareholding/9789722",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9789508",
       "url": "https://www.investegate.co.uk/announcement/rns/haleon--hln/director-pdmr-shareholding/9789508",
       "headline": "Director/PDMR Shareholding",
@@ -4635,37 +4974,6 @@
       "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
-    },
-    {
-      "rns_id": "9787718",
-      "url": "https://www.investegate.co.uk/announcement/rns/xaar--xar/two-grants-of-options-in-2019-and-2020/9787718",
-      "headline": "Two grants of options in 2019 and 2020",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled_multi_PDMR",
-        "bad_transaction_date:date_too_old:-2703d"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "876096b87846af64",
-          "date": "2019-04-30",
-          "ticker": "XAR",
-          "company": "Xaar plc",
-          "director": "Graham Tweedale",
-          "role": "Chief Operating Officer",
-          "type": "GRANT",
-          "shares": 20000,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/xaar--xar/two-grants-of-options-in-2019-and-2020/9787718",
-          "announced_at": "2026-09-23"
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "llm",
-      "used_llm": true
     },
     {
       "rns_id": "9787595",
@@ -4809,20 +5117,6 @@
       "rns_id": "9784482",
       "url": "https://www.investegate.co.uk/announcement/rns/hikma-pharmaceuticals--hik/director-pdmr-shareholding/9784482",
       "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9783242",
-      "url": "https://www.investegate.co.uk/announcement/rns/airea--aiea/pdmr-dealings/9783242",
-      "headline": "PDMR Dealings",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
