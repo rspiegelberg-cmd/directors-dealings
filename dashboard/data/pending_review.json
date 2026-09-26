@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-09-25T11:09:37Z",
-  "total": 335,
+  "generated_at": "2026-09-26T10:48:46Z",
+  "total": 340,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 185
+      "count": 190
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 75
+      "count": 76
     },
     {
       "id": "multi_tranche",
@@ -24,7 +24,7 @@
       "id": "corporate_actions",
       "name": "Corporate actions",
       "recoverable": "manual",
-      "count": 2
+      "count": 1
     },
     {
       "id": "could_not_classify",
@@ -1150,38 +1150,6 @@
       "used_llm": false
     },
     {
-      "rns_id": "9787718",
-      "url": "https://www.investegate.co.uk/announcement/rns/xaar--xar/two-grants-of-options-in-2019-and-2020/9787718",
-      "headline": "Two grants of options in 2019 and 2020",
-      "bucket": "corporate_actions",
-      "warnings": [
-        "multiple_transactions_in_filing: also includes a grant of 75,000 shares dated 2020-04-29",
-        "llm_escalated_to:claude-sonnet-5",
-        "bad_transaction_date:date_too_old:-2703d"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "876096b87846af64",
-          "date": "2019-04-30",
-          "ticker": "XAR",
-          "company": "Xaar plc",
-          "director": "Graham Tweedale",
-          "role": "Chief Operating Officer - PDMR",
-          "type": "GRANT",
-          "shares": 20000,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/xaar--xar/two-grants-of-options-in-2019-and-2020/9787718",
-          "announced_at": "2026-09-23"
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "llm",
-      "used_llm": true
-    },
-    {
       "rns_id": "9730788",
       "url": "https://www.investegate.co.uk/announcement/rns/team-internet-group-plc--tig/director-pdmr-shareholding/9730788",
       "headline": "Director/PDMR Shareholding",
@@ -1521,7 +1489,7 @@
         }
       ],
       "extracted_count": 2,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1557,7 +1525,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2560,6 +2528,37 @@
       "used_llm": false
     },
     {
+      "rns_id": "9792220",
+      "url": "https://www.investegate.co.uk/announcement/rns/oxford-biomedica--oxb/pdmr-dealing-/9792220",
+      "headline": "PDMR Dealing",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "fractional_shares_represented_as_integer"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "234518ec2028a5e9",
+          "date": "2026-09-25",
+          "ticker": "OXB",
+          "company": "Oxford Biomedica plc",
+          "director": "Peter Soelkner",
+          "role": "Non-Executive Director",
+          "type": "BUY",
+          "shares": 1666666666,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/oxford-biomedica--oxb/pdmr-dealing-/9792220",
+          "announced_at": "2026-09-25"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9791735",
       "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9791735",
       "headline": "Director/PDMR Shareholding",
@@ -2601,8 +2600,8 @@
       ],
       "extracted": [
         {
-          "fingerprint": "dfb781a1bc7fa050",
-          "date": "2026-09-22",
+          "fingerprint": "206fcab3770e0b20",
+          "date": "2026-09-23",
           "ticker": "SIHL",
           "company": "Symphony International Holdings Limited",
           "director": "Anil Thadani",
@@ -2628,7 +2627,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction includes exercise of options at C$2.38 and sale at C$13.00 CAD, converted to GBP at approximately £6.95/share"
+        "multi-transaction_bundled_exercise_and_sell"
       ],
       "extracted": [
         {
@@ -2729,8 +2728,9 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in USD ($50.7200 per ADS) on NYSE, not GBP on LSE",
-        "notional ADSs acquired within Executive Supplemental Savings Plan"
+        "fractional shares (9.414 ADSs)",
+        "transaction in USD at $50.72 per ADS",
+        "acquisition within Executive Supplemental Savings Plan account"
       ],
       "extracted": [
         {
@@ -2760,8 +2760,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "transaction in EUR on Euronext Amsterdam, not LSE"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -2826,8 +2825,9 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in USD on NYSE; price $15.9905 per ADR, total $11,085.39",
-        "fractional shares: 693.248 ADRs"
+        "transaction in USD ($15.9905 per ADR, $11,085.39 total)",
+        "ADRs traded on NYSE, not LSE",
+        "fractional shares (693.248) rounded to 693 for integer shares field"
       ],
       "extracted": [
         {
@@ -2958,8 +2958,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "transaction on Singapore Exchange, not LSE"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -2975,7 +2974,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9787031",
-          "announced_at": "2026-09-23"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3005,7 +3004,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/correction-director-pdmr-shareholding/9786963",
-          "announced_at": "2026-09-23"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3041,7 +3040,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -4862,6 +4861,48 @@
       "used_llm": true
     },
     {
+      "rns_id": "9792450",
+      "url": "https://www.investegate.co.uk/announcement/rns/hays--has/director-pdmr-shareholding/9792450",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9792425",
+      "url": "https://www.investegate.co.uk/announcement/rns/bp--bp./director-pdmr-shareholding/9792425",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9792401",
+      "url": "https://www.investegate.co.uk/announcement/rns/unilever--ulvr/director-pdmr-shareholding/9792401",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9790043",
       "url": "https://www.investegate.co.uk/announcement/rns/origin-enterprises-cdi---ogn/director-pdmr-shareholding/9790043",
       "headline": "Director/PDMR Shareholding",
@@ -4882,6 +4923,24 @@
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9790008",
+      "url": "https://www.investegate.co.uk/announcement/rns/procook-group--proc/grant-of-executive-share-awards/9790008",
+      "headline": "Grant of Executive Share Awards",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -4962,12 +5021,46 @@
       "used_llm": false
     },
     {
-      "rns_id": "9787726",
-      "url": "https://www.investegate.co.uk/announcement/rns/speedy-hire--sdy/director-pdmr-shareholding/9787726",
+      "rns_id": "9787718",
+      "url": "https://www.investegate.co.uk/announcement/rns/xaar--xar/two-grants-of-options-in-2019-and-2020/9787718",
+      "headline": "Two grants of options in 2019 and 2020",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled_multi_PDMR",
+        "bad_transaction_date:date_too_old:-2703d"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "876096b87846af64",
+          "date": "2019-04-30",
+          "ticker": "XAR",
+          "company": "Xaar plc",
+          "director": "Graham Tweedale",
+          "role": "Chief Operating Officer",
+          "type": "GRANT",
+          "shares": 20000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/xaar--xar/two-grants-of-options-in-2019-and-2020/9787718",
+          "announced_at": "2026-09-23"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9787627",
+      "url": "https://www.investegate.co.uk/announcement/rns/informa--inf/director-pdmr-shareholding/9787627",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "multiple_distinct_prices",
+        "required_fields_missing"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -5031,7 +5124,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5045,7 +5138,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5063,7 +5156,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5081,7 +5174,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5095,7 +5188,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5109,7 +5202,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5123,7 +5216,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5141,7 +5234,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5157,7 +5250,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5171,7 +5264,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5189,7 +5282,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
