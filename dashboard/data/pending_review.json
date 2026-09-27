@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-26T10:48:46Z",
-  "total": 340,
+  "generated_at": "2026-09-27T11:19:09Z",
+  "total": 339,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 190
+      "count": 189
     },
     {
       "id": "foreign_currency",
@@ -2534,7 +2534,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "fractional_shares_represented_as_integer"
+        "shares_appear_to_include_fractional_decimals"
       ],
       "extracted": [
         {
@@ -2543,7 +2543,7 @@
           "ticker": "OXB",
           "company": "Oxford Biomedica plc",
           "director": "Peter Soelkner",
-          "role": "Non-Executive Director",
+          "role": "Non-Executive Director and Vice Chair",
           "type": "BUY",
           "shares": 1666666666,
           "price": 0.0,
@@ -2564,7 +2564,8 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "transaction in US dollars (US$56.81 per share, US$198,835 total)"
       ],
       "extracted": [
         {
@@ -2627,7 +2628,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "multi-transaction_bundled_exercise_and_sell"
+        "exercise_and_sell_bundled_as_single_transaction"
       ],
       "extracted": [
         {
@@ -2728,9 +2729,9 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "fractional shares (9.414 ADSs)",
-        "transaction in USD at $50.72 per ADS",
-        "acquisition within Executive Supplemental Savings Plan account"
+        "transaction in USD ($50.7200 per ADS)",
+        "fractional shares (9.414 ADSs rounded to 9)",
+        "US-listed instrument (NYSE), not LSE"
       ],
       "extracted": [
         {
@@ -2739,7 +2740,7 @@
           "ticker": "GSK",
           "company": "GSK plc",
           "director": "Maya Martinez-Davis",
-          "role": "President, US",
+          "role": "President, US operations",
           "type": "BUY",
           "shares": 9,
           "price": 0.0,
@@ -2776,7 +2777,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/unilever--ulvr/director-pdmr-shareholding/9789233",
-          "announced_at": "2026-09-24"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2825,9 +2826,9 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in USD ($15.9905 per ADR, $11,085.39 total)",
-        "ADRs traded on NYSE, not LSE",
-        "fractional shares (693.248) rounded to 693 for integer shares field"
+        "transaction in USD on NYSE, not LSE",
+        "ADRs traded, not ordinary shares",
+        "fractional shares (693.248) rounded to 693"
       ],
       "extracted": [
         {
@@ -2843,7 +2844,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/pearson--pson/director-pdmr-shareholding/9787761",
-          "announced_at": "2026-09-23"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2944,7 +2945,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/china-pacific-insurance-group-co-ltd--cpic/director-pdmr-shareholding/9787283",
-          "announced_at": "2026-09-23"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -4922,13 +4923,29 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
+        "bundled_multi_PDMR"
       ],
-      "extracted": [],
-      "extracted_count": 0,
+      "extracted": [
+        {
+          "fingerprint": "6cedb3964ebeea3b",
+          "date": "2026-09-24",
+          "ticker": "BAB",
+          "company": "Babcock International Group PLC",
+          "director": "Jack Borrett",
+          "role": "Group Company Secretary & General Counsel",
+          "type": "SELL",
+          "shares": 32951,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/babcock-international-group--bab/director-pdmr-shareholding/9790021",
+          "announced_at": "2026-09-24"
+        }
+      ],
+      "extracted_count": 1,
       "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
+      "parser_source": "llm",
+      "used_llm": true
     },
     {
       "rns_id": "9790008",
@@ -5007,60 +5024,12 @@
       "used_llm": false
     },
     {
-      "rns_id": "9787968",
-      "url": "https://www.investegate.co.uk/announcement/rns/everplay-group-plc--evpl/grant-of-options/9787968",
-      "headline": "Grant of Options",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9787718",
-      "url": "https://www.investegate.co.uk/announcement/rns/xaar--xar/two-grants-of-options-in-2019-and-2020/9787718",
-      "headline": "Two grants of options in 2019 and 2020",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled_multi_PDMR",
-        "bad_transaction_date:date_too_old:-2703d"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "876096b87846af64",
-          "date": "2019-04-30",
-          "ticker": "XAR",
-          "company": "Xaar plc",
-          "director": "Graham Tweedale",
-          "role": "Chief Operating Officer",
-          "type": "GRANT",
-          "shares": 20000,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/xaar--xar/two-grants-of-options-in-2019-and-2020/9787718",
-          "announced_at": "2026-09-23"
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "llm",
-      "used_llm": true
-    },
-    {
-      "rns_id": "9787627",
-      "url": "https://www.investegate.co.uk/announcement/rns/informa--inf/director-pdmr-shareholding/9787627",
+      "rns_id": "9787726",
+      "url": "https://www.investegate.co.uk/announcement/rns/speedy-hire--sdy/director-pdmr-shareholding/9787726",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "could_not_extract_PDMR_name",
-        "could_not_classify_type",
-        "multiple_distinct_prices",
-        "required_fields_missing"
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -5104,6 +5073,24 @@
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9786798",
+      "url": "https://www.investegate.co.uk/announcement/rns/staffline-group--staf/director-pdmr-shareholding/9786798",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
       ],
       "extracted": [],
       "extracted_count": 0,
