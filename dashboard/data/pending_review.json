@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-09-27T11:19:09Z",
+  "generated_at": "2026-09-28T12:40:09Z",
   "total": 339,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 189
+      "count": 188
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 76
+      "count": 77
     },
     {
       "id": "multi_tranche",
@@ -2528,13 +2528,44 @@
       "used_llm": false
     },
     {
+      "rns_id": "9794334",
+      "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9794334",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "llm_escalated_to:claude-sonnet-5"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "12ca59c2a341b1a1",
+          "date": "2026-09-24",
+          "ticker": "SIHL",
+          "company": "Symphony International Holdings Limited",
+          "director": "Anil Thadani",
+          "role": "Director",
+          "type": "BUY",
+          "shares": 1800000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9794334",
+          "announced_at": "2026-09-28"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9792220",
       "url": "https://www.investegate.co.uk/announcement/rns/oxford-biomedica--oxb/pdmr-dealing-/9792220",
       "headline": "PDMR Dealing",
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "shares_appear_to_include_fractional_decimals"
+        "shares expressed as fractional units (1,666.666666); converted to integer 1666666666 assuming pence or smallest unit"
       ],
       "extracted": [
         {
@@ -2543,7 +2574,7 @@
           "ticker": "OXB",
           "company": "Oxford Biomedica plc",
           "director": "Peter Soelkner",
-          "role": "Non-Executive Director and Vice Chair",
+          "role": "Non-Executive Director",
           "type": "BUY",
           "shares": 1666666666,
           "price": 0.0,
@@ -2564,8 +2595,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "transaction in US dollars (US$56.81 per share, US$198,835 total)"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -2581,7 +2611,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9791735",
-          "announced_at": "2026-09-25"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2596,7 +2626,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "multiple_transactions_aggregated",
+        "multiple_transactions_combined",
         "llm_escalated_to:claude-sonnet-5"
       ],
       "extracted": [
@@ -2613,7 +2643,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9791602",
-          "announced_at": "2026-09-25"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2628,7 +2658,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "exercise_and_sell_bundled_as_single_transaction"
+        "transaction in CAD (C$13.00); GBP conversion provided in text (£6.95/share) but price field set to 0 per foreign currency protocol"
       ],
       "extracted": [
         {
@@ -2640,11 +2670,11 @@
           "role": "Executive",
           "type": "SELL",
           "shares": 50000,
-          "price": 6.95,
-          "value": 347500.0,
+          "price": 0.0,
+          "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/trekor-metals-limited--tko/director-pdmr-shareholding/9790291",
-          "announced_at": "2026-09-25"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2729,9 +2759,8 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in USD ($50.7200 per ADS)",
-        "fractional shares (9.414 ADSs rounded to 9)",
-        "US-listed instrument (NYSE), not LSE"
+        "notional_ADS_shares_not_ordinary_shares",
+        "price_in_USD_50.72_per_ADS"
       ],
       "extracted": [
         {
@@ -2740,14 +2769,14 @@
           "ticker": "GSK",
           "company": "GSK plc",
           "director": "Maya Martinez-Davis",
-          "role": "President, US operations",
+          "role": "President, US",
           "type": "BUY",
           "shares": 9,
           "price": 0.0,
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/gsk--gsk/director-pdmr-shareholding/9789986",
-          "announced_at": "2026-09-24"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -2826,9 +2855,8 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in USD on NYSE, not LSE",
-        "ADRs traded, not ordinary shares",
-        "fractional shares (693.248) rounded to 693"
+        "ADRs purchased on NYSE in USD ($15.9905 per ADR, $11,085.39 total)",
+        "fractional shares (693.248 ADRs)"
       ],
       "extracted": [
         {
@@ -4862,12 +4890,46 @@
       "used_llm": true
     },
     {
-      "rns_id": "9792450",
-      "url": "https://www.investegate.co.uk/announcement/rns/hays--has/director-pdmr-shareholding/9792450",
-      "headline": "Director/PDMR Shareholding",
+      "rns_id": "9794357",
+      "url": "https://www.investegate.co.uk/announcement/rns/ming-yang-smart-energy-group-limited--myse/pdmr-notification/9794357",
+      "headline": "PDMR Notification",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9794125",
+      "url": "https://www.investegate.co.uk/announcement/rns/optima-health--opt/director-pdmr-dealing/9794125",
+      "headline": "Director / PDMR Dealing",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9794052",
+      "url": "https://www.investegate.co.uk/announcement/gnw/shell--shel/director-pdmr-shareholding/9794052",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "required_fields_missing"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -4923,7 +4985,8 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "bundled_multi_PDMR"
+        "bundled_multi_PDMR",
+        "transaction for nil consideration (transfer to spouse)"
       ],
       "extracted": [
         {
@@ -4939,7 +5002,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/babcock-international-group--bab/director-pdmr-shareholding/9790021",
-          "announced_at": "2026-09-24"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -4966,42 +5029,12 @@
       "used_llm": false
     },
     {
-      "rns_id": "9789793",
-      "url": "https://www.investegate.co.uk/announcement/rns/st-james-s-place--stj/director-pdmr-shareholding/9789793",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9789722",
       "url": "https://www.investegate.co.uk/announcement/rns/sabre-insurance-group--sbre/director-pdmr-shareholding/9789722",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9789508",
-      "url": "https://www.investegate.co.uk/announcement/rns/haleon--hln/director-pdmr-shareholding/9789508",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "could_not_extract_PDMR_name",
-        "zero_shares_non_grant",
-        "required_fields_missing"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -5073,24 +5106,6 @@
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9786798",
-      "url": "https://www.investegate.co.uk/announcement/rns/staffline-group--staf/director-pdmr-shareholding/9786798",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "could_not_extract_PDMR_name",
-        "could_not_extract_company",
-        "required_fields_missing",
-        "could_not_extract_PDMR_name",
-        "required_fields_missing"
       ],
       "extracted": [],
       "extracted_count": 0,
