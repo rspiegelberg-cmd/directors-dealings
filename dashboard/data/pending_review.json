@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-09-28T12:40:09Z",
-  "total": 339,
+  "generated_at": "2026-09-29T12:03:19Z",
+  "total": 350,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 188
+      "count": 196
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 77
+      "count": 78
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 29
+      "count": 31
     },
     {
       "id": "corporate_actions",
@@ -78,7 +78,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1301,6 +1301,146 @@
       "used_llm": true
     },
     {
+      "rns_id": "9796212",
+      "url": "https://www.investegate.co.uk/announcement/rns/galliford-try--gfrd/director-pdmr-shareholding/9796212",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_separate_price_volume"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "f2a7dd693c37c91a",
+          "date": "2026-09-25",
+          "ticker": "GFRD",
+          "company": "",
+          "director": "Bill Hocking",
+          "role": "Chief Executive / PDMR",
+          "type": "GRANT",
+          "shares": 133064,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/galliford-try--gfrd/director-pdmr-shareholding/9796212",
+          "announced_at": "2026-09-29T09:00:11Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "8acb39ade81a2d03",
+          "date": "2026-09-25",
+          "ticker": "GFRD",
+          "company": "",
+          "director": "Kris Hampson",
+          "role": "Chief Financial Officer / PDMR",
+          "type": "GRANT",
+          "shares": 97862,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/galliford-try--gfrd/director-pdmr-shareholding/9796212",
+          "announced_at": "2026-09-29T09:00:11Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "be22430ec4d6d941",
+          "date": "2026-09-25",
+          "ticker": "GFRD",
+          "company": "",
+          "director": "Kevin Corbett",
+          "role": "General Counsel & Company Secretary / PDMR",
+          "type": "GRANT",
+          "shares": 77177,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/galliford-try--gfrd/director-pdmr-shareholding/9796212",
+          "announced_at": "2026-09-29T09:00:11Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 7,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9796211",
+      "url": "https://www.investegate.co.uk/announcement/rns/galliford-try--gfrd/director-pdmr-shareholding/9796211",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_separate_price_volume"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "b3ad09ea559bc679",
+          "date": "2026-09-25",
+          "ticker": "GFRD",
+          "company": "",
+          "director": "Bill Hocking",
+          "role": "Chief Executive / PDMR",
+          "type": "GRANT",
+          "shares": 315572,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/galliford-try--gfrd/director-pdmr-shareholding/9796211",
+          "announced_at": "2026-09-29T09:00:11Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "4afdc9aedcee5f78",
+          "date": "2026-09-25",
+          "ticker": "GFRD",
+          "company": "",
+          "director": "Kevin Corbett",
+          "role": "General Counsel and Company Secretary / PDMR",
+          "type": "GRANT",
+          "shares": 181779,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/galliford-try--gfrd/director-pdmr-shareholding/9796211",
+          "announced_at": "2026-09-29T09:00:11Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "8e1051787aaa8ad1",
+          "date": "2026-09-25",
+          "ticker": "GFRD",
+          "company": "",
+          "director": "Mark Baxter",
+          "role": "Managing Director, Specialist Services / PDMR",
+          "type": "GRANT",
+          "shares": 148093,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/galliford-try--gfrd/director-pdmr-shareholding/9796211",
+          "announced_at": "2026-09-29T09:00:11Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 4,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9789360",
       "url": "https://www.investegate.co.uk/announcement/rns/quilter--qlt/director-pdmr-shareholding/9789360",
       "headline": "Director/PDMR Shareholding",
@@ -1366,7 +1506,7 @@
         }
       ],
       "extracted_count": 9,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1436,7 +1576,7 @@
         }
       ],
       "extracted_count": 6,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2528,6 +2668,36 @@
       "used_llm": false
     },
     {
+      "rns_id": "9794712",
+      "url": "https://www.investegate.co.uk/announcement/rns/oxford-biomedica--oxb/pdmr-dealing/9794712",
+      "headline": "PDMR Dealing",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "6e3341d75e49cb1e",
+          "date": "2026-09-28",
+          "ticker": "OXB",
+          "company": "Oxford Biomedica PLC",
+          "director": "Peter Soelkner",
+          "role": "Non-Executive Director and Vice Chair",
+          "type": "BUY",
+          "shares": 1672,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/oxford-biomedica--oxb/pdmr-dealing/9794712",
+          "announced_at": "2026-09-28"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9794334",
       "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9794334",
       "headline": "Director/PDMR Shareholding",
@@ -2538,8 +2708,8 @@
       ],
       "extracted": [
         {
-          "fingerprint": "12ca59c2a341b1a1",
-          "date": "2026-09-24",
+          "fingerprint": "4a0b44575655b7e2",
+          "date": "2026-09-25",
           "ticker": "SIHL",
           "company": "Symphony International Holdings Limited",
           "director": "Anil Thadani",
@@ -2585,7 +2755,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2615,7 +2785,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2647,7 +2817,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2678,7 +2848,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2748,7 +2918,7 @@
         }
       ],
       "extracted_count": 6,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2780,7 +2950,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2810,7 +2980,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2844,7 +3014,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2876,7 +3046,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2946,7 +3116,7 @@
         }
       ],
       "extracted_count": 12,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2977,7 +3147,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3007,7 +3177,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3037,7 +3207,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -4890,6 +5060,130 @@
       "used_llm": true
     },
     {
+      "rns_id": "9796791",
+      "url": "https://www.investegate.co.uk/announcement/rns/chesnara--csn/director-pdmr-shareholding/9796791",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9796214",
+      "url": "https://www.investegate.co.uk/announcement/rns/galliford-try--gfrd/director-pdmr-shareholding/9796214",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9796213",
+      "url": "https://www.investegate.co.uk/announcement/rns/galliford-try--gfrd/director-pdmr-shareholding/9796213",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9795255",
+      "url": "https://www.investegate.co.uk/announcement/rns/brickability-group--brck/grant-of-options/9795255",
+      "headline": "Grant of Options",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing",
+        "could_not_classify_type",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9794890",
+      "url": "https://www.investegate.co.uk/announcement/gnw/admiral-group--adm/director-pdmr-shareholding/9794890",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9794648",
+      "url": "https://www.investegate.co.uk/announcement/rns/bango--bgo/director-pdmr-shareholding/9794648",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9794508",
+      "url": "https://www.investegate.co.uk/announcement/rns/tesco--tsco/director-pdmr-shareholding/9794508",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9794507",
+      "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9794507",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "could_not_extract_PDMR_name",
+        "multiple_distinct_prices"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9794357",
       "url": "https://www.investegate.co.uk/announcement/rns/ming-yang-smart-energy-group-limited--myse/pdmr-notification/9794357",
       "headline": "PDMR Notification",
@@ -4947,7 +5241,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -4961,7 +5255,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -4975,7 +5269,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5006,7 +5300,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -5024,7 +5318,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5038,7 +5332,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5052,7 +5346,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5066,7 +5360,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5080,7 +5374,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5095,7 +5389,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5109,7 +5403,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
