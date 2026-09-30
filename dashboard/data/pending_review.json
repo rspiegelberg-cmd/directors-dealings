@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-09-29T12:03:19Z",
-  "total": 350,
+  "generated_at": "2026-09-30T11:49:45Z",
+  "total": 364,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 196
+      "count": 205
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 78
+      "count": 81
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 31
+      "count": 33
     },
     {
       "id": "corporate_actions",
@@ -1299,6 +1299,58 @@
       "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
+    },
+    {
+      "rns_id": "9797387",
+      "url": "https://www.investegate.co.uk/announcement/rns/legal-general-group--lgen/director-pdmr-shareholding/9797387",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "multiple_distinct_prices",
+        "zero_shares_non_grant",
+        "zero_price_non_grant"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9797362",
+      "url": "https://www.investegate.co.uk/announcement/rns/rio-tinto--rio/director-pdmr-shareholding/9797362",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "cab2849823296e99",
+          "date": "2026-09-24",
+          "ticker": "RIO",
+          "company": "",
+          "director": "Peter Cunningham",
+          "role": "Chief Financial Officer",
+          "type": "BUY",
+          "shares": 108,
+          "price": 71.63927,
+          "value": 7737.04,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/rio-tinto--rio/director-pdmr-shareholding/9797362",
+          "announced_at": "2026-09-29T17:30:09Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
     },
     {
       "rns_id": "9796212",
@@ -2668,19 +2720,112 @@
       "used_llm": false
     },
     {
-      "rns_id": "9794712",
-      "url": "https://www.investegate.co.uk/announcement/rns/oxford-biomedica--oxb/pdmr-dealing/9794712",
-      "headline": "PDMR Dealing",
+      "rns_id": "9798970",
+      "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9798970",
+      "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency"
       ],
       "extracted": [
         {
+          "fingerprint": "c78f7533a7861b69",
+          "date": "2026-09-29",
+          "ticker": "JAR",
+          "company": "Jardine Matheson Holdings Limited",
+          "director": "Lincoln Pan",
+          "role": "Director",
+          "type": "BUY",
+          "shares": 5500,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9798970",
+          "announced_at": "2026-09-30"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9798875",
+      "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9798875",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "USD0.40 per share - currency conversion to GBP not provided"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "66bf42a43d8a0909",
+          "date": "2026-09-29",
+          "ticker": "SIHL",
+          "company": "Symphony International Holdings Limited",
+          "director": "Anil Thadani",
+          "role": "Director",
+          "type": "BUY",
+          "shares": 1000000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9798875",
+          "announced_at": "2026-09-30"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9797356",
+      "url": "https://www.investegate.co.uk/announcement/bzw/totalenergies-se--tte/director-pdmr-shareholding/9797356",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "financial instrument is a fund unit (TOTALENERGIES ACTIONNARIAT FRANCE « A » PART C), not ordinary shares"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "726c3acc253e37ac",
+          "date": "2026-09-27",
+          "ticker": "TTE",
+          "company": "TotalEnergies SE",
+          "director": "MICHEL STEPHANE",
+          "role": "Member of the Executive Committee",
+          "type": "SELL",
+          "shares": 5969,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/bzw/totalenergies-se--tte/director-pdmr-shareholding/9797356",
+          "announced_at": "2026-09-29"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9794712",
+      "url": "https://www.investegate.co.uk/announcement/rns/oxford-biomedica--oxb/pdmr-dealing/9794712",
+      "headline": "PDMR Dealing",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "shares rounded from 1672.27"
+      ],
+      "extracted": [
+        {
           "fingerprint": "6e3341d75e49cb1e",
           "date": "2026-09-28",
           "ticker": "OXB",
-          "company": "Oxford Biomedica PLC",
+          "company": "Oxford Biomedica plc",
           "director": "Peter Soelkner",
           "role": "Non-Executive Director and Vice Chair",
           "type": "BUY",
@@ -5058,6 +5203,143 @@
       "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
+    },
+    {
+      "rns_id": "9799219",
+      "url": "https://www.investegate.co.uk/announcement/rns/record--rec/director-pdmr-shareholding/9799219",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9798941",
+      "url": "https://www.investegate.co.uk/announcement/rns/sage-group--sge/director-pdmr-shareholding/9798941",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9798920",
+      "url": "https://www.investegate.co.uk/announcement/rns/amigo-holdings--amgo/director-and-pdmr-dealing/9798920",
+      "headline": "Director and PDMR dealing",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9798715",
+      "url": "https://www.investegate.co.uk/announcement/rns/quantum-helium-limited--qhe/director-pdmr-shareholding/9798715",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "zero_price_non_grant",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9798423",
+      "url": "https://www.investegate.co.uk/announcement/rns/microsalt--salt/result-of-director-subscription/9798423",
+      "headline": "Result of Director Subscription",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names: [1) Judith Batchelar (unknown role), MicroSalt plc (unknown role)]"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9798415",
+      "url": "https://www.investegate.co.uk/announcement/rns/arrow-exploration-corp-cdi---axl/arrow-announces-exercise-of-stock-options-/9798415",
+      "headline": "Arrow Announces Exercise of Stock Options",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "multiple_distinct_prices",
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9797361",
+      "url": "https://www.investegate.co.uk/announcement/rns/rio-tinto--rio/director-pdmr-shareholding/9797361",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_parse_tx_date",
+        "could_not_extract_company",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "multiple_distinct_prices"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9797303",
+      "url": "https://www.investegate.co.uk/announcement/rns/weir-group--weir/director-pdmr-shareholding/9797303",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9797253",
+      "url": "https://www.investegate.co.uk/announcement/rns/renishaw--rsw/director-pdmr-shareholding/9797253",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
     },
     {
       "rns_id": "9796791",
