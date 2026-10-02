@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-02T10:47:34Z",
-  "total": 387,
+  "generated_at": "2026-10-02T11:44:11Z",
+  "total": 389,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 209
+      "count": 212
     },
     {
       "id": "foreign_currency",
@@ -18,7 +18,7 @@
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 38
+      "count": 37
     },
     {
       "id": "corporate_actions",
@@ -1544,42 +1544,6 @@
       "used_llm": false
     },
     {
-      "rns_id": "9802156",
-      "url": "https://www.investegate.co.uk/announcement/rns/jupiter-fund-management--jup/director-pdmr-shareholding/9802156",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "multi_tranche",
-      "warnings": [
-        "could_not_extract_company",
-        "could_not_separate_price_volume",
-        "could_not_classify_type",
-        "could_not_extract_company",
-        "required_fields_missing"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "a1627ac8a981df18",
-          "date": "2026-09-30",
-          "ticker": "JUP",
-          "company": "",
-          "director": "Matthew Beesley",
-          "role": "Chief Executive Officer",
-          "type": "SELL",
-          "shares": 447370,
-          "price": 1.72753,
-          "value": 772845.1,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/jupiter-fund-management--jup/director-pdmr-shareholding/9802156",
-          "announced_at": "2026-10-01T12:30:08Z",
-          "buy_strictness": "UNKNOWN",
-          "resulting_shares": null
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9801130",
       "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9801130",
       "headline": "Director/PDMR Shareholding",
@@ -2838,7 +2802,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "other",
       "warnings": [
-        "nil-cost transfer to person closely associated (wife)",
+        "nil-cost transfer to connected person (wife)",
         "off-market transaction"
       ],
       "extracted": [
@@ -3137,8 +3101,8 @@
       ],
       "extracted": [
         {
-          "fingerprint": "7d3eb0a5cc6615e7",
-          "date": "2026-09-25",
+          "fingerprint": "1f1681a1268acad0",
+          "date": "2026-09-22",
           "ticker": "SIHL",
           "company": "Symphony International Holdings Limited",
           "director": "Anil Thadani",
@@ -3194,12 +3158,13 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "transaction_spans_two_dates_30_Sep_1_Oct_2026"
       ],
       "extracted": [
         {
-          "fingerprint": "c66678a0e09a983b",
-          "date": "2026-09-30",
+          "fingerprint": "5897e1049633ab81",
+          "date": "2026-10-01",
           "ticker": "SIHL",
           "company": "Symphony International Holdings Limited",
           "director": "Anil Thadani",
@@ -3316,8 +3281,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "price in USD ($0.988 per share)"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -3408,8 +3372,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction_spans_multiple_dates_2026-09-28_to_2026-09-29",
-        "aggregated_500000_shares_at_USD0.40_per_date"
+        "bundled transaction on multiple dates (28-29 Sep 2026)"
       ],
       "extracted": [
         {
@@ -3440,16 +3403,16 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "non-standard instrument (fund units, not shares)",
-        "price in EUR not GBP"
+        "transaction in EUR; price €81.0483 per unit, value €483,785.12",
+        "fractional shares: 5969.0965 units rounded to 5969"
       ],
       "extracted": [
         {
-          "fingerprint": "53ce164a87b07696",
+          "fingerprint": "726c3acc253e37ac",
           "date": "2026-09-27",
           "ticker": "TTE",
           "company": "TotalEnergies SE",
-          "director": "Michel Stephane",
+          "director": "MICHEL STEPHANE",
           "role": "Member of the Executive Committee",
           "type": "SELL",
           "shares": 5969,
@@ -5859,12 +5822,44 @@
       "used_llm": true
     },
     {
+      "rns_id": "9804574",
+      "url": "https://www.investegate.co.uk/announcement/rns/next--nxt/director-pdmr-shareholding/9804574",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9802849",
       "url": "https://www.investegate.co.uk/announcement/rns/rathbones-group--rat/director-pdmr-shareholding/9802849",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9802846",
+      "url": "https://www.investegate.co.uk/announcement/rns/forterra--fort/grant-of-options-under-2026-saye-scheme/9802846",
+      "headline": "Grant of Options under 2026 SAYE Scheme",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_parse_tx_date",
+        "could_not_extract_company",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "multiple_distinct_prices"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -5907,6 +5902,23 @@
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9800417",
+      "url": "https://www.investegate.co.uk/announcement/rns/tracsis--trcs/director-pdmr-pca-shareholding-/9800417",
+      "headline": "Director/PDMR/PCA Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "multiple_distinct_prices",
+        "zero_shares_non_grant",
+        "zero_price_non_grant"
       ],
       "extracted": [],
       "extracted_count": 0,
