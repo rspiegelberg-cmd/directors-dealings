@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-10-02T11:44:11Z",
-  "total": 389,
+  "generated_at": "2026-10-03T11:08:32Z",
+  "total": 393,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 212
+      "count": 214
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 89
+      "count": 90
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 37
+      "count": 38
     },
     {
       "id": "corporate_actions",
@@ -1544,6 +1544,42 @@
       "used_llm": false
     },
     {
+      "rns_id": "9802156",
+      "url": "https://www.investegate.co.uk/announcement/rns/jupiter-fund-management--jup/director-pdmr-shareholding/9802156",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_separate_price_volume",
+        "could_not_classify_type",
+        "could_not_extract_company",
+        "required_fields_missing"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "a1627ac8a981df18",
+          "date": "2026-09-30",
+          "ticker": "JUP",
+          "company": "",
+          "director": "Matthew Beesley",
+          "role": "Chief Executive Officer",
+          "type": "SELL",
+          "shares": 447370,
+          "price": 1.72753,
+          "value": 772845.1,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/jupiter-fund-management--jup/director-pdmr-shareholding/9802156",
+          "announced_at": "2026-10-01T12:30:08Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9801130",
       "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9801130",
       "headline": "Director/PDMR Shareholding",
@@ -1571,7 +1607,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1607,7 +1643,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1677,7 +1713,7 @@
         }
       ],
       "extracted_count": 7,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1747,7 +1783,7 @@
         }
       ],
       "extracted_count": 4,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2802,7 +2838,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "other",
       "warnings": [
-        "nil-cost transfer to connected person (wife)",
+        "nil-cost transfer to person closely associated (wife)",
         "off-market transaction"
       ],
       "extracted": [
@@ -3091,12 +3127,44 @@
       "used_llm": false
     },
     {
+      "rns_id": "9805090",
+      "url": "https://www.investegate.co.uk/announcement/rns/rio-tinto--rio/director-pdmr-shareholding/9805090",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "fractional_shares_rounded_down"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "6a993080f38c266c",
+          "date": "2026-09-29",
+          "ticker": "RIO",
+          "company": "Rio Tinto plc",
+          "director": "Matthew Holcz",
+          "role": "PDMR",
+          "type": "SIP",
+          "shares": 188,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/rio-tinto--rio/director-pdmr-shareholding/9805090",
+          "announced_at": "2026-10-02"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9804492",
       "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9804492",
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
+        "multiple_transactions_aggregated",
         "llm_escalated_to:claude-sonnet-5"
       ],
       "extracted": [
@@ -3128,6 +3196,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
+        "deemed_interest_reduction_zero_price",
         "llm_escalated_to:claude-sonnet-5"
       ],
       "extracted": [
@@ -3159,12 +3228,12 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction_spans_two_dates_30_Sep_1_Oct_2026"
+        "price in USD 0.4 per share, not converted to GBP"
       ],
       "extracted": [
         {
-          "fingerprint": "5897e1049633ab81",
-          "date": "2026-10-01",
+          "fingerprint": "c66678a0e09a983b",
+          "date": "2026-09-30",
           "ticker": "SIHL",
           "company": "Symphony International Holdings Limited",
           "director": "Anil Thadani",
@@ -3220,8 +3289,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "price in USD ($20.74 per share, $435.54 total) - conversion to GBP not provided"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -3357,7 +3425,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9798970",
-          "announced_at": "2026-09-30"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3372,12 +3440,12 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "bundled transaction on multiple dates (28-29 Sep 2026)"
+        "llm_escalated_to:claude-sonnet-5"
       ],
       "extracted": [
         {
-          "fingerprint": "a77a4ceed379cb27",
-          "date": "2026-09-28",
+          "fingerprint": "a80beb685fa735fd",
+          "date": "2026-09-30",
           "ticker": "SIHL",
           "company": "Symphony International Holdings Limited",
           "director": "Anil Thadani",
@@ -3388,7 +3456,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9798875",
-          "announced_at": "2026-09-30"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3424,7 +3492,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -5822,6 +5890,38 @@
       "used_llm": true
     },
     {
+      "rns_id": "9804825",
+      "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9804825",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "could_not_extract_PDMR_name",
+        "could_not_separate_price_volume"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9804792",
+      "url": "https://www.investegate.co.uk/announcement/rns/wizz-air-holdings--wizz/wizz-air-omnibus-plan-award-grants/9804792",
+      "headline": "Wizz Air Omnibus Plan award grants",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9804574",
       "url": "https://www.investegate.co.uk/announcement/rns/next--nxt/director-pdmr-shareholding/9804574",
       "headline": "Director/PDMR Shareholding",
@@ -5860,20 +5960,6 @@
         "could_not_extract_PDMR_name",
         "could_not_classify_type",
         "multiple_distinct_prices"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9802575",
-      "url": "https://www.investegate.co.uk/announcement/rns/st-james-s-place--stj/director-pdmr-shareholding/9802575",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -6034,6 +6120,20 @@
       "used_llm": false
     },
     {
+      "rns_id": "9797731",
+      "url": "https://www.investegate.co.uk/announcement/rns/aminex-cdi---aex/grant-of-options/9797731",
+      "headline": "Grant of Options",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9797361",
       "url": "https://www.investegate.co.uk/announcement/rns/rio-tinto--rio/director-pdmr-shareholding/9797361",
       "headline": "Director/PDMR Shareholding",
@@ -6047,7 +6147,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6061,7 +6161,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6075,7 +6175,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6090,7 +6190,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6104,7 +6204,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6118,7 +6218,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6136,7 +6236,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
