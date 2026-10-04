@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T11:08:32Z",
+  "generated_at": "2026-10-04T11:50:14Z",
   "total": 393,
   "buckets": [
     {
@@ -2838,8 +2838,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "other",
       "warnings": [
-        "nil-cost transfer to person closely associated (wife)",
-        "off-market transaction"
+        "Nil-cost transfer to person closely associated (wife); treated as SELL with zero price"
       ],
       "extracted": [
         {
@@ -3133,7 +3132,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "fractional_shares_rounded_down"
+        "fractional_shares_rounded"
       ],
       "extracted": [
         {
@@ -3164,7 +3163,6 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "multiple_transactions_aggregated",
         "llm_escalated_to:claude-sonnet-5"
       ],
       "extracted": [
@@ -3196,7 +3194,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "deemed_interest_reduction_zero_price",
+        "deemed interest reduction, not an open-market transaction",
         "llm_escalated_to:claude-sonnet-5"
       ],
       "extracted": [
@@ -3228,12 +3226,12 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "price in USD 0.4 per share, not converted to GBP"
+        "transactions span multiple dates (30 September - 1 October 2026); using latest date"
       ],
       "extracted": [
         {
-          "fingerprint": "c66678a0e09a983b",
-          "date": "2026-09-30",
+          "fingerprint": "5897e1049633ab81",
+          "date": "2026-10-01",
           "ticker": "SIHL",
           "company": "Symphony International Holdings Limited",
           "director": "Anil Thadani",
@@ -3258,8 +3256,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "transaction on Singapore Exchange, not LSE"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -3365,7 +3362,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/biopharma-credit--bpcp/director-pdmr-shareholding/9799815",
-          "announced_at": "2026-09-30"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3395,7 +3392,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/the-schiehallion-fund-limited-npv--mntn/director-pdmr-shareholding/9799627",
-          "announced_at": "2026-09-30"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3409,7 +3406,8 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "transaction on Singapore Exchange, not LSE"
       ],
       "extracted": [
         {
@@ -3444,8 +3442,8 @@
       ],
       "extracted": [
         {
-          "fingerprint": "a80beb685fa735fd",
-          "date": "2026-09-30",
+          "fingerprint": "66bf42a43d8a0909",
+          "date": "2026-09-29",
           "ticker": "SIHL",
           "company": "Symphony International Holdings Limited",
           "director": "Anil Thadani",
@@ -5950,16 +5948,26 @@
       "used_llm": false
     },
     {
-      "rns_id": "9802846",
-      "url": "https://www.investegate.co.uk/announcement/rns/forterra--fort/grant-of-options-under-2026-saye-scheme/9802846",
-      "headline": "Grant of Options under 2026 SAYE Scheme",
+      "rns_id": "9802766",
+      "url": "https://www.investegate.co.uk/announcement/prn/rightmove--rmv/director-pdmr-shareholding/9802766",
+      "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "could_not_parse_tx_date",
-        "could_not_extract_company",
-        "could_not_extract_PDMR_name",
-        "could_not_classify_type",
-        "multiple_distinct_prices"
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9802575",
+      "url": "https://www.investegate.co.uk/announcement/rns/st-james-s-place--stj/director-pdmr-shareholding/9802575",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -5988,23 +5996,6 @@
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9800417",
-      "url": "https://www.investegate.co.uk/announcement/rns/tracsis--trcs/director-pdmr-pca-shareholding-/9800417",
-      "headline": "Director/PDMR/PCA Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "could_not_extract_PDMR_name",
-        "multiple_distinct_prices",
-        "zero_shares_non_grant",
-        "zero_price_non_grant"
       ],
       "extracted": [],
       "extracted_count": 0,
