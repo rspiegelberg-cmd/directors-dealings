@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-04T11:50:14Z",
-  "total": 393,
+  "generated_at": "2026-10-05T13:18:16Z",
+  "total": 395,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
@@ -12,13 +12,13 @@
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 90
+      "count": 93
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 38
+      "count": 36
     },
     {
       "id": "corporate_actions",
@@ -30,7 +30,7 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 35
+      "count": 36
     },
     {
       "id": "data_quirks",
@@ -46,6 +46,41 @@
     }
   ],
   "items": [
+    {
+      "rns_id": "9805331",
+      "url": "https://www.investegate.co.uk/announcement/rns/keras-resources--krs/director-participation-in-subscription/9805331",
+      "headline": "Director Participation in Subscription",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_classify_type",
+        "could_not_extract_company",
+        "required_fields_missing"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "9635b6a6bd747bb7",
+          "date": "2026-10-05",
+          "ticker": "KRS",
+          "company": "",
+          "director": "Russell Lamming Andrew Malashewsky Nicholas Taylor",
+          "role": "Chief Executive Officer Chief Financial Officer Non-Executive Chairman",
+          "type": "GRANT",
+          "shares": 16000000,
+          "price": 0.02,
+          "value": 320000.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/keras-resources--krs/director-participation-in-subscription/9805331",
+          "announced_at": "2026-10-05T07:01:29Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9802786",
       "url": "https://www.investegate.co.uk/announcement/rns/anglo-american--aal/director-pdmr-shareholding/9802786",
@@ -1404,76 +1439,6 @@
       "used_llm": false
     },
     {
-      "rns_id": "9802785",
-      "url": "https://www.investegate.co.uk/announcement/rns/vistry-group--vty/director-pdmr-shareholding/9802785",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "multi_tranche",
-      "warnings": [
-        "could_not_separate_price_volume",
-        "could_not_extract_company",
-        "could_not_separate_price_volume",
-        "could_not_extract_company",
-        "could_not_separate_price_volume"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "aaddfd27602f2cf6",
-          "date": "2026-09-29",
-          "ticker": "VTY",
-          "company": "",
-          "director": "James Lidgate",
-          "role": "Executive Chair & Group Development Director",
-          "type": "EXERCISE",
-          "shares": 118243,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/vistry-group--vty/director-pdmr-shareholding/9802785",
-          "announced_at": "2026-10-01T16:30:09Z",
-          "buy_strictness": "NON_BUY_ONLY",
-          "resulting_shares": null
-        },
-        {
-          "fingerprint": "b91041bd49197013",
-          "date": "2026-09-29",
-          "ticker": "VTY",
-          "company": "",
-          "director": "James Lidgate",
-          "role": "Executive Chair & Group Development Director",
-          "type": "GRANT",
-          "shares": 59121,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/vistry-group--vty/director-pdmr-shareholding/9802785",
-          "announced_at": "2026-10-01T16:30:09Z",
-          "buy_strictness": "UNKNOWN",
-          "resulting_shares": null
-        },
-        {
-          "fingerprint": "2d6e0d5751dd0bff",
-          "date": "2026-09-29",
-          "ticker": "VTY",
-          "company": "",
-          "director": "Phil McHugh",
-          "role": "Executive Chair",
-          "type": "EXERCISE",
-          "shares": 133445,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/vistry-group--vty/director-pdmr-shareholding/9802785",
-          "announced_at": "2026-10-01T16:30:09Z",
-          "buy_strictness": "NON_BUY_ONLY",
-          "resulting_shares": null
-        }
-      ],
-      "extracted_count": 4,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9802769",
       "url": "https://www.investegate.co.uk/announcement/rns/united-utilities-group--uu./director-pdmr-shareholding/9802769",
       "headline": "Director/PDMR Shareholding",
@@ -1539,42 +1504,6 @@
         }
       ],
       "extracted_count": 9,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9802156",
-      "url": "https://www.investegate.co.uk/announcement/rns/jupiter-fund-management--jup/director-pdmr-shareholding/9802156",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "multi_tranche",
-      "warnings": [
-        "could_not_extract_company",
-        "could_not_separate_price_volume",
-        "could_not_classify_type",
-        "could_not_extract_company",
-        "required_fields_missing"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "a1627ac8a981df18",
-          "date": "2026-09-30",
-          "ticker": "JUP",
-          "company": "",
-          "director": "Matthew Beesley",
-          "role": "Chief Executive Officer",
-          "type": "SELL",
-          "shares": 447370,
-          "price": 1.72753,
-          "value": 772845.1,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/jupiter-fund-management--jup/director-pdmr-shareholding/9802156",
-          "announced_at": "2026-10-01T12:30:08Z",
-          "buy_strictness": "UNKNOWN",
-          "resulting_shares": null
-        }
-      ],
-      "extracted_count": 1,
       "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
@@ -2838,7 +2767,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "other",
       "warnings": [
-        "Nil-cost transfer to person closely associated (wife); treated as SELL with zero price"
+        "nil-cost transfer to person closely associated"
       ],
       "extracted": [
         {
@@ -2854,7 +2783,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/grainger--gri/director-pdmr-shareholding/9802702",
-          "announced_at": "2026-10-01"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3126,6 +3055,99 @@
       "used_llm": false
     },
     {
+      "rns_id": "9806703",
+      "url": "https://www.investegate.co.uk/announcement/rns/bunzl--bnzl/director-pdmr-shareholding/9806703",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "price in USD ($30.42711 per share), converted to GBP required"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "df87ee54575625f4",
+          "date": "2026-10-02",
+          "ticker": "BNZL",
+          "company": "Bunzl plc",
+          "director": "James McCool",
+          "role": "Chief Executive Officer, North America",
+          "type": "BUY",
+          "shares": 43,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/bunzl--bnzl/director-pdmr-shareholding/9806703",
+          "announced_at": "2026-10-05"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9806146",
+      "url": "https://www.investegate.co.uk/announcement/rns/wellnex-life-limited--wnx/director-s-dealing-/9806146",
+      "headline": "Director’s dealing",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "price in AUD$0.08 per share, not GBP"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "36b5837beaf3e23b",
+          "date": "2026-09-30",
+          "ticker": "WNX",
+          "company": "Wellnex Life Limited",
+          "director": "Jeffrey Yeh",
+          "role": "Non-executive director",
+          "type": "SELL",
+          "shares": 4423086,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/wellnex-life-limited--wnx/director-s-dealing-/9806146",
+          "announced_at": "2026-10-05"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9805316",
+      "url": "https://www.investegate.co.uk/announcement/rns/gemfields-group-limited--gem/grant-of-awards-under-ltip-and-pdmr-dealings/9805316",
+      "headline": "Grant of awards under LTIP and PDMR dealings",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "transaction_value_stated_in_ZAR_9822611.61_not_GBP"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "c9274a66187faa38",
+          "date": "2026-10-02",
+          "ticker": "GEM",
+          "company": "Gemfields Group Limited",
+          "director": "David Lovett",
+          "role": "Interim Chief Executive Officer / Chief Finance Officer",
+          "type": "GRANT",
+          "shares": 14235669,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/gemfields-group-limited--gem/grant-of-awards-under-ltip-and-pdmr-dealings/9805316",
+          "announced_at": "2026-10-05"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9805090",
       "url": "https://www.investegate.co.uk/announcement/rns/rio-tinto--rio/director-pdmr-shareholding/9805090",
       "headline": "Director/PDMR Shareholding",
@@ -3179,7 +3201,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9804492",
-          "announced_at": "2026-10-02"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3194,7 +3216,6 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "deemed interest reduction, not an open-market transaction",
         "llm_escalated_to:claude-sonnet-5"
       ],
       "extracted": [
@@ -3211,7 +3232,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9804480",
-          "announced_at": "2026-10-02"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3226,12 +3247,12 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transactions span multiple dates (30 September - 1 October 2026); using latest date"
+        "price in USD0.4 per share - conversion to GBP not provided"
       ],
       "extracted": [
         {
-          "fingerprint": "5897e1049633ab81",
-          "date": "2026-10-01",
+          "fingerprint": "c66678a0e09a983b",
+          "date": "2026-09-30",
           "ticker": "SIHL",
           "company": "Symphony International Holdings Limited",
           "director": "Anil Thadani",
@@ -3242,7 +3263,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/symphony-international-holdings-ltd---sihl/director-pdmr-shareholding/9804478",
-          "announced_at": "2026-10-02"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3256,7 +3277,8 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "transaction on Singapore Exchange, not LSE"
       ],
       "extracted": [
         {
@@ -3272,7 +3294,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9804362",
-          "announced_at": "2026-10-02"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3286,7 +3308,8 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "price in USD ($20.74), not GBP"
       ],
       "extracted": [
         {
@@ -3302,7 +3325,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/ig-group-holdings--igg/director-pdmr-shareholding/9804343",
-          "announced_at": "2026-10-02"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3332,7 +3355,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/boku-inc-di-reg-s-cat-3-144a--boku/pdmr-dealing/9802829",
-          "announced_at": "2026-10-01"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3346,7 +3369,8 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "price in USD ($0.988 per share), not GBP"
       ],
       "extracted": [
         {
@@ -5888,6 +5912,24 @@
       "used_llm": true
     },
     {
+      "rns_id": "9806416",
+      "url": "https://www.investegate.co.uk/announcement/rns/thungela-resources-limited-npv-di---tga/dealings-in-securities-/9806416",
+      "headline": "DEALINGS IN SECURITIES",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_parse_tx_date",
+        "could_not_extract_company",
+        "could_not_extract_PDMR_name",
+        "foreign_currency",
+        "multiple_distinct_prices"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9804825",
       "url": "https://www.investegate.co.uk/announcement/rns/ninety-one--n91/director-pdmr-shareholding/9804825",
       "headline": "Director/PDMR Shareholding",
@@ -5948,12 +5990,16 @@
       "used_llm": false
     },
     {
-      "rns_id": "9802766",
-      "url": "https://www.investegate.co.uk/announcement/prn/rightmove--rmv/director-pdmr-shareholding/9802766",
-      "headline": "Director/PDMR Shareholding",
+      "rns_id": "9802846",
+      "url": "https://www.investegate.co.uk/announcement/rns/forterra--fort/grant-of-options-under-2026-saye-scheme/9802846",
+      "headline": "Grant of Options under 2026 SAYE Scheme",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
+        "could_not_parse_tx_date",
+        "could_not_extract_company",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "multiple_distinct_prices"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -6041,21 +6087,6 @@
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9798920",
-      "url": "https://www.investegate.co.uk/announcement/rns/amigo-holdings--amgo/director-and-pdmr-dealing/9798920",
-      "headline": "Director and PDMR dealing",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "could_not_extract_PDMR_name",
-        "required_fields_missing"
       ],
       "extracted": [],
       "extracted_count": 0,
