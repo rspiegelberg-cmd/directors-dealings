@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-10-05T13:18:16Z",
-  "total": 395,
+  "generated_at": "2026-10-06T12:40:30Z",
+  "total": 404,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 214
+      "count": 218
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 93
+      "count": 96
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 36
+      "count": 37
     },
     {
       "id": "corporate_actions",
@@ -30,7 +30,7 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 36
+      "count": 37
     },
     {
       "id": "data_quirks",
@@ -46,6 +46,21 @@
     }
   ],
   "items": [
+    {
+      "rns_id": "9807422",
+      "url": "https://www.investegate.co.uk/announcement/bzw/totalenergies-se--tte/director-pdmr-shareholding/9807422",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9805331",
       "url": "https://www.investegate.co.uk/announcement/rns/keras-resources--krs/director-participation-in-subscription/9805331",
@@ -113,7 +128,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -128,7 +143,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -164,7 +179,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1423,6 +1438,76 @@
       "used_llm": true
     },
     {
+      "rns_id": "9807541",
+      "url": "https://www.investegate.co.uk/announcement/eqs/irish-residential-properties-reit-p-irish-residential-properties-ord-shs--0qt8/director-pdmr-shareholding/9807541",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_separate_price_volume",
+        "could_not_extract_company",
+        "could_not_separate_price_volume"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "8a93fede35c3b730",
+          "date": "2026-10-05",
+          "ticker": "IRES",
+          "company": "",
+          "director": "Eddie Byrne",
+          "role": "CHIEF FINANCIAL OFFICER",
+          "type": "GRANT",
+          "shares": 299260,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/eqs/irish-residential-properties-reit-p-irish-residential-properties-ord-shs--0qt8/director-pdmr-shareholding/9807541",
+          "announced_at": "2026-10-05T17:48:09Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "b71e5c05a16b46df",
+          "date": "2026-10-05",
+          "ticker": "IRES",
+          "company": "",
+          "director": "Eddie Byrne",
+          "role": "CHIEF EXECUTIVE OFFICER",
+          "type": "GRANT",
+          "shares": 67573,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/eqs/irish-residential-properties-reit-p-irish-residential-properties-ord-shs--0qt8/director-pdmr-shareholding/9807541",
+          "announced_at": "2026-10-05T17:48:09Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "88679a739cbc3842",
+          "date": "2026-10-05",
+          "ticker": "IRES",
+          "company": "",
+          "director": "Mari Hurley",
+          "role": "CHIEF FINANCIAL OFFICER",
+          "type": "GRANT",
+          "shares": 299260,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/eqs/irish-residential-properties-reit-p-irish-residential-properties-ord-shs--0qt8/director-pdmr-shareholding/9807541",
+          "announced_at": "2026-10-05T17:48:09Z",
+          "buy_strictness": "NON_BUY_ONLY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 3,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9803022",
       "url": "https://www.investegate.co.uk/announcement/rns/james-halstead--jhd/director-pdmr-shareholding/9803022",
       "headline": "Director/PDMR Shareholding",
@@ -1434,7 +1519,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1504,7 +1589,7 @@
         }
       ],
       "extracted_count": 9,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1520,7 +1605,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2787,7 +2872,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2801,7 +2886,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -2868,7 +2953,7 @@
         }
       ],
       "extracted_count": 3,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -3055,13 +3140,104 @@
       "used_llm": false
     },
     {
+      "rns_id": "9809179",
+      "url": "https://www.investegate.co.uk/announcement/rns/origin-enterprises-cdi---ogn/director-pdmr-shareholding/9809179",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "transactions on multiple dates (2 October 2026 and 6 October 2026) aggregated as single entry"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "4dc349d4039c847a",
+          "date": "2026-10-06",
+          "ticker": "OGN",
+          "company": "Origin Enterprises plc",
+          "director": "TJ Kelly",
+          "role": "Executive Director",
+          "type": "BUY",
+          "shares": 10000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/origin-enterprises-cdi---ogn/director-pdmr-shareholding/9809179",
+          "announced_at": "2026-10-06"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9807674",
+      "url": "https://www.investegate.co.uk/announcement/rns/itaconix--itx/director-pdmr-shareholding/9807674",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "price in USD ($2.5184 per share); conversion to GBP not provided"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "5610fd9a851fc7af",
+          "date": "2026-10-02",
+          "ticker": "ITX",
+          "company": "Itaconix plc",
+          "director": "John R. Shaw",
+          "role": "Chief Executive Officer",
+          "type": "SELL",
+          "shares": 5000,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/itaconix--itx/director-pdmr-shareholding/9807674",
+          "announced_at": "2026-10-06"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9807191",
+      "url": "https://www.investegate.co.uk/announcement/gnw/admiral-group--adm/director-pdmr-shareholding/9807191",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "678d1626e676ab8e",
+          "date": "2026-10-02",
+          "ticker": "ADM",
+          "company": "Admiral Group plc",
+          "director": "William Roberts",
+          "role": "Non-Executive Director",
+          "type": "BUY",
+          "shares": 206,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/gnw/admiral-group--adm/director-pdmr-shareholding/9807191",
+          "announced_at": "2026-10-05"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9806703",
       "url": "https://www.investegate.co.uk/announcement/rns/bunzl--bnzl/director-pdmr-shareholding/9806703",
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "price in USD ($30.42711 per share), converted to GBP required"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -3092,7 +3268,8 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "price in AUD$0.08 per share, not GBP"
+        "bundled_transaction",
+        "price_in_AUD_0.08_per_share"
       ],
       "extracted": [
         {
@@ -3101,7 +3278,7 @@
           "ticker": "WNX",
           "company": "Wellnex Life Limited",
           "director": "Jeffrey Yeh",
-          "role": "Non-executive director",
+          "role": "non-executive director",
           "type": "SELL",
           "shares": 4423086,
           "price": 0.0,
@@ -3123,7 +3300,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction_value_stated_in_ZAR_9822611.61_not_GBP"
+        "transaction value stated in ZAR 9,822,611.61 but no GBP conversion provided"
       ],
       "extracted": [
         {
@@ -3174,7 +3351,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3205,7 +3382,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3236,7 +3413,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3267,7 +3444,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3298,7 +3475,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3329,7 +3506,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3359,7 +3536,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3390,7 +3567,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3420,7 +3597,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3451,7 +3628,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3482,7 +3659,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -5912,6 +6089,76 @@
       "used_llm": true
     },
     {
+      "rns_id": "9808797",
+      "url": "https://www.investegate.co.uk/announcement/rns/standard-life-plc--sdlf/director-pdmr-shareholding/9808797",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9807551",
+      "url": "https://www.investegate.co.uk/announcement/rns/gran-tierra-energy-inc-cdi---gte/director-pdmr-shareholding/9807551",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "could_not_separate_price_volume",
+        "zero_shares_non_grant"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9807418",
+      "url": "https://www.investegate.co.uk/announcement/rns/breedon-group--bree/director-pdmr-shareholding/9807418",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_extract_PDMR_name",
+        "required_fields_missing",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9807411",
+      "url": "https://www.investegate.co.uk/announcement/rns/natwest-group--nwg/director-pdmr-shareholding/9807411",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_parse_tx_date",
+        "could_not_extract_company",
+        "could_not_extract_PDMR_name",
+        "could_not_classify_type",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9806416",
       "url": "https://www.investegate.co.uk/announcement/rns/thungela-resources-limited-npv-di---tga/dealings-in-securities-/9806416",
       "headline": "DEALINGS IN SECURITIES",
@@ -5943,7 +6190,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5957,7 +6204,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5971,7 +6218,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -5985,7 +6232,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6003,7 +6250,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6017,7 +6264,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6031,7 +6278,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6045,7 +6292,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6061,7 +6308,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6076,7 +6323,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6090,7 +6337,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6106,7 +6353,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6120,7 +6367,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6137,7 +6384,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -6151,7 +6398,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
