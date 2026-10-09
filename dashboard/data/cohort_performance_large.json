@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T12:50:46Z",
+  "generated_at": "2026-10-09T12:42:32Z",
   "horizon": "t30",
   "signal_groups": [
     "t1a",
@@ -21,8 +21,8 @@
       "color_hex": "#ef4444",
       "header": {
         "n_total_signals": 47,
-        "mean_car_t30_overall": -0.0156,
-        "hit_rate_t30_overall": 0.425,
+        "mean_car_t30_overall": -0.0147,
+        "hit_rate_t30_overall": 0.4186,
         "mean_car_t1_overall": -0.0091,
         "hit_rate_t1_overall": 0.3191,
         "mean_car_t90_overall": 0.0013,
@@ -799,14 +799,14 @@
           "month_iso": "2026-09",
           "n_signals": 7,
           "mean_car_t1": -0.0081,
-          "mean_car_t30": null,
+          "mean_car_t30": -0.002,
           "mean_car_t90": null,
-          "min_car_t30": null,
-          "max_car_t30": null,
-          "hit_rate_t30": null,
-          "hit_rate_t30_rolling_6m": 0.3846,
-          "single_ticker_weight": null,
-          "ma3_mean_car_t30": -0.0252,
+          "min_car_t30": -0.0838,
+          "max_car_t30": 0.1615,
+          "hit_rate_t30": 0.3333,
+          "hit_rate_t30_rolling_6m": 0.375,
+          "single_ticker_weight": 0.5091,
+          "ma3_mean_car_t30": -0.0136,
           "signal_ids": [
             "18aa15eb4e31d8b7",
             "19054d650cca5ea6",
@@ -816,9 +816,8 @@
             "5d1ab64914335008",
             "89249bd0886970d9"
           ],
-          "pending": true,
+          "pending": false,
           "pending_horizons": [
-            "t30",
             "t90",
             "t180",
             "t365"
@@ -829,7 +828,7 @@
           "hit_rate_t1_rolling_6m": 0.45,
           "single_ticker_weight_t1": 0.3883,
           "ma3_mean_car_t1": -0.005,
-          "single_ticker_weight_t30": null,
+          "single_ticker_weight_t30": 0.5091,
           "min_car_t90": null,
           "max_car_t90": null,
           "hit_rate_t90": null,
@@ -919,10 +918,10 @@
         },
         {
           "month_iso": "2026-09",
-          "mean_car_t30": null
+          "mean_car_t30": -0.002
         }
       ],
-      "trend_3m_vs_prior3m_t30": -0.0309
+      "trend_3m_vs_prior3m_t30": -0.0193
     },
     "t1b": {
       "label": "T1B CFO buy",
@@ -2685,16 +2684,16 @@
       "color_hex": "#10b981",
       "header": {
         "n_total_signals": 234,
-        "mean_car_t30_overall": -0.0149,
-        "hit_rate_t30_overall": 0.3333,
+        "mean_car_t30_overall": -0.015,
+        "hit_rate_t30_overall": 0.3349,
         "mean_car_t1_overall": -0.0111,
         "hit_rate_t1_overall": 0.2521,
         "mean_car_t90_overall": 0.0081,
         "hit_rate_t90_overall": 0.4581,
-        "mean_car_t180_overall": -0.0072,
-        "hit_rate_t180_overall": 0.3761,
-        "mean_car_t365_overall": -0.0427,
-        "hit_rate_t365_overall": 0.3509
+        "mean_car_t180_overall": -0.0076,
+        "hit_rate_t180_overall": 0.3729,
+        "mean_car_t365_overall": -0.0454,
+        "hit_rate_t365_overall": 0.3448
       },
       "months": [
         {
@@ -3020,13 +3019,13 @@
           "hit_rate_t180_rolling_6m": 0.3731,
           "single_ticker_weight_t180": 0.1974,
           "ma3_mean_car_t180": 0.0166,
-          "mean_car_t365": -0.2575,
+          "mean_car_t365": -0.2285,
           "min_car_t365": -0.2575,
-          "max_car_t365": -0.2575,
+          "max_car_t365": -0.1995,
           "hit_rate_t365": 0.0,
-          "hit_rate_t365_rolling_6m": 0.3509,
-          "single_ticker_weight_t365": 1.0,
-          "ma3_mean_car_t365": -0.0252
+          "hit_rate_t365_rolling_6m": 0.3448,
+          "single_ticker_weight_t365": 0.5634,
+          "ma3_mean_car_t365": -0.0156
         },
         {
           "month_iso": "2025-11",
@@ -3082,9 +3081,9 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.3878,
+          "hit_rate_t365_rolling_6m": 0.38,
           "single_ticker_weight_t365": null,
-          "ma3_mean_car_t365": -0.0528
+          "ma3_mean_car_t365": -0.0383
         },
         {
           "month_iso": "2025-12",
@@ -3142,9 +3141,9 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.425,
+          "hit_rate_t365_rolling_6m": 0.4146,
           "single_ticker_weight_t365": null,
-          "ma3_mean_car_t365": -0.2575
+          "ma3_mean_car_t365": -0.2285
         },
         {
           "month_iso": "2026-01",
@@ -3189,7 +3188,7 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.44,
+          "hit_rate_t365_rolling_6m": 0.4231,
           "single_ticker_weight_t365": null,
           "ma3_mean_car_t365": null
         },
@@ -3241,7 +3240,7 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.4545,
+          "hit_rate_t365_rolling_6m": 0.4167,
           "single_ticker_weight_t365": null,
           "ma3_mean_car_t365": null
         },
@@ -3348,13 +3347,13 @@
           "hit_rate_t90_rolling_6m": 0.2881,
           "single_ticker_weight_t90": 0.1539,
           "ma3_mean_car_t90": -0.0374,
-          "mean_car_t180": 0.1154,
+          "mean_car_t180": 0.0596,
           "min_car_t180": -0.061,
           "max_car_t180": 0.2918,
-          "hit_rate_t180": 0.5,
-          "hit_rate_t180_rolling_6m": 0.38,
-          "single_ticker_weight_t180": 0.8272,
-          "ma3_mean_car_t180": 0.0067,
+          "hit_rate_t180": 0.3333,
+          "hit_rate_t180_rolling_6m": 0.3725,
+          "single_ticker_weight_t180": 0.7208,
+          "ma3_mean_car_t180": -0.0119,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -3429,9 +3428,9 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.4474,
+          "hit_rate_t180_rolling_6m": 0.4359,
           "single_ticker_weight_t180": null,
-          "ma3_mean_car_t180": 0.0373,
+          "ma3_mean_car_t180": 0.0094,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -3497,9 +3496,9 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.375,
+          "hit_rate_t180_rolling_6m": 0.36,
           "single_ticker_weight_t180": null,
-          "ma3_mean_car_t180": 0.1154,
+          "ma3_mean_car_t180": 0.0596,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -3558,7 +3557,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.3913,
+          "hit_rate_t180_rolling_6m": 0.375,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -3629,7 +3628,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.4118,
+          "hit_rate_t180_rolling_6m": 0.3889,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -3644,14 +3643,14 @@
           "month_iso": "2026-09",
           "n_signals": 20,
           "mean_car_t1": -0.0107,
-          "mean_car_t30": -0.0305,
+          "mean_car_t30": -0.0262,
           "mean_car_t90": null,
-          "min_car_t30": -0.0622,
-          "max_car_t30": 0.0012,
+          "min_car_t30": -0.0682,
+          "max_car_t30": 0.0244,
           "hit_rate_t30": 0.5,
-          "hit_rate_t30_rolling_6m": 0.4356,
-          "single_ticker_weight": 0.9816,
-          "ma3_mean_car_t30": -0.0235,
+          "hit_rate_t30_rolling_6m": 0.4369,
+          "single_ticker_weight": 0.4374,
+          "ma3_mean_car_t30": -0.0221,
           "signal_ids": [
             "03adf83bddb4fd13",
             "0df4d3debf1cbd65",
@@ -3686,7 +3685,7 @@
           "hit_rate_t1_rolling_6m": 0.2689,
           "single_ticker_weight_t1": 0.1608,
           "ma3_mean_car_t1": -0.0086,
-          "single_ticker_weight_t30": 0.9816,
+          "single_ticker_weight_t30": 0.4374,
           "min_car_t90": null,
           "max_car_t90": null,
           "hit_rate_t90": null,
@@ -3697,7 +3696,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.5,
+          "hit_rate_t180_rolling_6m": 0.3333,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -3776,7 +3775,7 @@
         },
         {
           "month_iso": "2026-09",
-          "mean_car_t30": -0.0305
+          "mean_car_t30": -0.0262
         }
       ],
       "trend_3m_vs_prior3m_t30": -0.0234
@@ -4725,9 +4724,9 @@
         "hit_rate_t1_overall": 0.3455,
         "mean_car_t90_overall": 0.0538,
         "hit_rate_t90_overall": 0.5455,
-        "mean_car_t180_overall": -0.0787,
-        "hit_rate_t180_overall": 0.3448,
-        "mean_car_t365_overall": -0.3406,
+        "mean_car_t180_overall": -0.0794,
+        "hit_rate_t180_overall": 0.3333,
+        "mean_car_t365_overall": -0.3252,
         "hit_rate_t365_overall": 0.0
       },
       "months": [
@@ -4978,9 +4977,7 @@
             "5b68149eade3fdd9"
           ],
           "pending": false,
-          "pending_horizons": [
-            "t365"
-          ],
+          "pending_horizons": [],
           "min_car_t1": -0.0207,
           "max_car_t1": 0.0363,
           "hit_rate_t1": 0.3333,
@@ -5001,13 +4998,13 @@
           "hit_rate_t180_rolling_6m": 0.3077,
           "single_ticker_weight_t180": 0.5621,
           "ma3_mean_car_t180": -0.1532,
-          "mean_car_t365": null,
-          "min_car_t365": null,
-          "max_car_t365": null,
-          "hit_rate_t365": null,
+          "mean_car_t365": -0.171,
+          "min_car_t365": -0.171,
+          "max_car_t365": -0.171,
+          "hit_rate_t365": 0.0,
           "hit_rate_t365_rolling_6m": 0.0,
-          "single_ticker_weight_t365": null,
-          "ma3_mean_car_t365": -0.4292
+          "single_ticker_weight_t365": 1.0,
+          "ma3_mean_car_t365": -0.3001
         },
         {
           "month_iso": "2025-11",
@@ -5058,7 +5055,7 @@
           "hit_rate_t365": null,
           "hit_rate_t365_rolling_6m": 0.0,
           "single_ticker_weight_t365": null,
-          "ma3_mean_car_t365": -0.4292
+          "ma3_mean_car_t365": -0.3001
         },
         {
           "month_iso": "2025-12",
@@ -5106,7 +5103,7 @@
           "hit_rate_t365": null,
           "hit_rate_t365_rolling_6m": 0.0,
           "single_ticker_weight_t365": null,
-          "ma3_mean_car_t365": null
+          "ma3_mean_car_t365": -0.171
         },
         {
           "month_iso": "2026-01",
@@ -5248,7 +5245,7 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": null,
+          "hit_rate_t365_rolling_6m": 0.0,
           "single_ticker_weight_t365": null,
           "ma3_mean_car_t365": null
         },
@@ -5291,13 +5288,13 @@
           "hit_rate_t90_rolling_6m": 0.3333,
           "single_ticker_weight_t90": 0.3461,
           "ma3_mean_car_t90": 0.2453,
-          "mean_car_t180": -0.0858,
+          "mean_car_t180": -0.0894,
           "min_car_t180": -0.2845,
           "max_car_t180": 0.0549,
-          "hit_rate_t180": 0.3333,
-          "hit_rate_t180_rolling_6m": 0.375,
-          "single_ticker_weight_t180": 0.7748,
-          "ma3_mean_car_t180": 0.2924,
+          "hit_rate_t180": 0.25,
+          "hit_rate_t180_rolling_6m": 0.3529,
+          "single_ticker_weight_t180": 0.6086,
+          "ma3_mean_car_t180": 0.2912,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -5350,9 +5347,9 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.3636,
+          "hit_rate_t180_rolling_6m": 0.3333,
           "single_ticker_weight_t180": null,
-          "ma3_mean_car_t180": -0.0746,
+          "ma3_mean_car_t180": -0.0764,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -5400,9 +5397,9 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.4444,
+          "hit_rate_t180_rolling_6m": 0.4,
           "single_ticker_weight_t180": null,
-          "ma3_mean_car_t180": -0.0858,
+          "ma3_mean_car_t180": -0.0894,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -5453,7 +5450,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.4286,
+          "hit_rate_t180_rolling_6m": 0.375,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -5503,7 +5500,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.3333,
+          "hit_rate_t180_rolling_6m": 0.2857,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -5554,7 +5551,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.3333,
+          "hit_rate_t180_rolling_6m": 0.25,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -7292,8 +7289,8 @@
       "color_hex": "#dc2626",
       "header": {
         "n_total_signals": 95,
-        "mean_car_t30_overall": -0.006,
-        "hit_rate_t30_overall": 0.4556,
+        "mean_car_t30_overall": -0.0077,
+        "hit_rate_t30_overall": 0.4457,
         "mean_car_t1_overall": -0.0127,
         "hit_rate_t1_overall": 0.2211,
         "mean_car_t90_overall": -0.01,
@@ -8123,14 +8120,14 @@
           "month_iso": "2026-09",
           "n_signals": 5,
           "mean_car_t1": 0.0043,
-          "mean_car_t30": null,
+          "mean_car_t30": -0.0838,
           "mean_car_t90": null,
-          "min_car_t30": null,
-          "max_car_t30": null,
-          "hit_rate_t30": null,
-          "hit_rate_t30_rolling_6m": 0.5,
-          "single_ticker_weight": null,
-          "ma3_mean_car_t30": -0.0073,
+          "min_car_t30": -0.0838,
+          "max_car_t30": -0.0838,
+          "hit_rate_t30": 0.0,
+          "hit_rate_t30_rolling_6m": 0.4615,
+          "single_ticker_weight": 1.0,
+          "ma3_mean_car_t30": -0.0456,
           "signal_ids": [
             "19054d650cca5ea6",
             "316684d785fd1e62",
@@ -8138,9 +8135,8 @@
             "57e165d18c78e643",
             "89249bd0886970d9"
           ],
-          "pending": true,
+          "pending": false,
           "pending_horizons": [
-            "t30",
             "t90",
             "t180",
             "t365"
@@ -8151,7 +8147,7 @@
           "hit_rate_t1_rolling_6m": 0.3793,
           "single_ticker_weight_t1": 0.461,
           "ma3_mean_car_t1": -0.0007,
-          "single_ticker_weight_t30": null,
+          "single_ticker_weight_t30": 1.0,
           "min_car_t90": null,
           "max_car_t90": null,
           "hit_rate_t90": null,
@@ -8241,26 +8237,26 @@
         },
         {
           "month_iso": "2026-09",
-          "mean_car_t30": null
+          "mean_car_t30": -0.0838
         }
       ],
-      "trend_3m_vs_prior3m_t30": -0.0376
+      "trend_3m_vs_prior3m_t30": -0.0759
     },
     "s1": {
       "label": "S1 cluster buy",
       "color_hex": "#3b82f6",
       "header": {
         "n_total_signals": 648,
-        "mean_car_t30_overall": -0.0025,
-        "hit_rate_t30_overall": 0.4746,
+        "mean_car_t30_overall": -0.0027,
+        "hit_rate_t30_overall": 0.4739,
         "mean_car_t1_overall": -0.0094,
         "hit_rate_t1_overall": 0.2639,
         "mean_car_t90_overall": 0.0136,
         "hit_rate_t90_overall": 0.4958,
-        "mean_car_t180_overall": -0.0109,
-        "hit_rate_t180_overall": 0.4192,
-        "mean_car_t365_overall": -0.0005,
-        "hit_rate_t365_overall": 0.475
+        "mean_car_t180_overall": -0.0106,
+        "hit_rate_t180_overall": 0.4217,
+        "mean_car_t365_overall": -0.0034,
+        "hit_rate_t365_overall": 0.4672
       },
       "months": [
         {
@@ -8781,13 +8777,13 @@
           "hit_rate_t180_rolling_6m": 0.5115,
           "single_ticker_weight_t180": 0.1546,
           "ma3_mean_car_t180": -0.0277,
-          "mean_car_t365": 0.2368,
+          "mean_car_t365": 0.0293,
           "min_car_t365": -0.2162,
           "max_car_t365": 0.3968,
-          "hit_rate_t365": 0.75,
-          "hit_rate_t365_rolling_6m": 0.475,
-          "single_ticker_weight_t365": 0.5753,
-          "ma3_mean_car_t365": 0.0662
+          "hit_rate_t365": 0.375,
+          "hit_rate_t365_rolling_6m": 0.4672,
+          "single_ticker_weight_t365": 0.3794,
+          "ma3_mean_car_t365": -0.003
         },
         {
           "month_iso": "2025-11",
@@ -8871,9 +8867,9 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.4086,
+          "hit_rate_t365_rolling_6m": 0.4,
           "single_ticker_weight_t365": null,
-          "ma3_mean_car_t365": 0.1173
+          "ma3_mean_car_t365": 0.0135
         },
         {
           "month_iso": "2025-12",
@@ -8946,9 +8942,9 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.3937,
+          "hit_rate_t365_rolling_6m": 0.3817,
           "single_ticker_weight_t365": null,
-          "ma3_mean_car_t365": 0.2368
+          "ma3_mean_car_t365": 0.0293
         },
         {
           "month_iso": "2026-01",
@@ -9020,7 +9016,7 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.4605,
+          "hit_rate_t365_rolling_6m": 0.4375,
           "single_ticker_weight_t365": null,
           "ma3_mean_car_t365": null
         },
@@ -9106,7 +9102,7 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.6364,
+          "hit_rate_t365_rolling_6m": 0.5676,
           "single_ticker_weight_t365": null,
           "ma3_mean_car_t365": null
         },
@@ -9206,7 +9202,7 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.75,
+          "hit_rate_t365_rolling_6m": 0.375,
           "single_ticker_weight_t365": null,
           "ma3_mean_car_t365": null
         },
@@ -9284,13 +9280,13 @@
           "hit_rate_t90_rolling_6m": 0.3376,
           "single_ticker_weight_t90": 0.3575,
           "ma3_mean_car_t90": -0.0258,
-          "mean_car_t180": 0.0541,
+          "mean_car_t180": 0.0582,
           "min_car_t180": -0.0601,
           "max_car_t180": 0.1924,
-          "hit_rate_t180": 0.4,
-          "hit_rate_t180_rolling_6m": 0.2959,
-          "single_ticker_weight_t180": 0.7707,
-          "ma3_mean_car_t180": -0.0081,
+          "hit_rate_t180": 0.5714,
+          "hit_rate_t180_rolling_6m": 0.303,
+          "single_ticker_weight_t180": 0.6049,
+          "ma3_mean_car_t180": -0.0067,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -9406,9 +9402,9 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.3013,
+          "hit_rate_t180_rolling_6m": 0.3101,
           "single_ticker_weight_t180": null,
-          "ma3_mean_car_t180": -0.0094,
+          "ma3_mean_car_t180": -0.0074,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -9479,9 +9475,9 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.2756,
+          "hit_rate_t180_rolling_6m": 0.2868,
           "single_ticker_weight_t180": null,
-          "ma3_mean_car_t180": 0.0541,
+          "ma3_mean_car_t180": 0.0582,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -9537,7 +9533,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.2626,
+          "hit_rate_t180_rolling_6m": 0.2772,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -9609,7 +9605,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.1864,
+          "hit_rate_t180_rolling_6m": 0.2131,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -9624,14 +9620,14 @@
           "month_iso": "2026-09",
           "n_signals": 21,
           "mean_car_t1": -0.0067,
-          "mean_car_t30": -0.0042,
+          "mean_car_t30": -0.0248,
           "mean_car_t90": null,
-          "min_car_t30": -0.0622,
-          "max_car_t30": 0.0253,
-          "hit_rate_t30": 0.6667,
-          "hit_rate_t30_rolling_6m": 0.5141,
-          "single_ticker_weight": 0.557,
-          "ma3_mean_car_t30": -0.0111,
+          "min_car_t30": -0.0838,
+          "max_car_t30": 0.0315,
+          "hit_rate_t30": 0.5,
+          "hit_rate_t30_rolling_6m": 0.5111,
+          "single_ticker_weight": 0.5391,
+          "ma3_mean_car_t30": -0.018,
           "signal_ids": [
             "013391c5ef4ce381",
             "0671248d5cf1a0cc",
@@ -9667,7 +9663,7 @@
           "hit_rate_t1_rolling_6m": 0.3179,
           "single_ticker_weight_t1": 0.2132,
           "ma3_mean_car_t1": -0.0043,
-          "single_ticker_weight_t30": 0.557,
+          "single_ticker_weight_t30": 0.5391,
           "min_car_t90": null,
           "max_car_t90": null,
           "hit_rate_t90": null,
@@ -9678,7 +9674,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.4,
+          "hit_rate_t180_rolling_6m": 0.5714,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -9757,26 +9753,26 @@
         },
         {
           "month_iso": "2026-09",
-          "mean_car_t30": -0.0042
+          "mean_car_t30": -0.0248
         }
       ],
-      "trend_3m_vs_prior3m_t30": -0.0234
+      "trend_3m_vs_prior3m_t30": -0.0256
     },
     "f1": {
       "label": "F1 first-time buy",
       "color_hex": "#a855f7",
       "header": {
         "n_total_signals": 654,
-        "mean_car_t30_overall": -0.01,
-        "hit_rate_t30_overall": 0.4051,
+        "mean_car_t30_overall": -0.0103,
+        "hit_rate_t30_overall": 0.4042,
         "mean_car_t1_overall": -0.0098,
         "hit_rate_t1_overall": 0.2492,
         "mean_car_t90_overall": 0.0116,
         "hit_rate_t90_overall": 0.4853,
-        "mean_car_t180_overall": -0.0098,
-        "hit_rate_t180_overall": 0.4276,
-        "mean_car_t365_overall": -0.0059,
-        "hit_rate_t365_overall": 0.4496
+        "mean_car_t180_overall": -0.0101,
+        "hit_rate_t180_overall": 0.4245,
+        "mean_car_t365_overall": -0.0087,
+        "hit_rate_t365_overall": 0.4421
       },
       "months": [
         {
@@ -10302,13 +10298,13 @@
           "hit_rate_t180_rolling_6m": 0.4607,
           "single_ticker_weight_t180": 0.1033,
           "ma3_mean_car_t180": -0.0029,
-          "mean_car_t365": 0.0447,
+          "mean_car_t365": -0.0148,
           "min_car_t365": -0.6877,
           "max_car_t365": 0.3968,
-          "hit_rate_t365": 0.5455,
-          "hit_rate_t365_rolling_6m": 0.4496,
-          "single_ticker_weight_t365": 0.2276,
-          "ma3_mean_car_t365": 0.0422
+          "hit_rate_t365": 0.4,
+          "hit_rate_t365_rolling_6m": 0.4421,
+          "single_ticker_weight_t365": 0.189,
+          "ma3_mean_car_t365": 0.0224
         },
         {
           "month_iso": "2025-11",
@@ -10388,9 +10384,9 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.4229,
+          "hit_rate_t365_rolling_6m": 0.4134,
           "single_ticker_weight_t365": null,
-          "ma3_mean_car_t365": 0.0376
+          "ma3_mean_car_t365": 0.0078
         },
         {
           "month_iso": "2025-12",
@@ -10461,9 +10457,9 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.4215,
+          "hit_rate_t365_rolling_6m": 0.408,
           "single_ticker_weight_t365": null,
-          "ma3_mean_car_t365": 0.0447
+          "ma3_mean_car_t365": -0.0148
         },
         {
           "month_iso": "2026-01",
@@ -10518,7 +10514,7 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.4521,
+          "hit_rate_t365_rolling_6m": 0.4286,
           "single_ticker_weight_t365": null,
           "ma3_mean_car_t365": null
         },
@@ -10583,7 +10579,7 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.4286,
+          "hit_rate_t365_rolling_6m": 0.3846,
           "single_ticker_weight_t365": null,
           "ma3_mean_car_t365": null
         },
@@ -10685,7 +10681,7 @@
           "min_car_t365": null,
           "max_car_t365": null,
           "hit_rate_t365": null,
-          "hit_rate_t365_rolling_6m": 0.5455,
+          "hit_rate_t365_rolling_6m": 0.4,
           "single_ticker_weight_t365": null,
           "ma3_mean_car_t365": null
         },
@@ -10757,13 +10753,13 @@
           "hit_rate_t90_rolling_6m": 0.371,
           "single_ticker_weight_t90": 0.416,
           "ma3_mean_car_t90": 0.0043,
-          "mean_car_t180": 0.1521,
+          "mean_car_t180": 0.0751,
           "min_car_t180": -0.2845,
           "max_car_t180": 0.814,
-          "hit_rate_t180": 0.6,
-          "hit_rate_t180_rolling_6m": 0.3701,
-          "single_ticker_weight_t180": 0.4971,
-          "ma3_mean_car_t180": 0.0613,
+          "hit_rate_t180": 0.375,
+          "hit_rate_t180_rolling_6m": 0.3631,
+          "single_ticker_weight_t180": 0.453,
+          "ma3_mean_car_t180": 0.0356,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -10872,9 +10868,9 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.4322,
+          "hit_rate_t180_rolling_6m": 0.4215,
           "single_ticker_weight_t180": null,
-          "ma3_mean_car_t180": 0.0633,
+          "ma3_mean_car_t180": 0.0248,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -10949,9 +10945,9 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.4176,
+          "hit_rate_t180_rolling_6m": 0.4043,
           "single_ticker_weight_t180": null,
-          "ma3_mean_car_t180": 0.1521,
+          "ma3_mean_car_t180": 0.0751,
           "mean_car_t365": null,
           "min_car_t365": null,
           "max_car_t365": null,
@@ -11016,7 +11012,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.4,
+          "hit_rate_t180_rolling_6m": 0.3855,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -11111,7 +11107,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.3607,
+          "hit_rate_t180_rolling_6m": 0.3438,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -11126,14 +11122,14 @@
           "month_iso": "2026-09",
           "n_signals": 40,
           "mean_car_t1": -0.0085,
-          "mean_car_t30": -0.0227,
+          "mean_car_t30": -0.0324,
           "mean_car_t90": null,
           "min_car_t30": -0.0847,
           "max_car_t30": 0.0253,
-          "hit_rate_t30": 0.3333,
-          "hit_rate_t30_rolling_6m": 0.3883,
-          "single_ticker_weight": 0.2526,
-          "ma3_mean_car_t30": -0.0216,
+          "hit_rate_t30": 0.3077,
+          "hit_rate_t30_rolling_6m": 0.3857,
+          "single_ticker_weight": 0.4014,
+          "ma3_mean_car_t30": -0.0248,
           "signal_ids": [
             "013391c5ef4ce381",
             "03adf83bddb4fd13",
@@ -11188,7 +11184,7 @@
           "hit_rate_t1_rolling_6m": 0.2605,
           "single_ticker_weight_t1": 0.1406,
           "ma3_mean_car_t1": -0.0086,
-          "single_ticker_weight_t30": 0.2526,
+          "single_ticker_weight_t30": 0.4014,
           "min_car_t90": null,
           "max_car_t90": null,
           "hit_rate_t90": null,
@@ -11199,7 +11195,7 @@
           "min_car_t180": null,
           "max_car_t180": null,
           "hit_rate_t180": null,
-          "hit_rate_t180_rolling_6m": 0.6,
+          "hit_rate_t180_rolling_6m": 0.375,
           "single_ticker_weight_t180": null,
           "ma3_mean_car_t180": null,
           "mean_car_t365": null,
@@ -11278,10 +11274,10 @@
         },
         {
           "month_iso": "2026-09",
-          "mean_car_t30": -0.0227
+          "mean_car_t30": -0.0324
         }
       ],
-      "trend_3m_vs_prior3m_t30": -0.0174
+      "trend_3m_vs_prior3m_t30": -0.019
     },
     "b1": {
       "label": "B1 lone conviction buy",
@@ -12788,63 +12784,21 @@
         ]
       },
       "2026-09": {
-        "verdict": "",
+        "verdict": "1 ticker (SAFE) was the largest single drag on the cohort (51% of total movement, -16.8% net CAR).",
         "signals": [
           {
-            "fingerprint": "18aa15eb4e31d8b7",
-            "ticker": "THRL",
+            "fingerprint": "4b1c8dbdaa4ddb9c",
+            "ticker": "BME",
             "director": "",
             "role_short": "CEO",
-            "fire_date": "2026-09-22",
-            "car_t1": -0.0006733135447730687,
-            "car_t30": null,
+            "fire_date": "2026-09-09",
+            "car_t1": 0.0012830114631163791,
+            "car_t30": 0.16701546697349723,
             "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": 0.16151546697349722,
             "abs_return_ann": null,
-            "cohort_weight": null
-          },
-          {
-            "fingerprint": "43cc0e057d29750b",
-            "ticker": "CCH",
-            "director": "",
-            "role_short": "CEO",
-            "fire_date": "2026-09-22",
-            "car_t1": 0.011320363603064765,
-            "car_t30": null,
-            "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
-            "abs_return_ann": null,
-            "cohort_weight": null
-          },
-          {
-            "fingerprint": "19054d650cca5ea6",
-            "ticker": "AZN",
-            "director": "",
-            "role_short": "CEO",
-            "fire_date": "2026-09-18",
-            "car_t1": 0.007417597212499127,
-            "car_t30": null,
-            "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
-            "abs_return_ann": null,
-            "cohort_weight": null
-          },
-          {
-            "fingerprint": "5d1ab64914335008",
-            "ticker": "JMAT",
-            "director": "",
-            "role_short": "CEO",
-            "fire_date": "2026-09-10",
-            "car_t1": -0.02212621632288081,
-            "car_t30": null,
-            "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
-            "abs_return_ann": null,
-            "cohort_weight": null
+            "cohort_weight": 0.4909
           },
           {
             "fingerprint": "316684d785fd1e62",
@@ -12853,26 +12807,12 @@
             "role_short": "CEO",
             "fire_date": "2026-09-09",
             "car_t1": 0.011612740151919487,
-            "car_t30": null,
+            "car_t30": -0.07701752685827712,
             "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": -0.08376127965629132,
             "abs_return_ann": null,
-            "cohort_weight": null
-          },
-          {
-            "fingerprint": "4b1c8dbdaa4ddb9c",
-            "ticker": "BME",
-            "director": "",
-            "role_short": "CEO",
-            "fire_date": "2026-09-09",
-            "car_t1": 0.0012830114631163791,
-            "car_t30": null,
-            "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
-            "abs_return_ann": null,
-            "cohort_weight": null
+            "cohort_weight": 0.2546
           },
           {
             "fingerprint": "89249bd0886970d9",
@@ -12881,15 +12821,14 @@
             "role_short": "CEO",
             "fire_date": "2026-09-09",
             "car_t1": 0.011612740151919487,
-            "car_t30": null,
+            "car_t30": -0.07701752685827712,
             "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": -0.08376127965629132,
             "abs_return_ann": null,
-            "cohort_weight": null
+            "cohort_weight": 0.2546
           }
-        ],
-        "pending": true
+        ]
       }
     },
     "t1b": {
@@ -16967,8 +16906,22 @@
         ]
       },
       "2026-09": {
-        "verdict": "1 ticker (SRE) was the largest single drag on the cohort (98% of total movement, -6.2% net CAR).",
+        "verdict": "",
         "signals": [
+          {
+            "fingerprint": "9433867766687c0c",
+            "ticker": "ROSE",
+            "director": "",
+            "role_short": "NED",
+            "fire_date": "2026-09-09",
+            "car_t1": 0.003854129131158679,
+            "car_t30": -0.0627060159620133,
+            "car_t90": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": -0.06820601596201331,
+            "abs_return_ann": null,
+            "cohort_weight": 0.4374
+          },
           {
             "fingerprint": "d316d3e8b208ab0b",
             "ticker": "SRE",
@@ -16981,7 +16934,21 @@
             "benchmark_t30": -0.027754547320106404,
             "net_car_t30": -0.06219183390242588,
             "abs_return_ann": null,
-            "cohort_weight": 0.9816
+            "cohort_weight": 0.3989
+          },
+          {
+            "fingerprint": "ac4d2e5e37f0456b",
+            "ticker": "LRE",
+            "director": "",
+            "role_short": "NED",
+            "fire_date": "2026-09-09",
+            "car_t1": 0.0017751017755356369,
+            "car_t30": 0.034563284949840845,
+            "car_t90": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": 0.024365973509501204,
+            "abs_return_ann": null,
+            "cohort_weight": 0.1563
           },
           {
             "fingerprint": "89a10cbd6ac46e89",
@@ -16995,7 +16962,7 @@
             "benchmark_t30": -0.01741157619139766,
             "net_car_t30": 0.0011625950224601386,
             "abs_return_ann": null,
-            "cohort_weight": 0.0184
+            "cohort_weight": 0.0075
           }
         ]
       }
@@ -20911,50 +20878,8 @@
         ]
       },
       "2026-09": {
-        "verdict": "",
+        "verdict": "1 ticker (SAFE) was the largest single drag on the cohort (100% of total movement, -16.8% net CAR).",
         "signals": [
-          {
-            "fingerprint": "43cc0e057d29750b",
-            "ticker": "CCH",
-            "director": "",
-            "role_short": "Cluster",
-            "fire_date": "2026-09-22",
-            "car_t1": 0.011320363603064765,
-            "car_t30": null,
-            "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
-            "abs_return_ann": null,
-            "cohort_weight": null
-          },
-          {
-            "fingerprint": "57e165d18c78e643",
-            "ticker": "CCH",
-            "director": "",
-            "role_short": "Cluster",
-            "fire_date": "2026-09-22",
-            "car_t1": 0.011320363603064765,
-            "car_t30": null,
-            "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
-            "abs_return_ann": null,
-            "cohort_weight": null
-          },
-          {
-            "fingerprint": "19054d650cca5ea6",
-            "ticker": "AZN",
-            "director": "",
-            "role_short": "Cluster",
-            "fire_date": "2026-09-18",
-            "car_t1": 0.007417597212499127,
-            "car_t30": null,
-            "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
-            "abs_return_ann": null,
-            "cohort_weight": null
-          },
           {
             "fingerprint": "316684d785fd1e62",
             "ticker": "SAFE",
@@ -20962,12 +20887,12 @@
             "role_short": "Cluster",
             "fire_date": "2026-09-09",
             "car_t1": 0.011612740151919487,
-            "car_t30": null,
+            "car_t30": -0.07701752685827712,
             "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": -0.08376127965629132,
             "abs_return_ann": null,
-            "cohort_weight": null
+            "cohort_weight": 0.5
           },
           {
             "fingerprint": "89249bd0886970d9",
@@ -20976,15 +20901,14 @@
             "role_short": "Cluster",
             "fire_date": "2026-09-09",
             "car_t1": 0.011612740151919487,
-            "car_t30": null,
+            "car_t30": -0.07701752685827712,
             "car_t90": null,
-            "benchmark_t30": null,
-            "net_car_t30": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": -0.08376127965629132,
             "abs_return_ann": null,
-            "cohort_weight": null
+            "cohort_weight": 0.5
           }
-        ],
-        "pending": true
+        ]
       }
     },
     "s1": {
@@ -29847,8 +29771,36 @@
         ]
       },
       "2026-09": {
-        "verdict": "1 ticker (SRE) was the largest single drag on the cohort (56% of total movement, -6.2% net CAR).",
+        "verdict": "1 ticker (SAFE) was the largest single drag on the cohort (54% of total movement, -16.8% net CAR).",
         "signals": [
+          {
+            "fingerprint": "316684d785fd1e62",
+            "ticker": "SAFE",
+            "director": "",
+            "role_short": "Cluster",
+            "fire_date": "2026-09-09",
+            "car_t1": 0.011612740151919487,
+            "car_t30": -0.07701752685827712,
+            "car_t90": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": -0.08376127965629132,
+            "abs_return_ann": null,
+            "cohort_weight": 0.2696
+          },
+          {
+            "fingerprint": "89249bd0886970d9",
+            "ticker": "SAFE",
+            "director": "",
+            "role_short": "Cluster",
+            "fire_date": "2026-09-09",
+            "car_t1": 0.011612740151919487,
+            "car_t30": -0.07701752685827712,
+            "car_t90": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": -0.08376127965629132,
+            "abs_return_ann": null,
+            "cohort_weight": 0.2696
+          },
           {
             "fingerprint": "d316d3e8b208ab0b",
             "ticker": "SRE",
@@ -29861,7 +29813,21 @@
             "benchmark_t30": -0.027754547320106404,
             "net_car_t30": -0.06219183390242588,
             "abs_return_ann": null,
-            "cohort_weight": 0.557
+            "cohort_weight": 0.2002
+          },
+          {
+            "fingerprint": "5706efbf4d04b898",
+            "ticker": "BATS",
+            "director": "",
+            "role_short": "Cluster",
+            "fire_date": "2026-09-09",
+            "car_t1": 0.021749397376128687,
+            "car_t30": 0.03703525726817991,
+            "car_t90": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": 0.03153525726817991,
+            "abs_return_ann": null,
+            "cohort_weight": 0.1015
           },
           {
             "fingerprint": "013391c5ef4ce381",
@@ -29875,7 +29841,7 @@
             "benchmark_t30": -0.029003580896942216,
             "net_car_t30": 0.025307960051953966,
             "abs_return_ann": null,
-            "cohort_weight": 0.2266
+            "cohort_weight": 0.0814
           },
           {
             "fingerprint": "126957d452cac0ae",
@@ -29889,7 +29855,7 @@
             "benchmark_t30": -0.027754547320106404,
             "net_car_t30": 0.024162915091271726,
             "abs_return_ann": null,
-            "cohort_weight": 0.2164
+            "cohort_weight": 0.0778
           }
         ]
       }
@@ -38572,7 +38538,35 @@
             "benchmark_t30": -0.02849203339851547,
             "net_car_t30": -0.0847430307192314,
             "abs_return_ann": null,
-            "cohort_weight": 0.2526
+            "cohort_weight": 0.1438
+          },
+          {
+            "fingerprint": "316684d785fd1e62",
+            "ticker": "SAFE",
+            "director": "",
+            "role_short": "First-buy",
+            "fire_date": "2026-09-09",
+            "car_t1": 0.011612740151919487,
+            "car_t30": -0.07701752685827712,
+            "car_t90": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": -0.08376127965629132,
+            "abs_return_ann": null,
+            "cohort_weight": 0.1421
+          },
+          {
+            "fingerprint": "89249bd0886970d9",
+            "ticker": "SAFE",
+            "director": "",
+            "role_short": "First-buy",
+            "fire_date": "2026-09-09",
+            "car_t1": 0.011612740151919487,
+            "car_t30": -0.07701752685827712,
+            "car_t90": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": -0.08376127965629132,
+            "abs_return_ann": null,
+            "cohort_weight": 0.1421
           },
           {
             "fingerprint": "151207cdfb32dd64",
@@ -38586,7 +38580,21 @@
             "benchmark_t30": -0.027754547320106404,
             "net_car_t30": -0.06907929556799786,
             "abs_return_ann": null,
-            "cohort_weight": 0.2059
+            "cohort_weight": 0.1172
+          },
+          {
+            "fingerprint": "9433867766687c0c",
+            "ticker": "ROSE",
+            "director": "",
+            "role_short": "First-buy",
+            "fire_date": "2026-09-09",
+            "car_t1": 0.003854129131158679,
+            "car_t30": -0.0627060159620133,
+            "car_t90": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": -0.06820601596201331,
+            "abs_return_ann": null,
+            "cohort_weight": 0.1157
           },
           {
             "fingerprint": "d316d3e8b208ab0b",
@@ -38600,7 +38608,7 @@
             "benchmark_t30": -0.027754547320106404,
             "net_car_t30": -0.06219183390242588,
             "abs_return_ann": null,
-            "cohort_weight": 0.1854
+            "cohort_weight": 0.1055
           },
           {
             "fingerprint": "013391c5ef4ce381",
@@ -38614,7 +38622,7 @@
             "benchmark_t30": -0.029003580896942216,
             "net_car_t30": 0.025307960051953966,
             "abs_return_ann": null,
-            "cohort_weight": 0.0754
+            "cohort_weight": 0.0429
           },
           {
             "fingerprint": "126957d452cac0ae",
@@ -38628,7 +38636,7 @@
             "benchmark_t30": -0.027754547320106404,
             "net_car_t30": 0.024162915091271726,
             "abs_return_ann": null,
-            "cohort_weight": 0.072
+            "cohort_weight": 0.041
           },
           {
             "fingerprint": "f25f280498b9e736",
@@ -38642,7 +38650,21 @@
             "benchmark_t30": -0.027754547320106404,
             "net_car_t30": -0.022199829974691544,
             "abs_return_ann": null,
-            "cohort_weight": 0.0662
+            "cohort_weight": 0.0377
+          },
+          {
+            "fingerprint": "3b486f3cd16c920e",
+            "ticker": "SCT",
+            "director": "",
+            "role_short": "First-buy",
+            "fire_date": "2026-09-09",
+            "car_t1": -0.000595349066398132,
+            "car_t30": 0.023717874846636122,
+            "car_t90": null,
+            "benchmark_t30": -0.004163284949840862,
+            "net_car_t30": 0.018217874846636124,
+            "abs_return_ann": null,
+            "cohort_weight": 0.0309
           },
           {
             "fingerprint": "8ab54e73c9ef5205",
@@ -38656,7 +38678,7 @@
             "benchmark_t30": -0.02849203339851547,
             "net_car_t30": -0.017239515375770252,
             "abs_return_ann": null,
-            "cohort_weight": 0.0514
+            "cohort_weight": 0.0292
           },
           {
             "fingerprint": "46fe223d69d76de9",
@@ -38670,7 +38692,7 @@
             "benchmark_t30": -0.029003580896942216,
             "net_car_t30": 0.01617204317773347,
             "abs_return_ann": null,
-            "cohort_weight": 0.0482
+            "cohort_weight": 0.0274
           },
           {
             "fingerprint": "b12448eeaeabf83c",
@@ -38684,7 +38706,7 @@
             "benchmark_t30": -0.029003580896942216,
             "net_car_t30": -0.014386246467496361,
             "abs_return_ann": null,
-            "cohort_weight": 0.0429
+            "cohort_weight": 0.0244
           }
         ]
       }
