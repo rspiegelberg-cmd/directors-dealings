@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-10T11:55:32Z",
-  "total": 440,
+  "generated_at": "2026-10-11T12:09:42Z",
+  "total": 439,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 237
+      "count": 235
     },
     {
       "id": "foreign_currency",
@@ -36,7 +36,7 @@
       "id": "data_quirks",
       "name": "Zero-share / data quirks",
       "recoverable": "manual",
-      "count": 5
+      "count": 6
     },
     {
       "id": "other",
@@ -1361,6 +1361,36 @@
       ],
       "extracted_count": 1,
       "has_cache": false,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9814037",
+      "url": "https://www.investegate.co.uk/announcement/rns/howden-joinery-group--hwdn/director-pdmr-shareholding/9814037",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "data_quirks",
+      "warnings": [
+        "Transfer for nil consideration to Person Closely Associated"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "618b4564f36bc9ef",
+          "date": "2026-10-06",
+          "ticker": "HWDN",
+          "company": "Howden Joinery Group PLC",
+          "director": "Richard Sutcliffe",
+          "role": "PDMR",
+          "type": "SELL",
+          "shares": 61124,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/howden-joinery-group--hwdn/director-pdmr-shareholding/9814037",
+          "announced_at": "2026-10-08"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -2997,7 +3027,9 @@
       "headline": "Director&#039;s Dealings",
       "bucket": "other",
       "warnings": [
-        "No price disclosed; shares acquired via fundraising"
+        "Price per share not disclosed in filing",
+        "Transaction appears to be part of fundraising; no transaction price provided",
+        "Acquisition through entity Galloway Limited rather than direct holding"
       ],
       "extracted": [
         {
@@ -3355,14 +3387,14 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "mixed_transaction_types: 9 partnership shares purchased at €29.618141 each and 9 matching shares awarded (grant)"
+        "mixed transaction: 9 partnership shares at €29.618141 each + 9 matching shares awarded (grant)"
       ],
       "extracted": [
         {
           "fingerprint": "1624e0eef185e6af",
           "date": "2026-10-08",
           "ticker": "SSE",
-          "company": "SSE PLC",
+          "company": "SSE plc",
           "director": "Barry O'Regan",
           "role": "Director",
           "type": "SIP",
@@ -3386,7 +3418,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction on Shanghai Stock Exchange in CNY, not LSE"
+        "conversion of exchangeable bonds on Shanghai Stock Exchange"
       ],
       "extracted": [
         {
@@ -3395,7 +3427,7 @@
           "ticker": "MYSE",
           "company": "Ming Yang Smart Energy Group Limited",
           "director": "Mingyang New Energy Investment Holding Group Co., Ltd.",
-          "role": "controlling shareholder",
+          "role": "Controlling shareholder",
           "type": "EXERCISE",
           "shares": 6556099,
           "price": 0.0,
@@ -3416,8 +3448,7 @@
       "headline": "OML Director dealings",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "transaction in South African Rand (R13.1104 per share, R4,660,747.20 total)"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -3448,7 +3479,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "ADR transaction on NYSE; price in USD ($94.74)"
+        "ADRs acquired under dividend reinvestment plan (treated as grant with 0 price/value per instructions)"
       ],
       "extracted": [
         {
@@ -3479,7 +3510,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "dividend reinvestment plan - price in USD ($94.74), converted value not calculated"
+        "dividend reinvestment plan - price in USD ($94.74), conversion to GBP not provided"
       ],
       "extracted": [
         {
@@ -3488,7 +3519,7 @@
           "ticker": "RIO",
           "company": "Rio Tinto plc",
           "director": "Jennifer Nason",
-          "role": "PDMR",
+          "role": null,
           "type": "SIP",
           "shares": 47,
           "price": 0.0,
@@ -3509,8 +3540,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency",
-        "price in USD ($2.18 per share), not GBP"
+        "foreign_currency"
       ],
       "extracted": [
         {
@@ -6611,20 +6641,6 @@
       "used_llm": false
     },
     {
-      "rns_id": "9815988",
-      "url": "https://www.investegate.co.uk/announcement/rns/softcat--sct/director-pdmr-shareholding/9815988",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9815885",
       "url": "https://www.investegate.co.uk/announcement/rns/british-american-tobacco--bats/director-pdmr-shareholding/9815885",
       "headline": "Director/PDMR Shareholding",
@@ -6687,37 +6703,6 @@
       "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
-    },
-    {
-      "rns_id": "9814037",
-      "url": "https://www.investegate.co.uk/announcement/rns/howden-joinery-group--hwdn/director-pdmr-shareholding/9814037",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "Transfer for nil consideration to Person Closely Associated",
-        "bundled_multi_PDMR"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "618b4564f36bc9ef",
-          "date": "2026-10-06",
-          "ticker": "HWDN",
-          "company": "Howden Joinery Group PLC",
-          "director": "Richard Sutcliffe",
-          "role": "PDMR",
-          "type": "SELL",
-          "shares": 61124,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/howden-joinery-group--hwdn/director-pdmr-shareholding/9814037",
-          "announced_at": "2026-10-08"
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
-      "parser_source": "llm",
-      "used_llm": true
     },
     {
       "rns_id": "9813833",
