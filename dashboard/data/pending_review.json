@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-11T12:09:42Z",
+  "generated_at": "2026-10-12T14:13:23Z",
   "total": 439,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 235
+      "count": 236
     },
     {
       "id": "foreign_currency",
@@ -36,7 +36,7 @@
       "id": "data_quirks",
       "name": "Zero-share / data quirks",
       "recoverable": "manual",
-      "count": 6
+      "count": 5
     },
     {
       "id": "other",
@@ -1361,36 +1361,6 @@
       ],
       "extracted_count": 1,
       "has_cache": false,
-      "parser_source": "llm",
-      "used_llm": true
-    },
-    {
-      "rns_id": "9814037",
-      "url": "https://www.investegate.co.uk/announcement/rns/howden-joinery-group--hwdn/director-pdmr-shareholding/9814037",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "data_quirks",
-      "warnings": [
-        "Transfer for nil consideration to Person Closely Associated"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "618b4564f36bc9ef",
-          "date": "2026-10-06",
-          "ticker": "HWDN",
-          "company": "Howden Joinery Group PLC",
-          "director": "Richard Sutcliffe",
-          "role": "PDMR",
-          "type": "SELL",
-          "shares": 61124,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/howden-joinery-group--hwdn/director-pdmr-shareholding/9814037",
-          "announced_at": "2026-10-08"
-        }
-      ],
-      "extracted_count": 1,
-      "has_cache": true,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3027,9 +2997,8 @@
       "headline": "Director&#039;s Dealings",
       "bucket": "other",
       "warnings": [
-        "Price per share not disclosed in filing",
-        "Transaction appears to be part of fundraising; no transaction price provided",
-        "Acquisition through entity Galloway Limited rather than direct holding"
+        "No price disclosed; transaction appears to be part of fundraising/admission process",
+        "Transaction conducted through Galloway Limited (entity wholly owned by Jim Mellon)"
       ],
       "extracted": [
         {
@@ -3038,7 +3007,7 @@
           "ticker": "SEED",
           "company": "SEED Innovations Limited",
           "director": "Jim Mellon",
-          "role": "Non-executive Chair",
+          "role": "Chair",
           "type": "BUY",
           "shares": 42291666,
           "price": 0.0,
@@ -3387,14 +3356,14 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "mixed transaction: 9 partnership shares at €29.618141 each + 9 matching shares awarded (grant)"
+        "mixed_transaction_type_partnership_and_matching_shares"
       ],
       "extracted": [
         {
           "fingerprint": "1624e0eef185e6af",
           "date": "2026-10-08",
           "ticker": "SSE",
-          "company": "SSE plc",
+          "company": "SSE PLC",
           "director": "Barry O'Regan",
           "role": "Director",
           "type": "SIP",
@@ -3418,7 +3387,8 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "conversion of exchangeable bonds on Shanghai Stock Exchange"
+        "transaction_on_foreign_exchange_shanghai_stock_exchange",
+        "PDMR_is_entity_not_individual"
       ],
       "extracted": [
         {
@@ -3434,7 +3404,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/ming-yang-smart-energy-group-limited--myse/pdmr-notification/9815577",
-          "announced_at": "2026-10-09"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3448,7 +3418,8 @@
       "headline": "OML Director dealings",
       "bucket": "foreign_currency",
       "warnings": [
-        "foreign_currency"
+        "foreign_currency",
+        "transaction in ZAR (South African Rand), not GBP"
       ],
       "extracted": [
         {
@@ -3464,7 +3435,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/old-mutual-limited-npv-di---omu/oml-director-dealings-/9815359",
-          "announced_at": "2026-10-09"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3479,7 +3450,8 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "ADRs acquired under dividend reinvestment plan (treated as grant with 0 price/value per instructions)"
+        "transaction_on_NYSE_in_ADRs",
+        "dividend_reinvestment_plan"
       ],
       "extracted": [
         {
@@ -3495,7 +3467,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/rio-tinto--rio/director-pdmr-shareholding/9814285",
-          "announced_at": "2026-10-08"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -3510,7 +3482,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "dividend reinvestment plan - price in USD ($94.74), conversion to GBP not provided"
+        "price in USD ($94.74), converted to GBP not provided"
       ],
       "extracted": [
         {
@@ -3519,14 +3491,14 @@
           "ticker": "RIO",
           "company": "Rio Tinto plc",
           "director": "Jennifer Nason",
-          "role": null,
+          "role": "PDMR",
           "type": "SIP",
           "shares": 47,
           "price": 0.0,
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/rio-tinto--rio/director-pdmr-shareholding/9814284",
-          "announced_at": "2026-10-08"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -6592,6 +6564,20 @@
       "used_llm": true
     },
     {
+      "rns_id": "9816808",
+      "url": "https://www.investegate.co.uk/announcement/rns/solid-state--soli/pdmr-dealings/9816808",
+      "headline": "PDMR Dealings",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9816547",
       "url": "https://www.investegate.co.uk/announcement/rns/galliford-try--gfrd/director-pdmr-shareholding-replacement/9816547",
       "headline": "Director/PDMR Shareholding - Replacement",
@@ -6624,15 +6610,12 @@
       "used_llm": false
     },
     {
-      "rns_id": "9816169",
-      "url": "https://www.investegate.co.uk/announcement/rns/oxford-metrics--omg/notification-of-transactions-by-a-pdmr-and-a-pca/9816169",
-      "headline": "Notification of Transactions by a PDMR and a PCA",
+      "rns_id": "9815988",
+      "url": "https://www.investegate.co.uk/announcement/rns/softcat--sct/director-pdmr-shareholding/9815988",
+      "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
-        "could_not_extract_PDMR_name",
-        "required_fields_missing",
-        "could_not_extract_PDMR_name",
-        "required_fields_missing"
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -6665,20 +6648,6 @@
         "required_fields_missing",
         "could_not_extract_PDMR_name",
         "required_fields_missing"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9814172",
-      "url": "https://www.investegate.co.uk/announcement/rns/imperial-brands--imb/director-pdmr-shareholding/9814172",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -6788,6 +6757,20 @@
     {
       "rns_id": "9811636",
       "url": "https://www.investegate.co.uk/announcement/rns/spirax-group-plc--spx/director-pdmr-shareholding/9811636",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9811152",
+      "url": "https://www.investegate.co.uk/announcement/rns/severfield--sfr/director-pdmr-shareholding/9811152",
       "headline": "Director/PDMR Shareholding",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
