@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-10-16T10:44:51Z",
-  "total": 476,
+  "generated_at": "2026-10-17T10:20:10Z",
+  "total": 485,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 256
+      "count": 262
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 110
+      "count": 111
     },
     {
       "id": "multi_tranche",
       "name": "Multi-tranche / multi-transaction",
       "recoverable": "v2-fanout",
-      "count": 47
+      "count": 49
     },
     {
       "id": "corporate_actions",
@@ -46,6 +46,76 @@
     }
   ],
   "items": [
+    {
+      "rns_id": "9827946",
+      "url": "https://www.investegate.co.uk/announcement/rns/everyman-media-group--eman/pdmr-dealing/9827946",
+      "headline": "PDMR Dealing",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "could_not_extract_company",
+        "plausibility_rejected:R3_price_too_high"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "ae9ecee889a3f80f",
+          "date": "2026-10-13",
+          "ticker": "EMAN",
+          "company": "",
+          "director": "Rosie Kaye",
+          "role": "PCA to Adam Kaye, Executive Director of the Company",
+          "type": "BUY",
+          "shares": 60714,
+          "price": 0.4935,
+          "value": 29962.36,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/everyman-media-group--eman/pdmr-dealing/9827946",
+          "announced_at": "2026-10-16T15:33:08Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "3630dbdb25f8741f",
+          "date": "2026-10-13",
+          "ticker": "EMAN",
+          "company": "",
+          "director": "Evie Kaye",
+          "role": "PCA to Adam Kaye, Executive Director of the Company",
+          "type": "BUY",
+          "shares": 60715,
+          "price": 0.4935,
+          "value": 29962.85,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/everyman-media-group--eman/pdmr-dealing/9827946",
+          "announced_at": "2026-10-16T15:33:08Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": null
+        },
+        {
+          "fingerprint": "5f796127d98a31a4",
+          "date": "2026-10-13",
+          "ticker": "EMAN",
+          "company": "",
+          "director": "Zachary Kaye",
+          "role": "PCA to Adam Kaye, Executive Director of the Company",
+          "type": "BUY",
+          "shares": 60714,
+          "price": 0.4935,
+          "value": 29962.36,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/everyman-media-group--eman/pdmr-dealing/9827946",
+          "announced_at": "2026-10-16T15:33:08Z",
+          "buy_strictness": "STRICT_BUY",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 3,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9825952",
       "url": "https://www.investegate.co.uk/announcement/rns/mcbride--mcb/pdmr-and-pca-share-transfers/9825952",
@@ -77,59 +147,6 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9820500",
-      "url": "https://www.investegate.co.uk/announcement/rns/smiths-group--smin/director-pdmr-shareholding/9820500",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "could_not_classify",
-      "warnings": [
-        "could_not_extract_company",
-        "could_not_extract_company",
-        "volume_only_contained_dates",
-        "could_not_extract_company",
-        "required_fields_missing"
-      ],
-      "extracted": [
-        {
-          "fingerprint": "c1217f00e0d54699",
-          "date": "2026-10-13",
-          "ticker": "SMIN",
-          "company": "",
-          "director": "Roland Carter",
-          "role": "Director/Chief Executive Officer",
-          "type": "GRANT",
-          "shares": 190000,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/smiths-group--smin/director-pdmr-shareholding/9820500",
-          "announced_at": "2026-10-13T11:30:08Z",
-          "buy_strictness": "NON_BUY_ONLY",
-          "resulting_shares": null
-        },
-        {
-          "fingerprint": "3e2addaad3b7d30b",
-          "date": "2026-10-13",
-          "ticker": "SMIN",
-          "company": "",
-          "director": "Julian Fagge",
-          "role": "Director/Chief Financial Officer",
-          "type": "GRANT",
-          "shares": 110000,
-          "price": 0.0,
-          "value": 0.0,
-          "context": null,
-          "url": "https://www.investegate.co.uk/announcement/rns/smiths-group--smin/director-pdmr-shareholding/9820500",
-          "announced_at": "2026-10-13T11:30:08Z",
-          "buy_strictness": "NON_BUY_ONLY",
-          "resulting_shares": null
-        }
-      ],
-      "extracted_count": 2,
       "has_cache": true,
       "parser_source": "regex",
       "used_llm": false
@@ -1458,8 +1475,7 @@
       "headline": "Director/PDMR Shareholding",
       "bucket": "data_quirks",
       "warnings": [
-        "Transfer to spouse for nil consideration (not a market transaction)",
-        "Outside a trading venue"
+        "transfer to spouse for nil consideration"
       ],
       "extracted": [
         {
@@ -1475,7 +1491,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/rotork--ror/director-pdmr-shareholding/9821096",
-          "announced_at": "2026-10-13"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -1663,6 +1679,39 @@
       "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
+    },
+    {
+      "rns_id": "9827678",
+      "url": "https://www.investegate.co.uk/announcement/gnw/albion-crown-vct-plc--crwn/director-pdmr-transaction/9827678",
+      "headline": "Director/PDMR Transaction",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_separate_price_volume",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9827386",
+      "url": "https://www.investegate.co.uk/announcement/rns/british-land-company--blnd/director-pdmr-shareholding/9827386",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "multi_tranche",
+      "warnings": [
+        "zero_price_non_grant",
+        "could_not_separate_price_volume",
+        "zero_shares_non_grant",
+        "zero_price_non_grant"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
     },
     {
       "rns_id": "9827250",
@@ -3634,23 +3683,38 @@
       "used_llm": false
     },
     {
+      "rns_id": "9827482",
+      "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9827482",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "could_not_extract_company",
+        "foreign_currency"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9825498",
       "url": "https://www.investegate.co.uk/announcement/rns/integrated-diagnostics-holdings--idhc/director-pdmr-shareholding/9825498",
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction in USD at $0.50 per share; conversion to GBP not provided",
-        "PCA (person closely associated) rather than director"
+        "transaction by person closely associated (PCA) rather than director",
+        "price in USD ($0.50), converted value would be ~£0.40 but marked as foreign currency per protocol"
       ],
       "extracted": [
         {
-          "fingerprint": "6c444281884ae7b5",
+          "fingerprint": "82089413d9d4fd19",
           "date": "2026-10-15",
           "ticker": "IDHC",
           "company": "Integrated Diagnostics Holdings plc",
-          "director": "Hena Holdings Ltd",
-          "role": "PCA of Dr Hend El Sherbini, Chief Executive Officer",
+          "director": "Dr Hend El Sherbini",
+          "role": "Chief Executive Officer",
           "type": "BUY",
           "shares": 15580812,
           "price": 0.0,
@@ -3672,7 +3736,8 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "bundled transaction - two separate exercises on same date (36,931 shares at A$0.04 expiring 2034 and 41,464 shares at A$0.04 expiring 2035)"
+        "exercise price in AUD (A$0.04)",
+        "two separate tranches of performance rights exercised on same date"
       ],
       "extracted": [
         {
@@ -3703,7 +3768,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "scrip_dividend_election"
+        "scrip_dividend_alternative_grant"
       ],
       "extracted": [
         {
@@ -3719,7 +3784,7 @@
           "value": 0.0,
           "context": null,
           "url": "https://www.investegate.co.uk/announcement/rns/globalworth-real-estate-investments-limited--gwi/director-pdmr-shareholding/9821347",
-          "announced_at": "2026-10-14"
+          "announced_at": ""
         }
       ],
       "extracted_count": 1,
@@ -7006,6 +7071,104 @@
       "used_llm": true
     },
     {
+      "rns_id": "9828090",
+      "url": "https://www.investegate.co.uk/announcement/rns/tesco--tsco/director-pdmr-shareholding/9828090",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9827975",
+      "url": "https://www.investegate.co.uk/announcement/rns/softcat--sct/director-pdmr-shareholding/9827975",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9827885",
+      "url": "https://www.investegate.co.uk/announcement/rns/ocado-group--ocdo/director-pdmr-shareholding/9827885",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9827772",
+      "url": "https://www.investegate.co.uk/announcement/rns/wetherspoon-j-d---jdw/director-pdmr-shareholding/9827772",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9827757",
+      "url": "https://www.investegate.co.uk/announcement/rns/quilter--qlt/director-pdmr-shareholding/9827757",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9827611",
+      "url": "https://www.investegate.co.uk/announcement/rns/anglo-american--aal/director-pdmr-shareholding/9827611",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9827359",
+      "url": "https://www.investegate.co.uk/announcement/rns/m-g--mng/director-pdmr-shareholding/9827359",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9825966",
       "url": "https://www.investegate.co.uk/announcement/rns/sundae-bar-plc--sbar/grant-of-warrants/9825966",
       "headline": "Grant of Warrants",
@@ -7016,6 +7179,20 @@
         "required_fields_missing",
         "could_not_extract_PDMR_name",
         "could_not_classify_type"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9825884",
+      "url": "https://www.investegate.co.uk/announcement/gnw/admiral-group--adm/director-pdmr-shareholding/9825884",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
       ],
       "extracted": [],
       "extracted_count": 0,
@@ -7154,22 +7331,6 @@
       "used_llm": false
     },
     {
-      "rns_id": "9821030",
-      "url": "https://www.investegate.co.uk/announcement/rns/cls-holdings--cli/director-pdmr-shareholding/9821030",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "could_not_extract_PDMR_name",
-        "zero_shares_non_grant",
-        "required_fields_missing"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9821027",
       "url": "https://www.investegate.co.uk/announcement/rns/coca-cola-europacific-partners-di---ccep/director-pdmr-shareholding/9821027",
       "headline": "Director/PDMR Shareholding",
@@ -7222,22 +7383,6 @@
         "could_not_extract_PDMR_name",
         "multiple_distinct_prices",
         "zero_shares_non_grant"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9820629",
-      "url": "https://www.investegate.co.uk/announcement/rns/sthree--stem/director-pdmr-shareholding/9820629",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "could_not_extract_PDMR_name",
-        "zero_shares_non_grant",
-        "required_fields_missing"
       ],
       "extracted": [],
       "extracted_count": 0,
