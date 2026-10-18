@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-17T10:20:10Z",
-  "total": 485,
+  "generated_at": "2026-10-18T10:32:08Z",
+  "total": 483,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 262
+      "count": 260
     },
     {
       "id": "foreign_currency",
@@ -1495,7 +1495,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -1845,7 +1845,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1861,7 +1861,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -3704,8 +3704,7 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "transaction by person closely associated (PCA) rather than director",
-        "price in USD ($0.50), converted value would be ~£0.40 but marked as foreign currency per protocol"
+        "transaction_by_PCA_not_PDMR_directly"
       ],
       "extracted": [
         {
@@ -3736,8 +3735,8 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "exercise price in AUD (A$0.04)",
-        "two separate tranches of performance rights exercised on same date"
+        "multiple_tranches_aggregated",
+        "exercise_price_in_AUD_0.04_per_share"
       ],
       "extracted": [
         {
@@ -3768,17 +3767,17 @@
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "scrip_dividend_alternative_grant"
+        "scrip_dividend_grant_no_purchase_price"
       ],
       "extracted": [
         {
-          "fingerprint": "1f8e0c02031e0e3b",
+          "fingerprint": "a40d1de56a85a3b0",
           "date": "2026-10-09",
           "ticker": "GWI",
           "company": "Globalworth Real Estate Investments Limited",
           "director": "Norbert Sasse",
           "role": "Non-Executive Director",
-          "type": "GRANT",
+          "type": "SIP",
           "shares": 6840,
           "price": 0.0,
           "value": 0.0,
@@ -3818,7 +3817,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -7187,37 +7186,9 @@
       "used_llm": false
     },
     {
-      "rns_id": "9825884",
-      "url": "https://www.investegate.co.uk/announcement/gnw/admiral-group--adm/director-pdmr-shareholding/9825884",
-      "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
       "rns_id": "9825668",
       "url": "https://www.investegate.co.uk/announcement/rns/gsk--gsk/director-pdmr-shareholding/9825668",
       "headline": "Director/PDMR Shareholding",
-      "bucket": "bundled_multi_pdmr",
-      "warnings": [
-        "bundled multi-PDMR filing — names not extractable from boilerplate"
-      ],
-      "extracted": [],
-      "extracted_count": 0,
-      "has_cache": true,
-      "parser_source": "regex",
-      "used_llm": false
-    },
-    {
-      "rns_id": "9824704",
-      "url": "https://www.investegate.co.uk/announcement/rns/great-southern-copper--gscu/admission-of-shares-director-pdmr-shareholdings-/9824704",
-      "headline": "Admission of Shares &amp; Director/PDMR Shareholdings",
       "bucket": "bundled_multi_pdmr",
       "warnings": [
         "bundled multi-PDMR filing — names not extractable from boilerplate"
@@ -7340,7 +7311,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7354,7 +7325,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7368,7 +7339,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7386,7 +7357,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7400,7 +7371,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
