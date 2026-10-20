@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-19T11:58:13Z",
-  "total": 487,
+  "generated_at": "2026-10-20T10:59:16Z",
+  "total": 494,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 262
+      "count": 265
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 112
+      "count": 114
     },
     {
       "id": "multi_tranche",
@@ -30,7 +30,7 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 43
+      "count": 45
     },
     {
       "id": "data_quirks",
@@ -46,6 +46,39 @@
     }
   ],
   "items": [
+    {
+      "rns_id": "9832018",
+      "url": "https://www.investegate.co.uk/announcement/rns/avation--avap/warrant-grant-and-directors-dealing/9832018",
+      "headline": "WARRANT GRANT AND DIRECTORS’ DEALING",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "could_not_classify_type",
+        "could_not_extract_company",
+        "required_fields_missing",
+        "could_not_classify_type",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9830195",
+      "url": "https://www.investegate.co.uk/announcement/rns/coca-cola-hbc-ag-cdi---cch/director-pdmr-shareholding/9830195",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9827946",
       "url": "https://www.investegate.co.uk/announcement/rns/everyman-media-group--eman/pdmr-dealing/9827946",
@@ -112,7 +145,7 @@
         }
       ],
       "extracted_count": 3,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -129,7 +162,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -147,7 +180,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1708,7 +1741,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1724,7 +1757,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1741,7 +1774,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1758,7 +1791,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1794,7 +1827,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1809,7 +1842,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -1845,7 +1878,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -3699,6 +3732,73 @@
       "used_llm": false
     },
     {
+      "rns_id": "9830654",
+      "url": "https://www.investegate.co.uk/announcement/rns/trekor-metals-limited--tko/director-pdmr-shareholding/9830654",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "price converted from CAD 11.16 to GBP 5.95 per filing statement"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "3df8f33b29e3011f",
+          "date": "2026-10-16",
+          "ticker": "TKO",
+          "company": "Trekor Metals Limited",
+          "director": "Russell Hallbauer",
+          "role": "Director",
+          "type": "BUY",
+          "shares": 9000,
+          "price": 5.95,
+          "value": 53550.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/trekor-metals-limited--tko/director-pdmr-shareholding/9830654",
+          "announced_at": "2026-10-20"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
+      "rns_id": "9830290",
+      "url": "https://www.investegate.co.uk/announcement/rns/wise-class-a--wise/director-pdmr-shareholding/9830290",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "foreign_currency",
+        "could_not_extract_company",
+        "foreign_currency",
+        "foreign_currency"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "f10a7c36cba51305",
+          "date": "2026-10-16",
+          "ticker": "WISE",
+          "company": "",
+          "director": "Jessica Winter",
+          "role": "PDMR (Chief Legal Officer)",
+          "type": "SELL",
+          "shares": 16414,
+          "price": 11.7521,
+          "value": 192898.97,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/wise-class-a--wise/director-pdmr-shareholding/9830290",
+          "announced_at": "2026-10-19T16:07:07Z",
+          "buy_strictness": "UNKNOWN",
+          "resulting_shares": null
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9827482",
       "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9827482",
       "headline": "Director/PDMR Shareholding",
@@ -3709,7 +3809,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -3739,7 +3839,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3770,7 +3870,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3801,7 +3901,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -3832,7 +3932,7 @@
         }
       ],
       "extracted_count": 1,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
     },
@@ -7115,6 +7215,48 @@
       "used_llm": true
     },
     {
+      "rns_id": "9830647",
+      "url": "https://www.investegate.co.uk/announcement/rns/itm-power--itm/director-pdmr-shareholding/9830647",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9830320",
+      "url": "https://www.investegate.co.uk/announcement/rns/close-brothers-group--cbg/director-pdmr-shareholding/9830320",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9830304",
+      "url": "https://www.investegate.co.uk/announcement/rns/harworth-group--hwg/director-pdmr-shareholding/9830304",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
       "rns_id": "9829819",
       "url": "https://www.investegate.co.uk/announcement/rns/boku-inc-di-reg-s-cat-3-144a--boku/vesting-of-restricted-stock-units-and-tvr/9829819",
       "headline": "Vesting of Restricted Stock Units and TVR",
@@ -7160,7 +7302,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7174,7 +7316,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7188,7 +7330,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7202,7 +7344,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7216,7 +7358,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7230,7 +7372,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7244,7 +7386,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7262,7 +7404,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7276,7 +7418,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7290,7 +7432,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7304,7 +7446,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7318,7 +7460,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7336,7 +7478,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7350,7 +7492,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7364,7 +7506,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
@@ -7378,7 +7520,7 @@
       ],
       "extracted": [],
       "extracted_count": 0,
-      "has_cache": true,
+      "has_cache": false,
       "parser_source": "regex",
       "used_llm": false
     },
