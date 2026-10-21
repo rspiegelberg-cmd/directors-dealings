@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-20T10:59:16Z",
-  "total": 494,
+  "generated_at": "2026-10-21T11:14:32Z",
+  "total": 502,
   "buckets": [
     {
       "id": "bundled_multi_pdmr",
       "name": "Bundled multi-PDMR",
       "recoverable": "no",
-      "count": 265
+      "count": 271
     },
     {
       "id": "foreign_currency",
       "name": "Foreign currency",
       "recoverable": "v2-fx",
-      "count": 114
+      "count": 115
     },
     {
       "id": "multi_tranche",
@@ -30,7 +30,7 @@
       "id": "could_not_classify",
       "name": "Could not classify / extract",
       "recoverable": "manual",
-      "count": 45
+      "count": 46
     },
     {
       "id": "data_quirks",
@@ -46,6 +46,21 @@
     }
   ],
   "items": [
+    {
+      "rns_id": "9832110",
+      "url": "https://www.investegate.co.uk/announcement/rns/diageo--dge/director-pdmr-shareholding/9832110",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "could_not_classify",
+      "warnings": [
+        "zero_shares_non_grant",
+        "required_fields_missing"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
     {
       "rns_id": "9832018",
       "url": "https://www.investegate.co.uk/announcement/rns/avation--avap/warrant-grant-and-directors-dealing/9832018",
@@ -3732,13 +3747,44 @@
       "used_llm": false
     },
     {
+      "rns_id": "9834484",
+      "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9834484",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "foreign_currency",
+      "warnings": [
+        "foreign_currency",
+        "scrip_dividend_scheme_acquisition"
+      ],
+      "extracted": [
+        {
+          "fingerprint": "5472db1d096cc9b2",
+          "date": "2026-10-14",
+          "ticker": "JAR",
+          "company": "Jardine Matheson Holdings Limited",
+          "director": "Liang Whye Lee",
+          "role": "Chief Executive Officer of Jardine Matheson Southeast Asia",
+          "type": "GRANT",
+          "shares": 92,
+          "price": 0.0,
+          "value": 0.0,
+          "context": null,
+          "url": "https://www.investegate.co.uk/announcement/rns/jardine-matheson-holdings-ltd-singapore-reg---jar/director-pdmr-shareholding/9834484",
+          "announced_at": "2026-10-21"
+        }
+      ],
+      "extracted_count": 1,
+      "has_cache": true,
+      "parser_source": "llm",
+      "used_llm": true
+    },
+    {
       "rns_id": "9830654",
       "url": "https://www.investegate.co.uk/announcement/rns/trekor-metals-limited--tko/director-pdmr-shareholding/9830654",
       "headline": "Director/PDMR Shareholding",
       "bucket": "foreign_currency",
       "warnings": [
         "foreign_currency",
-        "price converted from CAD 11.16 to GBP 5.95 per filing statement"
+        "price converted from CAD 11.16 to GBP 5.95 as stated in filing"
       ],
       "extracted": [
         {
@@ -7213,6 +7259,94 @@
       "has_cache": false,
       "parser_source": "llm",
       "used_llm": true
+    },
+    {
+      "rns_id": "9832852",
+      "url": "https://www.investegate.co.uk/announcement/rns/dfs-furniture--dfs/director-pdmr-shareholding/9832852",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9832754",
+      "url": "https://www.investegate.co.uk/announcement/rns/gran-tierra-energy-inc-cdi---gte/director-pdmr-shareholding/9832754",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "could_not_extract_PDMR_name",
+        "could_not_extract_company",
+        "zero_price_non_grant",
+        "could_not_separate_price_volume",
+        "zero_shares_non_grant"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9832597",
+      "url": "https://www.investegate.co.uk/announcement/rns/ncc-group--ncc/director-pdmr-shareholding/9832597",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9832568",
+      "url": "https://www.investegate.co.uk/announcement/rns/coca-cola-europacific-partners-di---ccep/director-pdmr-shareholding/9832568",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9832552",
+      "url": "https://www.investegate.co.uk/announcement/rns/aviva--av./director-pdmr-shareholding/9832552",
+      "headline": "Director/PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
+    },
+    {
+      "rns_id": "9831455",
+      "url": "https://www.investegate.co.uk/announcement/rns/character-group--cct/directors-dealings-pdmr-shareholding/9831455",
+      "headline": "Directors&#039; Dealings /PDMR Shareholding",
+      "bucket": "bundled_multi_pdmr",
+      "warnings": [
+        "bundled multi-PDMR filing — names not extractable from boilerplate"
+      ],
+      "extracted": [],
+      "extracted_count": 0,
+      "has_cache": true,
+      "parser_source": "regex",
+      "used_llm": false
     },
     {
       "rns_id": "9830647",
